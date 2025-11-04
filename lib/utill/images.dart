@@ -97,6 +97,8 @@ class Images {
 
   // for Icon
   static const String logo = 'assets/image/logo.png';
+  static const String appIcon = 'assets/icon/icon.png';
+
   static const String marker = 'assets/icon/marker.png';
   static const String myLocation = 'assets/icon/my_location.png';
   static const String search = 'assets/icon/search.png';
