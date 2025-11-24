@@ -12,6 +12,7 @@ import 'package:flutter_restaurant/features/profile/providers/profile_provider.d
 import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
+import 'package:flutter_restaurant/utill/images.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +22,8 @@ import 'package:url_launcher/url_launcher.dart';
 class FreelancerDetailsBottomSheet extends StatefulWidget {
   final FreelancerModel freelancer;
 
-  const FreelancerDetailsBottomSheet({super.key,
+  const FreelancerDetailsBottomSheet({
+    super.key,
     required this.freelancer,
   });
 
@@ -33,7 +35,7 @@ class FreelancerDetailsBottomSheet extends StatefulWidget {
 class _FreelancerDetailsBottomSheetState
     extends State<FreelancerDetailsBottomSheet> with TickerProviderStateMixin {
   late TabController _tabController;
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
 
   @override
   void initState() {
@@ -152,7 +154,8 @@ class _FreelancerDetailsBottomSheetState
                           CustomOutlinedButton(
                             label: "Whatsapp",
                             icon: Icons.phone_android_outlined,
-                            onPressed: () => _launchWhatsApp(context,widget.freelancer.whatsapp),
+                            onPressed: () => _launchWhatsApp(
+                                context, widget.freelancer.whatsapp),
                           ),
                         ];
 
@@ -316,7 +319,7 @@ class _FreelancerDetailsBottomSheetState
                                   Theme.of(context).hintColor.withOpacity(0.1),
                             ),
                             ListTileWidget(
-                              iconData: Icons.phone,
+                              assetImage: Images.whatsapps,
                               mainTxt: 'Contact',
                               subTxt: '${widget.freelancer.phone}',
                             ),
@@ -360,16 +363,17 @@ class _FreelancerDetailsBottomSheetState
     );
   }
 }
-Future<void> _launchWhatsApp(BuildContext context,String? whatsappNumber) async {
+
+Future<void> _launchWhatsApp(
+    BuildContext context, String? whatsappNumber) async {
   // Close any open dialogs first
   Navigator.of(context).pop();
 
   // Phone number with country code (remove all non-digit characters)
-  final whatsappUrl = Uri.parse(
-      Platform.isAndroid
+  final whatsappUrl = Uri.parse(Platform.isAndroid
           ? "https://wa.me/$whatsappNumber" // Android URL format
           : "https://api.whatsapp.com/send?phone=$whatsappNumber" // iOS URL format
-  );
+      );
 
   try {
     if (await canLaunchUrl(whatsappUrl)) {

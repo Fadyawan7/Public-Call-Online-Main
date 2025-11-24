@@ -52,6 +52,11 @@ class FreelancerRepo {
       return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
     }
   }
+
+
+
+
+  
   Future<ApiResponseModel> getFreelancerDetails(String freelancerID) async {
     try {
       final response = await dioClient!.get('${AppConstants.freelancerDetailUri}$freelancerID');

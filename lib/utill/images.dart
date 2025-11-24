@@ -62,6 +62,8 @@ class Images {
   static const String offlinePayment = 'assets/image/offline_payment.png';
   static const String note = 'assets/image/note.png';
   static const String motorbike = 'assets/image/motorbike.png';
+    static const String whatsapps = 'assets/image/whatsapp.png';
+
   static const String cooking = 'assets/image/cooking.png';
   static const String outForDelivery = 'assets/image/out_for_delivery.png';
   static const String preparing = 'assets/image/preparing.png';

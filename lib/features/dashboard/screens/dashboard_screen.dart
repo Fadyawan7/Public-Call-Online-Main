@@ -42,7 +42,6 @@ class _DashboardScreenState extends State<DashboardScreen>
 @override
 void initState() {
   super.initState();
-
   _pageIndex = 0; 
 
   final splashProvider = Provider.of<SplashProvider>(context, listen: false);

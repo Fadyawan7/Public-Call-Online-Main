@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/widgets/custom_app_bar_widget.dart';
 import 'package:flutter_restaurant/features/freelancer/domain/models/freelancer_model.dart';
 import 'package:flutter_restaurant/features/freelancer/providers/freelancer_provider.dart';
+import 'package:flutter_restaurant/features/freelancer_booking/screens/freelance_detailsss.dart';
+import 'package:flutter_restaurant/features/profile/screens/profile_screen.dart'
+    show ProfileScreen;
 import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:provider/provider.dart';
