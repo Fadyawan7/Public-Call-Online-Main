@@ -60,6 +60,9 @@ class _FreelancerDetailsBottomSheetState
         mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(
+            height: 10,
+          ),
+          SizedBox(
             width: MediaQuery.sizeOf(context).width,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -143,7 +146,7 @@ class _FreelancerDetailsBottomSheetState
                                 icon: Icons.chat,
                                 onPressed: () async {
                                   await chatProvider
-                                      .startNewChat(widget.freelancer.id!);
+                                      .startNewChat(widget.freelancer.id ?? 0);
                                   RouterHelper.getConversationScreen(
                                       chat: chatProvider.newChat);
                                   Navigator.of(context).pop();
@@ -172,7 +175,7 @@ class _FreelancerDetailsBottomSheetState
                 ),
 
                 //Freelancer Portfolio Widget
-                if (widget.freelancer.portfolio!.isNotEmpty)
+                if (widget.freelancer.portfolio?.isNotEmpty ?? false)
                   FreelancerPortfolioWidget(freelancer: widget.freelancer),
 
                 TabBar(
@@ -198,7 +201,7 @@ class _FreelancerDetailsBottomSheetState
                     controller: _tabController,
                     children: [
                       SingleChildScrollView(
-                        child: widget.freelancer.reviews!.isNotEmpty
+                        child: widget.freelancer.reviews?.isNotEmpty ?? false
                             ? Column(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -234,7 +237,9 @@ class _FreelancerDetailsBottomSheetState
                                             foregroundColor: Colors.transparent,
                                           ),
                                           child: Text(
-                                            getTranslated('view_all', context)!,
+                                            getTranslated(
+                                                    'view_all', context) ??
+                                                'View All',
                                             style: rubikMedium.copyWith(
                                               color: Theme.of(context)
                                                   .primaryColor,
@@ -248,21 +253,21 @@ class _FreelancerDetailsBottomSheetState
                                     key: PageStorageKey(widget.freelancer.id),
                                     shrinkWrap: true,
                                     itemCount:
-                                        widget.freelancer.reviews!.length,
+                                        widget.freelancer.reviews?.length,
                                     physics:
                                         const NeverScrollableScrollPhysics(),
                                     itemBuilder: (context, index) {
                                       return RateReviewWidget(
                                         rating: widget
-                                            .freelancer.reviews![index].rating,
+                                            .freelancer.reviews?[index].rating,
                                         comment: widget
-                                            .freelancer.reviews![index].comment,
+                                            .freelancer.reviews?[index].comment,
                                         userImage: widget.freelancer
-                                            .reviews![index].giverImage,
+                                            .reviews?[index].giverImage,
                                         userName: widget.freelancer
-                                            .reviews![index].giverName,
+                                            .reviews?[index].giverName,
                                         reviewDate: widget.freelancer
-                                            .reviews![index].createdAt,
+                                            .reviews?[index].createdAt,
                                       );
                                     },
                                   ),

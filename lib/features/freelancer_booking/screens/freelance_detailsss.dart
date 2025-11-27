@@ -83,7 +83,6 @@ class _HappyProfileScreenState extends State<HappyProfileScreen> {
 
     _whatsappNumberController = TextEditingController();
     _aboutMeController = TextEditingController();
-
   }
 
   Future<void> _loadUserData(
@@ -142,12 +141,12 @@ class _HappyProfileScreenState extends State<HappyProfileScreen> {
       final phoneNumber = _phoneNumberController!.text.trim();
       final email = _emailController!.text.trim();
       final countryId = (profileProvider.userInfoModel?.countryId == null ||
-          profileProvider.userInfoModel!.countryId == -1)
+              profileProvider.userInfoModel!.countryId == -1)
           ? profileProvider.selectedCountryID!
           : profileProvider.userInfoModel!.countryId;
 
       final cityId = (profileProvider.userInfoModel?.cityId == null ||
-          profileProvider.userInfoModel!.cityId == -1)
+              profileProvider.userInfoModel!.cityId == -1)
           ? profileProvider.selectedCityID!
           : profileProvider.userInfoModel!.cityId;
 
@@ -166,7 +165,8 @@ class _HappyProfileScreenState extends State<HappyProfileScreen> {
             getTranslated('change_something_to_update', context));
       } else if (profileProvider.selectedCountryID! == -1) {
         showCustomSnackBarHelper(getTranslated('select_country', context));
-      } else if (profileProvider.selectedCityID! == -1 && profileProvider.userInfoModel!.cityId == -1) {
+      } else if (profileProvider.selectedCityID! == -1 &&
+          profileProvider.userInfoModel!.cityId == -1) {
         showCustomSnackBarHelper(getTranslated('select_city', context));
       } else if (phoneNumber.isEmpty) {
         showCustomSnackBarHelper(getTranslated('enter_phone_number', context));
@@ -216,281 +216,261 @@ class _HappyProfileScreenState extends State<HappyProfileScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: GestureDetector(
-              onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-              child: Consumer<ProfileProvider>(
-                builder: (context, profileProvider, child) {
-                  final requestSubmitted =
-                      profileProvider.userInfoModel?.freelancerProfileRequest ==
-                          'pending';
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: Consumer<ProfileProvider>(
+          builder: (context, profileProvider, child) {
+            final requestSubmitted =
+                profileProvider.userInfoModel?.freelancerProfileRequest ==
+                    'pending';
 
-                  return profileProvider.userInfoModel != null &&
-                          (profileProvider.countryList != null &&
-                              profileProvider.countryList!.isNotEmpty)
-                      ? Container(
-                          decoration: BoxDecoration(
-                              color: Theme.of(context).primaryColor),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              ProfileHeaderWidget(
-                                  fromSplash: widget.fromSplash),
-                              Expanded(
-                                child: CustomPaint(
-                                  size: Size(width, height),
-                                  painter: ProfileCustomPainterWidget(context),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      // Profile Image
-                                      ProfileImageWidget(
-                                        imageUrl: profileProvider
-                                            .userInfoModel!.image,
-                                        onImageSelected: (File? imageFile) {
-                                          setState(() => file = imageFile);
-                                        },
-                                      ),
+            return profileProvider.userInfoModel != null &&
+                    (profileProvider.countryList != null &&
+                        profileProvider.countryList!.isNotEmpty)
+                ? Container(
+                    decoration:
+                        BoxDecoration(color: Theme.of(context).primaryColor),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ProfileHeaderWidget(
+                          fromSplash: widget.fromSplash,
+                        ),
+                        Expanded(
+                          child: CustomPaint(
+                            size: Size(width, height),
+                            painter: ProfileCustomPainterWidget(context),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                // Profile Image
+                                ProfileImageWidget(
+                                  imageUrl:
+                                      profileProvider.userInfoModel!.image,
+                                  onImageSelected: (File? imageFile) {
+                                    setState(() => file = imageFile);
+                                  },
+                                ),
 
-                                      // Profile Form
-                                      Expanded(
-                                        child: SingleChildScrollView(
-                                          physics:
-                                              const BouncingScrollPhysics(),
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal:
-                                                Dimensions.paddingSizeDefault,
+                                // Profile Form
+                                Expanded(
+                                  child: SingleChildScrollView(
+                                    physics: const BouncingScrollPhysics(),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: Dimensions.paddingSizeDefault,
+                                    ),
+                                    child: Form(
+                                      key: profileFormKey,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const SizedBox(
+                                              height:
+                                                  Dimensions.paddingSizeLarge),
+
+                                          // First Name
+                                          ProfileTextFieldWidget(
+                                            isShowBorder: true,
+                                            controller: _firstNameController,
+                                            focusNode: _firstNameFocus,
+                                            nextFocus: _lastNameFocus,
+                                            inputType: TextInputType.name,
+                                            capitalization:
+                                                TextCapitalization.words,
+                                            level: getTranslated(
+                                                'first_name', context)!,
+                                            isFieldRequired: true,
+                                            isShowPrefixIcon: true,
+                                            prefixIconUrl:
+                                                Images.profileIconSvg,
+                                            onValidate: (value) => value!
+                                                    .isEmpty
+                                                ? '${getTranslated('please_enter', context)!} ${getTranslated('first_name', context)!}'
+                                                : null,
                                           ),
-                                          child: Form(
-                                            key: profileFormKey,
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                const SizedBox(
-                                                    height: Dimensions
-                                                        .paddingSizeLarge),
+                                          const SizedBox(
+                                              height:
+                                                  Dimensions.paddingSizeLarge),
 
-                                                // First Name
-                                                ProfileTextFieldWidget(
+                                          // Email
+                                          ProfileTextFieldWidget(
+                                            isEnabled: false,
+                                            isShowBorder: true,
+                                            controller: _emailController,
+                                            focusNode: _emailFocus,
+                                            nextFocus: _phoneNumberFocus,
+                                            inputType:
+                                                TextInputType.emailAddress,
+                                            level: getTranslated(
+                                                'email', context)!,
+                                            isShowPrefixIcon: true,
+                                            isShowSuffixIcon: _emailController!
+                                                .text.isNotEmpty,
+                                            suffixIconUrl: Images.verifiedSvg,
+                                            prefixIconUrl: Images.emailSvg,
+                                          ),
+                                          const SizedBox(
+                                              height:
+                                                  Dimensions.paddingSizeSmall),
+
+                                          // Country
+
+                                          const SizedBox(
+                                              height:
+                                                  Dimensions.paddingSizeSmall),
+                                          profileProvider.userInfoModel!
+                                                      .countryId ==
+                                                  -1
+                                              ? CountryDropdownWidget(
+                                                  searchController:
+                                                      countrySearchController,
+                                                )
+                                              : ProfileTextFieldWidget(
+                                                  isEnabled: false,
                                                   isShowBorder: true,
                                                   controller:
-                                                      _firstNameController,
-                                                  focusNode: _firstNameFocus,
-                                                  nextFocus: _lastNameFocus,
-                                                  inputType: TextInputType.name,
-                                                  capitalization:
-                                                      TextCapitalization.words,
+                                                      _countryNameController,
                                                   level: getTranslated(
-                                                      'first_name', context)!,
-                                                  isFieldRequired: true,
-                                                  isShowPrefixIcon: true,
-                                                  prefixIconUrl:
-                                                      Images.profileIconSvg,
-                                                  onValidate: (value) => value!
-                                                          .isEmpty
-                                                      ? '${getTranslated('please_enter', context)!} ${getTranslated('first_name', context)!}'
-                                                      : null,
-                                                ),
-                                                const SizedBox(
-                                                    height: Dimensions
-                                                        .paddingSizeLarge),
-
-                                                // Email
-                                                ProfileTextFieldWidget(
-                                                  isEnabled: false,
-                                                  isShowBorder: true,
-                                                  controller: _emailController,
-                                                  focusNode: _emailFocus,
-                                                  nextFocus: _phoneNumberFocus,
-                                                  inputType: TextInputType
-                                                      .emailAddress,
-                                                  level: getTranslated(
-                                                      'email', context)!,
-                                                  isShowPrefixIcon: true,
-                                                  isShowSuffixIcon:
-                                                      _emailController!
-                                                          .text.isNotEmpty,
-                                                  suffixIconUrl:
-                                                      Images.verifiedSvg,
-                                                  prefixIconUrl:
-                                                      Images.emailSvg,
-                                                ),
-                                                const SizedBox(
-                                                    height: Dimensions
-                                                        .paddingSizeSmall),
-
-                                                // Country
-
-                                                const SizedBox(
-                                                    height: Dimensions
-                                                        .paddingSizeSmall),
-                                                profileProvider.userInfoModel!
-                                                            .countryId ==
-                                                        -1
-                                                    ? CountryDropdownWidget(
-                                                        searchController:
-                                                            countrySearchController,
-                                                      )
-                                                    : ProfileTextFieldWidget(
-                                                  isEnabled: false,
-                                                        isShowBorder: true,
-                                                        controller:
-                                                            _countryNameController,
-                                                        level: getTranslated(
-                                                            'Country',
-                                                            context)!,
-                                                        isShowPrefixIcon: false,
-                                                        prefixIconUrl:
-                                                            Images.phoneSvg,
-                                                      ),
-                                                const SizedBox(
-                                                    height: Dimensions
-                                                        .paddingSizeSmall),
-
-                                                // City
-
-                                                const SizedBox(
-                                                    height: Dimensions
-                                                        .paddingSizeSmall),
-                                                profileProvider.userInfoModel!
-                                                            .cityId ==
-                                                        -1
-                                                    ? CityDropdownWidget(
-                                                        searchController:
-                                                            citySearchController,
-                                                      )
-                                                    : ProfileTextFieldWidget(
-                                                  isEnabled: false,
-                                                        isShowBorder: true,
-                                                        controller:
-                                                            _cityNameController,
-                                                        level: getTranslated(
-                                                            'City', context)!,
-                                                        isShowPrefixIcon: false,
-                                                        prefixIconUrl:
-                                                            Images.phoneSvg,
-                                                      ),
-                                                const SizedBox(
-                                                    height: Dimensions
-                                                        .paddingSizeLarge),
-
-                                                // Phone
-                                                ProfileTextFieldWidget(
-                                                  isShowBorder: true,
-                                                  controller:
-                                                      _phoneNumberController,
-                                                  focusNode: _phoneNumberFocus,
-                                                  inputType:
-                                                      TextInputType.phone,
-                                                  level: getTranslated(
-                                                      'phone', context)!,
-                                                  isShowPrefixIcon: true,
+                                                      'Country', context)!,
+                                                  isShowPrefixIcon: false,
                                                   prefixIconUrl:
                                                       Images.phoneSvg,
                                                 ),
+                                          const SizedBox(
+                                              height:
+                                                  Dimensions.paddingSizeSmall),
 
-                                                if (isFreelancer!) ...[
-                                                  const SizedBox(
-                                                      height: Dimensions
-                                                          .paddingSizeLarge),
-                                                  ProfileTextFieldWidget(
-                                                    isShowBorder: true,
-                                                    controller:
-                                                        _phoneNumberController,
-                                                    focusNode:
-                                                        _phoneNumberFocus,
-                                                    inputType:
-                                                        TextInputType.phone,
-                                                    level: getTranslated(
-                                                        'whatsapp', context)!,
-                                                    isShowPrefixIcon: true,
-                                                    isShowSuffixIcon:
-                                                        _phoneNumberController!
-                                                            .text.isNotEmpty,
-                                                    prefixIconUrl:
-                                                        Images.phoneSvg,
-                                                  ),
-                                                  const SizedBox(
-                                                      height: Dimensions
-                                                          .paddingSizeLarge),
-                                                  Text(
-                                                    getTranslated(
-                                                        'about_me', context)!,
-                                                    style:
-                                                        rubikSemiBold.copyWith(
-                                                      color: ColorResources
-                                                          .getGreyBunkerColor(
-                                                              context),
-                                                    ),
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                  CustomTextFieldWidget(
-                                                    controller:
-                                                        _aboutMeController,
-                                                    maxLines: 5,
-                                                    capitalization:
-                                                        TextCapitalization
-                                                            .sentences,
-                                                    hintText: getTranslated(
-                                                        'personalize_your_profile',
+                                          // City
+
+                                          const SizedBox(
+                                              height:
+                                                  Dimensions.paddingSizeSmall),
+                                          profileProvider
+                                                      .userInfoModel!.cityId ==
+                                                  -1
+                                              ? CityDropdownWidget(
+                                                  searchController:
+                                                      citySearchController,
+                                                )
+                                              : ProfileTextFieldWidget(
+                                                  isEnabled: false,
+                                                  isShowBorder: true,
+                                                  controller:
+                                                      _cityNameController,
+                                                  level: getTranslated(
+                                                      'City', context)!,
+                                                  isShowPrefixIcon: false,
+                                                  prefixIconUrl:
+                                                      Images.phoneSvg,
+                                                ),
+                                          const SizedBox(
+                                              height:
+                                                  Dimensions.paddingSizeLarge),
+
+                                          // Phone
+                                          ProfileTextFieldWidget(
+                                            isShowBorder: true,
+                                            controller: _phoneNumberController,
+                                            focusNode: _phoneNumberFocus,
+                                            inputType: TextInputType.phone,
+                                            level: getTranslated(
+                                                'phone', context)!,
+                                            isShowPrefixIcon: true,
+                                            prefixIconUrl: Images.phoneSvg,
+                                          ),
+
+                                          if (isFreelancer!) ...[
+                                            const SizedBox(
+                                                height: Dimensions
+                                                    .paddingSizeLarge),
+                                            ProfileTextFieldWidget(
+                                              isShowBorder: true,
+                                              controller:
+                                                  _phoneNumberController,
+                                              focusNode: _phoneNumberFocus,
+                                              inputType: TextInputType.phone,
+                                              level: getTranslated(
+                                                  'whatsapp', context)!,
+                                              isShowPrefixIcon: true,
+                                              isShowSuffixIcon:
+                                                  _phoneNumberController!
+                                                      .text.isNotEmpty,
+                                              prefixIconUrl: Images.phoneSvg,
+                                            ),
+                                            const SizedBox(
+                                                height: Dimensions
+                                                    .paddingSizeLarge),
+                                            Text(
+                                              getTranslated(
+                                                  'about_me', context)!,
+                                              style: rubikSemiBold.copyWith(
+                                                color: ColorResources
+                                                    .getGreyBunkerColor(
                                                         context),
-                                                    fillColor: Theme.of(context)
-                                                        .cardColor,
-                                                    isShowBorder: true,
-                                                    borderColor:
-                                                        Theme.of(context)
-                                                            .hintColor
-                                                            .withOpacity(0.5),
-                                                  ),
-                                                ],
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-
-                                      // Update Button
-                                      SafeArea(
-                                        child: Center(
-                                          child: Container(
-                                            width: width > 700 ? 700 : width,
-                                            padding: const EdgeInsets.all(
-                                                Dimensions.paddingSizeSmall),
-                                            child: CustomButtonWidget(
-                                              backgroundColor: !requestSubmitted
-                                                  ? Theme.of(context)
-                                                      .primaryColor
-                                                  : Theme.of(context)
-                                                      .primaryColor
-                                                      .withOpacity(0.4),
-                                              isLoading:
-                                                  profileProvider.isLoading,
-                                              btnTxt: getTranslated(
-                                                !requestSubmitted
-                                                    ? 'update'
-                                                    : 'request_submitted',
-                                                context,
                                               ),
-                                              onTap: !requestSubmitted
-                                                  ? () => _updateProfile(
-                                                      profileProvider)
-                                                  : null,
+                                              overflow: TextOverflow.ellipsis,
                                             ),
-                                          ),
-                                        ),
+                                            CustomTextFieldWidget(
+                                              controller: _aboutMeController,
+                                              maxLines: 5,
+                                              capitalization:
+                                                  TextCapitalization.sentences,
+                                              hintText: getTranslated(
+                                                  'personalize_your_profile',
+                                                  context),
+                                              fillColor:
+                                                  Theme.of(context).cardColor,
+                                              isShowBorder: true,
+                                              borderColor: Theme.of(context)
+                                                  .hintColor
+                                                  .withOpacity(0.5),
+                                            ),
+                                          ],
+                                        ],
                                       ),
-                                    ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+
+                                // Update Button
+                                SafeArea(
+                                  child: Center(
+                                    child: Container(
+                                      width: width > 700 ? 700 : width,
+                                      padding: const EdgeInsets.all(
+                                          Dimensions.paddingSizeSmall),
+                                      child: CustomButtonWidget(
+                                        backgroundColor: !requestSubmitted
+                                            ? Theme.of(context).primaryColor
+                                            : Theme.of(context)
+                                                .primaryColor
+                                                .withOpacity(0.4),
+                                        isLoading: profileProvider.isLoading,
+                                        btnTxt: getTranslated(
+                                          !requestSubmitted
+                                              ? 'update'
+                                              : 'request_submitted',
+                                          context,
+                                        ),
+                                        onTap: !requestSubmitted
+                                            ? () =>
+                                                _updateProfile(profileProvider)
+                                            : null,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        )
-                      : const ProfileShimmerWidget();
-                },
-              ),
-            )
-      ,
+                        ),
+                      ],
+                    ),
+                  )
+                : const ProfileShimmerWidget();
+          },
+        ),
+      ),
     );
   }
 }

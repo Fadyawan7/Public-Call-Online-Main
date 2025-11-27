@@ -85,7 +85,7 @@ class _ReleventCategoriesState extends State<ReleventCategories> {
                               image: DecorationImage(
                                   fit: BoxFit.cover,
                                   image: NetworkImage(
-                                      freelancer.categoryIcon.toString()))),
+                                      freelancer.cover_picture.toString()))),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(12.0),

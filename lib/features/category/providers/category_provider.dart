@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/enums/data_source_enum.dart';
 import 'package:flutter_restaurant/common/models/api_response_model.dart';
+import 'package:flutter_restaurant/common/models/category_model_response.dart';
 import 'package:flutter_restaurant/common/models/product_model.dart';
 import 'package:flutter_restaurant/common/providers/data_sync_provider.dart';
 import 'package:flutter_restaurant/data/datasource/local/cache_response.dart';
@@ -16,7 +17,7 @@ class CategoryProvider extends DataSyncProvider {
 
   CategoryProvider({required this.categoryRepo});
 
-  List<CategoryModel>? _categoryList;
+  List<OnlyCategoryModel>? _categoryList;
     List<CategoryModel>? _servicesList;
 
   List<CategoryModel>? _subCategoryList;
@@ -26,7 +27,7 @@ class CategoryProvider extends DataSyncProvider {
   bool _isLoading = false;
   String? _selectedSubCategoryId;
 
-  List<CategoryModel>? get categoryList => _categoryList;
+  List<OnlyCategoryModel>? get categoryList => _categoryList;
     List<CategoryModel>? get servicesList => _servicesList;
 
   List<CategoryModel>? get subCategoryList => _subCategoryList;
@@ -56,7 +57,7 @@ class CategoryProvider extends DataSyncProvider {
 
           if (extractedData is List) {
             for (var category in extractedData) {
-              _categoryList!.add(CategoryModel.fromJson(category));
+              _categoryList!.add(OnlyCategoryModel.fromJson(category));
             }
           } else {
             debugPrint(

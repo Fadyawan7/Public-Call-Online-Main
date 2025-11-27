@@ -7,41 +7,30 @@ class HomeScreenRepo {
   final DioClient? dioClient;
   HomeScreenRepo({this.dioClient});
 
+  Future<ApiResponseModel> freelanceCategory([int? categoryId]) async {
+    try {
+      String url = AppConstants.frelanceCategoryUri;
 
+      // ✅ If categoryId is provided, append it
+      if (categoryId != null) {
+        url = '$url?id=$categoryId';
+      }
 
-Future<ApiResponseModel> freelanceCategory([int? categoryId]) async {
-  try {
-    String url = AppConstants.frelanceCategoryUri;
-
-    // ✅ If categoryId is provided, append it
-    if (categoryId != null) {
-      url = '$url$categoryId';
+      final response = await dioClient!.get(url);
+      return ApiResponseModel.withSuccess(response);
+    } catch (e) {
+      return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
     }
-
-    final response = await dioClient!.get(url);
-    return ApiResponseModel.withSuccess(response);
-  } catch (e) {
-    return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
   }
-}
 
-
-
-
-
-Future<ApiResponseModel> freelanceAllCategory() async {
-  try {
-    final response = await dioClient!.get(
-      AppConstants.allFreelances,
-    );
-    return ApiResponseModel.withSuccess(response);
-  } catch (e) {
-    return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
+  Future<ApiResponseModel> freelanceAllCategory() async {
+    try {
+      final response = await dioClient!.get(
+        AppConstants.allFreelances,
+      );
+      return ApiResponseModel.withSuccess(response);
+    } catch (e) {
+      return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
+    }
   }
-}
-
-
-
-
-
 }

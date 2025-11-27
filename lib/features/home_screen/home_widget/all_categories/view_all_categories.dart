@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_restaurant/common/models/category_model_response.dart';
 import 'package:flutter_restaurant/common/widgets/custom_app_bar_widget.dart';
 import 'package:flutter_restaurant/features/category/domain/category_model.dart';
+import 'package:flutter_restaurant/features/home_screen/home_widget/relevant_category/relevant_categories.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/utill/images.dart';
 
 class AllCategories extends StatefulWidget {
-  final List<CategoryModel> allCategories;
+  final List<OnlyCategoryModel> allCategories;
 
   const AllCategories({super.key, required this.allCategories});
 
@@ -14,7 +16,7 @@ class AllCategories extends StatefulWidget {
 }
 
 class _AllCategoriesState extends State<AllCategories> {
-  late List<CategoryModel> categories;
+  late List<OnlyCategoryModel> categories;
 
   @override
   void initState() {
@@ -42,34 +44,46 @@ class _AllCategoriesState extends State<AllCategories> {
           ),
           itemBuilder: (context, index) {
             final category = categories[index];
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Column(
-                children: [
-                  CircleAvatar(
-                    radius: 30,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(30),
-                      child: Image.network(
-                        category.image ?? '',
-                        width: 40,
-                        height: 40,
-                        fit: BoxFit.cover,
-                        color: Colors.white,
-                        errorBuilder: (context, _, __) =>
-                            const Icon(Icons.image_not_supported),
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ReleventCategories(
+                            categoryId: category.id ?? 0,
+                            title: category.name,
+                          )),
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Column(
+                  children: [
+                    CircleAvatar(
+                      radius: 30,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(30),
+                        child: Image.network(
+                          category.iconUrl ?? '',
+                          width: 40,
+                          height: 40,
+                          fit: BoxFit.cover,
+                          //   color: Colors.white,
+                          errorBuilder: (context, _, __) =>
+                              const Icon(Icons.image_not_supported),
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    category.name ?? '',
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 14),
-                  ),
-                ],
+                    const SizedBox(height: 8),
+                    Text(
+                      category.name ?? '',
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                  ],
+                ),
               ),
             );
           },

@@ -44,9 +44,9 @@ class FreelancerRepo {
     }
   }
 
-  Future<ApiResponseModel> searchFreelancer(String text) async {
+  Future<ApiResponseModel> searchFreelancer(String text, ) async {
     try {
-      final response = await dioClient!.get('${AppConstants.freelancerListUri}?keyword=$text');
+      final response = await dioClient!.get('${AppConstants.frelanceCategoryUri}?categoryName=$text');
       return ApiResponseModel.withSuccess(response);
     } catch (e) {
       return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));

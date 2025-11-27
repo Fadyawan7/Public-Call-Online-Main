@@ -16,27 +16,31 @@ import 'package:provider/provider.dart';
 class FreelancerSearchDialogWidget extends StatefulWidget {
   final GoogleMapController? mapController;
   final EdgeInsets? margin;
-  const FreelancerSearchDialogWidget({super.key, required this.mapController, this.margin});
-
+  const FreelancerSearchDialogWidget(
+      {super.key, required this.mapController, this.margin});
 
   @override
-  State<FreelancerSearchDialogWidget> createState() => _FreelancerSearchDialogWidgetState();
+  State<FreelancerSearchDialogWidget> createState() =>
+      _FreelancerSearchDialogWidgetState();
 }
 
-class _FreelancerSearchDialogWidgetState extends State<FreelancerSearchDialogWidget> {
+class _FreelancerSearchDialogWidgetState
+    extends State<FreelancerSearchDialogWidget> {
   @override
   Widget build(BuildContext context) {
-    final FreelancerProvider freelancerProvider = Provider.of<FreelancerProvider>(context, listen: false);
+    final FreelancerProvider freelancerProvider =
+        Provider.of<FreelancerProvider>(context, listen: false);
 
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
       ),
-      margin: widget.margin ?? const EdgeInsets.only(
-        top: 75,
-        right: Dimensions.paddingSizeSmall,
-        left: Dimensions.paddingSizeSmall,
-      ),
+      margin: widget.margin ??
+          const EdgeInsets.only(
+            top: 75,
+            right: Dimensions.paddingSizeSmall,
+            left: Dimensions.paddingSizeSmall,
+          ),
       alignment: Alignment.topCenter,
       child: SizedBox(
         width: 650,
@@ -46,9 +50,14 @@ class _FreelancerSearchDialogWidgetState extends State<FreelancerSearchDialogWid
             FocusScope.of(context).unfocus(); // Close the keyboard
             Navigator.pop(context); // Close the dialog
           },
-          behavior: HitTestBehavior.opaque, // Ensure the GestureDetector captures taps
+          behavior: HitTestBehavior.opaque,
           child: TypeAheadField<FreelancerModel>(
-            suggestionsCallback: (pattern) async => await freelancerProvider.searchFreelancer(context, pattern),
+            suggestionsCallback: (pattern) async =>
+                await freelancerProvider.searchFreelancer(context, pattern),
+            hideOnEmpty: false, // text empty hote bhi show kare
+            hideOnUnfocus: false, // focus lose hone par bhi show kare
+            hideWithKeyboard: false, // keyboard close par bhi show kare
+            retainOnLoading: true,
             builder: (context, controller, focusNode) => TextField(
               controller: controller,
               focusNode: focusNode,
@@ -60,37 +69,52 @@ class _FreelancerSearchDialogWidgetState extends State<FreelancerSearchDialogWid
                 hintText: getTranslated('search_freelancer', context),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(style: BorderStyle.none, width: 0),
+                  borderSide:
+                      const BorderSide(style: BorderStyle.none, width: 0),
                 ),
                 hintStyle: Theme.of(context).textTheme.displayMedium!.copyWith(
-                  fontSize: Dimensions.fontSizeDefault,
-                  color: Theme.of(context).disabledColor,
-                ),
+                      fontSize: Dimensions.fontSizeDefault,
+                      color: Theme.of(context).disabledColor,
+                    ),
                 filled: true,
                 fillColor: Theme.of(context).cardColor,
               ),
               style: Theme.of(context).textTheme.displayMedium!.copyWith(
-                color: Theme.of(context).textTheme.bodyLarge!.color,
-                fontSize: Dimensions.fontSizeLarge,
-              ),
+                    color: Theme.of(context).textTheme.bodyLarge!.color,
+                    fontSize: Dimensions.fontSizeLarge,
+                  ),
+              onSubmitted: (value) async {
+                if (value.isNotEmpty) {
+                  final results =
+                      await freelancerProvider.searchFreelancer(context, value);
+
+                  // Update markers list
+                  freelancerProvider.updateFreelancerList(results);
+
+                  // Let the TypeAheadField handle hiding dropdown automatically
+                }
+              },
             ),
-            itemBuilder: (context, suggestion) => SearchItemWidget(suggestion: suggestion),
+            itemBuilder: (context, suggestion) =>
+                SearchItemWidget(suggestion: suggestion),
             onSelected: (FreelancerModel suggestion) async {
               freelancerProvider.setSelectedFreelancer(freelancer: suggestion);
               await showModalBottomSheet(
                 backgroundColor: Theme.of(context).canvasColor,
                 context: context,
                 isScrollControlled: true,
-                isDismissible: true, // Allow dismissing the bottom sheet by tapping outside
+                isDismissible:
+                    true, // Allow dismissing the bottom sheet by tapping outside
                 showDragHandle: true,
                 useSafeArea: true,
                 builder: (BuildContext context) {
                   return FreelancerDetailsBottomSheet(freelancer: suggestion);
                 },
               );
-              Navigator.pop(context); // Close the search dialog after selecting a freelancer
+              Navigator.pop(context);
             },
-            loadingBuilder: (context) => CustomLoaderWidget(color: Theme.of(context).primaryColor),
+            loadingBuilder: (context) =>
+                CustomLoaderWidget(color: Theme.of(context).primaryColor),
             errorBuilder: (context, error) => const SearchItemWidget(),
             emptyBuilder: (context) => const SearchItemWidget(),
           ),

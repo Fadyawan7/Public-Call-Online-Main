@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/models/api_response_model.dart';
 
@@ -7,6 +9,7 @@ import 'package:flutter_restaurant/features/freelancer/domain/models/freelancer_
 import 'package:flutter_restaurant/features/freelancer/domain/reposotories/freelancer_repo.dart';
 import 'package:flutter_restaurant/helper/api_checker_helper.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart' as http;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -47,9 +50,10 @@ class FreelancerProvider extends ChangeNotifier {
     try {
       final ApiResponseModel apiResponse =
           await freelancerRepo!.getFreelancerList(categoryId: categoryId);
+      final responseData = apiResponse.response!.data;
 
-      if (apiResponse.response?.statusCode == 200) {
-        _freelancerList = (apiResponse.response!.data as List)
+      if (responseData["status"] == true) {
+        _freelancerList = (responseData["data"] as List)
             .map((freelancer) => FreelancerModel.fromJson(freelancer))
             .toList();
       } else {
@@ -81,26 +85,34 @@ class FreelancerProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateFreelancerList(List<FreelancerModel> list) {
+    _freelancerList = list;
+    notifyListeners();
+  }
+
   Future<List<FreelancerModel>> searchFreelancer(
-      BuildContext context, String text) async {
+    BuildContext context,
+    String text,
+  ) async {
+    _predictionList = [];
+
     if (text.isNotEmpty) {
       ApiResponseModel apiResponse =
           await freelancerRepo!.searchFreelancer(text);
 
       if (apiResponse.response != null &&
           apiResponse.response!.statusCode == 200) {
-        _predictionList = [];
-        apiResponse.response!.data.forEach((freelancer) {
-          FreelancerModel freelancerModel =
-              FreelancerModel.fromJson(freelancer);
-          freelancerModel = FreelancerModel.fromJson(freelancer);
+        final List<dynamic> freelancers =
+            apiResponse.response!.data['data'] ?? [];
 
-          _predictionList.add(freelancerModel);
-        });
+        _predictionList = freelancers
+            .map((freelancerJson) => FreelancerModel.fromJson(freelancerJson))
+            .toList();
       } else {
         ApiCheckerHelper.checkApi(apiResponse);
       }
     }
+
     return _predictionList;
   }
 
@@ -176,5 +188,49 @@ class FreelancerProvider extends ChangeNotifier {
       endLatLng.latitude,
       endLatLng.longitude,
     );
+  }
+
+  Future<BitmapDescriptor> createMarkerFromNetworkImage(String imageUrl) async {
+    // 1. Load image from network
+    final response = await http.get(Uri.parse(imageUrl));
+    final bytes = response.bodyBytes;
+
+    // 2. Decode image with target width
+    final codec = await ui.instantiateImageCodec(
+      bytes,
+      targetWidth: 70, // <-- width in pixels
+    );
+    final frame = await codec.getNextFrame();
+    final image = frame.image;
+
+    // 3. Create a circular canvas
+    final recorder = ui.PictureRecorder();
+    final canvas = Canvas(recorder);
+
+    final paint = Paint();
+    final size = 70.0; // width & height
+    final rect = Rect.fromLTWH(0, 0, size, size);
+    final radius = size / 2;
+
+    // Draw circular clip
+    canvas.clipPath(Path()..addOval(rect));
+
+    // Draw image into circular canvas
+    paint.isAntiAlias = true;
+    canvas.drawImageRect(
+      image,
+      Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()),
+      rect,
+      paint,
+    );
+
+    // 4. Convert canvas to bytes
+    final picture = recorder.endRecording();
+    final img = await picture.toImage(size.toInt(), size.toInt());
+    final byteData = await img.toByteData(format: ui.ImageByteFormat.png);
+    final bitmap = byteData!.buffer.asUint8List();
+
+    // 5. Create BitmapDescriptor
+    return BitmapDescriptor.fromBytes(bitmap);
   }
 }

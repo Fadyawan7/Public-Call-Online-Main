@@ -1,17 +1,13 @@
 
-import 'dart:io';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_restaurant/common/models/response_model.dart';
+import 'package:flutter_restaurant/common/models/category_model_response.dart';
 import 'package:flutter_restaurant/common/widgets/custom_app_bar_widget.dart';
-import 'package:flutter_restaurant/common/widgets/custom_asset_image_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_button_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_image_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_text_field_widget.dart';
 import 'package:flutter_restaurant/common/widgets/not_logged_in_widget.dart';
 import 'package:flutter_restaurant/features/apply_freelancer/domain/models/apply_freelancer_model.dart';
-import 'package:flutter_restaurant/features/auth/domain/enum/auth_enum.dart';
-import 'package:flutter_restaurant/features/auth/domain/models/signup_model.dart';
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/features/category/domain/category_model.dart';
 import 'package:flutter_restaurant/features/category/providers/category_provider.dart';
@@ -21,7 +17,6 @@ import 'package:flutter_restaurant/features/profile/providers/profile_provider.d
 import 'package:flutter_restaurant/features/profile/widgets/profile_custom_painter_widget.dart';
 import 'package:flutter_restaurant/features/profile/widgets/profile_shimmer_widget.dart';
 import 'package:flutter_restaurant/features/profile/widgets/profile_textfield_widget.dart';
-import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
 import 'package:flutter_restaurant/helper/custom_snackbar_helper.dart';
 import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/helper/router_helper.dart';
@@ -31,7 +26,6 @@ import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class  ApplyFreelancerScreen extends StatefulWidget {
@@ -202,7 +196,7 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
                               ),
                               selectedItemBuilder: (BuildContext context) {
                                 return categoryProvider.categoryList!
-                                    .map((CategoryModel category) {
+                                    .map((OnlyCategoryModel category) {
                                   return Row(
                                     children: [
                                       Text(
@@ -223,7 +217,7 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
                                 }).toList();
                               },
 
-                              items: categoryProvider.categoryList!.map((CategoryModel category) => DropdownMenuItem<String>(
+                              items: categoryProvider.categoryList!.map((OnlyCategoryModel category) => DropdownMenuItem<String>(
                                 value: category.id.toString(),
                                 child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
 
@@ -236,7 +230,7 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
                                     height: 30,
                                     width: 30,
                                     placeholder: Images.categoryBanner, fit: BoxFit.cover,
-                                    image: '${category.image}',
+                                    image: '${category.iconUrl}',
                                   ),
 
                                 ]),
@@ -275,7 +269,7 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
                                   ),
                                 ),
                                 searchMatchFn: (item, searchValue) {
-                                  CategoryModel category = categoryProvider.categoryList!
+                                  OnlyCategoryModel category = categoryProvider.categoryList!
                                       .firstWhere((element) => element.id.toString() == item.value);
                                   return category.name?.toLowerCase().contains(searchValue.toLowerCase()) ?? false;
                                 },

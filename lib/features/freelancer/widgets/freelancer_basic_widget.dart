@@ -63,10 +63,10 @@ class FreelancerBasicInfo extends StatelessWidget {
               const SizedBox(
                   width: Dimensions.paddingSizeExtraSmall),
               Text(
-                freelancer.status!.toCapitalized(),
+                freelancer.status?.toCapitalized() ?? '',
                 style: rubikBold.copyWith(
                   fontSize: Dimensions.fontSizeDefault,
-                  color: freelancer.status! == 'busy'
+                  color: freelancer.status == 'busy'
                       ? Colors.red
                       : Theme.of(context).secondaryHeaderColor,
                 ),

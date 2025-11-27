@@ -11,7 +11,7 @@ class AppConstants {
 
   static const String categoryUri = '/api/freelancers/categories';
   static const String frelanceCategoryUri =
-      '/api/freelancers/categories/freelancer?id=';
+      '/api/freelancers/categories/freelancer';
   static const String allFreelances =
       '/api/freelancers/categories/freelancer/rating';
   static const String bannerUri = '/api/banner';

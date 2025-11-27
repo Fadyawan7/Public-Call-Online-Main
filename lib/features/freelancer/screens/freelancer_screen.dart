@@ -28,12 +28,12 @@ class FreelancerScreen extends StatefulWidget {
 
 class _FreelancerScreenState extends State<FreelancerScreen>
     with TickerProviderStateMixin {
-  LatLng bahrainCountryLatLong = const LatLng(26.201000, 50.606998);
+  LatLng bahrainCountryLatLong = const LatLng(30.81029000, 73.45155000);
   final FreelancerProvider freelancerProvider =
       Provider.of<FreelancerProvider>(Get.context!, listen: false);
 
   final ProfileProvider profileProvider =
-  Provider.of<ProfileProvider>(Get.context!, listen: false);
+      Provider.of<ProfileProvider>(Get.context!, listen: false);
   final List<String> categories = [
     'Technology',
     'Design',
@@ -49,73 +49,93 @@ class _FreelancerScreenState extends State<FreelancerScreen>
   BitmapDescriptor busyIcon = BitmapDescriptor.defaultMarker;
 
   BitmapDescriptor selectedIcon = BitmapDescriptor.defaultMarker;
-
-  void freelancerAvailableMarker() {
-    BitmapDescriptor.asset(ImageConfiguration(), "assets/icon/darkgreen.png")
-        .then((icon) {
-      setState(() {
-        availableIcon = icon;
-      });
-    });
+   BitmapDescriptor? userMarker;
+  void freelancerAvailableMarker() async {
+    availableIcon = await BitmapDescriptor.fromAssetImage(
+        const ImageConfiguration(), "assets/icon/darkgreen.png");
+    setState(() {});
   }
 
-  void freelancerBusyMarker() {
-    BitmapDescriptor.asset(ImageConfiguration(), "assets/icon/reddot.png")
-        .then((icon) {
-      setState(() {
-        busyIcon = icon;
-      });
-    });
+  void freelancerBusyMarker() async {
+    busyIcon = await BitmapDescriptor.fromAssetImage(
+        const ImageConfiguration(), "assets/icon/reddot.png");
+    setState(() {});
   }
 
-  void selectedMarker() {
-    BitmapDescriptor.asset(
-            ImageConfiguration(
-              size: const Size(20, 30),
-            ),
-            "assets/icon/marker.png")
-        .then((icon) {
-      setState(() {
-        selectedIcon = icon;
-      });
-    });
+  void selectedMarker() async {
+    selectedIcon = await BitmapDescriptor.fromAssetImage(
+        const ImageConfiguration(size: Size(20, 30)), "assets/icon/marker.png");
+    setState(() {});
   }
 
+  void selectetImage(String image) async {
+    selectedIcon = await BitmapDescriptor.fromAssetImage(
+        const ImageConfiguration(size: Size(20, 30)), image);
+    setState(() {});
+  }
+
+  Future<void> loadMarkers() async {
+    availableIcon = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(), "assets/icon/darkgreen.png");
+
+    busyIcon = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(), "assets/icon/reddot.png");
+
+    selectedIcon = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(size: Size(20, 30)), "assets/icon/marker.png");
+
+    setState(() {}); // <- important
+  }
+Future<void> _loadUserMarker() async {
+    userMarker = await freelancerProvider.createMarkerFromNetworkImage( freelancerProvider.freelancerList?.first.image ?? '');
+    setState(() {}); 
+  
+}
   @override
-  void initState() {
-
+  void initState()  {
     freelancerProvider.getFreelancerList();
     profileProvider.getUserInfo(true);
 
     freelancerAvailableMarker();
     freelancerBusyMarker();
-
+    loadMarkers();
     selectedMarker();
+_loadUserMarker();
     super.initState();
   }
 
   @override
   void dispose() {
     super.dispose();
-    googleMapController!.dispose();
+    googleMapController?.dispose();
+  }
 
+  void _openSearchDialog(
+      BuildContext context, GoogleMapController? mapController) async {
+    showDialog(
+        context: context,
+        builder: (context) =>
+            FreelancerSearchDialogWidget(mapController: mapController));
   }
-  void _openSearchDialog(BuildContext context, GoogleMapController? mapController) async {
-    showDialog(context: context, builder: (context) => FreelancerSearchDialogWidget(mapController: mapController));
-  }
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      appBar:  CustomAppBarWidget(
+      appBar: CustomAppBarWidget(
         isBackButtonExist: false,
         titleColor: Colors.white,
         context: context,
         title: getTranslated('Worker', context),
         actionView: IconButton(
-          icon: const Icon(Iconsax.add_circle, color: Colors.white,size: Dimensions.fontSizeDefault * 2,),
+          icon: const Icon(
+            Iconsax.add_circle,
+            color: Colors.white,
+            size: Dimensions.fontSizeDefault * 2,
+          ),
           onPressed: () => {
-            profileProvider.isFreelancer! ?   RouterHelper.getFreelancerPortfolioListRoute(): RouterHelper.getApplyFreelancerRoute()
+            profileProvider.isFreelancer!
+                ? RouterHelper.getFreelancerPortfolioListRoute()
+                : RouterHelper.getApplyFreelancerRoute()
           },
         ),
       ),
@@ -123,69 +143,61 @@ class _FreelancerScreenState extends State<FreelancerScreen>
         children: [
           Consumer<FreelancerProvider>(
             builder: (context, freelancerProvider, child) {
-              final freelancerMarker =
-                  freelancerProvider.freelancerList?.map((freelancer) {
-                        final markerIcon = freelancer.status == 'available'
-                                    ? availableIcon
-                                : busyIcon;
+              final Set<Marker> markers =
+                  (freelancerProvider.freelancerList ?? []).map((freelancer) {
+                final markerIcon =
+                    freelancer.status == 'available' ? availableIcon : busyIcon;
 
-                        return Marker(
-                          icon: markerIcon,
-                          markerId: MarkerId(freelancer.id.toString()),
-                          position: LatLng(
-                            double.parse(freelancer.latitude.toString()),
-                            double.parse(freelancer.longitude.toString()),
-                          ),
-                          onTap: () async {
-                            freelancerProvider.setSelectedFreelancer(
-                                freelancer: freelancer);
-                            await showModalBottomSheet(
-                              backgroundColor: Theme.of(context).canvasColor,
-                              context: context,
-                              isScrollControlled: true,
-                              isDismissible: true,
-                              showDragHandle: true,
-                              useSafeArea: true,
-                              builder: (BuildContext context) {
-                                return FreelancerDetailsBottomSheet(
-                                  freelancer: freelancer,
-                                );
-                              },
-                            );
-                          },
-                        );
-                      }).toList() ??
-                      <Marker>[];
+                return Marker(
+                  markerId: MarkerId(freelancer.id.toString()),
+                  icon: userMarker ??  BitmapDescriptor.defaultMarkerWithHue(
+                      BitmapDescriptor.hueAzure), // <- default icon
+                  infoWindow: InfoWindow(
+                    snippet: freelancer.freelancerCategory,
+                    title: freelancer.name,
+                  ), // <- added info window
+                  position: LatLng(
+                    double.parse(freelancer.latitude.toString()),
+                    double.parse(freelancer.longitude.toString()),
+                  ),
+                  onTap: () async {
+                    freelancerProvider.setSelectedFreelancer(
+                        freelancer: freelancer);
+                    await showModalBottomSheet(
+                      backgroundColor: Theme.of(context).canvasColor,
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (_) => FreelancerDetailsBottomSheet(
+                        freelancer: freelancer,
+                      ),
+                    );
+                  },
+                );
+              }).toSet();
+
               return GoogleMap(
                 mapType: MapType.normal,
                 initialCameraPosition: CameraPosition(
                   target: bahrainCountryLatLong,
                   zoom: 11,
                 ),
-                markers: freelancerMarker.toSet(),
-                onMapCreated: (GoogleMapController c) {
-                  googleMapController = c;
-                  _customInfoWindowController.googleMapController = c;
+                markers: markers, // <- updated markers here
+                onMapCreated: (controller) {
+                  googleMapController = controller;
+                  _customInfoWindowController.googleMapController = controller;
                 },
                 myLocationEnabled: false,
                 zoomControlsEnabled: false,
                 compassEnabled: false,
                 myLocationButtonEnabled: false,
-                onTap: (v) {
-                  _customInfoWindowController.hideInfoWindow?.call();
-                },
-                onCameraMove: (v) {
-                  _customInfoWindowController.onCameraMove?.call();
-                },
+                onTap: (_) =>
+                    _customInfoWindowController.hideInfoWindow?.call(),
+                onCameraMove: (_) =>
+                    _customInfoWindowController.onCameraMove?.call(),
               );
             },
           ),
-        
-        
-        
           CustomInfoWindow(
-
-            
             controller: _customInfoWindowController,
             height: 100,
             width: 250,
@@ -195,36 +207,43 @@ class _FreelancerScreenState extends State<FreelancerScreen>
             onTap: () => _openSearchDialog(context, googleMapController),
             child: Container(
               width: MediaQuery.of(context).size.width,
-              padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge, vertical: 18.0),
-              margin: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge, vertical: 23.0),
-              decoration: BoxDecoration(color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.paddingSizeSmall)),
-              child: Builder(
-                  builder: (context) {
-
-                    return  Row(children: [
-                      Expanded(child: Text(
-                           'search worker...'
-                          , maxLines: 1, overflow: TextOverflow.ellipsis,style: rubikRegular.copyWith(
-                        fontSize:
-                        Dimensions.paddingSizeDefault,
-                      ),)),
-                       const Icon(Icons.search, size: 25),
-                       const SizedBox(width: Dimensions.paddingSizeSmall,),
-                      FilterButton(
-                        categories: categories,
-                        initiallySelected: ['Tech', 'Design'],
-                        onFilterApplied: (selected) {
-                          // Handle selected categories
-                        },
-                      )
-                       // GestureDetector(
-                       //   onTap: () async {
-                       //
-                       //   },
-                       //     child: const Icon(Icons.filter_alt_outlined, size: 25)),
-                    ]);
-                  }
-              ),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: Dimensions.paddingSizeLarge, vertical: 18.0),
+              margin: const EdgeInsets.symmetric(
+                  horizontal: Dimensions.paddingSizeLarge, vertical: 23.0),
+              decoration: BoxDecoration(
+                  color: Theme.of(context).cardColor,
+                  borderRadius:
+                      BorderRadius.circular(Dimensions.paddingSizeSmall)),
+              child: Builder(builder: (context) {
+                return Row(children: [
+                  Expanded(
+                      child: Text(
+                    'search worker...',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: rubikRegular.copyWith(
+                      fontSize: Dimensions.paddingSizeDefault,
+                    ),
+                  )),
+                  const Icon(Icons.search, size: 25),
+                  const SizedBox(
+                    width: Dimensions.paddingSizeSmall,
+                  ),
+                  FilterButton(
+                    categories: categories,
+                    initiallySelected: ['Tech', 'Design'],
+                    onFilterApplied: (selected) {
+                      // Handle selected categories
+                    },
+                  )
+                  // GestureDetector(
+                  //   onTap: () async {
+                  //
+                  //   },
+                  //     child: const Icon(Icons.filter_alt_outlined, size: 25)),
+                ]);
+              }),
             ),
           )
         ],

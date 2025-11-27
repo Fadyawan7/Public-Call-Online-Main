@@ -6,6 +6,7 @@ class FreelancerCategoryResponse {
   String? categoryName;
   String? categoryIcon;
   int? rating;
+  String? cover_picture;
 
   FreelancerCategoryResponse({
     this.freelancerId,
@@ -15,6 +16,7 @@ class FreelancerCategoryResponse {
     this.categoryName,
     this.categoryIcon,
     this.rating,
+    this.cover_picture,
   });
 
   factory FreelancerCategoryResponse.fromJson(Map<String, dynamic> json) {
@@ -26,6 +28,7 @@ class FreelancerCategoryResponse {
       categoryName: json['category_name'],
       categoryIcon: json['category_icon'],
       rating: json['rating'],
+      cover_picture: json['cover_picture'],
     );
   }
 
@@ -37,5 +40,6 @@ class FreelancerCategoryResponse {
         'category_name': categoryName,
         'category_icon': categoryIcon,
         'rating': rating,
+        'cover_picture': cover_picture,
       };
 }

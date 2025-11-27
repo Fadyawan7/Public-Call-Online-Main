@@ -128,8 +128,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             _categorySection(context),
                             const SizedBox(height: 20),
                             _featuredSection(),
-                            const SizedBox(height: 25),
-                            _servicesSection(),
+                            const SizedBox(height: 5),
+                            //  _servicesSection(),
                           ],
                         ),
                       ),
@@ -285,7 +285,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Categories",
+                Text("Services Categories ",
                     style:
                         TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 GestureDetector(
@@ -340,11 +340,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(30),
                               child: Image.network(
-                                category.image ?? '',
+                                category.iconUrl.toString() ?? '',
                                 width: 40,
                                 height: 40,
                                 fit: BoxFit.cover,
-                                color: isSelected ? Colors.white : Colors.black,
+                                //  color: isSelected ? Colors.white : Colors.black,
                                 errorBuilder: (context, _, __) =>
                                     const Icon(Icons.image_not_supported),
                               ),
@@ -463,7 +463,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 image: DecorationImage(
                                   fit: BoxFit.cover,
                                   image: NetworkImage(
-                                    freelancer.categoryIcon.toString(),
+                                    freelancer.cover_picture.toString(),
                                   ),
                                 ),
                               ),
@@ -530,270 +530,270 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // 🔹 SERVICES SECTION
-  Widget _servicesSection() {
-    List<Map<String, String>> services = [
-      {
-        "image": Images.bannerhome1,
-        "title": "AC Filter Cleaning",
-        "price": "\$15.00",
-        "tag": "CLEANING"
-      },
-      {
-        "image": Images.bannerhome2,
-        "title": "Full Sanitization",
-        "price": "\$43.00",
-        "tag": "SANITIZATION"
-      },
-    ];
+  // Widget _servicesSection() {
+  //   List<Map<String, String>> services = [
+  //     {
+  //       "image": Images.bannerhome1,
+  //       "title": "AC Filter Cleaning",
+  //       "price": "\$15.00",
+  //       "tag": "CLEANING"
+  //     },
+  //     {
+  //       "image": Images.bannerhome2,
+  //       "title": "Full Sanitization",
+  //       "price": "\$43.00",
+  //       "tag": "SANITIZATION"
+  //     },
+  //   ];
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text("Services",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AllServicesCategories(
-                        title: 'Services',
-                      ),
-                    ));
-              },
-              child: Text("View All",
-                  style: TextStyle(fontSize: 15, color: Colors.grey)),
-            ),
-          ],
-        ),
-        const SizedBox(height: 10),
-        Consumer<CategoryProvider>(
-          builder: (context, categoryProvider, child) {
-            final categories = categoryProvider.categoryList;
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Row(
+  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //         children: [
+  //           Text("Services",
+  //               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+  //           GestureDetector(
+  //             onTap: () {
+  //               Navigator.push(
+  //                   context,
+  //                   MaterialPageRoute(
+  //                     builder: (context) => AllServicesCategories(
+  //                       title: 'Services',
+  //                     ),
+  //                   ));
+  //             },
+  //             child: Text("View All",
+  //                 style: TextStyle(fontSize: 15, color: Colors.grey)),
+  //           ),
+  //         ],
+  //       ),
+  //       const SizedBox(height: 10),
+  //       Consumer<CategoryProvider>(
+  //         builder: (context, categoryProvider, child) {
+  //           final categories = categoryProvider.categoryList;
 
-            if (categories == null || categoryProvider.isLoading) {
-              return const SizedBox.shrink();
-            }
+  //           if (categories == null || categoryProvider.isLoading) {
+  //             return const SizedBox.shrink();
+  //           }
 
-            return SizedBox(
-              height: 260,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: categories.length,
-                itemBuilder: (context, index) {
-                  final category = categories[index];
+  //           return SizedBox(
+  //             height: 260,
+  //             child: ListView.builder(
+  //               scrollDirection: Axis.horizontal,
+  //               itemCount: categories.length,
+  //               itemBuilder: (context, index) {
+  //                 final category = categories[index];
 
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ReleventCategories(
-                                  categoryId: category.id ?? 0,
-                                  title: category.name,
-                                )),
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: Container(
-                        width: 220,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          color: Colors.grey[100],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              height: 150,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(16),
-                                  topRight: Radius.circular(16),
-                                ),
-                                image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: NetworkImage(
-                                    category.image.toString(),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: List.generate(
-                                      5, // Always show 5 stars
-                                      (i) => Icon(
-                                        i < (category.totalReviews ?? 0)
-                                            ? Icons.star
-                                            : Icons.star_border,
-                                        size: 16,
-                                        color: Colors.orange,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    category.name.toString(),
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Row(
-                                    children: [
-                                      CircleAvatar(
-                                        radius: 16,
-                                        backgroundImage: NetworkImage(
-                                          category.image.toString(),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Expanded(
-                                        child: Text(
-                                          category.name.toString(),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            );
-          },
-        )
+  //                 return GestureDetector(
+  //                   onTap: () {
+  //                     Navigator.push(
+  //                       context,
+  //                       MaterialPageRoute(
+  //                           builder: (context) => ReleventCategories(
+  //                                 categoryId: category.id ?? 0,
+  //                                 title: category.name,
+  //                               )),
+  //                     );
+  //                   },
+  //                   child: Padding(
+  //                     padding: const EdgeInsets.symmetric(horizontal: 8),
+  //                     child: Container(
+  //                       width: 220,
+  //                       decoration: BoxDecoration(
+  //                         borderRadius: BorderRadius.circular(16),
+  //                         color: Colors.grey[100],
+  //                       ),
+  //                       child: Column(
+  //                         crossAxisAlignment: CrossAxisAlignment.start,
+  //                         children: [
+  //                           Container(
+  //                             height: 150,
+  //                             width: double.infinity,
+  //                             decoration: BoxDecoration(
+  //                               borderRadius: const BorderRadius.only(
+  //                                 topLeft: Radius.circular(16),
+  //                                 topRight: Radius.circular(16),
+  //                               ),
+  //                               image: DecorationImage(
+  //                                 fit: BoxFit.cover,
+  //                                 image: NetworkImage(
+  //                                   category.image.toString(),
+  //                                 ),
+  //                               ),
+  //                             ),
+  //                           ),
+  //                           Padding(
+  //                             padding: const EdgeInsets.all(12.0),
+  //                             child: Column(
+  //                               crossAxisAlignment: CrossAxisAlignment.start,
+  //                               children: [
+  //                                 Row(
+  //                                   mainAxisSize: MainAxisSize.min,
+  //                                   children: List.generate(
+  //                                     5, // Always show 5 stars
+  //                                     (i) => Icon(
+  //                                       i < (category.totalReviews ?? 0)
+  //                                           ? Icons.star
+  //                                           : Icons.star_border,
+  //                                       size: 16,
+  //                                       color: Colors.orange,
+  //                                     ),
+  //                                   ),
+  //                                 ),
+  //                                 const SizedBox(height: 4),
+  //                                 Text(
+  //                                   category.name.toString(),
+  //                                   style: const TextStyle(
+  //                                     fontWeight: FontWeight.bold,
+  //                                     fontSize: 16,
+  //                                   ),
+  //                                 ),
+  //                                 const SizedBox(height: 4),
+  //                                 Row(
+  //                                   children: [
+  //                                     CircleAvatar(
+  //                                       radius: 16,
+  //                                       backgroundImage: NetworkImage(
+  //                                         category.image.toString(),
+  //                                       ),
+  //                                     ),
+  //                                     const SizedBox(width: 8),
+  //                                     Expanded(
+  //                                       child: Text(
+  //                                         category.name.toString(),
+  //                                         overflow: TextOverflow.ellipsis,
+  //                                       ),
+  //                                     ),
+  //                                   ],
+  //                                 ),
+  //                               ],
+  //                             ),
+  //                           ),
+  //                         ],
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 );
+  //               },
+  //             ),
+  //           );
+  //         },
+  //       )
 
-        // SizedBox(
-        //   height: 250,
-        //   child: ListView.builder(
-        //     scrollDirection: Axis.horizontal,
-        //     itemCount: services.length,
-        //     itemBuilder: (context, index) {
-        //       var item = services[index];
-        //       return GestureDetector(
-        //         onTap: () {
-        //           Navigator.push(
-        //             context,
-        //             MaterialPageRoute(
-        //               builder: (context) => FeaturedItemsDetail(
-        //                 featured: services,
-        //                 index: index,
-        //               ),
-        //             ),
-        //           );
-        //         },
-        //         child: Container(
-        //           width: 180,
-        //           margin: const EdgeInsets.only(left: 0, right: 5),
-        //           decoration: BoxDecoration(
-        //             color: Colors.white,
-        //             borderRadius: BorderRadius.circular(15),
-        //             border: Border.all(
-        //               color: Colors.black12,
-        //             ),
-        //             boxShadow: [
-        //               BoxShadow(color: Colors.black12, blurRadius: 5)
-        //             ],
-        //           ),
-        //           child: Column(
-        //             crossAxisAlignment: CrossAxisAlignment.start,
-        //             children: [
-        //               Stack(
-        //                 children: [
-        //                   ClipRRect(
-        //                     borderRadius: const BorderRadius.only(
-        //                         topLeft: Radius.circular(15),
-        //                         topRight: Radius.circular(15)),
-        //                     child: Image.asset(
-        //                       item["image"]!,
-        //                       height: 140,
-        //                       width: double.infinity,
-        //                       fit: BoxFit.cover,
-        //                     ),
-        //                   ),
-        //                   Positioned(
-        //                     top: 10,
-        //                     left: 10,
-        //                     child: Container(
-        //                       padding: const EdgeInsets.symmetric(
-        //                           horizontal: 8, vertical: 4),
-        //                       decoration: BoxDecoration(
-        //                         color: Colors.white.withOpacity(0.8),
-        //                         borderRadius: BorderRadius.circular(15),
-        //                       ),
-        //                       child: Text(item["tag"]!,
-        //                           style: const TextStyle(
-        //                               fontSize: 12,
-        //                               fontWeight: FontWeight.bold)),
-        //                     ),
-        //                   ),
-        //                   Positioned(
-        //                     bottom: 10,
-        //                     right: 10,
-        //                     child: Container(
-        //                       padding: const EdgeInsets.symmetric(
-        //                           horizontal: 10, vertical: 5),
-        //                       decoration: BoxDecoration(
-        //                         color: Colors.deepPurpleAccent,
-        //                         borderRadius: BorderRadius.circular(20),
-        //                       ),
-        //                       child: Text(item["price"]!,
-        //                           style: const TextStyle(
-        //                               fontSize: 13, color: Colors.white)),
-        //                     ),
-        //                   ),
-        //                 ],
-        //               ),
-        //               Padding(
-        //                 padding: const EdgeInsets.all(10),
-        //                 child: Column(
-        //                   crossAxisAlignment: CrossAxisAlignment.start,
-        //                   children: [
-        //                     const Row(
-        //                       children: [
-        //                         Icon(Icons.star_border, size: 16),
-        //                         Icon(Icons.star_border, size: 16),
-        //                         Icon(Icons.star_border, size: 16),
-        //                         Icon(Icons.star_border, size: 16),
-        //                         Icon(Icons.star_border, size: 16),
-        //                       ],
-        //                     ),
-        //                     const SizedBox(height: 5),
-        //                     Text(item["title"]!,
-        //                         style: const TextStyle(
-        //                             fontSize: 15, fontWeight: FontWeight.w600)),
-        //                   ],
-        //                 ),
-        //               ),
-        //             ],
-        //           ),
-        //         ),
-        //       );
-        //     },
-        //   ),
-        // ),
-      ],
-    );
-  }
+  //       // SizedBox(
+  //       //   height: 250,
+  //       //   child: ListView.builder(
+  //       //     scrollDirection: Axis.horizontal,
+  //       //     itemCount: services.length,
+  //       //     itemBuilder: (context, index) {
+  //       //       var item = services[index];
+  //       //       return GestureDetector(
+  //       //         onTap: () {
+  //       //           Navigator.push(
+  //       //             context,
+  //       //             MaterialPageRoute(
+  //       //               builder: (context) => FeaturedItemsDetail(
+  //       //                 featured: services,
+  //       //                 index: index,
+  //       //               ),
+  //       //             ),
+  //       //           );
+  //       //         },
+  //       //         child: Container(
+  //       //           width: 180,
+  //       //           margin: const EdgeInsets.only(left: 0, right: 5),
+  //       //           decoration: BoxDecoration(
+  //       //             color: Colors.white,
+  //       //             borderRadius: BorderRadius.circular(15),
+  //       //             border: Border.all(
+  //       //               color: Colors.black12,
+  //       //             ),
+  //       //             boxShadow: [
+  //       //               BoxShadow(color: Colors.black12, blurRadius: 5)
+  //       //             ],
+  //       //           ),
+  //       //           child: Column(
+  //       //             crossAxisAlignment: CrossAxisAlignment.start,
+  //       //             children: [
+  //       //               Stack(
+  //       //                 children: [
+  //       //                   ClipRRect(
+  //       //                     borderRadius: const BorderRadius.only(
+  //       //                         topLeft: Radius.circular(15),
+  //       //                         topRight: Radius.circular(15)),
+  //       //                     child: Image.asset(
+  //       //                       item["image"]!,
+  //       //                       height: 140,
+  //       //                       width: double.infinity,
+  //       //                       fit: BoxFit.cover,
+  //       //                     ),
+  //       //                   ),
+  //       //                   Positioned(
+  //       //                     top: 10,
+  //       //                     left: 10,
+  //       //                     child: Container(
+  //       //                       padding: const EdgeInsets.symmetric(
+  //       //                           horizontal: 8, vertical: 4),
+  //       //                       decoration: BoxDecoration(
+  //       //                         color: Colors.white.withOpacity(0.8),
+  //       //                         borderRadius: BorderRadius.circular(15),
+  //       //                       ),
+  //       //                       child: Text(item["tag"]!,
+  //       //                           style: const TextStyle(
+  //       //                               fontSize: 12,
+  //       //                               fontWeight: FontWeight.bold)),
+  //       //                     ),
+  //       //                   ),
+  //       //                   Positioned(
+  //       //                     bottom: 10,
+  //       //                     right: 10,
+  //       //                     child: Container(
+  //       //                       padding: const EdgeInsets.symmetric(
+  //       //                           horizontal: 10, vertical: 5),
+  //       //                       decoration: BoxDecoration(
+  //       //                         color: Colors.deepPurpleAccent,
+  //       //                         borderRadius: BorderRadius.circular(20),
+  //       //                       ),
+  //       //                       child: Text(item["price"]!,
+  //       //                           style: const TextStyle(
+  //       //                               fontSize: 13, color: Colors.white)),
+  //       //                     ),
+  //       //                   ),
+  //       //                 ],
+  //       //               ),
+  //       //               Padding(
+  //       //                 padding: const EdgeInsets.all(10),
+  //       //                 child: Column(
+  //       //                   crossAxisAlignment: CrossAxisAlignment.start,
+  //       //                   children: [
+  //       //                     const Row(
+  //       //                       children: [
+  //       //                         Icon(Icons.star_border, size: 16),
+  //       //                         Icon(Icons.star_border, size: 16),
+  //       //                         Icon(Icons.star_border, size: 16),
+  //       //                         Icon(Icons.star_border, size: 16),
+  //       //                         Icon(Icons.star_border, size: 16),
+  //       //                       ],
+  //       //                     ),
+  //       //                     const SizedBox(height: 5),
+  //       //                     Text(item["title"]!,
+  //       //                         style: const TextStyle(
+  //       //                             fontSize: 15, fontWeight: FontWeight.w600)),
+  //       //                   ],
+  //       //                 ),
+  //       //               ),
+  //       //             ],
+  //       //           ),
+  //       //         ),
+  //       //       );
+  //       //     },
+  //       //   ),
+  //       // ),
+  //     ],
+  //   );
+  // }
 
   // 🔹 SHOP SECTION
   Widget _shopSection() {
@@ -892,9 +892,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   spacing: 8,
                   runSpacing: 10,
                   children: const [
-                    _ServiceTag(text: "Authentic Mexican Chef"),
-                    _ServiceTag(text: "Indoor Lighting Installation"),
-                    _ServiceTag(text: "Transmission Repair"),
+                    // _ServiceTag(text: "Authentic Mexican Chef"),
+                    // _ServiceTag(text: "Indoor Lighting Installation"),
+                    // _ServiceTag(text: "Transmission Repair"),
                   ],
                 ),
               ],
@@ -951,27 +951,27 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// 🔸 REUSABLE TAG WIDGET
-class _ServiceTag extends StatelessWidget {
-  final String text;
-  const _ServiceTag({required this.text});
+// // 🔸 REUSABLE TAG WIDGET
+// class _ServiceTag extends StatelessWidget {
+//   final String text;
+//   const _ServiceTag({required this.text});
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-      decoration: BoxDecoration(
-        color: const Color(0xFFEAE6FB),
-        borderRadius: BorderRadius.circular(25),
-      ),
-      child: Text(
-        text,
-        style: const TextStyle(
-          color: Color(0xFF6759FF),
-          fontSize: 13,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+//       decoration: BoxDecoration(
+//         color: const Color(0xFFEAE6FB),
+//         borderRadius: BorderRadius.circular(25),
+//       ),
+//       child: Text(
+//         text,
+//         style: const TextStyle(
+//           color: Color(0xFF6759FF),
+//           fontSize: 13,
+//           fontWeight: FontWeight.w500,
+//         ),
+//       ),
+//     );
+//   }
+// }
