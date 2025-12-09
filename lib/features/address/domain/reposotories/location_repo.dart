@@ -76,10 +76,11 @@ class LocationRepo {
     ];
   }
 
-  Future<ApiResponseModel> getAddressFromGeocode(LatLng latLng) async {
+  Future<ApiResponseModel> getAddressFromGeocode(LatLng latLng ,bool isLogin) async {
     try {
-      Response response = await dioClient!.get(
-          '${AppConstants.geocodeUri}?lat=${latLng.latitude}&lng=${latLng.longitude}');
+     Response response = isLogin ?     await dioClient!.get(
+          '${AppConstants.geocodeUri}?lat=${latLng.latitude}&lng=${latLng.longitude}'):await dioClient!.getWithoutToken(
+          AppConstants.geocodeUri);
 
       return ApiResponseModel.withSuccess(response);
     } catch (e) {
@@ -120,7 +121,7 @@ class LocationRepo {
 
   Future<ApiResponseModel> getBanners() async {
     try {
-      final response = await dioClient!.get(AppConstants.bannerUri);
+      final response = await dioClient!.getWithoutToken(AppConstants.bannerUri);
       return ApiResponseModel.withSuccess(response);
     } catch (e) {
       return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));

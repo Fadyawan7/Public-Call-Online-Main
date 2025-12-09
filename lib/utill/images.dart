@@ -64,6 +64,13 @@ class Images {
   static const String motorbike = 'assets/image/motorbike.png';
     static const String whatsapps = 'assets/image/whatsapp.png';
 
+    static const String profileicon = 'assets/image/profileicon.png';
+    static const String chaticons = 'assets/image/chaticons.png';
+    static const String mapicon = 'assets/image/mapicon.png';
+    static const String bookingicon = 'assets/image/bookingicon.png';
+    static const String homeicon = 'assets/image/homeicon.png';
+
+
   static const String cooking = 'assets/image/cooking.png';
   static const String outForDelivery = 'assets/image/out_for_delivery.png';
   static const String preparing = 'assets/image/preparing.png';
@@ -90,7 +97,8 @@ class Images {
   static const String moneyIcon = 'assets/image/money_icon.png';
   static const String walletIcon = 'assets/image/wallet_icon.png';
   static const String tooltipIcon = 'assets/image/tooltip_icon.png';
-  static const String splashBackground = 'assets/image/splash_background.jpeg';
+  static const String splashBackground = 'assets/image/splash_background.png';
+
   static const String listIcon = 'assets/image/list_icon.png';
   static const String selectAddressBottomSheetIcon = 'assets/image/select_address_bottom_sheet_icon.png';
   static const String noMapBackground = 'assets/image/no_map_background.png';
@@ -99,7 +107,6 @@ class Images {
 
   // for Icon
   static const String logo = 'assets/image/logo.png';
-  static const String appIcon = 'assets/icon/icon.png';
 
   static const String marker = 'assets/icon/marker.png';
   static const String myLocation = 'assets/icon/my_location.png';
@@ -118,6 +125,8 @@ class Images {
   static const String location = 'assets/icon/location.png';
   static const String webLogOut = 'assets/icon/web_logout_icon.png';
   static const String changePasswordIcon = 'assets/image/change.png';
+  static const String pcosplash = 'assets/image/pcosplash.png';
+  static const String avatarmen = 'assets/image/avatarmen.png';
 
 
   //social media icon
@@ -163,6 +172,7 @@ class Images {
 
   //svg
   static const String placeholderUserSvg = 'assets/svg/placeholder_user.svg';
+
   static const String darkModeSvg = 'assets/svg/dark_mode.svg';
   static const String lightModeSvg = 'assets/svg/light_mode.svg';
   static const String favoriteSvg = 'assets/svg/favorite.svg';

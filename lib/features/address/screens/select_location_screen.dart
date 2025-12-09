@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
@@ -25,13 +26,15 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
   LatLng? _markerPosition;
   CameraPosition? _cameraPosition;
   Set<Marker> _markers = {};
+  late bool _isLoggedIn;
 
   @override
   void initState() {
     super.initState();
     final locationProvider =
         Provider.of<LocationProvider>(context, listen: false);
-
+    _isLoggedIn =
+        Provider.of<AuthProvider>(context, listen: false).isLoggedIn();
     // Set initial position
     _initialPosition = (locationProvider.pickedAddressLatitude != null &&
             locationProvider.pickedAddressLongitude != null)
@@ -153,8 +156,7 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                   children: [
                     InkWell(
                       onTap: () => _checkPermission(() {
-                        locationProvider.getCurrentLocation(context, true,
-                            mapController: _controller);
+                        locationProvider.getCurrentLocation(context, true, mapController: _controller, isLoggedIn: _isLoggedIn);
                       }),
                       child: Container(
                         width: 50,
@@ -190,9 +192,11 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
 
                                 final formattedAddress = await locationProvider
                                     .getAddressFromGeocode(
-                                  LatLng(selectedPosition.latitude,
-                                      selectedPosition.longitude),
-                                );
+                                        LatLng(
+                                          selectedPosition.latitude,
+                                          selectedPosition.longitude,
+                                        ),
+                                        context);
 
                                 print(
                                     "formattedAddress.......$formattedAddress");

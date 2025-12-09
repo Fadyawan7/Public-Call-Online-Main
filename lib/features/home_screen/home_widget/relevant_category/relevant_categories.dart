@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/widgets/custom_app_bar_widget.dart';
+import 'package:flutter_restaurant/features/category/providers/category_provider.dart';
 import 'package:flutter_restaurant/features/home_screen/home_widget/all_featured/featured_item_detail.dart';
 import 'package:flutter_restaurant/features/home_screen/provider/home_provider.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
@@ -22,9 +23,11 @@ class _ReleventCategoriesState extends State<ReleventCategories> {
     super.initState();
 
     // Fetch freelancers for this category
-    Future.microtask(() {
-      final provider = Provider.of<HomeProvider>(context, listen: false);
-      provider.fetchFreelancersByCategory(widget.categoryId);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final categoryProvider =
+          Provider.of<CategoryProvider>(context, listen: false);
+
+      categoryProvider.freelancerbyCategory(widget.title.toString());
     });
   }
 
@@ -36,20 +39,20 @@ class _ReleventCategoriesState extends State<ReleventCategories> {
         title: getTranslated(widget.title, context) ?? '',
         centerTitle: true,
       ),
-      body: Consumer<HomeProvider>(
+      body: Consumer<CategoryProvider>(
         builder: (context, provider, child) {
           if (provider.isLoading) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (provider.freelancers.isEmpty) {
+          if (provider.predictionList?.isEmpty ?? false) {
             return const Center(child: Text("No Data available"));
           }
 
           return ListView.builder(
-            itemCount: provider.freelancers.length,
+            itemCount: provider.predictionList?.length,
             itemBuilder: (context, index) {
-              final freelancer = provider.freelancers[index];
+              final freelancer = provider.predictionList?[index];
 
               return GestureDetector(
                 onTap: () {
@@ -58,7 +61,7 @@ class _ReleventCategoriesState extends State<ReleventCategories> {
                     MaterialPageRoute(
                       builder: (context) => FeaturedItemsDetail(
                         index: index,
-                        freelanceId: freelancer.freelancerId,
+                        freelanceId: freelancer?.id,
                       ),
                     ),
                   );
@@ -85,7 +88,8 @@ class _ReleventCategoriesState extends State<ReleventCategories> {
                               image: DecorationImage(
                                   fit: BoxFit.cover,
                                   image: NetworkImage(
-                                      freelancer.cover_picture.toString()))),
+                                      freelancer?.coverPicture.toString() ??
+                                          ''))),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(12.0),
@@ -97,7 +101,7 @@ class _ReleventCategoriesState extends State<ReleventCategories> {
                                 children: List.generate(
                                   5,
                                   (i) => Icon(
-                                    i < (freelancer.rating ?? 0)
+                                    i < (freelancer?.rating ?? 0)
                                         ? Icons.star
                                         : Icons.star_border,
                                     size: 16,
@@ -107,7 +111,7 @@ class _ReleventCategoriesState extends State<ReleventCategories> {
                               ),
                               SizedBox(height: 4),
                               Text(
-                                freelancer.name.toString(),
+                                freelancer?.name.toString() ?? '',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 16),
                               ),
@@ -117,10 +121,10 @@ class _ReleventCategoriesState extends State<ReleventCategories> {
                                   CircleAvatar(
                                     radius: 12,
                                     backgroundImage: NetworkImage(
-                                        freelancer.profilePicture.toString()),
+                                        freelancer?.image.toString() ?? ''),
                                   ),
                                   SizedBox(width: 8),
-                                  Text(freelancer.name.toString()),
+                                  Text(freelancer?.name.toString() ?? ''),
                                 ],
                               ),
                             ],

@@ -3,7 +3,7 @@ import 'package:flutter_restaurant/common/enums/app_mode_enum.dart';
 import 'package:flutter_restaurant/utill/images.dart';
 
 class AppConstants {
-  static const String appName = 'eFood';
+  static const String appName = 'PCO';
   static const String appVersion = '11.2';
   static const AppMode appMode = AppMode.release;
   static const String baseUrl = 'https://publiccallonline.com';

@@ -3,7 +3,7 @@ import 'package:flutter_restaurant/utill/dimensions.dart';
 
 ThemeData light = ThemeData(
   fontFamily: 'Arial',
-  primaryColor: const Color(0xFF760e25),
+  primaryColor: const Color(0xFFf11920),
   // primaryColor: const Color(0xFFFC6A57),
   //#FF5555
   secondaryHeaderColor: const Color(0xff04B200),

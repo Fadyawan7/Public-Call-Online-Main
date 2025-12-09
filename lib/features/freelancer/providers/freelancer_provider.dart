@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -68,6 +69,14 @@ class FreelancerProvider extends ChangeNotifier {
     }
   }
 
+  
+  
+  
+  
+  
+  
+  
+  
   void setCategoryID(
       {int? categoryID, bool isUpdate = true, bool isReload = false}) {
     if (isReload) {
@@ -190,47 +199,60 @@ class FreelancerProvider extends ChangeNotifier {
     );
   }
 
-  Future<BitmapDescriptor> createMarkerFromNetworkImage(String imageUrl) async {
-    // 1. Load image from network
-    final response = await http.get(Uri.parse(imageUrl));
-    final bytes = response.bodyBytes;
+Future<BitmapDescriptor> createBorderedMarkerFromUrl(
+  String imageUrl, {
+  double size = 80,
+  double borderSize = 6,
+  String currentStatus = 'available', // pass status
+}) async {
+  final recorder = ui.PictureRecorder();
+  final canvas = Canvas(recorder);
+  final paint = Paint();
 
-    // 2. Decode image with target width
-    final codec = await ui.instantiateImageCodec(
-      bytes,
-      targetWidth: 70, // <-- width in pixels
-    );
-    final frame = await codec.getNextFrame();
-    final image = frame.image;
+  final radius = size / 2;
 
-    // 3. Create a circular canvas
-    final recorder = ui.PictureRecorder();
-    final canvas = Canvas(recorder);
+  // Determine border color based on currentStatus
+final borderColor = (currentStatus?.trim().toLowerCase() == 'available')
+    ? Colors.green
+    : Colors.red;
+  // Draw border
+  paint.color = borderColor;
+  canvas.drawCircle(Offset(radius, radius), radius, paint);
 
-    final paint = Paint();
-    final size = 70.0; // width & height
-    final rect = Rect.fromLTWH(0, 0, size, size);
-    final radius = size / 2;
+  // Draw white inner circle
+  paint.color = Colors.white;
+  canvas.drawCircle(Offset(radius, radius), radius - borderSize, paint);
 
-    // Draw circular clip
-    canvas.clipPath(Path()..addOval(rect));
+  // Load image from URL
+  final Uint8List imgBytes = await fetchNetworkImageBytes(imageUrl);
+  final ui.Codec codec = await ui.instantiateImageCodec(imgBytes);
+  final ui.FrameInfo frameInfo = await codec.getNextFrame();
+  final ui.Image image = frameInfo.image;
 
-    // Draw image into circular canvas
-    paint.isAntiAlias = true;
-    canvas.drawImageRect(
-      image,
-      Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()),
-      rect,
-      paint,
-    );
+  // Clip circle (image inside)
+  canvas.clipPath(Path()
+    ..addOval(Rect.fromCircle(
+      center: Offset(radius, radius),
+      radius: radius - borderSize,
+    )));
 
-    // 4. Convert canvas to bytes
-    final picture = recorder.endRecording();
-    final img = await picture.toImage(size.toInt(), size.toInt());
-    final byteData = await img.toByteData(format: ui.ImageByteFormat.png);
-    final bitmap = byteData!.buffer.asUint8List();
+  canvas.drawImageRect(
+    image,
+    Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()),
+    Rect.fromLTWH(
+        borderSize, borderSize, size - borderSize * 2, size - borderSize * 2),
+    paint,
+  );
 
-    // 5. Create BitmapDescriptor
-    return BitmapDescriptor.fromBytes(bitmap);
+  final picture = recorder.endRecording();
+  final img = await picture.toImage(size.toInt(), size.toInt());
+  final bytes = await img.toByteData(format: ui.ImageByteFormat.png);
+
+  return BitmapDescriptor.fromBytes(bytes!.buffer.asUint8List());
+}
+
+  Future<Uint8List> fetchNetworkImageBytes(String url) async {
+    final http.Response response = await http.get(Uri.parse(url));
+    return response.bodyBytes;
   }
 }

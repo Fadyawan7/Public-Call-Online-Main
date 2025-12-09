@@ -114,17 +114,33 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SizedBox(height: size.height * 0.1),
+                                  SizedBox(height: size.height * 0.06),
 
                                   Align(
                                     alignment: Alignment.center,
-                                    child: ClipRRect(
-                                      borderRadius:
-                                          BorderRadiusGeometry.circular(10),
-                                      child: Image.asset(
-                                        Images.appIcon,
-                                        height: 150,
-                                        width: 150,
+                                    child: Container(
+                                      padding: const EdgeInsets.all(20),
+                                      margin: const EdgeInsets.all(40),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.red,
+                                        // borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Container(
+                                        padding: EdgeInsets.all(25),
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          border:
+                                              Border.all(color: Colors.white),
+                                        ),
+                                        child: const Text(
+                                          "PCO",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),

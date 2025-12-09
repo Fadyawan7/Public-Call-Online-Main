@@ -35,7 +35,7 @@ class DioClient {
       ..httpClientAdapter
       ..options.headers = {
 
-        'Content-Type': 'application/json; charset=UTF-8',
+        // 'Content-Type': 'application/json; charset=UTF-8',
         'X-localization': sharedPreferences.getString(AppConstants.languageCode)
             ?? AppConstants.languages[0].languageCode,
         'Authorization': 'Bearer $getToken',
@@ -71,13 +71,41 @@ class DioClient {
       rethrow;
     }
   }
+Future<Response> getWithoutToken(String uri, {
+  Map<String, dynamic>? queryParameters,
+  CancelToken? cancelToken,
+  ProgressCallback? onReceiveProgress,
+}) async {
+  try {
+    // Clone dio headers
+    Map<String, String> headers = Map.from(dio!.options.headers);
+
+    // Remove Authorization header
+    headers.remove('Authorization');
+
+    debugPrint('apiCall (without token) ==> url=> $uri \nparams---> $queryParameters\nheader=> $headers');
+
+    var response = await dio!.get(
+      uri,
+      queryParameters: queryParameters,
+      cancelToken: cancelToken,
+      onReceiveProgress: onReceiveProgress,
+      options: Options(headers: headers),
+    );
+
+    debugPrint('apiCalll ==${response.data}');
+    return response;
+  } catch (e) {
+    rethrow;
+  }
+}
 
   Future<Response> post(String uri, {
     data,
     Map<String, dynamic>? queryParameters,
     CancelToken? cancelToken,
     ProgressCallback? onSendProgress,
-    ProgressCallback? onReceiveProgress,
+    ProgressCallback? onReceiveProgress,  Options? options,
   }) async {
     try {
       debugPrint('apiCall ==> url=> $uri \nparams---> $queryParameters\nheader=> ${dio!.options.headers} \nbody---> $data');
@@ -204,4 +232,60 @@ class DioClient {
       rethrow;
     }
   }
+
+Future<Response> postMultipartImages(String uri, {
+  Map<String, dynamic>? data,
+  List<XFile?>? files,
+  String? fileKey,
+  Map<String, dynamic>? queryParameters,
+  CancelToken? cancelToken,
+  ProgressCallback? onSendProgress,
+  ProgressCallback? onReceiveProgress,
+}) async {
+
+  // 🔥 Override header JUST for this request
+  Options newOptions = Options(
+    headers: {
+      ...dio!.options.headers,
+      'Content-Type': 'multipart/form-data',
+    },
+  );
+
+  try {
+    List<MultipartFile> fileList = [];
+
+    if (files != null) {
+      for (var f in files) {
+        if (f != null) {
+          fileList.add(MultipartFile.fromBytes(
+            await f.readAsBytes(),
+            filename: f.name,
+          ));
+        }
+      }
+    }
+
+    if (fileList.isNotEmpty) {
+      data?.addAll({ fileKey ?? "image": fileList.first });
+    }
+
+    final response = await dio!.post(
+      uri,
+      data: FormData.fromMap(data ?? {}),
+      options: newOptions, // 👈 ONLY MULTIPART uses this
+      queryParameters: queryParameters,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
+
+    return response;
+
+  } catch (e) {
+    rethrow;
+  }
+}
+
+
+
 }

@@ -55,7 +55,7 @@ Container CustomInfoWidget(FreelancerModel freelancer) {
                     Text(
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
-                      '${freelancer.freelancerCategory}' ?? '',
+                      '${freelancer.category}' ?? '',
                       style: rubikRegular.copyWith(fontSize: Dimensions.fontSizeSmall,fontWeight: FontWeight.w900),
                     ) ,
                   ],

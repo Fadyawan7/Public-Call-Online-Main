@@ -43,9 +43,9 @@ class SearchItemWidget extends StatelessWidget {
                 ),
 
                 // Freelancer Category
-                if (suggestion?.freelancerCategory != null)
+                if (suggestion?.category != null)
                   Text(
-                    suggestion!.freelancerCategory!,
+                    suggestion!.category!,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(

@@ -99,42 +99,50 @@ set setAddress(String value) {
 
 
   // for get current location
-  Future<String?> getCurrentLocation(BuildContext context, bool isUpdate, {GoogleMapController? mapController}) async {
-    _loading = true;
-    if(isUpdate) {
-      notifyListeners();
-    }
-
-    Position myPosition;
-    try {
-      Position newLocalData = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-      myPosition = newLocalData;
-    }catch(e) {
-      myPosition = Position(
-        latitude: double.parse('0'),
-        longitude: double.parse('0'),
-        timestamp: DateTime.now(), accuracy: 1, altitude: 1, heading: 1, speed: 1, speedAccuracy: 1,
-        altitudeAccuracy: 1, headingAccuracy: 1,
-
-      );
-    }
-    _position = myPosition;
-
-    if (mapController != null) {
-      mapController.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(target: LatLng(myPosition.latitude, myPosition.longitude), zoom: 17),
-      ));
-    }
-    // String _myPlaceMark;
-    _address = await getAddressFromGeocode(LatLng(myPosition.latitude, myPosition.longitude));
-
-
-    _loading = false;
+Future<String?> getCurrentLocation(BuildContext context, bool isUpdate, {GoogleMapController? mapController, bool isLoggedIn = false}) async {
+  _loading = true;
+  if (isUpdate) {
     notifyListeners();
-
-    return _address;
-
   }
+
+  Position myPosition;
+  try {
+    myPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  } catch (e) {
+    myPosition = Position(
+      latitude: 0,
+      longitude: 0,
+      timestamp: DateTime.now(),
+      accuracy: 1,
+      altitude: 1,
+      heading: 1,
+      speed: 1,
+      speedAccuracy: 1,
+      altitudeAccuracy: 1,
+      headingAccuracy: 1,
+    );
+  }
+  _position = myPosition;
+
+  if (mapController != null) {
+    mapController.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(target: LatLng(myPosition.latitude, myPosition.longitude), zoom: 17),
+    ));
+  }
+
+  // 🔹 Only call geocode if user is logged in
+  if (isLoggedIn) {
+    _address = await getAddressFromGeocode(
+        LatLng(myPosition.latitude, myPosition.longitude), context);
+  } else {
+    _address = null; // or "" if you prefer
+  }
+
+  _loading = false;
+  notifyListeners();
+
+  return _address;
+}
 
   // update Position
   void updatePosition(CameraPosition? position, bool fromAddress, String? address, BuildContext context, bool forceNotify, {bool isUpdate = true}) async {
@@ -160,7 +168,7 @@ set setAddress(String value) {
           );
         }
         if (_changeAddress) {
-          String addressFromGeocode = await getAddressFromGeocode(LatLng(position.target.latitude, position.target.longitude));
+          String addressFromGeocode = await getAddressFromGeocode(LatLng(position.target.latitude, position.target.longitude,),context);
           fromAddress ? _address = addressFromGeocode : _pickAddress = addressFromGeocode;
 
         } else {
@@ -377,14 +385,32 @@ set setAddress(String value) {
     _pickAddress = _address;
   }
 
-  Future<String> getAddressFromGeocode(LatLng latLng) async {
-    ApiResponseModel response = await locationRepo!.getAddressFromGeocode(latLng);
-    String address = '';
-    if(response.response?.statusCode == 200 && response.response!.data['status'] == 'OK') {
-      address = response.response!.data['results'][0]['formatted_address'].toString();
+Future<String> getAddressFromGeocode(LatLng latLng, BuildContext context) async {
+  bool _isLoggedIn = context.read<AuthProvider>().isLoggedIn();
+
+  ApiResponseModel response = await locationRepo!.getAddressFromGeocode(latLng, _isLoggedIn);
+  String address = '';
+
+  if (response.response?.statusCode == 200) {
+    final data = response.response!.data;
+
+    // Check if 'results' exist and is a List
+    if (data is Map<String, dynamic> &&
+        data['status'] == 'OK' &&
+        data['results'] != null &&
+        data['results'] is List &&
+        (data['results'] as List).isNotEmpty) {
+
+      address = (data['results'] as List)[0]['formatted_address'].toString();
+    } else {
+      // Handle public API response differently if needed
+      debugPrint('Geocode API returned unexpected data: $data');
     }
-    return address;
   }
+
+  return address;
+}
+
 
   Future<List<PredictionModel>> searchLocation(BuildContext context, String text) async {
     if(text.isNotEmpty) {

@@ -52,7 +52,7 @@ class ConversationModel {
 
 class Attachment {
   int? id;
-  int? chatMessageId;
+  String? chatMessageId;
   String? filePath;
   String? fileType;
   String? createdAt;

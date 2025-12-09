@@ -113,7 +113,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                                     BorderRadiusGeometry
                                                         .circular(10),
                                                 child: Image.asset(
-                                                  Images.appIcon,
+                                                  Images.pcosplash,
                                                 ),
                                               ),
                                             ),

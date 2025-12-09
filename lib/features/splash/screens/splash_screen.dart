@@ -129,24 +129,28 @@ void _route() async {
             : RouterHelper.getMainRoute(
                 action: RouteAction.pushNamedAndRemoveUntil);
       } else {
-        if (widget.routeTo != null) {
-          Get.context!.pushReplacement(widget.routeTo!);
-        } else {
-          Future.delayed(const Duration(milliseconds: 10)).then((v) {
-            RouterHelper.getLoginRoute(
-                action: RouteAction.pushNamedAndRemoveUntil);
+         Future.delayed(const Duration(milliseconds: 10)).then((v) {
+            RouterHelper.getDashboardRoute(
+                action: RouteAction.pushNamedAndRemoveUntil,'home');
           });
-        }
+        // if (widget.routeTo != null) {
+        //   Get.context!.pushReplacement(widget.routeTo!);
+        // } else {
+        //   Future.delayed(const Duration(milliseconds: 10)).then((v) {
+        //     RouterHelper.getLoginRoute(
+        //         action: RouteAction.pushNamedAndRemoveUntil);
+        //   });
+       // }
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return const CustomAssetImageWidget(
-      Images.splashBackground,
-      fit: BoxFit.cover,
-    );
+    return  const CustomAssetImageWidget(
+          Images.splashBackground,
+          fit: BoxFit.cover,
+        );
   }
 
   void _checkConnectivity() {

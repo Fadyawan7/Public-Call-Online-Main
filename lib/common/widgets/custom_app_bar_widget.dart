@@ -5,7 +5,8 @@ import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
 import 'package:go_router/go_router.dart';
 
-class CustomAppBarWidget extends StatelessWidget implements PreferredSizeWidget {
+class CustomAppBarWidget extends StatelessWidget
+    implements PreferredSizeWidget {
   final String? title;
   final bool isBackButtonExist;
   final Function? onBackPressed;
@@ -17,45 +18,83 @@ class CustomAppBarWidget extends StatelessWidget implements PreferredSizeWidget 
   final Widget? leading;
   final Color? titleColor;
 
-  const CustomAppBarWidget({
-    super.key,
-    required this.title,
-    this.isBackButtonExist = true,
-    this.onBackPressed,
-    this.context,
-    this.actionView,
-    this.centerTitle = true,
-    this.isTransparent = false,
-    this.elevation = 0,
-    this.leading,
-    this.titleColor
-  });
+  const CustomAppBarWidget(
+      {super.key,
+      required this.title,
+      this.isBackButtonExist = true,
+      this.onBackPressed,
+      this.context,
+      this.actionView,
+      this.centerTitle = true,
+      this.isTransparent = false,
+      this.elevation = 0,
+      this.leading,
+      this.titleColor});
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text(
-        title!,
-        style: rubikSemiBold.copyWith(
-          fontSize: Dimensions.fontSizeLarge,
-          color:  Theme.of(context).cardColor ,
+      title: FittedBox(
+        child: Stack(
+          children: [
+            // BORDER
+            Text(
+              title!,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'Pacifico',
+                fontSize: 18,
+                height: 1.2,
+                letterSpacing: 1.5,
+                foreground: Paint()
+                  ..style = PaintingStyle.stroke
+                  ..strokeWidth = 3
+                  ..color = Theme.of(context).primaryColor,
+              ),
+            ),
+
+            // FILL
+            Text(
+              title!,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'Pacifico',
+                fontSize: 18,
+                height: 1.2,
+                letterSpacing: 1.5,
+                color: Colors.white,
+              ),
+            ),
+          ],
         ),
       ),
+
       centerTitle: centerTitle,
-      leading: isBackButtonExist ? IconButton(
-        icon: leading ?? const Icon(Icons.arrow_back_ios),
-        color: titleColor ?? (isTransparent ? Theme.of(context).cardColor : Colors.white),
-        onPressed: () => onBackPressed != null ? onBackPressed!() : context.pop(),
-      ) : const SizedBox(),
-      actions: actionView != null ? [Padding(
-        padding: const EdgeInsets.only(right: Dimensions.paddingSizeSmall),
-        child: actionView!,
-      )] : [],
-      backgroundColor: isTransparent ? Colors.transparent : Theme.of(context).primaryColor,
+      leading: isBackButtonExist
+          ? IconButton(
+              icon: leading ?? const Icon(Icons.arrow_back_ios),
+              color: titleColor ??
+                  (isTransparent ? Theme.of(context).cardColor : Colors.white),
+              onPressed: () =>
+                  onBackPressed != null ? onBackPressed!() : context.pop(),
+            )
+          : const SizedBox(),
+      actions: actionView != null
+          ? [
+              Padding(
+                padding:
+                    const EdgeInsets.only(right: Dimensions.paddingSizeSmall),
+                child: actionView!,
+              )
+            ]
+          : [],
+      // backgroundColor:
+      //     isTransparent ? Colors.transparent : Theme.of(context).primaryColor,
       elevation: elevation,
     );
   }
 
   @override
-  Size get preferredSize => Size(double.maxFinite, ResponsiveHelper.isDesktop(Get.context) ? 100 : 50);
+  Size get preferredSize => Size(
+      double.maxFinite, ResponsiveHelper.isDesktop(Get.context) ? 100 : 50);
 }

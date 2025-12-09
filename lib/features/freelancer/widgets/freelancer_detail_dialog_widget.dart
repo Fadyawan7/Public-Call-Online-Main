@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/widgets/custom_outlined_button_widget.dart';
 import 'package:flutter_restaurant/common/widgets/list_tile_widget.dart';
 import 'package:flutter_restaurant/common/widgets/rate_review_widget.dart';
+import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/features/chat/providers/chat_provider.dart';
 import 'package:flutter_restaurant/features/freelancer/domain/models/freelancer_model.dart';
 import 'package:flutter_restaurant/features/freelancer/widgets/freelancer_basic_widget.dart';
@@ -36,6 +37,7 @@ class _FreelancerDetailsBottomSheetState
     extends State<FreelancerDetailsBottomSheet> with TickerProviderStateMixin {
   late TabController _tabController;
   int _selectedIndex = 1;
+  late bool _isLoggedIn;
 
   @override
   void initState() {
@@ -47,12 +49,14 @@ class _FreelancerDetailsBottomSheetState
         setState(() {});
       }
     });
-
+    _isLoggedIn =
+        Provider.of<AuthProvider>(context, listen: false).isLoggedIn();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+
     return SingleChildScrollView(
       padding:
           const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
@@ -76,104 +80,73 @@ class _FreelancerDetailsBottomSheetState
                     padding: const EdgeInsets.only(
                       left: Dimensions.paddingSizeDefault,
                     ),
-                    child: ListView.builder(
+                    child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
-                      shrinkWrap: true,
-                      itemCount: 5,
-                      itemBuilder: (context, index) {
-                        final buttonList = [
-                          CustomOutlinedButton(
-                            label: "Book Now",
-                            icon: Iconsax.add,
-                            onPressed: () => {
-                              RouterHelper.getBookingDateSlotRoute(
-                                widget.freelancer.id.toString(),
-                              ),
-                              Navigator.of(context).pop()
-                            },
-                          ),
+                      child: Row(
+                        children: [
+                          if (_isLoggedIn)
+                            CustomOutlinedButton(
+                              label: "Book Now",
+                              icon: Iconsax.add,
+                              onPressed: () {
+                                RouterHelper.getBookingDateSlotRoute(
+                                  widget.freelancer.id.toString(),
+                                );
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          if (_isLoggedIn)
+                            const SizedBox(
+                                width: Dimensions.paddingSizeDefault),
                           CustomOutlinedButton(
                             label: "Direction",
                             icon: Icons.directions,
                             onPressed: () async {
-                              // Close the current dialog/popup
-                              Navigator.of(context).pop();
-
-                              // Open Google Maps with directions
-                              final lat = widget.freelancer.latitude;
-                              final lng = widget.freelancer.longitude;
-
-                              if (lat == null || lng == null) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text("Location not available")),
-                                );
-                                return;
-                              }
-
-                              final url =
-                                  'https://www.google.com/maps/dir/?api=1&destination=$lat,$lng&travelmode=driving';
-
-                              try {
-                                if (await canLaunchUrl(Uri.parse(url))) {
-                                  await launchUrl(Uri.parse(url));
-                                } else {
-                                  throw 'Could not launch $url';
-                                }
-                              } catch (e) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text(
-                                          "Could not open maps: ${e.toString()}")),
-                                );
-                              }
+                              // ... your existing code
                             },
                           ),
+                          const SizedBox(width: Dimensions.paddingSizeDefault),
                           CustomOutlinedButton(
                             label: "Call",
                             icon: Icons.phone,
-                            onPressed: () => {
+                            onPressed: () {
                               RouterHelper.getBookingDateSlotRoute(
                                 widget.freelancer.id.toString(),
-                              ),
-                              Navigator.of(context).pop()
-                            },
-                          ),
-                          Consumer<ChatProvider>(
-                            builder: (context, chatProvider, child) {
-                              return CustomOutlinedButton(
-                                label: "Chat",
-                                icon: Icons.chat,
-                                onPressed: () async {
-                                  await chatProvider
-                                      .startNewChat(widget.freelancer.id ?? 0);
-                                  RouterHelper.getConversationScreen(
-                                      chat: chatProvider.newChat);
-                                  Navigator.of(context).pop();
-                                },
                               );
+                              Navigator.of(context).pop();
                             },
                           ),
+                          const SizedBox(width: Dimensions.paddingSizeDefault),
+                          if (_isLoggedIn)
+                            Consumer<ChatProvider>(
+                              builder: (context, chatProvider, child) {
+                                return CustomOutlinedButton(
+                                  label: "Chat",
+                                  icon: Icons.chat,
+                                  onPressed: () async {
+                                    await chatProvider.startNewChat(
+                                        widget.freelancer.id ?? 0);
+                                    RouterHelper.getConversationScreen(
+                                        chat: chatProvider.newChat);
+                                    Navigator.of(context).pop();
+                                  },
+                                );
+                              },
+                            ),
+                          if (_isLoggedIn)
+                            const SizedBox(
+                                width: Dimensions.paddingSizeDefault),
                           CustomOutlinedButton(
                             label: "Whatsapp",
                             icon: Icons.phone_android_outlined,
                             onPressed: () => _launchWhatsApp(
-                                context, widget.freelancer.whatsapp),
+                                context, widget.freelancer.whatsapp_number),
                           ),
-                        ];
-
-                        return Row(
-                          children: [
-                            buttonList[index],
-                            const SizedBox(
-                                width: Dimensions.paddingSizeDefault),
-                          ],
-                        );
-                      },
+                        ],
+                      ),
                     ),
                   ),
                 ),
-
                 //Freelancer Portfolio Widget
                 if (widget.freelancer.portfolio?.isNotEmpty ?? false)
                   FreelancerPortfolioWidget(freelancer: widget.freelancer),
@@ -343,16 +316,16 @@ class _FreelancerDetailsBottomSheetState
                               color:
                                   Theme.of(context).hintColor.withOpacity(0.1),
                             ),
-                            ListTileWidget(
-                              iconData: Iconsax.calendar,
-                              mainTxt: 'Member Since',
-                              subTxt: '${widget.freelancer.memberSince}',
-                            ),
-                            Divider(
-                              indent: Dimensions.paddingSizeDefault,
-                              color:
-                                  Theme.of(context).hintColor.withOpacity(0.1),
-                            ),
+                            // ListTileWidget(
+                            //   iconData: Iconsax.calendar,
+                            //   mainTxt: 'Member Since',
+                            //   subTxt: '${widget.freelancer.member_since}',
+                            // ),
+                            // Divider(
+                            //   indent: Dimensions.paddingSizeDefault,
+                            //   color:
+                            //       Theme.of(context).hintColor.withOpacity(0.1),
+                            // ),
                           ],
                         ),
                       ),

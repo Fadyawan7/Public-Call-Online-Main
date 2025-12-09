@@ -6,6 +6,7 @@ import 'package:flutter_restaurant/features/address/providers/location_provider.
 import 'package:flutter_restaurant/features/address/screens/select_location_screen.dart';
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/features/category/providers/category_provider.dart';
+import 'package:flutter_restaurant/features/freelancer/domain/models/freelancer_model.dart';
 import 'package:flutter_restaurant/features/freelancer/providers/freelancer_provider.dart';
 import 'package:flutter_restaurant/features/freelancer/screens/freelancer_screen.dart';
 import 'package:flutter_restaurant/features/freelancer/widgets/freelancer_detail_dialog_widget.dart';
@@ -15,11 +16,15 @@ import 'package:flutter_restaurant/features/home_screen/home_widget/all_featured
 import 'package:flutter_restaurant/features/home_screen/home_widget/all_services/all_services.dart';
 import 'package:flutter_restaurant/features/home_screen/home_widget/relevant_category/relevant_categories.dart';
 import 'package:flutter_restaurant/features/home_screen/provider/home_provider.dart';
+import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
 import 'package:flutter_restaurant/helper/responsive_helper.dart';
+import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/main.dart';
+import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -40,63 +45,54 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late bool _isLoggedIn;
-  final FreelancerProvider freelancerProvider =
-      Provider.of<FreelancerProvider>(Get.context!, listen: false);
+  late FreelancerProvider freelancerProvider;
+  late ProfileProvider profileProvider;
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      final provider = Provider.of<HomeProvider>(context, listen: false);
-      provider.freelanceAllCategory();
-    });
-    freelancerProvider.getFreelancerList();
-
-    _isLoggedIn =
-        Provider.of<AuthProvider>(context, listen: false).isLoggedIn();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final homeProvider = Provider.of<HomeProvider>(context, listen: false);
+      final categoryProvider =
+          Provider.of<CategoryProvider>(context, listen: false);
+      final freelancerProvider =
+          Provider.of<FreelancerProvider>(context, listen: false);
       final locationProvider =
           Provider.of<LocationProvider>(context, listen: false);
+      profileProvider = Provider.of<ProfileProvider>(context, listen: false);
 
+      // Load home data
+      homeProvider.freelanceAllCategory();
+      homeProvider.getBanners();
+
+      // Load freelancer list
+      freelancerProvider.getFreelancerList();
+
+      // Load categories list
+      categoryProvider.getCategoryList();
+
+      // 🔹 Only load location if user is logged in
       if (_isLoggedIn) {
-        // Load banners or other user-specific data
-        await homeProvider.getBanners();
-      }
+        if (locationProvider.address == null ||
+            locationProvider.address!.isEmpty) {
+          await locationProvider.getCurrentLocation(context, true,
+              isLoggedIn: _isLoggedIn);
+          LatLng currentLatLng = LatLng(
+            locationProvider.position.latitude,
+            locationProvider.position.longitude,
+          );
 
-      if (locationProvider.address == null ||
-          locationProvider.address!.isEmpty) {
-        // ignore: use_build_context_synchronously
-        await locationProvider.getCurrentLocation(context, true);
+          String address = await locationProvider.getAddressFromGeocode(
+              currentLatLng, context);
 
-        LatLng currentLatLng = LatLng(
-          locationProvider.position.latitude,
-          locationProvider.position.longitude,
-        );
-
-        String address =
-            await locationProvider.getAddressFromGeocode(currentLatLng);
-        locationProvider.setAddress = address;
-        locationProvider.setPickData();
-
-        if (kDebugMode) {
-          print("✅ Current Address (from device): $address");
-        }
-      } else {
-        if (kDebugMode) {
-          print(
-              "✅ Using previously selected address: ${locationProvider.address}");
+          locationProvider.setAddress = address;
+          locationProvider.setPickData();
         }
       }
     });
-    _loadData();
-  }
 
-  void _loadData() async {
-    final categoryProvider =
-        Provider.of<CategoryProvider>(context, listen: false);
-
-    categoryProvider.getServicesList();
+    _isLoggedIn =
+        Provider.of<AuthProvider>(context, listen: false).isLoggedIn();
   }
 
   int selectedIndex = 0;
@@ -107,34 +103,48 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: CustomAppBarWidget(
         titleColor: Colors.white,
         context: context,
-        title: getTranslated('Home Screen', context),
+        title: getTranslated('Easy Business\nEvery Business', context),
         isBackButtonExist: !ResponsiveHelper.isMobile(),
+        actionView: IconButton(
+          icon: Icon(
+            Iconsax.add_circle,
+            color: Theme.of(context).primaryColor,
+            size: Dimensions.fontSizeDefault * 2,
+          ),
+          onPressed: () => {
+            profileProvider.isFreelancer!
+                ? RouterHelper.getFreelancerPortfolioListRoute()
+                : RouterHelper.getApplyFreelancerRoute()
+          },
+        ),
       ) as PreferredSizeWidget?,
       body: Consumer<HomeProvider>(
         builder: (context, provider, child) {
           return Stack(
             children: [
-              _isLoggedIn
-                  ? SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            const SizedBox(height: 25),
-                            _searchAndFilterBar(context),
-                            const SizedBox(height: 15),
-                            _topBannerWithNotification(),
-                            const SizedBox(height: 20),
-                            _categorySection(context),
-                            const SizedBox(height: 20),
-                            _featuredSection(),
-                            const SizedBox(height: 5),
-                            //  _servicesSection(),
-                          ],
-                        ),
-                      ),
-                    )
-                  : const NotLoggedInWidget(),
+              // _isLoggedIn
+              //     ?
+              SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 25),
+                      _searchAndFilterBar(context),
+                      const SizedBox(height: 15),
+                      _topBannerWithNotification(),
+                      const SizedBox(height: 20),
+                      _categorySection(context),
+                      const SizedBox(height: 20),
+                      _featuredSection(),
+                      const SizedBox(height: 5),
+
+                      //  _servicesSection(),
+                    ],
+                  ),
+                ),
+              ),
+              // : const NotLoggedInWidget(),
 
               // 🔹 Overall loading indicator
               if (provider.isLoading)
@@ -227,10 +237,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _searchAndFilterBar(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        await Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const SelectLocationScreen()),
-        );
+        _isLoggedIn
+            ? await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const SelectLocationScreen()),
+              )
+            : SizedBox.shrink();
 
         setState(() {});
       },
@@ -251,9 +263,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 builder: (context, locationProvider, child) {
                   final formattedAddress = locationProvider.address ?? '';
                   return Text(
-                    formattedAddress.isNotEmpty
-                        ? formattedAddress
-                        : "Select your location",
+                    _isLoggedIn
+                        ? formattedAddress.isNotEmpty
+                            ? formattedAddress
+                            : "Select your location"
+                        : 'Please Login',
                     style: const TextStyle(
                       fontSize: 12,
                       overflow: TextOverflow.ellipsis,
@@ -416,11 +430,9 @@ class _HomeScreenState extends State<HomeScreen> {
             if (provider.isLoading) {
               return const SizedBox.shrink();
             }
-
             if (provider.allFreelancers.isEmpty) {
               return const Center(child: Text("No freelancers available"));
             }
-
             return SizedBox(
               height: 260,
               child: ListView.builder(
@@ -437,7 +449,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         MaterialPageRoute(
                             builder: (context) => FeaturedItemsDetail(
                                   index: index,
-                                  freelanceId: freelancer.freelancerId,
+                                  freelanceId: freelancer.id,
                                 )),
                       );
                     },

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/models/category_model_response.dart';
 import 'package:flutter_restaurant/common/widgets/custom_app_bar_widget.dart';
-import 'package:flutter_restaurant/features/category/domain/category_model.dart';
 import 'package:flutter_restaurant/features/home_screen/home_widget/relevant_category/relevant_categories.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
-import 'package:flutter_restaurant/utill/images.dart';
 
 class AllCategories extends StatefulWidget {
   final List<OnlyCategoryModel> allCategories;
@@ -21,7 +19,7 @@ class _AllCategoriesState extends State<AllCategories> {
   @override
   void initState() {
     super.initState();
-    categories = widget.allCategories; // assign the passed list
+    categories = widget.allCategories;
   }
 
   @override
@@ -61,6 +59,7 @@ class _AllCategoriesState extends State<AllCategories> {
                   children: [
                     CircleAvatar(
                       radius: 30,
+                      backgroundColor: Theme.of(context).primaryColor,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(30),
                         child: Image.network(

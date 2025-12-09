@@ -25,7 +25,7 @@ class HomeScreenRepo {
 
   Future<ApiResponseModel> freelanceAllCategory() async {
     try {
-      final response = await dioClient!.get(
+      final response = await dioClient!.getWithoutToken(
         AppConstants.allFreelances,
       );
       return ApiResponseModel.withSuccess(response);

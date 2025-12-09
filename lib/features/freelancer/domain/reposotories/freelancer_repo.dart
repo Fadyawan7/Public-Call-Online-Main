@@ -3,7 +3,9 @@ import 'package:flutter_restaurant/data/datasource/remote/dio/dio_client.dart';
 import 'package:flutter_restaurant/data/datasource/remote/exception/api_error_handler.dart';
 import 'package:flutter_restaurant/common/models/api_response_model.dart';
 import 'package:flutter_restaurant/features/apply_freelancer/domain/models/apply_freelancer_model.dart';
+import 'package:flutter_restaurant/features/freelancer/domain/models/freelancer_model.dart';
 import 'package:flutter_restaurant/utill/app_constants.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FreelancerRepo {
@@ -20,7 +22,7 @@ class FreelancerRepo {
         queryParams['category_id'] = categoryId;
       }
 
-      final response = await dioClient!.get(
+      final response = await dioClient!.getWithoutToken(
         AppConstants.frelanceCategoryUri,
         queryParameters: queryParams.isNotEmpty ? queryParams : null,
       );
@@ -31,22 +33,33 @@ class FreelancerRepo {
     }
   }
 
-  Future<ApiResponseModel> applyFreelancer(ApplyFreelancerModel applyFreelancerModelRequest) async {
-    try {
-      Map<String, dynamic> data = applyFreelancerModelRequest.toJson();
-      print('=====RESPONSE====${data}');
+Future<ApiResponseModel> applyFreelancer(ApplyFreelancerModel model) async {
+  try {
+    Map<String, dynamic> fields = model.toJson();
 
-      final response = await dioClient!.post(AppConstants.applyFreelancerUri, data: data);
-      print('=====RESPONSE====${response.data}');
-      return ApiResponseModel.withSuccess(response);
-    } catch (e) {
-      return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
+    List<XFile?> images = [];
+    if (model.cover_picture != null && model.cover_picture!.isNotEmpty) {
+      images.add(XFile(model.cover_picture!));
     }
+
+    final response = await dioClient!.postMultipartImages(
+      AppConstants.applyFreelancerUri,
+      data: fields,
+      files: images,
+      fileKey: "cover_picture", 
+    );
+
+    return ApiResponseModel.withSuccess(response);
+
+  } catch (e) {
+    return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
   }
+}
+
 
   Future<ApiResponseModel> searchFreelancer(String text, ) async {
     try {
-      final response = await dioClient!.get('${AppConstants.frelanceCategoryUri}?categoryName=$text');
+      final response = await dioClient!.getWithoutToken('${AppConstants.frelanceCategoryUri}?categoryName=$text');
       return ApiResponseModel.withSuccess(response);
     } catch (e) {
       return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));

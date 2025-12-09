@@ -20,7 +20,8 @@ class ApiErrorHandler {
               break;
 
             case DioExceptionType.receiveTimeout:
-              errorDescription = "Receive timeout in connection with API server";
+              errorDescription =
+                  "Receive timeout in connection with API server";
               break;
 
             case DioExceptionType.badResponse:
@@ -29,17 +30,22 @@ class ApiErrorHandler {
                 var data = error.response?.data;
 
                 if (data is Map<String, dynamic>) {
-                  ErrorResponseModel errorResponse = ErrorResponseModel.fromJson(data);
+                  ErrorResponseModel errorResponse =
+                      ErrorResponseModel.fromJson(data);
 
-                  if (errorResponse.errors != null && errorResponse.errors!.isNotEmpty) {
+                  if (errorResponse.errors != null &&
+                      errorResponse.errors!.isNotEmpty) {
                     if (kDebugMode) {
-                      print('error----------------== ${errorResponse.errors![0].message} || error: ${error.response!.requestOptions.uri}');
+                      print(
+                          'error----------------== ${errorResponse.errors![0].message} || error: ${error.response!.requestOptions.uri}');
                     }
-                    errorDescription = errorResponse.errors![0].message ?? "Unknown error";
+                    errorDescription =
+                        errorResponse.errors![0].message ?? "Unknown error";
                   } else if (data.containsKey('message')) {
                     errorDescription = data['message'];
                   } else {
-                    errorDescription = "Failed to load data (invalid error format)";
+                    errorDescription =
+                        "Failed to load data (invalid error format)";
                   }
                 } else if (data is String) {
                   // 🧩 Handle plain string or HTML responses
@@ -54,17 +60,23 @@ class ApiErrorHandler {
                 if (kDebugMode) {
                   print('error is -> ${e.toString()}');
                 }
-                errorDescription = "Failed to parse server error";
+                if (error.response?.statusCode == 401) {
+                  errorDescription = "Please login first";
+                } else {
+                  errorDescription = "";
+                }
               }
               break;
 
             case DioExceptionType.sendTimeout:
             case DioExceptionType.connectionTimeout:
-              errorDescription = getTranslated('send_timeout_with_server', Get.context!);
+              errorDescription =
+                  getTranslated('send_timeout_with_server', Get.context!);
               break;
 
             case DioExceptionType.badCertificate:
-              errorDescription = getTranslated('incorrect_certificate', Get.context!);
+              errorDescription =
+                  getTranslated('incorrect_certificate', Get.context!);
               break;
 
             case DioExceptionType.connectionError:
@@ -75,7 +87,8 @@ class ApiErrorHandler {
             case DioExceptionType.unknown:
               debugPrint(
                   'error----------------== ${error.response?.requestOptions.path} || ${error.response?.statusCode} ${error.response?.data}');
-              errorDescription = getTranslated('unavailable_to_process_data', Get.context!);
+              errorDescription =
+                  getTranslated('unavailable_to_process_data', Get.context!);
               break;
           }
         } else {

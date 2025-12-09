@@ -18,6 +18,8 @@ class FreelancerBasicInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(
+        "object freelancer name: ${freelancer.name}........ ${freelancer.category} .......${freelancer.average_rating}");
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -38,35 +40,33 @@ class FreelancerBasicInfo extends StatelessWidget {
                 ),
               ),
               Text(
-                '${freelancer.freelancerCategory}',
+                freelancer.category_name ?? 'Category',
                 style: rubikMedium.copyWith(
                   fontSize: Dimensions.fontSizeLarge,
                 ),
               ),
-              Row(
-                children: [
-                  RatingBarWidget(
-                    rating: freelancer.avgRating ?? 0.0,
-                    size: Dimensions.paddingSizeDefault,
-                    textSize: Dimensions.paddingSizeDefault,
-                  ),
-                  const SizedBox(
-                      width: Dimensions.paddingSizeExtraSmall),
-                  Text(
-                    '(${freelancer.totalJob})',
-                    style: rubikRegular.copyWith(
-                      color: Theme.of(context).hintColor,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                  width: Dimensions.paddingSizeExtraSmall),
+              // Row(
+              //   children: [
+              //     RatingBarWidget(
+              //       rating: freelancer.rating ?? 0.0,
+              //       size: Dimensions.paddingSizeDefault,
+              //       textSize: Dimensions.paddingSizeDefault,
+              //     ),
+              //     const SizedBox(width: Dimensions.paddingSizeExtraSmall),
+              //     Text(
+              //       '(${freelancer.total_jobs})',
+              //       style: rubikRegular.copyWith(
+              //         color: Theme.of(context).hintColor,
+              //       ),
+              //     ),
+              //   ],
+              // ),
+              const SizedBox(width: Dimensions.paddingSizeExtraSmall),
               Text(
-                freelancer.status?.toCapitalized() ?? '',
+                freelancer.current_status?.toCapitalized() ?? '',
                 style: rubikBold.copyWith(
                   fontSize: Dimensions.fontSizeDefault,
-                  color: freelancer.status == 'busy'
+                  color: freelancer.current_status == 'busy'
                       ? Colors.red
                       : Theme.of(context).secondaryHeaderColor,
                 ),

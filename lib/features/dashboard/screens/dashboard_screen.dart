@@ -4,6 +4,7 @@ import 'package:flutter_restaurant/common/widgets/custom_asset_image_widget.dart
 import 'package:flutter_restaurant/common/widgets/custom_pop_scope_widget.dart';
 import 'package:flutter_restaurant/common/widgets/third_party_chat_widget.dart';
 import 'package:flutter_restaurant/features/address/providers/location_provider.dart';
+import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/features/chat/screens/chat_screen.dart';
 
 import 'package:flutter_restaurant/features/dashboard/widgets/bottom_nav_item_widget.dart';
@@ -38,6 +39,7 @@ class _DashboardScreenState extends State<DashboardScreen>
   int _pageIndex = 0; // Set initial page index to 1
   late List<Widget> _screens;
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey();
+  late bool _isLoggedIn;
 
 @override
 void initState() {
@@ -47,7 +49,8 @@ void initState() {
   final splashProvider = Provider.of<SplashProvider>(context, listen: false);
   final locationProvider =
       Provider.of<LocationProvider>(context, listen: false);
-
+ _isLoggedIn =
+        Provider.of<AuthProvider>(context, listen: false).isLoggedIn();
   if (splashProvider.policyModel == null) {
     splashProvider.getPolicyPage();
   }
@@ -56,11 +59,12 @@ void initState() {
 
   locationProvider.checkPermission(
     () => locationProvider
-        .getCurrentLocation(context, false)
+        .getCurrentLocation(context, false,isLoggedIn:_isLoggedIn )
         .then((currentAddress) {
       locationProvider.onChangeCurrentAddress(currentAddress);
     }),
     canBeIgnoreDialog: true,
+
   );
 
   _pageController = PageController(initialPage: 0);
@@ -74,11 +78,12 @@ void initState() {
       _setPage(pageIndex);
     }),
   ];
+WidgetsBinding.instance.addPostFrameCallback((_) {
+  final profileProvider =
+      Provider.of<ProfileProvider>(context, listen: false);
 
-  WidgetsBinding.instance.addPostFrameCallback((_) async {
-    final profileProvider =
-        Provider.of<ProfileProvider>(context, listen: false);
-    await profileProvider.getUserInfo(true);
+  profileProvider.getUserInfo(true).then((_) {
+    if (!mounted) return; // check before updating UI
 
     bool isFreelancer =
         profileProvider.userInfoModel?.userType == 'freelancer';
@@ -88,6 +93,8 @@ void initState() {
           isFreelancer ? FreelancerBookingScreen() : const BookingScreen();
     });
   });
+});
+
 }
 
   @override
@@ -146,32 +153,33 @@ void initState() {
                             children: [
                               BottomNavItemWidget(
                                 title: getTranslated('home', context)!,
-                                icon: Icons.home,
+                                imageIcon: Images.homeicon,  
                                 isSelected: _pageIndex == 0,
                                 onTap: () => _setPage(0),
                               ),
                               BottomNavItemWidget(
                                 title: getTranslated('booking', context)!,
-                                icon: Icons.calendar_month,
+                                                                imageIcon: Images.bookingicon,  
+
                                 isSelected: _pageIndex == 1,
                                 onTap: () => _setPage(1),
                               ),
                               BottomNavItemWidget(
                                 title: getTranslated('freelancer', context)!
                                     .toCapitalized(),
-                                icon: Icons.map_outlined,
+                                imageIcon: Images.mapicon,  
                                 isSelected: _pageIndex == 2,
                                 onTap: () => _setPage(2),
                               ),
                               BottomNavItemWidget(
                                 title: getTranslated('chat', context)!,
-                                icon: Icons.chat_bubble_outline,
+                                imageIcon: Images.chaticons,  
                                 isSelected: _pageIndex == 3,
                                 onTap: () => _setPage(3),
                               ),
                               BottomNavItemWidget(
                                 title: getTranslated('menu', context)!,
-                                icon: Icons.menu,
+                                imageIcon: Images.profileicon,  
                                 isSelected: _pageIndex == 4,
                                 onTap: () => _setPage(4),
                               ),
@@ -186,11 +194,12 @@ void initState() {
         ));
   }
 
-  void _setPage(int pageIndex) {
-    print('====HELooo====');
-    _pageController?.jumpToPage(pageIndex);
-    setState(() {
-      _pageIndex = pageIndex;
-    });
-  }
+void _setPage(int pageIndex) {
+  if (!mounted) return; 
+  _pageController?.jumpToPage(pageIndex);
+  setState(() {
+    _pageIndex = pageIndex;
+  });
+}
+
 }

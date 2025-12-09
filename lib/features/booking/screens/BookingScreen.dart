@@ -97,7 +97,7 @@ class _BookingScreenState extends State<BookingScreen>
       appBar: (CustomAppBarWidget(
         titleColor: Colors.white,
         context: context,
-        title: getTranslated('my_booking', context),
+        title: getTranslated('Easy Business\nEvery Business', context),
         isBackButtonExist: !ResponsiveHelper.isMobile(),
       )) as PreferredSizeWidget?,
       body: _isLoggedIn
