@@ -140,6 +140,7 @@ class Images {
   static const String iMark = 'assets/icon/i_mark.png';
   static const String whatsapp = 'assets/icon/whatsapp.png';
   static const String share = 'assets/icon/share.png';
+  static const String iconPco = 'assets/icon/icon.png';
 
 
   // for Image

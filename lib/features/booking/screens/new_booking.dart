@@ -76,6 +76,10 @@ class _BookingDateSlotScreenState extends State<BookingDateSlotScreen>
         appBar: CustomAppBarWidget(
           title: getTranslated('booking_detail', context),
           titleColor: Colors.white,
+          leading: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.red,
+          ),
         ),
         body: GestureDetector(
           onTap: () {
@@ -410,18 +414,49 @@ class _BookingDateSlotScreenState extends State<BookingDateSlotScreen>
                                   if (index == imageCount) {
                                     return GestureDetector(
                                       onTap: () {
-                                        // ⚡ Only allow 1 image
-                                        if (imageCount == 0) {
-                                          bookingProvider.pickImage();
-                                        } else {
+                                        if (imageCount >= 2) {
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(
                                             const SnackBar(
-                                              content: Text(
-                                                  "You can only select 1 image"),
-                                            ),
+                                                content: Text(
+                                                    "You can only select 2 images")),
                                           );
+                                          return;
                                         }
+
+                                        showModalBottomSheet(
+                                          context: context,
+                                          builder: (_) {
+                                            return SizedBox(
+                                              height: 160,
+                                              child: Column(
+                                                children: [
+                                                  ListTile(
+                                                    leading: const Icon(
+                                                        Icons.camera_alt),
+                                                    title: const Text("Camera"),
+                                                    onTap: () {
+                                                      Navigator.pop(context);
+                                                      bookingProvider.pickImage(
+                                                          true); // camera
+                                                    },
+                                                  ),
+                                                  ListTile(
+                                                    leading:
+                                                        const Icon(Icons.photo),
+                                                    title:
+                                                        const Text("Gallery"),
+                                                    onTap: () {
+                                                      Navigator.pop(context);
+                                                      bookingProvider.pickImage(
+                                                          false); // gallery
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                        );
                                       },
                                       child: Stack(
                                         children: [
@@ -469,10 +504,10 @@ class _BookingDateSlotScreenState extends State<BookingDateSlotScreen>
                                   }
 
                                   // ⚡ Only show the picked image
-                                  if (index >=
-                                      (bookingProvider.images?.length ?? 0)) {
-                                    return const SizedBox();
-                                  }
+                                  // if (index >=
+                                  //     (bookingProvider.images?.length ?? 0)) {
+                                  //   return const SizedBox();
+                                  // }
 
                                   return Stack(
                                     children: [
@@ -494,16 +529,15 @@ class _BookingDateSlotScreenState extends State<BookingDateSlotScreen>
                                                         .paddingSizeSmall)),
                                             child: Image.file(
                                               File(bookingProvider
-                                                  .images![index].path),
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  2.3,
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  2.3,
+                                                  .listImagePath[index]),
                                               fit: BoxFit.cover,
+                                              width: double.infinity,
+                                              height: double.infinity,
+                                              errorBuilder: (c, e, s) {
+                                                return const Center(
+                                                    child: Text(
+                                                        "Image Load Error"));
+                                              },
                                             ),
                                           ),
                                         ),

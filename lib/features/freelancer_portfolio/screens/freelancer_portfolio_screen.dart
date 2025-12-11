@@ -20,13 +20,16 @@ class FreelancerPortfolioScreen extends StatefulWidget {
   const FreelancerPortfolioScreen({super.key});
 
   @override
-  State<FreelancerPortfolioScreen> createState() => _FreelancerPortfolioScreenState();
+  State<FreelancerPortfolioScreen> createState() =>
+      _FreelancerPortfolioScreenState();
 }
 
-class _FreelancerPortfolioScreenState extends State<FreelancerPortfolioScreen> with TickerProviderStateMixin {
+class _FreelancerPortfolioScreenState extends State<FreelancerPortfolioScreen>
+    with TickerProviderStateMixin {
   @override
   void initState() {
-    Provider.of<FreelancerPortfolioProvider>(context, listen: false).getFreelancerPortfolioList();
+    Provider.of<FreelancerPortfolioProvider>(context, listen: false)
+        .getFreelancerPortfolioList();
 
     super.initState();
   }
@@ -39,92 +42,128 @@ class _FreelancerPortfolioScreenState extends State<FreelancerPortfolioScreen> w
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ( CustomAppBarWidget(
+      appBar: (CustomAppBarWidget(
         titleColor: Colors.white,
         context: context,
         title: getTranslated('my_portfolio', context),
         actionView: IconButton(
-          icon: const Icon(Iconsax.add_circle, color: Colors.white),
-          onPressed: () => {
-            RouterHelper.getFreelancerPortfolioAddRoute()
-          },
+          icon: const Icon(Iconsax.add_circle, color: Colors.red),
+          onPressed: () => {RouterHelper.getFreelancerPortfolioAddRoute()},
         ),
       )),
       body: Consumer<FreelancerPortfolioProvider>(
-        builder: (context,freelancerPortfolio,child){
-          List<FreelancerPortfolioModel>? freelancerPortfolioList =[];
-          if(freelancerPortfolio.freelancerPortfolioList != null) {
-            freelancerPortfolioList = freelancerPortfolio.freelancerPortfolioList ;
+        builder: (context, freelancerPortfolio, child) {
+          List<FreelancerPortfolioModel>? freelancerPortfolioList = [];
+          if (freelancerPortfolio.freelancerPortfolioList != null) {
+            freelancerPortfolioList =
+                freelancerPortfolio.freelancerPortfolioList;
           }
-          return !freelancerPortfolio.isLoading ? freelancerPortfolioList!.isNotEmpty ? Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-                children: [
-                  GridView.builder(
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        childAspectRatio: 1,
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                      ),
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: freelancerPortfolioList.length ,
-                      itemBuilder: (BuildContext context, index){
-                        String? imageUrl = '${freelancerPortfolioList![index].imageUrl}';
-                        return Stack(children: [
-                          DottedBorder(
-                            dashPattern: const [4,5],
-                            borderType: BorderType.RRect,
-                            color: Theme.of(context).hintColor,
-                            radius: const Radius.circular(15),
-                            child: Container(
-                              decoration: const BoxDecoration(color: Colors.white,
-                                borderRadius: BorderRadius.all(Radius.circular(20)),),
-                              child: ClipRRect(borderRadius: const BorderRadius.all(Radius.circular(Dimensions.paddingSizeSmall)),
-                                  child:CustomImageWidget(
-                                    placeholder: Images.placeholderUser,
-                                    height: MediaQuery.of(context).size.width/2.3,
-                                    width: MediaQuery.of(context).size.width/2.3,
-                                    fit: BoxFit.contain,
-                                    image: imageUrl ?? '',
-                                  )
-
-                              )
-                              ,),
-                          ),
-
-                          Positioned(top: 5, right : 5,
-                            child: InkWell(
-                              splashColor: Colors.transparent,
-                              onTap :() => {
-                                freelancerPortfolio.deleteFreelancerPortfolio(freelancerPortfolioList![index].id!, _callback)
-                              },
-                              child: Container(decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  boxShadow: [BoxShadow(color: Theme.of(context).hintColor, blurRadius: 1,spreadRadius: 1,offset: const Offset(0,0))],
-                                  borderRadius: const BorderRadius.all(Radius.circular(Dimensions.paddingSizeDefault))),
-                                  child: const Padding(
-                                    padding: EdgeInsets.all(4.0),
-                                    child: Icon(Icons.delete_forever_rounded,color: Colors.red,size: 25,),)),
+          return !freelancerPortfolio.isLoading
+              ? freelancerPortfolioList!.isNotEmpty
+                  ? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(children: [
+                        GridView.builder(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              childAspectRatio: 1,
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 10,
                             ),
-                          ),
-                        ],);
-                      })
-
-                ]),
-          ) :const Center(child: NoDataWidget(isPortfolio: true)) : const BookingShimmerWidget();
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: freelancerPortfolioList.length,
+                            itemBuilder: (BuildContext context, index) {
+                              String? imageUrl =
+                                  '${freelancerPortfolioList![index].imageUrl}';
+                              return Stack(
+                                children: [
+                                  DottedBorder(
+                                    dashPattern: const [4, 5],
+                                    borderType: BorderType.RRect,
+                                    color: Theme.of(context).hintColor,
+                                    radius: const Radius.circular(15),
+                                    child: Container(
+                                      decoration: const BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(20)),
+                                      ),
+                                      child: ClipRRect(
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(
+                                                  Dimensions.paddingSizeSmall)),
+                                          child: CustomImageWidget(
+                                            placeholder: Images.placeholderUser,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                2.3,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                2.3,
+                                            fit: BoxFit.contain,
+                                            image: imageUrl ?? '',
+                                          )),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 5,
+                                    right: 5,
+                                    child: InkWell(
+                                      splashColor: Colors.transparent,
+                                      onTap: () => {
+                                        freelancerPortfolio
+                                            .deleteFreelancerPortfolio(
+                                                freelancerPortfolioList![index]
+                                                    .id!,
+                                                _callback)
+                                      },
+                                      child: Container(
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                    color: Theme.of(context)
+                                                        .hintColor,
+                                                    blurRadius: 1,
+                                                    spreadRadius: 1,
+                                                    offset: const Offset(0, 0))
+                                              ],
+                                              borderRadius: const BorderRadius
+                                                  .all(
+                                                  Radius.circular(Dimensions
+                                                      .paddingSizeDefault))),
+                                          child: const Padding(
+                                            padding: EdgeInsets.all(4.0),
+                                            child: Icon(
+                                              Icons.delete_forever_rounded,
+                                              color: Colors.red,
+                                              size: 25,
+                                            ),
+                                          )),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            })
+                      ]),
+                    )
+                  : const Center(child: NoDataWidget(isPortfolio: true))
+              : const BookingShimmerWidget();
         },
-      ) ,
+      ),
     );
   }
 
-  void _callback( String message,bool isSuccess) async {
-    if(isSuccess) {
-      showCustomSnackBarHelper(message,isError: false);
-      Provider.of<FreelancerPortfolioProvider>(context, listen: false).getFreelancerPortfolioList();
-
-    }else {
+  void _callback(String message, bool isSuccess) async {
+    if (isSuccess) {
+      showCustomSnackBarHelper(message, isError: false);
+      Provider.of<FreelancerPortfolioProvider>(context, listen: false)
+          .getFreelancerPortfolioList();
+    } else {
       showCustomSnackBarHelper(message);
     }
   }

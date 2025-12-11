@@ -28,16 +28,22 @@ class FreelancerPortfolioAddScreen extends StatefulWidget {
   const FreelancerPortfolioAddScreen({super.key});
 
   @override
-  State<FreelancerPortfolioAddScreen> createState() => _FreelancerPortfolioAddScreenState();
+  State<FreelancerPortfolioAddScreen> createState() =>
+      _FreelancerPortfolioAddScreenState();
 }
 
-class _FreelancerPortfolioAddScreenState extends State<FreelancerPortfolioAddScreen> with TickerProviderStateMixin {
+class _FreelancerPortfolioAddScreenState
+    extends State<FreelancerPortfolioAddScreen> with TickerProviderStateMixin {
   File? file;
   final picker = ImagePicker();
   final GlobalKey<FormState> portfolioFormKey = GlobalKey<FormState>();
 
   void _choose() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery, imageQuality: 100, maxHeight: 500, maxWidth: 600);
+    final pickedFile = await picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 100,
+        maxHeight: 500,
+        maxWidth: 600);
     if (pickedFile != null) {
       setState(() {
         file = File(pickedFile.path);
@@ -58,128 +64,192 @@ class _FreelancerPortfolioAddScreenState extends State<FreelancerPortfolioAddScr
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ( CustomAppBarWidget(
-        titleColor: Colors.white,
+      appBar: (CustomAppBarWidget(
+        titleColor: Colors.red,
         context: context,
         title: getTranslated('Add Portfolio Image', context),
       )) as PreferredSizeWidget?,
       body: Column(children: [
-
-        Expanded(child:
-        SizedBox(width: Dimensions.webScreenWidth,
-            child: Form(
-              key: portfolioFormKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    getTranslated('Upload Portfolio Image', context)!,
-                    style: rubikSemiBold.copyWith(color: ColorResources.getGreyBunkerColor(context)), overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                const SizedBox(height: Dimensions.paddingSizeSmall),
-                file != null ? Stack(children: [
-                  DottedBorder(
-                    dashPattern: const [4,5],
-                    borderType: BorderType.RRect,
-                    color: Theme.of(context).hintColor,
-                    radius: const Radius.circular(15),
-                    child: Container(
-                      decoration: const BoxDecoration(color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(20)),),
-                      child: ClipRRect(borderRadius: const BorderRadius.all(Radius.circular(Dimensions.paddingSizeSmall)),
-                        child: Image.file(file!,
-                          width: MediaQuery.of(context).size.width/2.3,
-                          height: MediaQuery.of(context).size.width/2.3,
-                          fit: BoxFit.contain,),) ,),
-                  ),
-
-                  Positioned(top: 5, right : 5,
-                    child: InkWell(
-                      splashColor: Colors.transparent,
-                      onTap : _choose,
-                      child: Container(decoration: BoxDecoration(
-                          color: Colors.white,
-                          boxShadow: [BoxShadow(color: Theme.of(context).hintColor, blurRadius: 1,spreadRadius: 1,offset: const Offset(0,0))],
-                          borderRadius: const BorderRadius.all(Radius.circular(Dimensions.paddingSizeDefault))),
-                          child: const Padding(
-                            padding: EdgeInsets.all(4.0),
-                            child: Icon(Icons.edit_note_sharp,color: Colors.red,size: 25,),)),
-                    ),
-                  ),
-                ],) :InkWell(
-                  onTap:_choose,
-                  child: Stack(children: [
-                    DottedBorder(
-                      dashPattern: const [4,5],
-                      borderType: BorderType.RRect,
-                      color: Theme.of(context).hintColor,
-                      radius: const Radius.circular(15),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(Dimensions.paddingSizeSmall),
-                        child:  Image.asset(Images.placeholderImage, height: MediaQuery.of(context).size.width/2.3,
-                            width: MediaQuery.of(context).size.width/2.3, fit: BoxFit.cover),
-                      ),
-                    ),
-                    const Positioned(bottom: 0, right: 0, top: 0, left: 0,
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Icon(Icons.camera_alt, color: Colors.black, size: 40,),
-                      ),
-                    ),
-                  ],
-                  ),
-                )
-              ]),
-            ))),
+        Expanded(
+            child: SizedBox(
+                width: Dimensions.webScreenWidth,
+                child: Form(
+                  key: portfolioFormKey,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            getTranslated('Upload Portfolio Image', context)!,
+                            style: rubikSemiBold.copyWith(
+                                color:
+                                    ColorResources.getGreyBunkerColor(context)),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        const SizedBox(height: Dimensions.paddingSizeSmall),
+                        file != null
+                            ? Stack(
+                                children: [
+                                  DottedBorder(
+                                    dashPattern: const [4, 5],
+                                    borderType: BorderType.RRect,
+                                    color: Theme.of(context).hintColor,
+                                    radius: const Radius.circular(15),
+                                    child: Container(
+                                      decoration: const BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(20)),
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(
+                                                Dimensions.paddingSizeSmall)),
+                                        child: Image.file(
+                                          file!,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2.3,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2.3,
+                                          fit: BoxFit.contain,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 5,
+                                    right: 5,
+                                    child: InkWell(
+                                      splashColor: Colors.transparent,
+                                      onTap: _choose,
+                                      child: Container(
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                    color: Theme.of(context)
+                                                        .hintColor,
+                                                    blurRadius: 1,
+                                                    spreadRadius: 1,
+                                                    offset: const Offset(0, 0))
+                                              ],
+                                              borderRadius: const BorderRadius
+                                                  .all(
+                                                  Radius.circular(Dimensions
+                                                      .paddingSizeDefault))),
+                                          child: const Padding(
+                                            padding: EdgeInsets.all(4.0),
+                                            child: Icon(
+                                              Icons.edit_note_sharp,
+                                              color: Colors.red,
+                                              size: 25,
+                                            ),
+                                          )),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : InkWell(
+                                onTap: _choose,
+                                child: Stack(
+                                  children: [
+                                    DottedBorder(
+                                      dashPattern: const [4, 5],
+                                      borderType: BorderType.RRect,
+                                      color: Theme.of(context).hintColor,
+                                      radius: const Radius.circular(15),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(
+                                            Dimensions.paddingSizeSmall),
+                                        child: Image.asset(
+                                            Images.placeholderImage,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                2.3,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                2.3,
+                                            fit: BoxFit.cover),
+                                      ),
+                                    ),
+                                    const Positioned(
+                                      bottom: 0,
+                                      right: 0,
+                                      top: 0,
+                                      left: 0,
+                                      child: Align(
+                                        alignment: Alignment.center,
+                                        child: Icon(
+                                          Icons.camera_alt,
+                                          color: Colors.black,
+                                          size: 40,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                      ]),
+                ))),
         Center(
           child: Consumer<FreelancerPortfolioProvider>(
-            builder: (context,freelancerPortfolioProvider,child){
+            builder: (context, freelancerPortfolioProvider, child) {
               return Container(
-                width: 700 ,
+                width: 700,
                 padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-                margin:const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall,vertical:Dimensions.paddingSizeDefault ) ,
+                margin: const EdgeInsets.symmetric(
+                    horizontal: Dimensions.paddingSizeSmall,
+                    vertical: Dimensions.paddingSizeDefault),
                 child: CustomButtonWidget(
-                  isLoading: freelancerPortfolioProvider.isLoading,
+                    isLoading: freelancerPortfolioProvider.isLoading,
                     btnTxt: getTranslated('Upload', context),
-                    onTap: () async  {
-
-                      if(portfolioFormKey.currentState != null && portfolioFormKey.currentState!.validate()){
-
-                        if(file == null){
-                          showCustomSnackBarHelper(getTranslated('select_city', context));
-                        }  else {
-
-                          ResponseModel responseModel = await freelancerPortfolioProvider.freelancerPortfolioAdd(
-                             file,
-                            Provider.of<AuthProvider>(context, listen: false).getUserToken(),
+                    onTap: () async {
+                      if (portfolioFormKey.currentState != null &&
+                          portfolioFormKey.currentState!.validate()) {
+                        if (file == null) {
+                          showCustomSnackBarHelper(
+                              getTranslated('select_city', context));
+                        } else {
+                          ResponseModel responseModel =
+                              await freelancerPortfolioProvider
+                                  .freelancerPortfolioAdd(
+                            file,
+                            Provider.of<AuthProvider>(context, listen: false)
+                                .getUserToken(),
                           );
 
-                          if(responseModel.isSuccess) {
-                            if(context.mounted){
+                          if (responseModel.isSuccess) {
+                            if (context.mounted) {
                               setState(() {
                                 file = null;
                               });
-                              showCustomSnackBarHelper(getTranslated('Uploaded Successfully !', context), isError: false);
-                              Provider.of<FreelancerPortfolioProvider>(context, listen: false).getFreelancerPortfolioList();
-
-                      }
-                          }else {
+                              showCustomSnackBarHelper(
+                                  getTranslated(
+                                      'Uploaded Successfully !', context),
+                                  isError: false);
+                              Provider.of<FreelancerPortfolioProvider>(context,
+                                      listen: false)
+                                  .getFreelancerPortfolioList();
+                            }
+                          } else {
                             showCustomSnackBarHelper(responseModel.message);
                           }
                         }
-
                       }
-                    }
-                ),
+                    }),
               );
             },
           ),
         )
-
-      ]) ,
+      ]),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/main.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
+import 'package:flutter_restaurant/utill/images.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
 import 'package:go_router/go_router.dart';
 
@@ -71,14 +72,32 @@ class CustomAppBarWidget extends StatelessWidget
 
       centerTitle: centerTitle,
       leading: isBackButtonExist
-          ? IconButton(
-              icon: leading ?? const Icon(Icons.arrow_back_ios),
-              color: titleColor ??
-                  (isTransparent ? Theme.of(context).cardColor : Colors.white),
-              onPressed: () =>
-                  onBackPressed != null ? onBackPressed!() : context.pop(),
-            )
-          : const SizedBox(),
+          ? (leading != null
+              ? GestureDetector(
+                  onTap: () =>
+                      onBackPressed != null ? onBackPressed!() : context.pop(),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: leading,
+                  ),
+                )
+              : IconButton(
+                  icon: const Icon(Icons.arrow_back_ios),
+                  color: titleColor ?? Colors.red,
+                  onPressed: () =>
+                      onBackPressed != null ? onBackPressed!() : context.pop(),
+                ))
+          : (leading != null
+              ? GestureDetector(
+                  onTap: () =>
+                      onBackPressed != null ? onBackPressed!() : context.pop(),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: leading,
+                  ),
+                )
+              : const SizedBox()),
+
       actions: actionView != null
           ? [
               Padding(

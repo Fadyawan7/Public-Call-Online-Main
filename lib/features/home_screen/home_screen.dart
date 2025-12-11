@@ -1,26 +1,20 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/widgets/custom_app_bar_widget.dart';
-import 'package:flutter_restaurant/common/widgets/not_logged_in_widget.dart';
+import 'package:flutter_restaurant/common/widgets/custom_image_widget.dart';
 import 'package:flutter_restaurant/features/address/providers/location_provider.dart';
 import 'package:flutter_restaurant/features/address/screens/select_location_screen.dart';
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/features/category/providers/category_provider.dart';
-import 'package:flutter_restaurant/features/freelancer/domain/models/freelancer_model.dart';
 import 'package:flutter_restaurant/features/freelancer/providers/freelancer_provider.dart';
-import 'package:flutter_restaurant/features/freelancer/screens/freelancer_screen.dart';
-import 'package:flutter_restaurant/features/freelancer/widgets/freelancer_detail_dialog_widget.dart';
 import 'package:flutter_restaurant/features/home_screen/home_widget/all_featured/all_featured.dart';
 import 'package:flutter_restaurant/features/home_screen/home_widget/all_categories/view_all_categories.dart';
 import 'package:flutter_restaurant/features/home_screen/home_widget/all_featured/featured_item_detail.dart';
-import 'package:flutter_restaurant/features/home_screen/home_widget/all_services/all_services.dart';
 import 'package:flutter_restaurant/features/home_screen/home_widget/relevant_category/relevant_categories.dart';
 import 'package:flutter_restaurant/features/home_screen/provider/home_provider.dart';
 import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
 import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
-import 'package:flutter_restaurant/main.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -101,6 +95,14 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBarWidget(
+        leading: ClipRRect(
+          borderRadius: BorderRadiusGeometry.all(Radius.circular(5)),
+          child: Image.asset(
+            Images.iconPco,
+            width: 28,
+            height: 28,
+          ),
+        ),
         titleColor: Colors.white,
         context: context,
         title: getTranslated('Easy Business\nEvery Business', context),

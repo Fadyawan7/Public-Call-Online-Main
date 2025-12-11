@@ -4,6 +4,8 @@ import 'package:flutter_restaurant/common/widgets/custom_app_bar_widget.dart';
 import 'package:flutter_restaurant/features/home_screen/home_widget/relevant_category/relevant_categories.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 
+
+
 class AllCategories extends StatefulWidget {
   final List<OnlyCategoryModel> allCategories;
 

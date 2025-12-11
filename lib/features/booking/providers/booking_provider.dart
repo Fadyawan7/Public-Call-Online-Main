@@ -26,10 +26,9 @@ class BookingProvider extends ChangeNotifier {
   BookingProvider({required this.sharedPreferences, required this.bookingRepo});
 
   // Separate lists for each booking status
-List<BookingModel> _pendingList = [];
-List<BookingModel> _confirmedList = [];
-List<BookingModel> _historyList = [];
-
+  List<BookingModel> _pendingList = [];
+  List<BookingModel> _confirmedList = [];
+  List<BookingModel> _historyList = [];
 
   ResponseModel? _responseModel;
   bool _isLoading = false;
@@ -51,16 +50,16 @@ List<BookingModel> _historyList = [];
 
   // ======== GETTERS ========
   bool get isLoading => _isLoading;
-    List<XFile>? get images => _images;
+  List<XFile>? get images => _images;
 
-List<BookingModel> get pendingList => _pendingList;
-List<BookingModel> get confirmedList => _confirmedList;
-List<BookingModel> get historyList => _historyList;
+  List<BookingModel> get pendingList => _pendingList;
+  List<BookingModel> get confirmedList => _confirmedList;
+  List<BookingModel> get historyList => _historyList;
 
   BookingDetailsModel? get bookingDetails => _bookingDetails;
   List<String> get availableTimes => _availableTimes;
   List<DayData> get days => _days;
-  
+
   List<String> get listImagePath => _listImagePath;
   int get selectDateSlot => _selectDateSlot;
   int get selectTimeSlot => _selectTimeSlot;
@@ -138,15 +137,36 @@ List<BookingModel> get historyList => _historyList;
     Future.microtask(() => notifyListeners());
   }
 
-  Future<void> pickImage() async {
-    _images = await ImagePicker().pickMultiImage(limit: 8);
-    if (_images != null) {
-      for (XFile file in _images!) {
-        _listImagePath.add(file.path);
-      }
+  // Future<void> pickImage() async {
+  //   _images = await ImagePicker().pickMultiImage(limit: 8);
+  //   if (_images != null) {
+  //     for (XFile file in _images!) {
+  //       _listImagePath.add(file.path);
+  //     }
+  //   }
+  //   Future.microtask(() => notifyListeners());
+  // }
+Future<void> pickImage(bool fromCamera) async {
+ if (_listImagePath.length >= 2) return;
+
+  final ImagePicker picker = ImagePicker();
+
+  if (fromCamera) {
+    final XFile? image = await picker.pickImage(source: ImageSource.camera);
+    if (image != null && _listImagePath.length < 2) {
+      _listImagePath.add(image.path);
     }
-    Future.microtask(() => notifyListeners());
+  } else {
+    final List<XFile> images = await picker.pickMultiImage(limit: 2);
+    for (XFile file in images!) {
+ if (_listImagePath.length < 2) {
+        _listImagePath.add(file.path);
+      }      }
   }
+
+  /// 🔥 You forgot this line
+  notifyListeners();
+}
 
   void removeImage(int index, bool fromColor) {
     _listImagePath.removeAt(index);
@@ -184,51 +204,51 @@ List<BookingModel> get historyList => _historyList;
     return responseModel;
   }
 
-Future<void> getBookingList(BuildContext context, String? status) async {
-  _isLoading = true;
-  notifyListeners();
+  Future<void> getBookingList(BuildContext context, String? status) async {
+    _isLoading = true;
+    notifyListeners();
 
-  print("⏳ API call started for: $status");
+    print("⏳ API call started for: $status");
 
-  ApiResponseModel apiResponse = await bookingRepo!.getBookingList(status);
+    ApiResponseModel apiResponse = await bookingRepo!.getBookingList(status);
 
-  List<BookingModel> newList = [];
+    List<BookingModel> newList = [];
 
-  if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-    final responseData = apiResponse.response!.data;
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
+      final responseData = apiResponse.response!.data;
 
-    if (responseData is List) {
-      // 🔥 Directly parse the list
-      for (var booking in responseData) {
-        newList.add(BookingModel.fromJson(booking));
+      if (responseData is List) {
+        // 🔥 Directly parse the list
+        for (var booking in responseData) {
+          newList.add(BookingModel.fromJson(booking));
+        }
+      } else {
+        print("❌ Unexpected response format: $responseData");
+      }
+
+      print("✅ Received ${newList.length} records for $status");
+
+      // Assign to correct list
+      if (status == 'pending') {
+        _pendingList = newList;
+      } else if (status == 'confirmed') {
+        _confirmedList = newList;
+      } else if (status == 'history') {
+        _historyList = newList;
       }
     } else {
-      print("❌ Unexpected response format: $responseData");
+      print("❌ API error: ${apiResponse.error}");
     }
 
-    print("✅ Received ${newList.length} records for $status");
+    // Delay rebuild until data assigned
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _isLoading = false;
+      notifyListeners();
+    });
 
-    // Assign to correct list
-    if (status == 'pending') {
-      _pendingList = newList;
-    } else if (status == 'confirmed') {
-      _confirmedList = newList;
-    } else if (status == 'history') {
-      _historyList = newList;
-    }
-
-  } else {
-    print("❌ API error: ${apiResponse.error}");
+    print("🏁 UI updated for $status with count: ${newList.length}");
   }
-
-  // Delay rebuild until data assigned
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    _isLoading = false;
-    notifyListeners();
-  });
-
-  print("🏁 UI updated for $status with count: ${newList.length}");
-}
 
   void stopLoader() {
     _isLoading = false;
@@ -241,13 +261,16 @@ Future<void> getBookingList(BuildContext context, String? status) async {
     _isLoading = true;
     WidgetsBinding.instance.addPostFrameCallback((_) => notifyListeners());
 
-    ApiResponseModel apiResponse = await bookingRepo!.getBookingDetails(bookingID);
+    ApiResponseModel apiResponse =
+        await bookingRepo!.getBookingDetails(bookingID);
 
     if (apiResponse.response != null &&
         apiResponse.response!.statusCode == 200) {
       try {
-        _bookingDetails = BookingDetailsModel.fromJson(apiResponse.response!.data);
-        _responseModel = ResponseModel(true, apiResponse.response!.data.toString());
+        _bookingDetails =
+            BookingDetailsModel.fromJson(apiResponse.response!.data);
+        _responseModel =
+            ResponseModel(true, apiResponse.response!.data.toString());
       } catch (e) {
         print("Error parsing JSON: $e");
         _bookingDetails = BookingDetailsModel(id: -1);
@@ -263,7 +286,8 @@ Future<void> getBookingList(BuildContext context, String? status) async {
     return _responseModel;
   }
 
-  void updateBookingStatus(String bookingID, String? status, Function callback) async {
+  void updateBookingStatus(
+      String bookingID, String? status, Function callback) async {
     _isLoading = true;
     notifyListeners();
 
@@ -290,7 +314,8 @@ Future<void> getBookingList(BuildContext context, String? status) async {
       String? message = 'Booking $bookingID $status Successfully !';
       callback(message, true, bookingID);
     } else {
-      callback(ApiCheckerHelper.getError(apiResponse).errors?.first.message, false, '-1');
+      callback(ApiCheckerHelper.getError(apiResponse).errors?.first.message,
+          false, '-1');
     }
 
     notifyListeners();
@@ -298,7 +323,8 @@ Future<void> getBookingList(BuildContext context, String? status) async {
 
   // ======== Local Cache Methods ========
   Future<void> setPlaceBooking(String placeBooking) async {
-    await sharedPreferences!.setString(AppConstants.placeOrderData, placeBooking);
+    await sharedPreferences!
+        .setString(AppConstants.placeOrderData, placeBooking);
   }
 
   String? getPlaceBooking() {
