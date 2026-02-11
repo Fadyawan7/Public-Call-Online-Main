@@ -289,22 +289,97 @@ typedef $$CacheResponseTableUpdateCompanionBuilder = CacheResponseCompanion
   Value<String> response,
 });
 
+class $$CacheResponseTableFilterComposer
+    extends Composer<_$AppDatabase, $CacheResponseTable> {
+  $$CacheResponseTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get endPoint => $composableBuilder(
+      column: $table.endPoint, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get header => $composableBuilder(
+      column: $table.header, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get response => $composableBuilder(
+      column: $table.response, builder: (column) => ColumnFilters(column));
+}
+
+class $$CacheResponseTableOrderingComposer
+    extends Composer<_$AppDatabase, $CacheResponseTable> {
+  $$CacheResponseTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get endPoint => $composableBuilder(
+      column: $table.endPoint, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get header => $composableBuilder(
+      column: $table.header, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get response => $composableBuilder(
+      column: $table.response, builder: (column) => ColumnOrderings(column));
+}
+
+class $$CacheResponseTableAnnotationComposer
+    extends Composer<_$AppDatabase, $CacheResponseTable> {
+  $$CacheResponseTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get endPoint =>
+      $composableBuilder(column: $table.endPoint, builder: (column) => column);
+
+  GeneratedColumn<String> get header =>
+      $composableBuilder(column: $table.header, builder: (column) => column);
+
+  GeneratedColumn<String> get response =>
+      $composableBuilder(column: $table.response, builder: (column) => column);
+}
+
 class $$CacheResponseTableTableManager extends RootTableManager<
     _$AppDatabase,
     $CacheResponseTable,
     CacheResponseData,
     $$CacheResponseTableFilterComposer,
     $$CacheResponseTableOrderingComposer,
+    $$CacheResponseTableAnnotationComposer,
     $$CacheResponseTableCreateCompanionBuilder,
-    $$CacheResponseTableUpdateCompanionBuilder> {
+    $$CacheResponseTableUpdateCompanionBuilder,
+    (
+      CacheResponseData,
+      BaseReferences<_$AppDatabase, $CacheResponseTable, CacheResponseData>
+    ),
+    CacheResponseData,
+    PrefetchHooks Function()> {
   $$CacheResponseTableTableManager(_$AppDatabase db, $CacheResponseTable table)
       : super(TableManagerState(
           db: db,
           table: table,
-          filteringComposer:
-              $$CacheResponseTableFilterComposer(ComposerState(db, table)),
-          orderingComposer:
-              $$CacheResponseTableOrderingComposer(ComposerState(db, table)),
+          createFilteringComposer: () =>
+              $$CacheResponseTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CacheResponseTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CacheResponseTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<int> id = const Value.absent(),
             Value<String> endPoint = const Value.absent(),
@@ -329,56 +404,28 @@ class $$CacheResponseTableTableManager extends RootTableManager<
             header: header,
             response: response,
           ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
         ));
 }
 
-class $$CacheResponseTableFilterComposer
-    extends FilterComposer<_$AppDatabase, $CacheResponseTable> {
-  $$CacheResponseTableFilterComposer(super.$state);
-  ColumnFilters<int> get id => $state.composableBuilder(
-      column: $state.table.id,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get endPoint => $state.composableBuilder(
-      column: $state.table.endPoint,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get header => $state.composableBuilder(
-      column: $state.table.header,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get response => $state.composableBuilder(
-      column: $state.table.response,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-}
-
-class $$CacheResponseTableOrderingComposer
-    extends OrderingComposer<_$AppDatabase, $CacheResponseTable> {
-  $$CacheResponseTableOrderingComposer(super.$state);
-  ColumnOrderings<int> get id => $state.composableBuilder(
-      column: $state.table.id,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get endPoint => $state.composableBuilder(
-      column: $state.table.endPoint,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get header => $state.composableBuilder(
-      column: $state.table.header,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get response => $state.composableBuilder(
-      column: $state.table.response,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-}
+typedef $$CacheResponseTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $CacheResponseTable,
+    CacheResponseData,
+    $$CacheResponseTableFilterComposer,
+    $$CacheResponseTableOrderingComposer,
+    $$CacheResponseTableAnnotationComposer,
+    $$CacheResponseTableCreateCompanionBuilder,
+    $$CacheResponseTableUpdateCompanionBuilder,
+    (
+      CacheResponseData,
+      BaseReferences<_$AppDatabase, $CacheResponseTable, CacheResponseData>
+    ),
+    CacheResponseData,
+    PrefetchHooks Function()>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;

@@ -15,7 +15,7 @@ echo ""
 
 echo "📝 TO FIX:"
 echo "1. Go to: https://console.firebase.google.com/project/pco-app-3d42d/settings/general"
-echo "2. Find your Android app (com.pco.pcoapp)"
+echo "2. Find your Android app (com.pcobh.app)"
 echo "3. Add this SHA-1 fingerprint:"
 echo "   70:08:CA:92:68:6F:43:79:39:A9:AA:B2:4E:8C:B5:E9:BA:3D:78:59"
 echo "4. Download the new google-services.json"
