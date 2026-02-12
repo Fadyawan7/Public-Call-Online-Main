@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:906367301565:android:8ef5cc658b13b8d71944d4",
         "android_client_info": {
-          "package_name": "com.pcobh.app"
+          "package_name": "com.pco.pcoapp"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "906367301565-4kcsf4s68lf9o0l6qqsn5g12csqnhdvd.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.pcobh.app",
+            "package_name": "com.pco.pcoapp",
             "certificate_hash": "1146a4a03f376e6dc5b466e52ab010a2d9580265"
           }
         },
@@ -25,7 +25,7 @@
           "client_id": "906367301565-7beugqs26ac4il8b3lgl7t5jtaag8csp.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.pcobh.app",
+            "package_name": "com.pco.pcoapp",
             "certificate_hash": "022d35f55e6cf9dd4ef5a41e83cdef245dc3b210"
           }
         },
@@ -33,7 +33,7 @@
           "client_id": "906367301565-e1g3eq409mtgsalru3pl9nqaqkvv6emc.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.pcobh.app",
+            "package_name": "com.pco.pcoapp",
             "certificate_hash": "f99f686c237ebd6862d52d2a956eaee48c63f991"
           }
         },
@@ -41,7 +41,7 @@
           "client_id": "906367301565-h01aj9tfikc8lbnce5q3eocrlh8t0j2m.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.pcobh.app",
+            "package_name": "com.pco.pcoapp",
             "certificate_hash": "7008ca92686f437939a9aab24e8cb5e9ba3d7859"
           }
         },
@@ -49,7 +49,7 @@
           "client_id": "906367301565-m2c8d246id6aq5ag8psvg1oajg6ppqp5.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.pcobh.app",
+            "package_name": "com.pco.pcoapp",
             "certificate_hash": "5fde954a649bb124336ae3b0ff41df82d185a9e7"
           }
         },
@@ -57,8 +57,55 @@
           "client_id": "906367301565-vhbo1np6r8jorh8ni94tp5hjrivcu7vb.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.pcobh.app",
+            "package_name": "com.pco.pcoapp",
             "certificate_hash": "a6872d1cd95c3894c059c8b045e1a111abc018a7"
+          }
+        },
+        {
+          "client_id": "906367301565-lupte21f5ai9nu8mu98ualkou76rgvjr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJf08_uax0vrI5-sKvL_2m2DWq59iPdZc"
+        },
+        {
+          "current_key": "AIzaSyBCQ44BxSnC69-tauqW6Xa-wkOCkQCd75E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "906367301565-lupte21f5ai9nu8mu98ualkou76rgvjr.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "906367301565-k04khf2cs33s4qgfulvjckdntjar6edn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.saqyaa.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:906367301565:android:08dc80b3e57222051944d4",
+        "android_client_info": {
+          "package_name": "com.pcobh.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "906367301565-n754cnqm27c89mjrcs114340m4ogee0g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pcobh.app",
+            "certificate_hash": "7f007d758aa9e6ceed6c961e85b0dd2f6ac6245f"
           }
         },
         {
