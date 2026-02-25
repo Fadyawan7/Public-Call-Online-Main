@@ -126,8 +126,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/main.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
-import 'package:flutter_restaurant/utill/images.dart';
-import 'package:flutter_restaurant/utill/styles.dart';
 import 'package:go_router/go_router.dart';
 
 class CustomAppBarWidget extends StatelessWidget implements PreferredSizeWidget {

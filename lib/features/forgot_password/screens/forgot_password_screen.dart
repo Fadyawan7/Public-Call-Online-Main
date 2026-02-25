@@ -1,12 +1,9 @@
-import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/models/config_model.dart';
 import 'package:flutter_restaurant/common/models/response_model.dart';
 import 'package:flutter_restaurant/common/widgets/custom_asset_image_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_pop_scope_widget.dart';
 import 'package:flutter_restaurant/features/auth/domain/enum/auth_enum.dart';
-import 'package:flutter_restaurant/helper/number_checker_helper.dart';
-import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';

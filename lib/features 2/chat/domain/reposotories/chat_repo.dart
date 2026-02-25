@@ -1,15 +1,11 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:dio/dio.dart';
 import 'package:flutter_restaurant/data/datasource/remote/dio/dio_client.dart';
 import 'package:flutter_restaurant/data/datasource/remote/exception/api_error_handler.dart';
 import 'package:flutter_restaurant/common/models/api_response_model.dart';
-import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/utill/app_constants.dart';
 import 'package:http/http.dart' as http;
-import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter/foundation.dart';
 
 
 class ChatRepo {

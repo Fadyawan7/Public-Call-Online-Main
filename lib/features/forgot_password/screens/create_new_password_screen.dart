@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/widgets/custom_asset_image_widget.dart';
-import 'package:flutter_restaurant/helper/number_checker_helper.dart';
 import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';

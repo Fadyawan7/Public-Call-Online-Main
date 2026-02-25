@@ -81,7 +81,7 @@ class _MessageBodyWidgetState extends State<MessageBodyWidget> {
   }
   void onEvent(PusherEvent event) {
     try {
-      if (event.eventName != null && event.eventName == 'new-message' ) {
+      if (event.eventName == 'new-message' ) {
         final dynamic eventData = jsonDecode(event.data!);
           final conversation = ConversationModel.fromJson(eventData);
           if (context.mounted) {

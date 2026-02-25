@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/features/category/providers/category_provider.dart';
 import 'package:flutter_restaurant/features/booking/providers/booking_provider.dart';
 import 'package:flutter_restaurant/features/booking/widgets/booking_list_widget.dart';
-import 'package:flutter_restaurant/features/freelancer/providers/freelancer_provider.dart';
 import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
 import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
@@ -72,11 +71,11 @@ class _BookingScreenState extends State<BookingScreen>
 
         // ✅ Only call API if this tab’s list is currently empty
         if ((status == 'pending' &&
-                (bookingProvider.pendingList?.isEmpty ?? true)) ||
+                (bookingProvider.pendingList.isEmpty ?? true)) ||
             (status == 'confirmed' &&
-                (bookingProvider.confirmedList?.isEmpty ?? true)) ||
+                (bookingProvider.confirmedList.isEmpty ?? true)) ||
             (status == 'history' &&
-                (bookingProvider.historyList?.isEmpty ?? true))) {
+                (bookingProvider.historyList.isEmpty ?? true))) {
           bookingProvider.getBookingList(context, status);
         }
 

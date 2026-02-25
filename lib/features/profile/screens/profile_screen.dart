@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/widgets/custom_button_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_text_field_widget.dart';
-import 'package:flutter_restaurant/common/widgets/not_logged_in_widget.dart';
 import 'package:flutter_restaurant/features/apply_freelancer/widgets/profile_custom_painter_widget.dart';
 import 'package:flutter_restaurant/features/apply_freelancer/widgets/profile_shimmer_widget.dart';
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
@@ -21,7 +20,6 @@ import 'package:flutter_restaurant/utill/color_resources.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {

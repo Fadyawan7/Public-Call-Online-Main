@@ -2,16 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_restaurant/common/widgets/custom_button_widget.dart';
 import 'package:flutter_restaurant/features/booking/providers/booking_provider.dart';
-import 'package:flutter_restaurant/features/menu/widgets/booking_info_item_widget.dart';
 import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
 import 'package:flutter_restaurant/helper/get_direction_googlemap_widget.dart';
-import 'package:flutter_restaurant/localization/app_localization.dart';
-import 'package:flutter_restaurant/localization/language_constrants.dart';
-import 'package:flutter_restaurant/utill/color_resources.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class BookingAddressInfoWidget extends StatelessWidget {
 

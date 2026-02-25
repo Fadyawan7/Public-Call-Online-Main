@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/features/notification/domain/models/notification_model.dart';
-import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
 import 'package:flutter_restaurant/utill/color_resources.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
 class NotificationDialogWidget extends StatelessWidget {
   final NotificationModel notificationModel;

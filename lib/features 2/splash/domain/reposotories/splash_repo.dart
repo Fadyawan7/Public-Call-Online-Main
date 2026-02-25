@@ -1,14 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:drift/drift.dart';
 import 'package:flutter_restaurant/common/enums/data_source_enum.dart';
 import 'package:flutter_restaurant/common/reposotories/data_sync_repo.dart';
-import 'package:flutter_restaurant/data/datasource/local/cache_response.dart';
-import 'package:flutter_restaurant/data/datasource/remote/dio/dio_client.dart';
-import 'package:flutter_restaurant/data/datasource/remote/exception/api_error_handler.dart';
 import 'package:flutter_restaurant/common/models/api_response_model.dart';
-import 'package:flutter_restaurant/main.dart';
 import 'package:flutter_restaurant/utill/app_constants.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashRepo extends DataSyncRepo {
   SplashRepo({required super.sharedPreferences, required super.dioClient});

@@ -39,20 +39,6 @@
 			remoteGlobalIDString = B46CC14F5020A277B322D80BA336BC10;
 			remoteInfo = AppCheckCore;
 		};
-		1819C00D2DE3838A00A002C0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 18E44AC42DC62712007A0E57 /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 6D3FD4746C5C4B5292B7C4C862F01EF9;
-			remoteInfo = connectivity_plus;
-		};
-		1819C00F2DE3838A00A002C0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 18E44AC42DC62712007A0E57 /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 497F2B75C867D2399270877559788776;
-			remoteInfo = "connectivity_plus-connectivity_plus_privacy";
-		};
 		1819C0112DE3838A00A002C0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 18E44AC42DC62712007A0E57 /* Pods.xcodeproj */;
@@ -473,13 +459,6 @@
 			remoteGlobalIDString = 5B3F4A99493DE8EEF335FA5018E92F12;
 			remoteInfo = sqlite3_flutter_libs;
 		};
-		1819C0892DE3838A00A002C0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 18E44AC42DC62712007A0E57 /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 317CDB3617AE7CFBD3C9B5B901F8F543;
-			remoteInfo = TweetNacl;
-		};
 		1819C08B2DE3838A00A002C0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 18E44AC42DC62712007A0E57 /* Pods.xcodeproj */;
@@ -626,6 +605,34 @@
 			proxyType = 2;
 			remoteGlobalIDString = 669E8F25E1897672BDB80B7EB784DA24;
 			remoteInfo = "Pods-Runner";
+		};
+		417333212F4C7AC700DB6696 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 18E44AC42DC62712007A0E57 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 62410AF4BE9F38BD8DC42BF6AA38BDAD;
+			remoteInfo = PusherTweetNacl;
+		};
+		417333232F4C7AC700DB6696 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 18E44AC42DC62712007A0E57 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1CD70310E4BEC6B844C1ECCCC39BA88A;
+			remoteInfo = "vibration-vibration_privacy";
+		};
+		419798812F4D7F0200131A47 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 18E44AC42DC62712007A0E57 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6D3FD4746C5C4B5292B7C4C862F01EF9;
+			remoteInfo = connectivity_plus;
+		};
+		419798832F4D7F0200131A47 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 18E44AC42DC62712007A0E57 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 497F2B75C867D2399270877559788776;
+			remoteInfo = "connectivity_plus-connectivity_plus_privacy";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -2567,8 +2574,8 @@
 				1819C0082DE3838A00A002C0 /* AppAuth.framework */,
 				1819C00A2DE3838A00A002C0 /* AppAuthCore_Privacy.bundle */,
 				1819C00C2DE3838A00A002C0 /* AppCheckCore.framework */,
-				1819C00E2DE3838A00A002C0 /* connectivity_plus.framework */,
-				1819C0102DE3838A00A002C0 /* connectivity_plus_privacy.bundle */,
+				419798822F4D7F0200131A47 /* connectivity_plus.framework */,
+				419798842F4D7F0200131A47 /* connectivity_plus_privacy.bundle */,
 				1819C0122DE3838A00A002C0 /* device_info_plus.framework */,
 				1819C0142DE3838A00A002C0 /* device_info_plus_privacy.bundle */,
 				1819C0162DE3838A00A002C0 /* firebase_auth.framework */,
@@ -2633,6 +2640,7 @@
 				1833C8DA2DC640F2008142EB /* FBLPromises_Privacy.bundle */,
 				1819C0722DE3838A00A002C0 /* pusher_channels_flutter.framework */,
 				1819C0742DE3838A00A002C0 /* PusherSwift.framework */,
+				417333222F4C7AC700DB6696 /* PusherTweetNacl.framework */,
 				1819C0762DE3838A00A002C0 /* RecaptchaInterop.framework */,
 				1819C0782DE3838A00A002C0 /* share_plus.framework */,
 				1819C07A2DE3838A00A002C0 /* share_plus_privacy.bundle */,
@@ -2643,10 +2651,10 @@
 				1819C0842DE3838A00A002C0 /* sqflite_darwin_privacy.bundle */,
 				1819C0862DE3838A00A002C0 /* sqlite3.framework */,
 				1819C0882DE3838A00A002C0 /* sqlite3_flutter_libs.framework */,
-				1819C08A2DE3838A00A002C0 /* TweetNacl.framework */,
 				1819C08C2DE3838A00A002C0 /* url_launcher_ios.framework */,
 				1819C08E2DE3838A00A002C0 /* url_launcher_ios_privacy.bundle */,
 				1819C0902DE3838A00A002C0 /* vibration.framework */,
+				417333242F4C7AC700DB6696 /* vibration_privacy.bundle */,
 				1819C0922DE3838A00A002C0 /* webview_flutter_wkwebview.framework */,
 				1819C0942DE3838A00A002C0 /* webview_flutter_wkwebview_privacy.bundle */,
 			);
@@ -2846,20 +2854,6 @@
 			fileType = wrapper.framework;
 			path = AppCheckCore.framework;
 			remoteRef = 1819C00B2DE3838A00A002C0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1819C00E2DE3838A00A002C0 /* connectivity_plus.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = connectivity_plus.framework;
-			remoteRef = 1819C00D2DE3838A00A002C0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1819C0102DE3838A00A002C0 /* connectivity_plus_privacy.bundle */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = connectivity_plus_privacy.bundle;
-			remoteRef = 1819C00F2DE3838A00A002C0 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		1819C0122DE3838A00A002C0 /* device_info_plus.framework */ = {
@@ -3282,13 +3276,6 @@
 			remoteRef = 1819C0872DE3838A00A002C0 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		1819C08A2DE3838A00A002C0 /* TweetNacl.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = TweetNacl.framework;
-			remoteRef = 1819C0892DE3838A00A002C0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		1819C08C2DE3838A00A002C0 /* url_launcher_ios.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -3436,6 +3423,34 @@
 			remoteRef = 18E44AD32DC62712007A0E57 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		417333222F4C7AC700DB6696 /* PusherTweetNacl.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = PusherTweetNacl.framework;
+			remoteRef = 417333212F4C7AC700DB6696 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		417333242F4C7AC700DB6696 /* vibration_privacy.bundle */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = vibration_privacy.bundle;
+			remoteRef = 417333232F4C7AC700DB6696 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		419798822F4D7F0200131A47 /* connectivity_plus.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = connectivity_plus.framework;
+			remoteRef = 419798812F4D7F0200131A47 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		419798842F4D7F0200131A47 /* connectivity_plus_privacy.bundle */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = connectivity_plus_privacy.bundle;
+			remoteRef = 419798832F4D7F0200131A47 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -3478,13 +3493,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3521,13 +3532,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3728,7 +3735,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
-				DEVELOPMENT_TEAM = L833H34H64;
+				DEVELOPMENT_TEAM = G5B268TGZB;
 				ENABLE_BITCODE = NO;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
@@ -3877,7 +3884,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
-				DEVELOPMENT_TEAM = L833H34H64;
+				DEVELOPMENT_TEAM = G5B268TGZB;
 				ENABLE_BITCODE = NO;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
@@ -3916,7 +3923,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
-				DEVELOPMENT_TEAM = L833H34H64;
+				DEVELOPMENT_TEAM = G5B268TGZB;
 				ENABLE_BITCODE = NO;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;

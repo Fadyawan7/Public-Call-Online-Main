@@ -35,7 +35,7 @@ class BookingProvider extends ChangeNotifier {
 
   // Other variables
   List<String> _availableTimes = [];
-  List<DayData> _days = [];
+  final List<DayData> _days = [];
   int _selectDateSlot = 0;
   int _selectTimeSlot = -1;
   int _selectAddressIndex = -1;
@@ -44,7 +44,7 @@ class BookingProvider extends ChangeNotifier {
   String? _date = '';
   String? _timeSlot = '';
 
-  List<XFile>? _images = [];
+  final List<XFile> _images = [];
   List<String> _listImagePath = [];
   BookingDetailsModel? _bookingDetails;
 
@@ -158,7 +158,7 @@ Future<void> pickImage(bool fromCamera) async {
     }
   } else {
     final List<XFile> images = await picker.pickMultiImage(limit: 2);
-    for (XFile file in images!) {
+    for (XFile file in images) {
  if (_listImagePath.length < 2) {
         _listImagePath.add(file.path);
       }      }

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/providers/theme_provider.dart';
 import 'package:flutter_restaurant/common/widgets/custom_asset_image_widget.dart';
-import 'package:flutter_restaurant/common/widgets/custom_button_widget.dart';
 import 'package:flutter_restaurant/features/address/domain/models/input_model.dart';
 import 'package:flutter_restaurant/features/address/providers/location_provider.dart';
 import 'package:flutter_restaurant/features/address/screens/select_location_screen.dart';
 import 'package:flutter_restaurant/features/profile/widgets/profile_textfield_widget.dart';
-import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
 import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/utill/color_resources.dart';

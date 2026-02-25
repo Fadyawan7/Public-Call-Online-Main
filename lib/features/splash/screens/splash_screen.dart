@@ -7,17 +7,14 @@ import 'package:flutter_restaurant/common/models/config_model.dart';
 import 'package:flutter_restaurant/common/widgets/custom_asset_image_widget.dart';
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
-import 'package:flutter_restaurant/features/profile/screens/profile_screen.dart';
 import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
 import 'package:flutter_restaurant/helper/custom_snackbar_helper.dart';
-import 'package:flutter_restaurant/helper/profile_completed_helper.dart';
 import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/helper/version_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/main.dart';
 import 'package:flutter_restaurant/utill/app_constants.dart';
 import 'package:flutter_restaurant/utill/images.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {

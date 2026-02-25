@@ -1,8 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_restaurant/common/widgets/custom_asset_image_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_pop_scope_widget.dart';
-import 'package:flutter_restaurant/common/widgets/third_party_chat_widget.dart';
 import 'package:flutter_restaurant/features/address/providers/location_provider.dart';
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/features/chat/screens/chat_screen.dart';
@@ -16,13 +14,10 @@ import 'package:flutter_restaurant/features/menu/screens/menu_screen.dart';
 import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
 
 import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
-import 'package:flutter_restaurant/helper/responsive_helper.dart';
-import 'package:flutter_restaurant/helper/user_type_checker.dart';
 import 'package:flutter_restaurant/localization/app_localization.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';
-import 'package:flutter_restaurant/utill/styles.dart';
 import 'package:provider/provider.dart';
 
 class DashboardScreen extends StatefulWidget {

@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
@@ -34,10 +33,6 @@ class _FreelancerPortfolioScreenState extends State<FreelancerPortfolioScreen>
     super.initState();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {

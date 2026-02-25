@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_restaurant/common/models/booking_details_model.dart';
 import 'package:flutter_restaurant/common/widgets/custom_image_widget.dart';
 import 'package:flutter_restaurant/common/widgets/rating_bar_widget.dart';
 import 'package:flutter_restaurant/utill/color_resources.dart';

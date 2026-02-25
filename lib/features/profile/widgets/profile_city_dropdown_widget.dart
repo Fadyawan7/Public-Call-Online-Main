@@ -111,10 +111,16 @@ class CityDropdownWidget extends StatelessWidget {
             ),
           ),
           searchMatchFn: (item, searchValue) {
-            final city = profileProvider.cityList
-                ?.firstWhere((element) => element.id.toString() == item.value);
-            return city?.cityName?.toLowerCase().contains(searchValue.toLowerCase()) ?? false;
-          },
+  final city = profileProvider.cityList?.firstWhere(
+    (element) => element.id.toString() == item.value,
+    orElse: () => CityModel(), // return empty model
+  );
+
+  return city?.cityName
+          ?.toLowerCase()
+          .contains(searchValue.toLowerCase()) ??
+      false;
+},
         ),
         buttonStyleData: ButtonStyleData(
           decoration: BoxDecoration(

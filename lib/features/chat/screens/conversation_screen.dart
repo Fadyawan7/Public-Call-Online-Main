@@ -1,12 +1,8 @@
-import 'dart:developer';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/widgets/custom_image_widget.dart';
-import 'package:flutter_restaurant/common/widgets/custom_loader_widget.dart';
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/features/chat/domain/models/chat_model.dart';
-import 'package:flutter_restaurant/features/chat/domain/models/conversation_model.dart';
 import 'package:flutter_restaurant/features/chat/providers/chat_provider.dart';
 import 'package:flutter_restaurant/features/chat/widgets/message_body_widget.dart';
 import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
@@ -14,10 +10,8 @@ import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/main.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';
-import 'package:flutter_restaurant/utill/pusher_service.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class ConversationScreen extends StatefulWidget {

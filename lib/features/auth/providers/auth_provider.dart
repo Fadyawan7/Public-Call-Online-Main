@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/models/api_response_model.dart';
 import 'package:flutter_restaurant/common/models/config_model.dart';
@@ -16,19 +15,15 @@ import 'package:flutter_restaurant/features/auth/domain/models/user_log_data.dar
 import 'package:flutter_restaurant/features/auth/domain/reposotories/auth_repo.dart';
 import 'package:flutter_restaurant/features/profile/domain/models/userinfo_model.dart';
 import 'package:flutter_restaurant/helper/get_response_error_message.dart';
-import 'package:flutter_restaurant/helper/number_checker_helper.dart';
 import 'package:flutter_restaurant/helper/router_helper.dart';
-import 'package:flutter_restaurant/localization/app_localization.dart';
 import 'package:flutter_restaurant/main.dart';
 import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
 import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
 import '../../../helper/api_checker_helper.dart';
-import '../../../localization/language_constrants.dart';
 import '../../../helper/custom_snackbar_helper.dart';
 import 'package:http/http.dart' as http;
 
@@ -40,7 +35,7 @@ class AuthProvider with ChangeNotifier {
   // for registration section
   bool _isLoading = false;
   String? _registrationErrorMessage = '';
-  bool _isCheckedPhone = false;
+  final bool _isCheckedPhone = false;
   Timer? _timer;
   bool _isForgotPasswordLoading = false;
   bool _isNumberLogin = false;
@@ -50,7 +45,7 @@ class AuthProvider with ChangeNotifier {
   bool resendButtonLoading = false;
   String? _verificationMsg = '';
   String _email = '';
-  String _phone = '';
+  final String _phone = '';
   String _verificationCode = '';
   bool _isEnableVerificationCode = false;
   bool _isActiveRememberMe = false;
@@ -133,7 +128,7 @@ class AuthProvider with ChangeNotifier {
       } else if (map.containsKey('token')) {
         token = map["token"];
       }
-      print("Type is ${token}");
+      print("Type is $token");
 
       if (token != null) {
         await _updateAuthToken(token);
@@ -488,7 +483,7 @@ class AuthProvider with ChangeNotifier {
               true, null, message, null, userInfoModel, socialLogin.medium);
         } catch (e) {}
       }
-      print('------------(update device token) -----from socialLogin ${token}');
+      print('------------(update device token) -----from socialLogin $token');
 
       if (token != null) {
         authRepo!.saveUserToken(token);

@@ -21,7 +21,7 @@ class CategoryRepo extends DataSyncRepo{
 
   Future<ApiResponseModel> freelancerbyCategory(String text, ) async {
     try {
-      final response = await dioClient!.getWithoutToken('${AppConstants.frelanceCategoryUri}?categoryName=$text');
+      final response = await dioClient.getWithoutToken('${AppConstants.frelanceCategoryUri}?categoryName=$text');
       return ApiResponseModel.withSuccess(response);
     } catch (e) {
       return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));

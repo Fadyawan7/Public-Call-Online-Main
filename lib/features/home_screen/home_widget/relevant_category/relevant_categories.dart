@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/widgets/custom_app_bar_widget.dart';
 import 'package:flutter_restaurant/features/category/providers/category_provider.dart';
 import 'package:flutter_restaurant/features/home_screen/home_widget/all_featured/featured_item_detail.dart';
-import 'package:flutter_restaurant/features/home_screen/provider/home_provider.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:provider/provider.dart';
 

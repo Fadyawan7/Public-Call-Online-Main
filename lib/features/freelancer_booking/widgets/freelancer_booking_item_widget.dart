@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/widgets/custom_button_widget.dart';
-import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/features/booking/domain/models/booking_model.dart';
 import 'package:flutter_restaurant/features/booking/providers/booking_provider.dart';
 import 'package:flutter_restaurant/features/booking/widgets/booking_cancel_dialog_widget.dart';
 import 'package:flutter_restaurant/features/freelancer_booking/providers/freelancer_booking_provider.dart';
 import 'package:flutter_restaurant/helper/custom_snackbar_helper.dart';
-import 'package:flutter_restaurant/helper/date_converter_helper.dart';
-import 'package:flutter_restaurant/helper/price_converter_helper.dart';
 import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/localization/app_localization.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
-import 'package:flutter_restaurant/main.dart';
 import 'package:flutter_restaurant/utill/color_resources.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/styles.dart';

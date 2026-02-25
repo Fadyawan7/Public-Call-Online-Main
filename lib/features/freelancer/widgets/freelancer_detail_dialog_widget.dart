@@ -9,7 +9,6 @@ import 'package:flutter_restaurant/features/chat/providers/chat_provider.dart';
 import 'package:flutter_restaurant/features/freelancer/domain/models/freelancer_model.dart';
 import 'package:flutter_restaurant/features/freelancer/widgets/freelancer_basic_widget.dart';
 import 'package:flutter_restaurant/features/freelancer/widgets/freelancer_portfolio_widget.dart';
-import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
 import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';

@@ -1,20 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/models/config_model.dart';
-import 'package:flutter_restaurant/common/widgets/custom_alert_dialog_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_asset_image_widget.dart';
 import 'package:flutter_restaurant/features/auth/domain/enum/auth_enum.dart';
 import 'package:flutter_restaurant/features/auth/domain/models/signup_model.dart';
-import 'package:flutter_restaurant/common/enums/app_mode_enum.dart';
-import 'package:flutter_restaurant/features/auth/domain/models/user_log_data.dart';
-import 'package:flutter_restaurant/features/auth/widgets/existing_account_bottom_sheet.dart';
-import 'package:flutter_restaurant/features/profile/domain/models/userinfo_model.dart';
 import 'package:flutter_restaurant/helper/email_checker_helper.dart';
-import 'package:flutter_restaurant/helper/number_checker_helper.dart';
 import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
-import 'package:flutter_restaurant/utill/app_constants.dart';
 import 'package:flutter_restaurant/utill/color_resources.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';
@@ -235,7 +228,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                                             }
                                           });
                                         } else {
-                                          print('=====EMAIL===${userInput}');
+                                          print('=====EMAIL===$userInput');
 
                                           authProvider
                                               .verifyToken(userInput)

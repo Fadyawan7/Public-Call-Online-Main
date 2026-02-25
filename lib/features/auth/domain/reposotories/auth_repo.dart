@@ -235,7 +235,7 @@ class AuthRepo {
 
   Future<ApiResponseModel> verifyProfileInfo(String userInput, String token, String type) async {
     try {
-      print('=====EMAIL===${userInput}');
+      print('=====EMAIL===$userInput');
       Response response = await dioClient!.post(
           AppConstants.verifyOtpUri, data: {"email": userInput, "token": token});
       return ApiResponseModel.withSuccess(response);

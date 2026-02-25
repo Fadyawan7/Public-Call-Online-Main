@@ -5,7 +5,6 @@ import 'package:flutter_restaurant/common/widgets/no_data_widget.dart';
 import 'package:flutter_restaurant/common/widgets/rate_review_widget.dart';
 import 'package:flutter_restaurant/features/freelancer_portfolio/widgets/booking_shimmer_widget.dart';
 import 'package:flutter_restaurant/features/rating_reviews/providers/review_provider.dart';
-import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/common/widgets/custom_app_bar_widget.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';

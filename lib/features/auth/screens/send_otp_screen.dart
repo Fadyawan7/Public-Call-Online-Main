@@ -1,10 +1,8 @@
 import 'package:country_code_picker/country_code_picker.dart';
-import 'package:flutter/foundation.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/models/config_model.dart';
 import 'package:flutter_restaurant/common/widgets/custom_button_widget.dart';
-import 'package:flutter_restaurant/common/widgets/custom_image_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_pop_scope_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_text_field_widget.dart';
 
@@ -19,7 +17,6 @@ import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/utill/color_resources.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
-import 'package:flutter_restaurant/utill/images.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
 import 'package:provider/provider.dart';
 

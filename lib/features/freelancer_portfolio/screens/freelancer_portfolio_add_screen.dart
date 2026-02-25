@@ -4,23 +4,15 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/models/response_model.dart';
 import 'package:flutter_restaurant/common/widgets/custom_button_widget.dart';
-import 'package:flutter_restaurant/features/category/providers/category_provider.dart';
-import 'package:flutter_restaurant/features/booking/providers/booking_provider.dart';
-import 'package:flutter_restaurant/features/booking/widgets/booking_list_widget.dart';
-import 'package:flutter_restaurant/features/freelancer/providers/freelancer_provider.dart';
 import 'package:flutter_restaurant/features/freelancer_portfolio/providers/freelancer_portfolio_provider.dart';
-import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
 import 'package:flutter_restaurant/helper/custom_snackbar_helper.dart';
-import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
-import 'package:flutter_restaurant/main.dart';
 import 'package:flutter_restaurant/utill/color_resources.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
 import 'package:flutter_restaurant/common/widgets/custom_app_bar_widget.dart';
-import 'package:flutter_restaurant/common/widgets/not_logged_in_widget.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -56,10 +48,6 @@ class _FreelancerPortfolioAddScreenState
     super.initState();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {

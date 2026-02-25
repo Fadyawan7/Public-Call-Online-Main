@@ -10,17 +10,23 @@ class ErrorResponseModel {
   }
 
   ErrorResponseModel.fromJson(dynamic json) {
-    final data = json["errors"];
+    if (json is Map<String, dynamic>) {
+      final data = json["errors"];
 
-    if (data is List) {
-      // ✅ Normal case
-      _errors = data.map((v) => Errors.fromJson(v)).toList();
-    } else if (data is Map) {
-      // ⚙️ API returned a single object instead of a list
-      _errors = [Errors.fromJson(data)];
-    } else if (data is String) {
-      // ⚙️ API returned just a string
-      _errors = [Errors(message: data)];
+      if (data is List) {
+        // Normal case
+        _errors = data.map((v) => Errors.fromJson(v)).toList();
+      } else if (data is Map) {
+        // API returned a single object instead of a list
+        _errors = [Errors.fromJson(data)];
+      } else if (data is String) {
+        // API returned just a string
+        _errors = [Errors(message: data)];
+      } else {
+        _errors = [];
+      }
+    } else if (json is String) {
+      _errors = [Errors(message: json)];
     } else {
       _errors = [];
     }

@@ -2,17 +2,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import 'package:flutter_restaurant/common/models/product_model.dart';
-import 'package:flutter_restaurant/common/providers/theme_provider.dart';
-import 'package:flutter_restaurant/common/widgets/custom_alert_dialog_widget.dart';
 import 'package:flutter_restaurant/common/widgets/slider_button_widget.dart';
 import 'package:flutter_restaurant/features/booking/providers/booking_provider.dart';
 import 'package:flutter_restaurant/features/booking/widgets/booking_cancel_dialog_widget.dart';
 import 'package:flutter_restaurant/features/language/providers/localization_provider.dart';
 import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
 
-import 'package:flutter_restaurant/helper/price_converter_helper.dart';
-import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/main.dart';
 import 'package:flutter_restaurant/utill/color_resources.dart';

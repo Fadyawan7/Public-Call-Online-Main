@@ -1,16 +1,11 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 
-import 'package:dio/dio.dart';
 import 'package:flutter_restaurant/data/datasource/remote/dio/dio_client.dart';
 import 'package:flutter_restaurant/data/datasource/remote/exception/api_error_handler.dart';
 import 'package:flutter_restaurant/common/models/api_response_model.dart';
-import 'package:flutter_restaurant/features/booking/domain/models/place_booking_model.dart';
 import 'package:flutter_restaurant/utill/app_constants.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:path/path.dart';
 
 class FreelancerPortfolioRepo {
   final DioClient? dioClient;

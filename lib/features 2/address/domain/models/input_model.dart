@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_restaurant/common/models/config_model.dart';
 import 'package:flutter_restaurant/features/address/domain/models/address_model.dart';
 
 class InputModel {

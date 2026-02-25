@@ -1,18 +1,13 @@
 
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/models/api_response_model.dart';
 import 'package:flutter_restaurant/common/models/booking_details_model.dart';
 import 'package:flutter_restaurant/common/models/response_model.dart';
-import 'package:flutter_restaurant/features/booking/domain/models/booking_model.dart';
 import 'package:flutter_restaurant/features/booking/domain/reposotories/booking_repo.dart';
-import 'package:flutter_restaurant/features/booking/providers/booking_provider.dart';
 import 'package:flutter_restaurant/features/rating_reviews/domain/models/review_body_model.dart';
 import 'package:flutter_restaurant/helper/api_checker_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/main.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 
 
 class ReviewProvider extends ChangeNotifier {

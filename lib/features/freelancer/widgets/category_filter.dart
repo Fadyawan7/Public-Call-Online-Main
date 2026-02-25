@@ -5,7 +5,6 @@ import 'package:flutter_restaurant/features/freelancer/providers/freelancer_prov
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 
 class FilterButton extends StatelessWidget {
@@ -14,11 +13,11 @@ class FilterButton extends StatelessWidget {
   final List<String>? initiallySelected;
 
   const FilterButton({
-    Key? key,
+    super.key,
     required this.categories,
     required this.onFilterApplied,
     this.initiallySelected,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +41,11 @@ class FilterDialog extends StatefulWidget {
   final List<String>? initiallySelected;
 
   const FilterDialog({
-    Key? key,
+    super.key,
     required this.categories,
     required this.onFilterApplied,
     this.initiallySelected,
-  }) : super(key: key);
+  });
 
   @override
   State<FilterDialog> createState() => _FilterDialogState();
@@ -159,6 +158,8 @@ class MyHomePage extends StatelessWidget {
     'Finance',
     'Health'
   ];
+
+   MyHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {

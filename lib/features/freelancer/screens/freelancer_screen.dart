@@ -1,14 +1,10 @@
 import 'package:custom_info_window/custom_info_window.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_restaurant/common/widgets/custom_dialog_widget.dart';
-import 'package:flutter_restaurant/common/widgets/filter_button_widget.dart';
 import 'package:flutter_restaurant/features/address/widgets/freelancer_search_dialog_widget.dart';
-import 'package:flutter_restaurant/features/freelancer/domain/models/freelancer_model.dart';
 import 'package:flutter_restaurant/features/freelancer/providers/freelancer_provider.dart';
 import 'package:flutter_restaurant/features/freelancer/widgets/category_filter.dart';
 import 'package:flutter_restaurant/features/freelancer/widgets/freelancer_detail_dialog_widget.dart';
 import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
-import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/main.dart';

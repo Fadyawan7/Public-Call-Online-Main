@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/providers/theme_provider.dart';
 import 'package:flutter_restaurant/common/widgets/custom_app_bar_widget.dart';
 import 'package:flutter_restaurant/common/widgets/no_data_widget.dart';
-import 'package:flutter_restaurant/common/widgets/not_logged_in_widget.dart';
 import 'package:flutter_restaurant/features/address/domain/models/address_model.dart';
 import 'package:flutter_restaurant/features/address/providers/location_provider.dart';
 import 'package:flutter_restaurant/features/address/widgets/address_card_widget.dart';

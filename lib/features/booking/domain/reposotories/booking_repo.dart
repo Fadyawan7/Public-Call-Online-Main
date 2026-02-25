@@ -1,17 +1,12 @@
-import 'dart:convert';
-import 'dart:io';
 import 'package:flutter_restaurant/features/rating_reviews/domain/models/review_body_model.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:dio/dio.dart';
 import 'package:flutter_restaurant/data/datasource/remote/dio/dio_client.dart';
 import 'package:flutter_restaurant/data/datasource/remote/exception/api_error_handler.dart';
 import 'package:flutter_restaurant/common/models/api_response_model.dart';
 import 'package:flutter_restaurant/features/booking/domain/models/place_booking_model.dart';
 import 'package:flutter_restaurant/utill/app_constants.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:path/path.dart';
 
 class BookingRepo {
   final DioClient? dioClient;
@@ -22,7 +17,7 @@ class BookingRepo {
     try {
 
       final response = await dioClient!.get('${AppConstants.bookingListUri}'
-      '?status=${status}');
+      '?status=$status');
       return ApiResponseModel.withSuccess(response);
     } catch (e) {
       return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
@@ -83,7 +78,7 @@ class BookingRepo {
 
     // Convert bookingBody to a map
     Map<String, dynamic> data = bookingBody.toJson();
- print("======BOOKINGDATA====${data}");
+ print("======BOOKINGDATA====$data");
     // Add fields to the request
     request.fields.addAll(<String, String>{
       '_method': 'post',

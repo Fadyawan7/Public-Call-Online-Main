@@ -1,5 +1,4 @@
 import 'dart:core';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/widgets/no_data_widget.dart';
@@ -8,7 +7,6 @@ import 'package:flutter_restaurant/features/booking/providers/booking_provider.d
 import 'package:flutter_restaurant/features/booking/widgets/booking_details_shimmer_widget.dart';
 import 'package:flutter_restaurant/features/booking/widgets/button_widget.dart';
 import 'package:flutter_restaurant/features/freelancer_booking/widgets/freelancer_booking_details_widget.dart';
-import 'package:flutter_restaurant/features/profile/screens/profile_screen.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/styles.dart';

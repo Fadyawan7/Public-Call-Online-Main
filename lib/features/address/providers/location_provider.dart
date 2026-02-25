@@ -146,7 +146,7 @@ Future<String?> getCurrentLocation(BuildContext context, bool isUpdate, {GoogleM
 
   // update Position
   void updatePosition(CameraPosition? position, bool fromAddress, String? address, BuildContext context, bool forceNotify, {bool isUpdate = true}) async {
-    print('----------update posi-------${_changeAddress}');
+    print('----------update posi-------$_changeAddress');
 
     if(_updateAddAddressData || forceNotify) {
       _loading = true;
@@ -386,9 +386,9 @@ Future<String?> getCurrentLocation(BuildContext context, bool isUpdate, {GoogleM
   }
 
 Future<String> getAddressFromGeocode(LatLng latLng, BuildContext context) async {
-  bool _isLoggedIn = context.read<AuthProvider>().isLoggedIn();
+  bool isLoggedIn = context.read<AuthProvider>().isLoggedIn();
 
-  ApiResponseModel response = await locationRepo!.getAddressFromGeocode(latLng, _isLoggedIn);
+  ApiResponseModel response = await locationRepo!.getAddressFromGeocode(latLng, isLoggedIn);
   String address = '';
 
   if (response.response?.statusCode == 200) {

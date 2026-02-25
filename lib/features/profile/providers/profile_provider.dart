@@ -10,7 +10,6 @@ import 'package:flutter_restaurant/features/profile/domain/reposotories/profile_
 import 'package:flutter_restaurant/helper/api_checker_helper.dart';
 import 'package:flutter_restaurant/helper/get_response_error_message.dart';
 import 'package:http/http.dart' as http;
-import 'package:image_picker/image_picker.dart';
 
 class ProfileProvider with ChangeNotifier {
   final ProfileRepo? profileRepo;
@@ -104,7 +103,7 @@ class ProfileProvider with ChangeNotifier {
       if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
         _cityList = [];
         apiResponse.response.data.forEach((city) => _cityList!.add(CityModel.fromJson(city)));
-        print('=====CITY ===${_cityList}');
+        print('=====CITY ===$_cityList');
       } else {
         ApiCheckerHelper.checkApi(apiResponse);
       }
@@ -145,7 +144,7 @@ class ProfileProvider with ChangeNotifier {
 
     http.StreamedResponse response = await profileRepo!.updateProfile(updateUserModel, file, token);
     Map map = jsonDecode(await response.stream.bytesToString());
-    print("====REESPONSE===${map}");
+    print("====REESPONSE===$map");
 
     if (response.statusCode == 200) {
 

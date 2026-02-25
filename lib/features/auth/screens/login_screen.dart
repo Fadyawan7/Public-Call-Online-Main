@@ -1,6 +1,5 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_restaurant/common/widgets/custom_image_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_pop_scope_widget.dart';
 import 'package:flutter_restaurant/features/auth/domain/models/user_log_data.dart';
 import 'package:flutter_restaurant/features/language/providers/localization_provider.dart';
@@ -8,7 +7,6 @@ import 'package:flutter_restaurant/features/profile/providers/profile_provider.d
 import 'package:flutter_restaurant/helper/number_checker_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
-import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
 import 'package:flutter_restaurant/utill/color_resources.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';

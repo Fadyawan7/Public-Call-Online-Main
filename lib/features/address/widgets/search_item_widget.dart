@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_restaurant/features/address/domain/models/prediction_model.dart';
 import 'package:flutter_restaurant/features/freelancer/domain/models/freelancer_model.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';

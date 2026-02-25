@@ -1,4 +1,3 @@
-import 'package:flutter_restaurant/common/models/product_model.dart';
 
 class BookingDetailsModel {
   int? _id;
