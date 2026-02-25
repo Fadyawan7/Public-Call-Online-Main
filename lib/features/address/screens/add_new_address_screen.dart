@@ -138,6 +138,14 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
     return Scaffold(
 
       appBar:(CustomAppBarWidget(
+        leading: InkWell(
+          onTap: () {
+            if(Get.context!.canPop()) {
+              Get.context!.pop();
+            }
+          },
+          child: const Icon(Icons.arrow_back_ios, size: 20,color: Colors.red,),
+        ),
         titleColor: Colors.white,
         context: context,
         title:  getTranslated(widget.isEnableUpdate ? 'update_address' : 'add_delivery_info', context),

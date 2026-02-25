@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/widgets/custom_app_bar_widget.dart';
+import 'package:flutter_restaurant/common/widgets/toast_message.dart';
 import 'package:flutter_restaurant/features/address/providers/location_provider.dart';
 import 'package:flutter_restaurant/features/address/screens/select_location_screen.dart';
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
@@ -106,16 +107,29 @@ class _HomeScreenState extends State<HomeScreen> {
         context: context,
         title: getTranslated('Easy Business\nEvery Business', context),
         isBackButtonExist: !ResponsiveHelper.isMobile(),
-        actionView: IconButton(
+        actionView: 
+IconButton(
           icon: Icon(
             Iconsax.add_circle,
             color: Theme.of(context).primaryColor,
             size: Dimensions.fontSizeDefault * 2,
           ),
-          onPressed: () => {
-            profileProvider.isFreelancer!
-                ? RouterHelper.getFreelancerPortfolioListRoute()
-                : RouterHelper.getApplyFreelancerRoute()
+          onPressed: () {
+            final applicationStatus =
+                profileProvider.userInfoModel?.freelancerRequestStatus ?? '';
+
+            if (applicationStatus.isEmpty ||
+                (applicationStatus != 'approved' &&
+                    applicationStatus != 'pending')) {
+              RouterHelper.getApplyFreelancerRoute();
+            } else {
+              CustomToast.show(
+                context,
+                message: applicationStatus == 'approved'
+                    ? 'You are already a freelancer.'
+                    : 'Your application is under review.',
+              );
+            }
           },
         ),
       ) as PreferredSizeWidget?,
@@ -988,3 +1002,4 @@ class _HomeScreenState extends State<HomeScreen> {
 //     );
 //   }
 // }
+

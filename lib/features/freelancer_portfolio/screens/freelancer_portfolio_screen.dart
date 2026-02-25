@@ -38,6 +38,11 @@ class _FreelancerPortfolioScreenState extends State<FreelancerPortfolioScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: (CustomAppBarWidget(
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Icon(Icons.arrow_back_ios_new_rounded, color:Color(0xFFf11920))),
         titleColor: Colors.white,
         context: context,
         title: getTranslated('my_portfolio', context),

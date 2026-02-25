@@ -10,6 +10,7 @@ import 'package:flutter_restaurant/common/widgets/custom_app_bar_widget.dart';
 import 'package:flutter_restaurant/common/widgets/no_data_widget.dart';
 import 'package:flutter_restaurant/features/notification/widgets/notification_dialog_widget.dart';
 import 'package:flutter_restaurant/utill/images.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class NotificationScreen extends StatefulWidget {
@@ -37,6 +38,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
     return Scaffold(
       appBar: (CustomAppBarWidget(
+         leading: InkWell(
+          onTap: () {
+            if(Get.context!.canPop()) {
+              Get.context!.pop();
+            }
+          },
+          child: const Icon(Icons.arrow_back_ios, size: 20,color: Colors.red,),
+        ),
               context: context,
               titleColor: Colors.white,
               title: getTranslated('notification', context)))

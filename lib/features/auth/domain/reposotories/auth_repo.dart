@@ -112,10 +112,24 @@ class AuthRepo {
       }
 
       if(!kIsWeb){
-        if(fcmToken == null) {
-          FirebaseMessaging.instance.subscribeToTopic(AppConstants.topic);
-        }else{
-          FirebaseMessaging.instance.unsubscribeFromTopic(AppConstants.topic);
+        if (defaultTargetPlatform == TargetPlatform.iOS ||
+            defaultTargetPlatform == TargetPlatform.macOS) {
+          final String? apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+          if (apnsToken == null) {
+            debugPrint('APNS token not set yet, skipping topic update');
+          } else {
+            if(fcmToken == null) {
+              FirebaseMessaging.instance.subscribeToTopic(AppConstants.topic);
+            }else{
+              FirebaseMessaging.instance.unsubscribeFromTopic(AppConstants.topic);
+            }
+          }
+        } else {
+          if(fcmToken == null) {
+            FirebaseMessaging.instance.subscribeToTopic(AppConstants.topic);
+          }else{
+            FirebaseMessaging.instance.unsubscribeFromTopic(AppConstants.topic);
+          }
         }
       }else{
         await subscribeTokenToTopic(deviceToken, fcmToken ?? AppConstants.topic);

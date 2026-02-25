@@ -21,12 +21,14 @@ class CityDropdownWidget extends StatelessWidget {
     final profileProvider = Provider.of<ProfileProvider>(context, listen: false);
 
     String? selectedCityId;
-      if(profileProvider.selectedCityID != -1){
-        selectedCityId = profileProvider.cityList
-            ?.firstWhere((city) => city.id == profileProvider.selectedCityID)
-            .id
-            .toString();
+    if (profileProvider.selectedCityID != -1) {
+      final cityList = profileProvider.cityList ?? [];
+      final index = cityList
+          .indexWhere((city) => city.id == profileProvider.selectedCityID);
+      if (index != -1) {
+        selectedCityId = cityList[index].id?.toString();
       }
+    }
 
 
     return  DropdownButtonHideUnderline(
