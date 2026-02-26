@@ -238,20 +238,33 @@ class RouterHelper {
   }
 
   static String _navigateRoute( String path,{ RouteAction? route = RouteAction.push}) {
-
-    if(route == RouteAction.pushNamedAndRemoveUntil){
-      Get.context?.go(path);
-
-      if(kIsWeb) {
-        historyUrlStrategy.replaceState(null, '', '/');
+    try {
+      final context = Get.context;
+      if (context == null) {
+        debugPrint('⚠️ Navigation attempted but context is null for: $path');
+        // Delay and retry if context not ready
+        Future.delayed(const Duration(milliseconds: 500), () {
+          _navigateRoute(path, route: route);
+        });
+        return path;
       }
 
+      debugPrint('🔄 Navigating to: $path with action: $route');
 
-    }else if(route == RouteAction.pushReplacement){
-      Get.context?.pushReplacement(path);
-
-    }else{
-      Get.context?.push(path);
+      if(route == RouteAction.pushNamedAndRemoveUntil){
+        context.go(path);
+        if(kIsWeb) {
+          historyUrlStrategy.replaceState(null, '', '/');
+        }
+      } else if(route == RouteAction.pushReplacement){
+        context.pushReplacement(path);
+      } else {
+        context.push(path);
+      }
+      debugPrint('✅ Successfully navigated to: $path');
+    } catch (e) {
+      debugPrint('❌ Navigation error for $path: $e');
+      rethrow;
     }
     return path;
   }
