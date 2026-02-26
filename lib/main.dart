@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart' show defaultTargetPlatform, kIsWeb;
+import 'package:flutter/foundation.dart' show defaultTargetPlatform, kIsWeb, PlatformDispatcher;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -48,11 +48,23 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 final database = AppDatabase();
 
 Future<void> main() async {
+    WidgetsFlutterBinding.ensureInitialized();
   if (ResponsiveHelper.isMobilePhone()) {
     HttpOverrides.global = MyHttpOverrides();
   }
   setPathUrlStrategy();
-  WidgetsFlutterBinding.ensureInitialized();
+
+  // Add global error handler for iOS
+  FlutterError.onError = (FlutterErrorDetails details) {
+    debugPrint('🔴 Flutter Error: ${details.exception}');
+    debugPrint('Stack trace: ${details.stack}');
+  };
+
+  PlatformDispatcher.instance.onError = (error, stack) {
+    debugPrint('🔴 Platform Error: $error');
+    debugPrint('Stack trace: $stack');
+    return true;
+  };
 
   if (kIsWeb) {
     await Firebase.initializeApp(
@@ -178,36 +190,39 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
-    if (kIsWeb || widget.route != null) {
-      Provider.of<SplashProvider>(context, listen: false).initSharedData();
-      // Provider.of<SplashProvider>(context, listen: false).getPolicyPage();
-      _route();
-    }
-  }
-
-  void _route() {
-    final SplashProvider splashProvider =
-        Provider.of<SplashProvider>(context, listen: false);
-
-    splashProvider
-        .initConfig(context, DataSourceEnum.local)
-        .then((value) async {
-      if (value != null) {
-        if (Provider.of<AuthProvider>(context, listen: false).isLoggedIn()) {
-          await Provider.of<AuthProvider>(context, listen: false).updateToken();
+    // Delay initialization until after GoRouter is ready
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      try {
+        debugPrint('🔵 Starting splash initialization...');
+        await Provider.of<SplashProvider>(context, listen: false).initSharedData();
+        debugPrint('🟢 initSharedData completed');
+        
+        // Initialize config but don't navigate here - let GoRouter handle it
+        if (mounted && context.mounted) {
+          final splashProvider =
+              Provider.of<SplashProvider>(context, listen: false);
+          await splashProvider.initConfig(context, DataSourceEnum.client);
+          debugPrint('🟢 initConfig completed');
         }
-
-        _onRemoveLoader();
+      } catch (e, stack) {
+        debugPrint('🔴 Error initializing splash: $e');
+        debugPrint('Stack: $stack');
       }
     });
   }
 
   void _onRemoveLoader() {
-    final preloader = html.document.querySelector('.preloader');
-    if (preloader != null) {
-      Future.delayed(const Duration(seconds: 1)).then((_) {
-        preloader.remove();
-      });
+    try {
+      if (kIsWeb) {
+        final preloader = html.document.querySelector('.preloader');
+        if (preloader != null) {
+          Future.delayed(const Duration(seconds: 1)).then((_) {
+            preloader.remove();
+          });
+        }
+      }
+    } catch (e) {
+      debugPrint('Error removing loader: $e');
     }
   }
 

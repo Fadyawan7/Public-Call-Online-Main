@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -9,17 +8,12 @@ import 'package:flutter_restaurant/common/models/api_response_model.dart';
 import 'package:flutter_restaurant/common/models/config_model.dart';
 import 'package:flutter_restaurant/common/models/offline_payment_model.dart';
 import 'package:flutter_restaurant/common/providers/data_sync_provider.dart';
-import 'package:flutter_restaurant/data/datasource/local/cache_response.dart';
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/features/splash/domain/reposotories/splash_repo.dart';
-import 'package:flutter_restaurant/helper/date_converter_helper.dart';
-import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/helper/router_helper.dart';
-import 'package:flutter_restaurant/utill/app_constants.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/models/policy_model.dart';
-import '../../../helper/api_checker_helper.dart';
 
 class SplashProvider extends DataSyncProvider {
   final SplashRepo? splashRepo;
@@ -29,7 +23,7 @@ class SplashProvider extends DataSyncProvider {
 
   final DateTime _currentTime = DateTime.now();
   PolicyModel? _policyModel;
-  bool _cookiesShow = true;
+  final bool _cookiesShow = true;
   List<OfflinePaymentModel?>? _offlinePaymentModelList;
 
   ConfigModel? get configModel => _configModel;

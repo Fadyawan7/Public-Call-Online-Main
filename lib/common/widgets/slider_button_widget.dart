@@ -48,7 +48,7 @@ class SliderButtonWidget extends StatefulWidget {
   final double dismissThresholds;
 
   final bool disable;
-  const SliderButtonWidget({Key? key,
+  const SliderButtonWidget({super.key,
     required this.action,
     this.radius = 100,
     this.boxShadow = const BoxShadow(
@@ -79,7 +79,7 @@ class SliderButtonWidget extends StatefulWidget {
     this.dismissible = true,
     this.dismissThresholds = 1.0,
     this.disable = false,
-  }) : assert(buttonSize <= height), super(key: key);
+  }) : assert(buttonSize <= height);
 
   @override
   State<SliderButtonWidget> createState() => _SliderButtonWidgetState();
@@ -179,7 +179,7 @@ class _SliderButtonWidgetState extends State<SliderButtonWidget> {
 
             widget.action();
             if (widget.vibrationFlag &&
-                (await Vibration.hasVibrator())!) {
+                (await Vibration.hasVibrator())) {
               try {
                 Vibration.vibrate(duration: 200);
               } catch (e) {

@@ -1,5 +1,3 @@
-import 'package:dio/dio.dart';
-import 'package:flutter_restaurant/data/datasource/local/cache_response.dart';
 
 class ApiResponseModel<T> {
   final T? response;

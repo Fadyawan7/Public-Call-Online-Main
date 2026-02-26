@@ -43,7 +43,7 @@ class FreelancerProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   void setSelectedFreelancer({FreelancerModel? freelancer}) {
-    _selectedFreelancer = freelancer ?? null;
+    _selectedFreelancer = freelancer;
     notifyListeners();
   }
 
@@ -212,7 +212,7 @@ Future<BitmapDescriptor> createBorderedMarkerFromUrl(
   final radius = size / 2;
 
   // Determine border color based on currentStatus
-final borderColor = (currentStatus?.trim().toLowerCase() == 'available')
+final borderColor = (currentStatus.trim().toLowerCase() == 'available')
     ? Colors.green
     : Colors.red;
   // Draw border

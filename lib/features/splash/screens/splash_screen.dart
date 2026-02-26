@@ -7,17 +7,14 @@ import 'package:flutter_restaurant/common/models/config_model.dart';
 import 'package:flutter_restaurant/common/widgets/custom_asset_image_widget.dart';
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
-import 'package:flutter_restaurant/features/profile/screens/profile_screen.dart';
 import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
 import 'package:flutter_restaurant/helper/custom_snackbar_helper.dart';
-import 'package:flutter_restaurant/helper/profile_completed_helper.dart';
 import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/helper/version_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/main.dart';
 import 'package:flutter_restaurant/utill/app_constants.dart';
 import 'package:flutter_restaurant/utill/images.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -77,18 +74,39 @@ void _route() async {
   final splashProvider = Provider.of<SplashProvider>(context, listen: false);
 
   try {
+    // Add delay to ensure GoRouter is ready
+    await Future.delayed(const Duration(milliseconds: 500));
+    
+    debugPrint('🔵 Starting config initialization...');
+    
+    // Add timeout to prevent iOS from hanging
     final config = await splashProvider
         .initConfig(context, DataSourceEnum.client)
-        .timeout(const Duration(seconds: 10));
+        .timeout(const Duration(seconds: 15), onTimeout: () {
+      debugPrint('❌ Config initialization timeout after 15 seconds');
+      return null;
+    });
 
-    if (!mounted) return;
+    if (!mounted) {
+      debugPrint('⚠️ Widget unmounted before config loaded');
+      return;
+    }
+    
+    debugPrint('✅ Config loaded: ${config == null ? 'null' : 'success'}');
     _onConfigAction(config, splashProvider, context);
   } catch (e) {
-    debugPrint("⚠️ Config fetch failed: $e");
+    debugPrint("🔴 Config fetch failed: $e");
     if (!mounted) return;
-    Future.delayed(const Duration(milliseconds: 500), () {
-      RouterHelper.getLoginRoute(action: RouteAction.pushNamedAndRemoveUntil);
-    });
+    
+    await Future.delayed(const Duration(milliseconds: 500));
+    if (mounted) {
+      try {
+        debugPrint('🔵 Navigating to login as fallback...');
+        RouterHelper.getLoginRoute(action: RouteAction.pushNamedAndRemoveUntil);
+      } catch (e) {
+        debugPrint('❌ Failed to navigate to login: $e');
+      }
+    }
   }
 }
 
@@ -107,40 +125,59 @@ void _route() async {
         minimumVersion = config.appStoreConfig!.minVersion;
       }
 
-      if (config.maintenanceMode == 1) {
-        RouterHelper.getMaintainRoute(
-            action: RouteAction.pushNamedAndRemoveUntil);
-      } else if (VersionHelper.parse('$minimumVersion') >
-          VersionHelper.parse(AppConstants.appVersion)) {
-        RouterHelper.getUpdateRoute(
-            action: RouteAction.pushNamedAndRemoveUntil);
-      } else if (Provider.of<AuthProvider>(Get.context!, listen: false)
-          .isLoggedIn()) {
-        final ProfileProvider profileProvider =
-            Provider.of<ProfileProvider>(context, listen: false);
+      try {
+        if (config.maintenanceMode == 1) {
+          RouterHelper.getMaintainRoute(
+              action: RouteAction.pushNamedAndRemoveUntil);
+        } else if (VersionHelper.parse('$minimumVersion') >
+            VersionHelper.parse(AppConstants.appVersion)) {
+          RouterHelper.getUpdateRoute(
+              action: RouteAction.pushNamedAndRemoveUntil);
+        } else if (Provider.of<AuthProvider>(Get.context!, listen: false)
+            .isLoggedIn()) {
+          final ProfileProvider profileProvider =
+              Provider.of<ProfileProvider>(context, listen: false);
 
-        Provider.of<AuthProvider>(Get.context!, listen: false).updateToken();
+          try {
+            debugPrint('🔵 Calling updateToken...');
+            await Provider.of<AuthProvider>(Get.context!, listen: false).updateToken();
+            debugPrint('✅ updateToken completed');
+          } catch (e) {
+            debugPrint('⚠️ updateToken failed: $e');
+            // Continue even if updateToken fails
+          }
 
-        await profileProvider.getUserInfo(true);
+          try {
+            debugPrint('🔵 Fetching user info...');
+            await profileProvider.getUserInfo(true);
+            debugPrint('✅ User info fetched');
+          } catch (e) {
+            debugPrint('⚠️ getUserInfo failed: $e');
+            // Continue even if getUserInfo fails
+          }
 
-        profileProvider.userInfoModel!.countryId == -1
-            ? RouterHelper.getProfileRoute('splash',
-                action: RouteAction.pushReplacement)
-            : RouterHelper.getMainRoute(
-                action: RouteAction.pushNamedAndRemoveUntil);
-      } else {
-         Future.delayed(const Duration(milliseconds: 10)).then((v) {
-            RouterHelper.getDashboardRoute(
-                action: RouteAction.pushNamedAndRemoveUntil,'home');
-          });
-        // if (widget.routeTo != null) {
-        //   Get.context!.pushReplacement(widget.routeTo!);
-        // } else {
-        //   Future.delayed(const Duration(milliseconds: 10)).then((v) {
-        //     RouterHelper.getLoginRoute(
-        //         action: RouteAction.pushNamedAndRemoveUntil);
-        //   });
-       // }
+          if (!mounted) return;
+          
+          profileProvider.userInfoModel!.countryId == -1
+              ? RouterHelper.getProfileRoute('splash',
+                  action: RouteAction.pushReplacement)
+              : RouterHelper.getMainRoute(
+                  action: RouteAction.pushNamedAndRemoveUntil);
+        } else {
+          await Future.delayed(const Duration(milliseconds: 10));
+          if (!mounted) return;
+          
+          RouterHelper.getDashboardRoute(
+              action: RouteAction.pushNamedAndRemoveUntil,'home');
+        }
+      } catch (e) {
+        debugPrint('❌ Error during config action navigation: $e');
+        if (mounted) {
+          await Future.delayed(const Duration(milliseconds: 500));
+          if (mounted) {
+            RouterHelper.getLoginRoute(action: RouteAction.pushNamedAndRemoveUntil);
+          }
+        }
       }
     }
   }

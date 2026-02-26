@@ -25,7 +25,7 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
   late LatLng _initialPosition;
   LatLng? _markerPosition;
   CameraPosition? _cameraPosition;
-  Set<Marker> _markers = {};
+  final Set<Marker> _markers = {};
   late bool _isLoggedIn;
 
   @override

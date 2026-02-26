@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/enums/html_type_enum.dart';
 import 'package:flutter_restaurant/common/models/booking_details_model.dart';
 import 'package:flutter_restaurant/common/models/config_model.dart';
-import 'package:flutter_restaurant/common/models/product_model.dart';
 import 'package:flutter_restaurant/features/address/domain/models/address_model.dart';
 import 'package:flutter_restaurant/features/address/screens/add_new_address_screen.dart';
 import 'package:flutter_restaurant/features/address/screens/address_screen.dart';
@@ -16,7 +15,6 @@ import 'package:flutter_restaurant/features/auth/screens/send_otp_screen.dart';
 import 'package:flutter_restaurant/features/booking/screens/booking_detail_screen.dart';
 import 'package:flutter_restaurant/features/booking/screens/new_booking.dart';
 import 'package:flutter_restaurant/features/chat/domain/models/chat_model.dart';
-import 'package:flutter_restaurant/features/chat/domain/models/conversation_model.dart';
 import 'package:flutter_restaurant/features/chat/screens/chat_screen.dart';
 import 'package:flutter_restaurant/features/chat/screens/conversation_screen.dart';
 
@@ -240,20 +238,33 @@ class RouterHelper {
   }
 
   static String _navigateRoute( String path,{ RouteAction? route = RouteAction.push}) {
-
-    if(route == RouteAction.pushNamedAndRemoveUntil){
-      Get.context?.go(path);
-
-      if(kIsWeb) {
-        historyUrlStrategy.replaceState(null, '', '/');
+    try {
+      final context = Get.context;
+      if (context == null) {
+        debugPrint('⚠️ Navigation attempted but context is null for: $path');
+        // Delay and retry if context not ready
+        Future.delayed(const Duration(milliseconds: 500), () {
+          _navigateRoute(path, route: route);
+        });
+        return path;
       }
 
+      debugPrint('🔄 Navigating to: $path with action: $route');
 
-    }else if(route == RouteAction.pushReplacement){
-      Get.context?.pushReplacement(path);
-
-    }else{
-      Get.context?.push(path);
+      if(route == RouteAction.pushNamedAndRemoveUntil){
+        context.go(path);
+        if(kIsWeb) {
+          historyUrlStrategy.replaceState(null, '', '/');
+        }
+      } else if(route == RouteAction.pushReplacement){
+        context.pushReplacement(path);
+      } else {
+        context.push(path);
+      }
+      debugPrint('✅ Successfully navigated to: $path');
+    } catch (e) {
+      debugPrint('❌ Navigation error for $path: $e');
+      rethrow;
     }
     return path;
   }
@@ -261,7 +272,7 @@ class RouterHelper {
 
 
   static  Widget _routeHandler(BuildContext context, Widget route,  {bool isBranchCheck = false, required String? path}) {
-    print('=====PATH-====${path}');
+    print('=====PATH-====$path');
    return Provider.of<SplashProvider>(context, listen: false).configModel == null
        ? SplashScreen(routeTo: path) : _isMaintenance(Provider.of<SplashProvider>(context, listen: false).configModel!)
        ? const MaintenanceScreen()
@@ -410,7 +421,7 @@ class RouterHelper {
         BookingDetailsModel? bookingDetailsModel;
         try{
           bookingDetailsModel = BookingDetailsModel.fromJson(jsonDecode(utf8.decode(base64Url.decode('${state.uri.queryParameters['bookingDetailData']?.replaceAll(' ', '+')}'))));
-          debugPrint('route - ${bookingDetailsModel}');
+          debugPrint('route - $bookingDetailsModel');
 
         }catch(error){
           debugPrint('route - $error');

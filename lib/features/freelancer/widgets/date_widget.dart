@@ -8,7 +8,7 @@ class DateWidget extends StatelessWidget {
 
   final bool isSelected;
   final Function onTap;
-  const DateWidget({Key? key, required this.title, required this.isSelected, required this.onTap, this.date}) : super(key: key);
+  const DateWidget({super.key, required this.title, required this.isSelected, required this.onTap, this.date});
 
   @override
   Widget build(BuildContext context) {

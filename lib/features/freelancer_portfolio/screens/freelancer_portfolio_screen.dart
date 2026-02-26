@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
@@ -34,15 +33,16 @@ class _FreelancerPortfolioScreenState extends State<FreelancerPortfolioScreen>
     super.initState();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: (CustomAppBarWidget(
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Icon(Icons.arrow_back_ios_new_rounded, color:Color(0xFFf11920))),
         titleColor: Colors.white,
         context: context,
         title: getTranslated('my_portfolio', context),

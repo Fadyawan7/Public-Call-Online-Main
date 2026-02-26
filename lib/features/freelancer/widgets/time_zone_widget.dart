@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_restaurant/features/address/screens/add_new_address_screen.dart';
 import 'package:flutter_restaurant/localization/app_localization.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/styles.dart';

@@ -83,7 +83,7 @@ class _BookingDateSlotScreenState extends State<BookingDateSlotScreen>
         ),
         body: GestureDetector(
           onTap: () {
-            FocusScope.of(context).requestFocus(new FocusNode());
+            FocusScope.of(context).requestFocus(FocusNode());
           },
           child: SafeArea(
             child: SingleChildScrollView(
@@ -404,10 +404,10 @@ class _BookingDateSlotScreenState extends State<BookingDateSlotScreen>
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemCount:
-                                    bookingProvider.listImagePath!.length + 1,
+                                    bookingProvider.listImagePath.length + 1,
                                 itemBuilder: (BuildContext context, index) {
                                   final imageCount =
-                                      bookingProvider.listImagePath?.length ??
+                                      bookingProvider.listImagePath.length ??
                                           0;
 
                                   // Last item is the add button
@@ -633,7 +633,7 @@ class _BookingDateSlotScreenState extends State<BookingDateSlotScreen>
 
                                   bookingProvider.placeBooking(
                                       placeBookingBody,
-                                      bookingProvider.listImagePath!,
+                                      bookingProvider.listImagePath,
                                       _callback,
                                       Provider.of<AuthProvider>(context,
                                               listen: false)
@@ -655,12 +655,12 @@ class _BookingDateSlotScreenState extends State<BookingDateSlotScreen>
 
   void _callback(bool isSuccess, String message) async {
     if (isSuccess) {
-      print('=====BOOKING===${isSuccess}');
+      print('=====BOOKING===$isSuccess');
 
       Provider.of<BookingProvider>(context, listen: false).resetSlots();
       RouterHelper.getOrderSuccessScreen('success', message);
     } else {
-      print('=====BOOKING===${message}');
+      print('=====BOOKING===$message');
       showCustomSnackBarHelper(message);
     }
   }

@@ -10,7 +10,6 @@ ThemeData dark = ThemeData(
   hintColor: const Color(0xFFbebebe),
   disabledColor: const Color(0xffa2a7ad),
   shadowColor: Colors.black.withOpacity(0.4),
-  indicatorColor: const Color(0xFF1981E0),
   pageTransitionsTheme: const PageTransitionsTheme(builders: {
     TargetPlatform.android: ZoomPageTransitionsBuilder(),
     TargetPlatform.iOS: ZoomPageTransitionsBuilder(),
@@ -39,5 +38,5 @@ ThemeData dark = ThemeData(
     titleMedium: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500),
     bodyMedium: TextStyle(fontSize: 12.0),
     bodyLarge: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600),
-  ),
+  ), tabBarTheme: TabBarThemeData(indicatorColor: const Color(0xFF1981E0)),
 );

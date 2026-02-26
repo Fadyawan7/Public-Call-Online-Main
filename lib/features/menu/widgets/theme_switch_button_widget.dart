@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
-import 'package:flutter_restaurant/utill/dimensions.dart';
-import 'package:flutter_restaurant/utill/styles.dart';
 import 'package:provider/provider.dart';
 
 class ThemeSwitchButtonWidget extends StatefulWidget {

@@ -1,19 +1,15 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter_restaurant/common/models/api_response_model.dart';
 import 'package:flutter_restaurant/features/chat/domain/models/conversation_model.dart';
 import 'package:flutter_restaurant/features/notification/domain/reposotories/notification_repo.dart';
-import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
 import 'package:flutter_restaurant/helper/api_checker_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/features/chat/domain/models/chat_model.dart';
 import 'package:flutter_restaurant/features/chat/domain/reposotories/chat_repo.dart';
-import 'package:flutter_restaurant/main.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 
 class ChatProvider extends ChangeNotifier {
   final ChatRepo? chatRepo;
@@ -149,11 +145,10 @@ class ChatProvider extends ChangeNotifier {
   }
 
   void addConversation(ConversationModel newConversation) {
-    log('[Pusher] Parsed conversations: ${newConversation}');
+    log('[Pusher] Parsed conversations: $newConversation');
 
-    if(newConversation != null){
-      _conversationList!.insert(0, newConversation);
-    } // Add at the beginning
+    _conversationList!.insert(0, newConversation);
+  // Add at the beginning
     notifyListeners();
   }
   Future<http.StreamedResponse> sendMessage(String message, BuildContext context, String token, int? chatId) async {
@@ -180,7 +175,7 @@ class ChatProvider extends ChangeNotifier {
     if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
       Map map = apiResponse.response!.data;
       String? message = map["message"];
-      print('======RESPONSEee====${message}');
+      print('======RESPONSEee====$message');
       _chatList!.removeAt(index);
       _message = message!;
       notifyListeners();

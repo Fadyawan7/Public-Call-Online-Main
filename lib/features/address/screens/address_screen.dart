@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/providers/theme_provider.dart';
 import 'package:flutter_restaurant/common/widgets/custom_app_bar_widget.dart';
 import 'package:flutter_restaurant/common/widgets/no_data_widget.dart';
-import 'package:flutter_restaurant/common/widgets/not_logged_in_widget.dart';
 import 'package:flutter_restaurant/features/address/domain/models/address_model.dart';
 import 'package:flutter_restaurant/features/address/providers/location_provider.dart';
 import 'package:flutter_restaurant/features/address/widgets/address_card_widget.dart';
@@ -11,7 +10,9 @@ import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
+import 'package:flutter_restaurant/main.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
@@ -44,6 +45,14 @@ class _AddressScreenState extends State<AddressScreen> {
 
     return Scaffold(
         appBar: (CustomAppBarWidget(
+          leading: InkWell(
+            onTap: () {
+            if(Get.context!.canPop()) {
+              Get.context!.pop();
+            }
+          },
+            child: const Icon(Icons.arrow_back_ios, size: 20,color: Colors.red,),
+          ),
           context: context,
           title: getTranslated('my_address', context),
           centerTitle: true,

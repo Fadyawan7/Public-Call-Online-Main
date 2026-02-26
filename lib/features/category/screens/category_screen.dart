@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/widgets/custom_image_widget.dart';
-import 'package:flutter_restaurant/common/widgets/custom_loader_widget.dart';
-import 'package:flutter_restaurant/common/widgets/filter_button_widget.dart';
 import 'package:flutter_restaurant/common/widgets/no_data_widget.dart';
 import 'package:flutter_restaurant/common/widgets/paginated_list_widget.dart';
 import 'package:flutter_restaurant/common/widgets/product_shimmer_widget.dart';
 import 'package:flutter_restaurant/features/category/providers/category_provider.dart';
 import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
 import 'package:flutter_restaurant/helper/responsive_helper.dart';
-import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
@@ -174,6 +171,7 @@ class _CategoryScreenState extends State<CategoryScreen> with TickerProviderStat
                         width: double.maxFinite,
                       );
                       }
+                      return null;
 
                     },
                   ) : const SliverToBoxAdapter(child: NoDataWidget(isFooter: false)),

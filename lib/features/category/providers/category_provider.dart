@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/enums/data_source_enum.dart';
 import 'package:flutter_restaurant/common/models/api_response_model.dart';
@@ -11,7 +9,6 @@ import 'package:flutter_restaurant/features/category/domain/category_model.dart'
 import 'package:flutter_restaurant/features/category/domain/reposotories/category_repo.dart';
 import 'package:flutter_restaurant/features/freelancer/domain/models/freelancer_model.dart';
 import 'package:flutter_restaurant/helper/api_checker_helper.dart';
-import 'package:flutter_restaurant/helper/custom_snackbar_helper.dart';
 
 class CategoryProvider extends DataSyncProvider {
   final CategoryRepo? categoryRepo;
@@ -25,8 +22,8 @@ class CategoryProvider extends DataSyncProvider {
 
   List<CategoryModel>? _subCategoryList;
   ProductModel? _categoryProductModel;
-  bool _pageFirstIndex = true;
-  bool _pageLastIndex = false;
+  final bool _pageFirstIndex = true;
+  final bool _pageLastIndex = false;
   bool _isLoading = false;
   String? _selectedSubCategoryId;
 

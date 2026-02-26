@@ -3,9 +3,7 @@ import 'package:flutter_restaurant/common/models/booking_details_model.dart';
 import 'package:flutter_restaurant/common/widgets/custom_asset_image_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_image_widget.dart';
 import 'package:flutter_restaurant/features/booking/providers/booking_provider.dart';
-import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
 
-import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
 import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';

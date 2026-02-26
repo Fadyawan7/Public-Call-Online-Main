@@ -99,41 +99,77 @@ class AuthRepo {
       String? deviceToken = '@';
 
       if (defaultTargetPlatform == TargetPlatform.iOS) {
-        FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(alert: true, badge: true, sound: true);
-        NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
-          alert: true, announcement: false, badge: true, carPlay: false,
-          criticalAlert: false, provisional: false, sound: true,
-        );
-        if(settings.authorizationStatus == AuthorizationStatus.authorized) {
-          deviceToken = (await getDeviceToken())!;
+        try {
+          FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(alert: true, badge: true, sound: true);
+          NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
+            alert: true, announcement: false, badge: true, carPlay: false,
+            criticalAlert: false, provisional: false, sound: true,
+          );
+          if(settings.authorizationStatus == AuthorizationStatus.authorized) {
+            deviceToken = (await getDeviceToken()) ?? '@';
+          }
+        } catch (e) {
+          debugPrint('🔴 iOS notification permission error: $e');
+          // Fallback to '@' if permission fails
         }
       }else {
-        deviceToken = (await getDeviceToken())!;
+        try {
+          deviceToken = (await getDeviceToken()) ?? '@';
+        } catch (e) {
+          debugPrint('🔴 Android device token error: $e');
+        }
       }
 
       if(!kIsWeb){
-        if(fcmToken == null) {
-          FirebaseMessaging.instance.subscribeToTopic(AppConstants.topic);
-        }else{
-          FirebaseMessaging.instance.unsubscribeFromTopic(AppConstants.topic);
+        if (defaultTargetPlatform == TargetPlatform.iOS ||
+            defaultTargetPlatform == TargetPlatform.macOS) {
+          try {
+            final String? apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+            if (apnsToken == null) {
+              debugPrint('⚠️ APNS token not set yet, skipping topic update');
+            } else {
+              if(fcmToken == null) {
+                await FirebaseMessaging.instance.subscribeToTopic(AppConstants.topic);
+              }else{
+                await FirebaseMessaging.instance.unsubscribeFromTopic(AppConstants.topic);
+              }
+            }
+          } catch (e) {
+            debugPrint('🔴 iOS topic subscription error: $e');
+            // Don't crash if topic subscription fails
+          }
+        } else {
+          try {
+            if(fcmToken == null) {
+              await FirebaseMessaging.instance.subscribeToTopic(AppConstants.topic);
+            }else{
+              await FirebaseMessaging.instance.unsubscribeFromTopic(AppConstants.topic);
+            }
+          } catch (e) {
+            debugPrint('🔴 Topic subscription error: $e');
+          }
         }
       }else{
-        await subscribeTokenToTopic(deviceToken, fcmToken ?? AppConstants.topic);
+        try {
+          await subscribeTokenToTopic(deviceToken, fcmToken ?? AppConstants.topic);
+        } catch (e) {
+          debugPrint('🔴 Web topic subscription error: $e');
+        }
       }
-
 
       Map<String, dynamic> data = {"_method": "post", "fcm_token": fcmToken ?? deviceToken};
 
-      debugPrint('eroor ====> $data');
+      debugPrint('📤 Sending device token: $data');
 
       Response response = await dioClient!.post(
         AppConstants.tokenUri,
         data: data,
       );
-      debugPrint('eroorr ====> ${response.data}');
+      debugPrint('✅ Device token response: ${response.data}');
 
       return ApiResponseModel.withSuccess(response);
     } catch (e) {
+      debugPrint('🔴 updateDeviceToken error: $e');
       return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
     }
   }
@@ -141,10 +177,16 @@ class AuthRepo {
   Future<String?> getDeviceToken() async {
     String? deviceToken = '@';
     try{
-      deviceToken = (await FirebaseMessaging.instance.getToken())!;
-
-    }catch(error){
-      debugPrint('eroor ====> $error');
+      deviceToken = (await FirebaseMessaging.instance.getToken());
+      if (deviceToken == null) {
+        debugPrint('⚠️ FCM getToken returned null');
+        deviceToken = '@';
+      } else {
+        debugPrint('✅ FCM token obtained: ${deviceToken.substring(0, 10)}...');
+      }
+    } catch(error){
+      debugPrint('🔴 FCM getToken error: $error');
+      deviceToken = '@';
     }
     return deviceToken;
   }
@@ -235,7 +277,7 @@ class AuthRepo {
 
   Future<ApiResponseModel> verifyProfileInfo(String userInput, String token, String type) async {
     try {
-      print('=====EMAIL===${userInput}');
+      print('=====EMAIL===$userInput');
       Response response = await dioClient!.post(
           AppConstants.verifyOtpUri, data: {"email": userInput, "token": token});
       return ApiResponseModel.withSuccess(response);

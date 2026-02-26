@@ -27,7 +27,7 @@ class LocationRepo {
 
   Future<ApiResponseModel> removeAddressByID(int? id) async {
     try {
-      print("=====ADDRESSS===${id}");
+      print("=====ADDRESSS===$id");
 
       final response = await dioClient!.post(
           '${AppConstants.removeAddressUri}$id',
@@ -48,7 +48,7 @@ class LocationRepo {
         AppConstants.addAddressUri,
         data: data,
       );
-      print("=====ADDRESSS===${data}");
+      print("=====ADDRESSS===$data");
       return ApiResponseModel.withSuccess(response);
     } catch (e) {
       return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));

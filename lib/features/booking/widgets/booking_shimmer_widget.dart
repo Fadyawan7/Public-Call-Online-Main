@@ -13,12 +13,9 @@ class BookingShimmerWidget extends StatelessWidget {
     final bookingProvider = Provider.of<BookingProvider>(context);
 
     // Determine if shimmer should show (true when all lists are null or empty)
-    bool isLoading = (bookingProvider.pendingList == null ||
-            bookingProvider.pendingList!.isEmpty) &&
-        (bookingProvider.confirmedList == null ||
-            bookingProvider.confirmedList!.isEmpty) &&
-        (bookingProvider.historyList == null ||
-            bookingProvider.historyList!.isEmpty);
+    bool isLoading = (bookingProvider.pendingList.isEmpty) &&
+        (bookingProvider.confirmedList.isEmpty) &&
+        (bookingProvider.historyList.isEmpty);
 
     return ListView.builder(
       itemCount: 10,

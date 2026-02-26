@@ -6,8 +6,6 @@ import 'package:flutter_restaurant/features/booking/widgets/booking_info_widget.
 import 'package:flutter_restaurant/features/booking/widgets/freelancer_widget.dart';
 import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
 import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
-import 'package:flutter_restaurant/helper/date_converter_helper.dart';
-import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/styles.dart';

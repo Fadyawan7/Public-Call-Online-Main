@@ -1,6 +1,5 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_restaurant/common/models/config_model.dart';
 import 'package:flutter_restaurant/common/providers/theme_provider.dart';
 import 'package:flutter_restaurant/common/widgets/custom_app_bar_widget.dart';
 import 'package:flutter_restaurant/features/address/domain/models/address_model.dart';
@@ -12,7 +11,6 @@ import 'package:flutter_restaurant/features/address/widgets/save_button_widget.d
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/common/widgets/code_picker_widget.dart';
 import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
-import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
 import 'package:flutter_restaurant/helper/custom_snackbar_helper.dart';
 import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/localization/app_localization.dart';
@@ -140,6 +138,14 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
     return Scaffold(
 
       appBar:(CustomAppBarWidget(
+        leading: InkWell(
+          onTap: () {
+            if(Get.context!.canPop()) {
+              Get.context!.pop();
+            }
+          },
+          child: const Icon(Icons.arrow_back_ios, size: 20,color: Colors.red,),
+        ),
         titleColor: Colors.white,
         context: context,
         title:  getTranslated(widget.isEnableUpdate ? 'update_address' : 'add_delivery_info', context),
@@ -147,7 +153,7 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
       )) as PreferredSizeWidget?,
       body: GestureDetector(
         onTap: () {
-          FocusScope.of(context).requestFocus(new FocusNode());
+          FocusScope.of(context).requestFocus(FocusNode());
         },
         child: Consumer<LocationProvider>(
           builder: (context, locationProvider, child) {

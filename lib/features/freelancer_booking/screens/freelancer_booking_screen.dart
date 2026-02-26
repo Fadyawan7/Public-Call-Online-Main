@@ -1,19 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_restaurant/features/category/providers/category_provider.dart';
-import 'package:flutter_restaurant/features/booking/providers/booking_provider.dart';
-import 'package:flutter_restaurant/features/booking/widgets/booking_list_widget.dart';
-import 'package:flutter_restaurant/features/freelancer/providers/freelancer_provider.dart';
 import 'package:flutter_restaurant/features/freelancer_booking/providers/freelancer_booking_provider.dart';
 import 'package:flutter_restaurant/features/freelancer_booking/widgets/freelancer_booking_list_widget.dart';
-import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
-import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
-import 'package:flutter_restaurant/main.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
 import 'package:flutter_restaurant/common/widgets/custom_app_bar_widget.dart';
-import 'package:flutter_restaurant/common/widgets/not_logged_in_widget.dart';
 import 'package:provider/provider.dart';
 
 class FreelancerBookingScreen extends StatefulWidget {

@@ -4,7 +4,6 @@ import 'package:flutter_restaurant/features/booking/domain/models/booking_model.
 import 'package:flutter_restaurant/features/booking/providers/booking_provider.dart';
 import 'package:flutter_restaurant/features/booking/widgets/booking_item_widget.dart';
 import 'package:flutter_restaurant/features/booking/widgets/booking_shimmer_widget.dart';
-import 'package:flutter_restaurant/helper/date_converter_helper.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:provider/provider.dart';
 
@@ -36,7 +35,7 @@ class _FreelancerPortfolioListWidgetState extends State<FreelancerPortfolioListW
         } else {
           bookingList = booking.historyList;
         }
-        return !booking.isLoading ? bookingList!.isNotEmpty ? RefreshIndicator(
+        return !booking.isLoading ? bookingList.isNotEmpty ? RefreshIndicator(
           onRefresh: () async {
             await Provider.of<BookingProvider>(context, listen: false).getBookingList(context,widget.status);
           },

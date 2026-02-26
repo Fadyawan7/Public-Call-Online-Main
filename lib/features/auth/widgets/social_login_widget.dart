@@ -207,31 +207,31 @@ class _SocialLoginWidgetState extends State<SocialLoginWidget> {
               const SizedBox(width: Dimensions.paddingSizeDefault),
 
 
-            if( defaultTargetPlatform == TargetPlatform.iOS)...[
-              Expanded(
-                child: InkWell(
-                  onTap: () async {
-                    final credential = await SignInWithApple.getAppleIDCredential(scopes: [
-                      AppleIDAuthorizationScopes.email,
-                      AppleIDAuthorizationScopes.fullName,
-                    ],
-                      webAuthenticationOptions: WebAuthenticationOptions(
-                        clientId: '${configModel?.appleLogin?.clientId}',
-                        redirectUri: Uri.parse(AppConstants.baseUrl),
-                      ),
-                    );
-                    authProvider.socialLogin(SocialLoginModel(
-                      email: credential.email, token: credential.authorizationCode, uniqueId: credential.authorizationCode, medium: 'apple',
-                    ), route);
-                  },
-                  child: SocialLoginButtonWidget(
-                    text: getTranslated('continue_with_apple', context)!,
-                    image: Images.appleLogo,
-                    color: Theme.of(context).textTheme.bodyMedium?.color,
-                  ),
-                ),
-              ),
-            ],
+            // if( defaultTargetPlatform == TargetPlatform.iOS)...[
+            //   Expanded(
+            //     child: InkWell(
+            //       onTap: () async {
+            //         final credential = await SignInWithApple.getAppleIDCredential(scopes: [
+            //           AppleIDAuthorizationScopes.email,
+            //           AppleIDAuthorizationScopes.fullName,
+            //         ],
+            //           webAuthenticationOptions: WebAuthenticationOptions(
+            //             clientId: '${configModel?.appleLogin?.clientId}',
+            //             redirectUri: Uri.parse(AppConstants.baseUrl),
+            //           ),
+            //         );
+            //         authProvider.socialLogin(SocialLoginModel(
+            //           email: credential.email, token: credential.authorizationCode, uniqueId: credential.authorizationCode, medium: 'apple',
+            //         ), route);
+            //       },
+            //       child: SocialLoginButtonWidget(
+            //         text: getTranslated('continue_with_apple', context)!,
+            //         image: Images.appleLogo,
+            //         color: Theme.of(context).textTheme.bodyMedium?.color,
+            //       ),
+            //     ),
+            //   ),
+            // ],
 
           ],);
         }else if(socialLoginList.length == 3){

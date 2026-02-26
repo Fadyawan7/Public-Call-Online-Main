@@ -1,8 +1,4 @@
-import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_restaurant/common/models/config_model.dart';
-import 'package:flutter_restaurant/common/models/product_model.dart';
 
 class BookingModel {
   int? _id;

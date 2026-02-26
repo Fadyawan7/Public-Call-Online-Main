@@ -1,8 +1,6 @@
 // profile_header_widget.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_restaurant/common/widgets/custom_image_widget.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
-import 'package:flutter_restaurant/utill/images.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 

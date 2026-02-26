@@ -1,4 +1,4 @@
-library image_zoom_on_move;
+library;
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
