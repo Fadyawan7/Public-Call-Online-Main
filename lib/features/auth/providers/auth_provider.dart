@@ -156,16 +156,17 @@ class AuthProvider with ChangeNotifier {
 
   Future<ResponseModel?> forgetPassword(
       {required ConfigModel config, required String email}) async {
-    ResponseModel? responseModel;
     _isForgotPasswordLoading = true;
     notifyListeners();
 
-    responseModel = await _forgetPassword(email);
-
-    _isForgotPasswordLoading = false;
-    notifyListeners();
-
-    return responseModel;
+    try {
+      return await _forgetPassword(email);
+    } catch (_) {
+      return ResponseModel(false, 'Something went wrong');
+    } finally {
+      _isForgotPasswordLoading = false;
+      notifyListeners();
+    }
   }
 
   Future<ResponseModel> _forgetPassword(String email) async {
@@ -173,23 +174,26 @@ class AuthProvider with ChangeNotifier {
     resendButtonLoading = true;
     notifyListeners();
 
-    ApiResponseModel apiResponse = await authRepo!.forgetPassword(email);
-    ResponseModel responseModel;
+    try {
+      ApiResponseModel apiResponse = await authRepo!.forgetPassword(email);
 
-    if (apiResponse.response != null &&
-        apiResponse.response!.statusCode == 200) {
-      responseModel =
-          ResponseModel(true, apiResponse.response!.data["message"]);
-    } else {
-      responseModel = ResponseModel(
-          false, ApiCheckerHelper.getError(apiResponse).errors![0].message);
-      ApiCheckerHelper.checkApi(apiResponse);
+      if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+        return ResponseModel(true, apiResponse.response!.data["message"]);
+      }
+
+      final errorModel = ApiCheckerHelper.getError(apiResponse);
+      final String message = (errorModel.errors != null && errorModel.errors!.isNotEmpty)
+          ? (errorModel.errors!.first.message ?? 'Invalid email address')
+          : 'Invalid email address';
+
+      return ResponseModel(false, message);
+    } catch (_) {
+      return ResponseModel(false, 'Invalid email address');
+    } finally {
+      resendButtonLoading = false;
+      _isForgotPasswordLoading = false;
+      notifyListeners();
     }
-    resendButtonLoading = false;
-    _isForgotPasswordLoading = false;
-    notifyListeners();
-
-    return responseModel;
   }
 
   Future<void> updateToken() async {
