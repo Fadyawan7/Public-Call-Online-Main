@@ -157,40 +157,7 @@ class CustomAppBarWidget extends StatelessWidget implements PreferredSizeWidget 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: FittedBox(
-        child: Stack(
-          children: [
-            // BORDER
-            Text(
-              title!,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: 'Pacifico',
-                fontSize: 18,
-                height: 1.2,
-                letterSpacing: 1.5,
-                foreground: Paint()
-                  ..style = PaintingStyle.stroke
-                  ..strokeWidth = 3
-                  ..color = Theme.of(context).primaryColor,
-              ),
-            ),
-
-            // FILL
-            Text(
-              title!,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontFamily: 'Pacifico',
-                fontSize: 18,
-                height: 1.2,
-                letterSpacing: 1.5,
-                color: Colors.white,
-              ),
-            ),
-          ],
-        ),
-      ),
+      title: Text(title ?? '',style: TextStyle(color: Colors.red,),textAlign: TextAlign.center,),
       centerTitle: centerTitle,
       leading: isBackButtonExist
     ? (leading != null

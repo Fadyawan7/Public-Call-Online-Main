@@ -47,10 +47,13 @@ class FreelancerProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getFreelancerList({int? categoryId}) async {
+  Future<void> getFreelancerList({int? categoryId, String? categoryName}) async {
     try {
       final ApiResponseModel apiResponse =
-          await freelancerRepo!.getFreelancerList(categoryId: categoryId);
+          await freelancerRepo!.getFreelancerList(
+            categoryId: categoryId,
+            categoryName: categoryName,
+          );
       final responseData = apiResponse.response!.data;
 
       if (responseData["status"] == true) {

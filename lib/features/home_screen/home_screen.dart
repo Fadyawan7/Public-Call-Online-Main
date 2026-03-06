@@ -96,11 +96,12 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: CustomAppBarWidget(
         leading: ClipRRect(
-          borderRadius: BorderRadiusGeometry.all(Radius.circular(5)),
+          borderRadius: BorderRadiusGeometry.all(Radius.circular(7)),
           child: Image.asset(
             Images.iconPco,
             width: 28,
             height: 28,
+            
           ),
         ),
         titleColor: Colors.white,
@@ -361,22 +362,16 @@ IconButton(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Column(
                         children: [
-                          CircleAvatar(
-                            radius: 30,
-                            backgroundColor: isSelected
-                                ? Theme.of(context).primaryColor
-                                : Colors.grey[200],
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(30),
-                              child: Image.network(
-                                category.iconUrl.toString() ?? '',
-                                width: 40,
-                                height: 40,
-                                fit: BoxFit.cover,
-                                //  color: isSelected ? Colors.white : Colors.black,
-                                errorBuilder: (context, _, __) =>
-                                    const Icon(Icons.image_not_supported),
-                              ),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(30),
+                            child: Image.network(
+                              category.iconUrl.toString() ?? '',
+                              width: 40,
+                              height: 40,
+                              fit: BoxFit.cover,
+                              //  color: isSelected ? Colors.white : Colors.black,
+                              errorBuilder: (context, _, __) =>
+                                  const Icon(Icons.image_not_supported),
                             ),
                           ),
                           const SizedBox(height: 8),

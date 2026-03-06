@@ -30,11 +30,10 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>fb482889663914976</string>
-	            <string>com.googleusercontent.apps.906367301565-u8itonvvbjlbvttft2un9fgb0un3j54v</string>
+				<string>com.googleusercontent.apps.906367301565-u8itonvvbjlbvttft2un9fgb0un3j54v</string>
 			</array>
 		</dict>
 	</array>
-	
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>FacebookAppID</key>
@@ -86,6 +85,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	
 </dict>
 </plist>

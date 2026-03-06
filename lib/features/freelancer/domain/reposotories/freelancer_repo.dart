@@ -11,13 +11,17 @@ class FreelancerRepo {
   final SharedPreferences? sharedPreferences;
   FreelancerRepo({required this.dioClient, required this.sharedPreferences});
 
-  Future<ApiResponseModel> getFreelancerList({int? categoryId}) async {
+  Future<ApiResponseModel> getFreelancerList({int? categoryId, String? categoryName}) async {
     try {
       final Map<String, dynamic> queryParams = {};
 
       // Only add category_id if it's not null and not -1
       if (categoryId != null && categoryId != -1) {
         queryParams['category_id'] = categoryId;
+      }
+
+      if (categoryName != null && categoryName.trim().isNotEmpty) {
+        queryParams['categoryName'] = categoryName.trim();
       }
 
       final response = await dioClient!.getWithoutToken(

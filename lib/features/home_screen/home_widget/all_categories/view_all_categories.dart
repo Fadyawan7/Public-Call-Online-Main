@@ -59,20 +59,16 @@ class _AllCategoriesState extends State<AllCategories> {
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Column(
                   children: [
-                    CircleAvatar(
-                      radius: 30,
-                      backgroundColor: Theme.of(context).primaryColor,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(30),
-                        child: Image.network(
-                          category.iconUrl ?? '',
-                          width: 40,
-                          height: 40,
-                          fit: BoxFit.cover,
-                          //   color: Colors.white,
-                          errorBuilder: (context, _, __) =>
-                              const Icon(Icons.image_not_supported),
-                        ),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(30),
+                      child: Image.network(
+                        category.iconUrl ?? '',
+                        width: 40,
+                        height: 40,
+                        fit: BoxFit.cover,
+                        //   color: Colors.white,
+                        errorBuilder: (context, _, __) =>
+                            const Icon(Icons.image_not_supported),
                       ),
                     ),
                     const SizedBox(height: 8),
