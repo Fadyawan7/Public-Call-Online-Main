@@ -14,6 +14,7 @@ import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
@@ -37,6 +38,137 @@ class _FreelancerDetailsBottomSheetState
   late TabController _tabController;
   int _selectedIndex = 1;
   late bool _isLoggedIn;
+  double? _distanceKm;
+  int? _etaMinutes;
+  bool _isDistanceLoading = false;
+
+  Future<Position?> _getCurrentPosition({bool showFeedback = true}) async {
+    final isServiceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!isServiceEnabled) {
+      if (mounted && showFeedback) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please enable location service')),
+        );
+      }
+      return null;
+    }
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      if (mounted && showFeedback) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Location permission is required for directions')),
+        );
+      }
+      return null;
+    }
+
+    return Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+      timeLimit: const Duration(seconds: 12),
+    );
+  }
+
+  Future<void> _loadDistanceInfo({bool showFeedback = false}) async {
+    final double? destinationLat = widget.freelancer.latitude;
+    final double? destinationLng = widget.freelancer.longitude;
+
+    if (destinationLat == null || destinationLng == null) {
+      return;
+    }
+
+    if (mounted) {
+      setState(() => _isDistanceLoading = true);
+    }
+
+    try {
+      final Position? position = await _getCurrentPosition(showFeedback: showFeedback);
+      if (position == null) {
+        return;
+      }
+
+      final distanceInMeter = Geolocator.distanceBetween(
+        position.latitude,
+        position.longitude,
+        destinationLat,
+        destinationLng,
+      );
+
+      final double distanceKm = distanceInMeter / 1000;
+      final int etaMinutes = ((distanceKm / 35) * 60).ceil();
+
+      if (mounted) {
+        setState(() {
+          _distanceKm = distanceKm;
+          _etaMinutes = etaMinutes;
+        });
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isDistanceLoading = false);
+      }
+    }
+  }
+
+  Future<void> _handleDirectionTap() async {
+    final double? destinationLat = widget.freelancer.latitude;
+    final double? destinationLng = widget.freelancer.longitude;
+
+    if (destinationLat == null || destinationLng == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Freelancer location is not available')),
+      );
+      return;
+    }
+
+    final Position? position = await _getCurrentPosition(showFeedback: true);
+    if (position == null) {
+      return;
+    }
+
+    final distanceInMeter = Geolocator.distanceBetween(
+      position.latitude,
+      position.longitude,
+      destinationLat,
+      destinationLng,
+    );
+
+    final double distanceKm = distanceInMeter / 1000;
+    final int etaMinutes = ((distanceKm / 35) * 60).ceil();
+
+    if (mounted) {
+      setState(() {
+        _distanceKm = distanceKm;
+        _etaMinutes = etaMinutes;
+      });
+    }
+
+    if (!mounted) {
+      return;
+    }
+
+    Navigator.of(context).pop();
+
+    final Uri directionUri = Uri.parse(
+      'https://www.google.com/maps/dir/?api=1&origin=${position.latitude},${position.longitude}&destination=$destinationLat,$destinationLng&travelmode=driving',
+    );
+
+    if (await canLaunchUrl(directionUri)) {
+      await launchUrl(directionUri, mode: LaunchMode.externalApplication);
+    } else {
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not open directions')),
+      );
+    }
+  }
 
   @override
   void initState() {
@@ -50,6 +182,11 @@ class _FreelancerDetailsBottomSheetState
     });
     _isLoggedIn =
         Provider.of<AuthProvider>(context, listen: false).isLoggedIn();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadDistanceInfo();
+    });
+
     super.initState();
   }
 
@@ -101,7 +238,7 @@ class _FreelancerDetailsBottomSheetState
                             label: "Direction",
                             icon: Icons.directions,
                             onPressed: () async {
-                              // ... your existing code
+                              await _handleDirectionTap();
                             },
                           ),
                           const SizedBox(width: Dimensions.paddingSizeDefault),
@@ -109,9 +246,10 @@ class _FreelancerDetailsBottomSheetState
                             label: "Call",
                             icon: Icons.phone,
                             onPressed: () {
-                              RouterHelper.getBookingDateSlotRoute(
-                                widget.freelancer.id.toString(),
-                              );
+                              _launchCall(context, widget.freelancer.phone);
+                              // RouterHelper.getBookingDateSlotRoute(
+                              //   widget.freelancer.id.toString(),
+                              // );
                               Navigator.of(context).pop();
                             },
                           ),
@@ -145,6 +283,53 @@ class _FreelancerDetailsBottomSheetState
                       ),
                     ),
                   ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: Dimensions.paddingSizeDefault,
+                    vertical: Dimensions.paddingSizeExtraSmall,
+                  ),
+                  child: _isDistanceLoading
+                      ? Row(
+                          children: [
+                            SizedBox(
+                              height: 14,
+                              width: 14,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Calculating distance...',
+                              style: rubikRegular.copyWith(
+                                color: Theme.of(context).hintColor,
+                                fontSize: Dimensions.fontSizeSmall,
+                              ),
+                            ),
+                          ],
+                        )
+                      : (_distanceKm != null && _etaMinutes != null)
+                          ? Row(
+                              children: [
+                                Icon(Icons.near_me_outlined, size: 16, color: Theme.of(context).primaryColor),
+                                const SizedBox(width: 6),
+                                Text(
+                                  'Distance: ${_distanceKm!.toStringAsFixed(1)} km',
+                                  style: rubikMedium.copyWith(fontSize: Dimensions.fontSizeSmall),
+                                ),
+                                const SizedBox(width: 10),
+                                Text(
+                                  'ETA: ~$_etaMinutes min',
+                                  style: rubikRegular.copyWith(
+                                    color: Theme.of(context).hintColor,
+                                    fontSize: Dimensions.fontSizeSmall,
+                                  ),
+                                ),
+                              ],
+                            )
+                          : const SizedBox.shrink(),
                 ),
                 //Freelancer Portfolio Widget
                 if (widget.freelancer.portfolio?.isNotEmpty ?? false)
@@ -363,6 +548,29 @@ Future<void> _launchWhatsApp(
   } catch (e) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Error launching WhatsApp: ${e.toString()}')),
+    );
+  }
+}
+Future<void> _launchCall(
+  BuildContext context,
+  String? phoneNumber,
+) async {
+  // Close dialog if open
+  Navigator.of(context).pop();
+
+  final Uri callUri = Uri.parse("tel:$phoneNumber");
+
+  try {
+    if (await canLaunchUrl(callUri)) {
+      await launchUrl(callUri);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not open dialer')),
+      );
+    }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Error opening dialer: ${e.toString()}')),
     );
   }
 }
