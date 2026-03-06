@@ -7,7 +7,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_restaurant/common/enums/data_source_enum.dart';
 import 'package:flutter_restaurant/data/datasource/local/cache_response.dart';
 import 'package:flutter_restaurant/features/category/providers/category_provider.dart';
 import 'package:flutter_restaurant/features/chat/providers/chat_provider.dart';
@@ -33,6 +32,7 @@ import 'package:flutter_restaurant/common/providers/theme_provider.dart';
 import 'package:flutter_restaurant/theme/dark_theme.dart';
 import 'package:flutter_restaurant/theme/light_theme.dart';
 import 'package:flutter_restaurant/utill/app_constants.dart';
+import 'package:flutter_restaurant/firebase_options.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:url_strategy/url_strategy.dart';
@@ -66,18 +66,9 @@ Future<void> main() async {
     return true;
   };
 
-  if (kIsWeb) {
-    await Firebase.initializeApp(
-        options: const FirebaseOptions(
-            apiKey: "AIzaSyBCtDfdfPqxXDO6rDNlmQC1VJSHOtuyo3w",
-            authDomain: "gem-b5006.firebaseapp.com",
-            projectId: "gem-b5006",
-            storageBucket: "gem-b5006.firebasestorage.app",
-            messagingSenderId: "384321080318",
-            appId: "1:384321080318:web:64ade0c69276c34e2c0eaf"));
-  } else {
-    await Firebase.initializeApp();
-  }
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
  
 
@@ -196,14 +187,6 @@ class _MyAppState extends State<MyApp> {
         debugPrint('🔵 Starting splash initialization...');
         await Provider.of<SplashProvider>(context, listen: false).initSharedData();
         debugPrint('🟢 initSharedData completed');
-        
-        // Initialize config but don't navigate here - let GoRouter handle it
-        if (mounted && context.mounted) {
-          final splashProvider =
-              Provider.of<SplashProvider>(context, listen: false);
-          await splashProvider.initConfig(context, DataSourceEnum.client);
-          debugPrint('🟢 initConfig completed');
-        }
       } catch (e, stack) {
         debugPrint('🔴 Error initializing splash: $e');
         debugPrint('Stack: $stack');

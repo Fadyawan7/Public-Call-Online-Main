@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_restaurant/common/widgets/custom_alert_dialog_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_asset_image_widget.dart';
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/features/menu/widgets/portion_widget.dart';
+import 'package:flutter_restaurant/features/menu/widgets/sign_out_dialog_widget.dart';
 import 'package:flutter_restaurant/features/menu/widgets/theme_switch_button_widget.dart';
 import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
-import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/localization/app_localization.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
@@ -13,7 +12,6 @@ import 'package:flutter_restaurant/utill/app_constants.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
-import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 
@@ -143,45 +141,98 @@ class OptionsWidget extends StatelessWidget {
                   icon: Icons.delete,
                   imageIcon: null,
                   title: getTranslated('delete_account', context)!,
-                  onRoute:()=> ResponsiveHelper.showDialogOrBottomSheet(context, Consumer<AuthProvider>(
-                      builder: (context, authProvider, _) {
-                        return CustomAlertDialogWidget(
-                          isLoading: authProvider.isLoading,
-                          title: getTranslated('are_you_sure_to_delete_account', context),
-                          subTitle: getTranslated('it_will_remove_your_all_information', context),
-                          icon: Icons.question_mark_sharp,
-                          isSingleButton: authProvider.isLoading,
-                          leftButtonText: getTranslated('yes', context),
-                          rightButtonText: getTranslated('no', context),
-                          onPressLeft: () => authProvider.deleteUser(),
-                        );
-                      }
-                  )),
+                  onRoute: ()=> showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (dialogContext) {
+                      return Consumer<AuthProvider>(
+                        builder: (context, authProvider, _) {
+                          return Dialog(
+                            insetPadding: const EdgeInsets.symmetric(horizontal: 24),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                            child: Container(
+                              constraints: const BoxConstraints(maxWidth: 420),
+                              padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Theme.of(dialogContext).cardColor,
+                              ),
+                              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                                Container(
+                                  width: 64,
+                                  height: 64,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Theme.of(dialogContext).colorScheme.error.withOpacity(0.12),
+                                  ),
+                                  child: Icon(Icons.delete_outline_rounded, color: Theme.of(dialogContext).colorScheme.error, size: 32),
+                                ),
+                                const SizedBox(height: Dimensions.paddingSizeDefault),
+
+                                Text(
+                                  getTranslated('are_you_sure_to_delete_account', dialogContext) ?? '',
+                                  style: rubikBold.copyWith(fontSize: Dimensions.fontSizeLarge),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: Dimensions.paddingSizeSmall),
+
+                                Text(
+                                  getTranslated('it_will_remove_your_all_information', dialogContext) ?? '',
+                                  style: rubikRegular.copyWith(
+                                    color: Theme.of(dialogContext).hintColor,
+                                    fontSize: Dimensions.fontSizeDefault,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: Dimensions.paddingSizeLarge),
+
+                                Row(children: [
+                                  Expanded(
+                                    child: OutlinedButton(
+                                      onPressed: authProvider.isLoading ? null : () => Navigator.pop(dialogContext),
+                                      style: OutlinedButton.styleFrom(
+                                        minimumSize: const Size.fromHeight(46),
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                      ),
+                                      child: Text(getTranslated('no', dialogContext) ?? 'No', style: rubikMedium),
+                                    ),
+                                  ),
+                                  const SizedBox(width: Dimensions.paddingSizeSmall),
+                                  Expanded(
+                                    child: FilledButton(
+                                      onPressed: authProvider.isLoading ? null : () => authProvider.deleteUser(),
+                                      style: FilledButton.styleFrom(
+                                        backgroundColor: Theme.of(dialogContext).colorScheme.error,
+                                        minimumSize: const Size.fromHeight(46),
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                      ),
+                                      child: authProvider.isLoading
+                                        ? const SizedBox(
+                                            width: 20,
+                                            height: 20,
+                                            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                                          )
+                                        : Text(getTranslated('yes', dialogContext) ?? 'Yes', style: rubikMedium.copyWith(color: Colors.white)),
+                                    ),
+                                  ),
+                                ]),
+                              ]),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
                 ): const SizedBox(),
 
                 InkWell(
                   onTap: (){
                     if(authProvider.isLoggedIn()) {
-                      ResponsiveHelper.showDialogOrBottomSheet(context, Consumer<AuthProvider>(
-                          builder: (context, authProvider, _) {
-                          return CustomAlertDialogWidget(
-                            isLoading: authProvider.isLoading,
-                            title: getTranslated('want_to_sign_out', context),
-                            icon: Icons.contact_support,
-                            isSingleButton: authProvider.isLoading,
-                            leftButtonText: getTranslated('yes', context),
-                            rightButtonText: getTranslated('no', context),
-                            onPressLeft: () {
-                              authProvider.clearSharedData(context).then((condition) {
-                                  context.pop();
-                                  RouterHelper.getLoginRoute(action: RouteAction.pushNamedAndRemoveUntil);
-
-                              });
-                            },
-
-                          );
-                        }
-                      ));
+                      showDialog(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (_) => const SignOutDialogWidget(),
+                      );
 
                     }else {
                       RouterHelper.getLoginRoute();

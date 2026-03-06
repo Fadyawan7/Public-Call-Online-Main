@@ -17,7 +17,10 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      return web;
+      throw UnsupportedError(
+        'DefaultFirebaseOptions have not been configured for web - '
+            'use FlutterFire CLI to configure web for pco-app-3d42d.',
+      );
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -27,7 +30,9 @@ class DefaultFirebaseOptions {
       case TargetPlatform.macOS:
         return macos;
       case TargetPlatform.windows:
-        return windows;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for windows.',
+        );
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -40,54 +45,34 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCnekGgn1hc9epIWmeAeZpUtdUbnkoiXpk',
-    appId: '1:1019530614766:web:9825a07719b93e6b4da0ff',
-    messagingSenderId: '1019530614766',
-    projectId: 'shoorapp-61239',
-    authDomain: 'shoorapp-61239.firebaseapp.com',
-    storageBucket: 'shoorapp-61239.firebasestorage.app',
-    measurementId: 'G-WRZPQMBSL9',
-  );
-
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAihhBU41DGXpDrioRFxaXrS9j87HDYAdo',
-    appId: '1:1019530614766:android:5f287354bf1434e44da0ff',
-    messagingSenderId: '1019530614766',
-    projectId: 'shoorapp-61239',
-    storageBucket: 'shoorapp-61239.firebasestorage.app',
+    apiKey: 'AIzaSyBJf08_uax0vrI5-sKvL_2m2DWq59iPdZc',
+    appId: '1:906367301565:android:08dc80b3e57222051944d4',
+    messagingSenderId: '906367301565',
+    projectId: 'pco-app-3d42d',
+    storageBucket: 'pco-app-3d42d.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDWEVQiyt2rta481lGtLSl861ZKJ6kCruQ',
-    appId: '1:1019530614766:ios:9c0583d560badc5e4da0ff',
-    messagingSenderId: '1019530614766',
-    projectId: 'shoorapp-61239',
-    storageBucket: 'shoorapp-61239.firebasestorage.app',
-    androidClientId: '1019530614766-3v3hgebu3tbtga2h014j29l9f36k6f9a.apps.googleusercontent.com',
-    iosClientId: '1019530614766-tq2sb46p1pn2ch8ipi9ngv7rl4mco19d.apps.googleusercontent.com',
-    iosBundleId: 'com.shoor.shoorapp',
+    apiKey: 'AIzaSyDI35oPKdygiZSArt5TJdA6ICP4rbBqAco',
+    appId: '1:906367301565:ios:845f299e91ae6a551944d4',
+    messagingSenderId: '906367301565',
+    projectId: 'pco-app-3d42d',
+    storageBucket: 'pco-app-3d42d.firebasestorage.app',
+    androidClientId: '906367301565-hh59gc4j68ii464ob22pf3oqd1k12h51.apps.googleusercontent.com',
+    iosClientId: '906367301565-u8itonvvbjlbvttft2un9fgb0un3j54v.apps.googleusercontent.com',
+    iosBundleId: 'com.pcobh.app',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDWEVQiyt2rta481lGtLSl861ZKJ6kCruQ',
-    appId: '1:1019530614766:ios:9c0583d560badc5e4da0ff',
-    messagingSenderId: '1019530614766',
-    projectId: 'shoorapp-61239',
-    storageBucket: 'shoorapp-61239.firebasestorage.app',
-    androidClientId: '1019530614766-3v3hgebu3tbtga2h014j29l9f36k6f9a.apps.googleusercontent.com',
-    iosClientId: '1019530614766-tq2sb46p1pn2ch8ipi9ngv7rl4mco19d.apps.googleusercontent.com',
-    iosBundleId: 'com.shoor.shoorapp',
-  );
-
-  static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyCnekGgn1hc9epIWmeAeZpUtdUbnkoiXpk',
-    appId: '1:1019530614766:web:572a6b656bd1c3bb4da0ff',
-    messagingSenderId: '1019530614766',
-    projectId: 'shoorapp-61239',
-    authDomain: 'shoorapp-61239.firebaseapp.com',
-    storageBucket: 'shoorapp-61239.firebasestorage.app',
-    measurementId: 'G-NK1YT9CTDT',
+    apiKey: 'AIzaSyDI35oPKdygiZSArt5TJdA6ICP4rbBqAco',
+    appId: '1:906367301565:ios:845f299e91ae6a551944d4',
+    messagingSenderId: '906367301565',
+    projectId: 'pco-app-3d42d',
+    storageBucket: 'pco-app-3d42d.firebasestorage.app',
+    androidClientId: '906367301565-hh59gc4j68ii464ob22pf3oqd1k12h51.apps.googleusercontent.com',
+    iosClientId: '906367301565-u8itonvvbjlbvttft2un9fgb0un3j54v.apps.googleusercontent.com',
+    iosBundleId: 'com.pcobh.app',
   );
 
 }

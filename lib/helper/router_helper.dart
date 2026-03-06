@@ -293,7 +293,9 @@ class RouterHelper {
   static final goRoutes = GoRouter(
 
     navigatorKey: navigatorKey,
-    initialLocation: ResponsiveHelper.isMobilePhone() ? getSplashRoute() : getMainRoute(),
+    // Keep initial location pure to avoid navigation side effects during router boot.
+    initialLocation:
+        ResponsiveHelper.isMobilePhone() ? splashScreen : dashboard,
     errorBuilder: (ctx, _)=> const PageNotFoundScreen(),
     routes: [
       GoRoute(path: splashScreen, builder: (context, state) => const SplashScreen()),
@@ -449,5 +451,4 @@ class HistoryUrlStrategy extends PathUrlStrategy {
   @override
   void pushState(Object? state, String title, String url) => replaceState(state, title, url);
 }
-
 

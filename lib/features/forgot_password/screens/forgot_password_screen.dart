@@ -28,7 +28,11 @@ class ForgotPasswordScreen extends StatefulWidget {
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   TextEditingController? _userInputController;
-  String? _countryCode;
+
+  bool _isValidEmail(String value) {
+    final emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
+    return emailRegex.hasMatch(value);
+  }
 
   @override
   void initState() {
@@ -119,9 +123,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             onTap: () async {
                               if (_userInputController!.text.isEmpty) {
                                 showCustomSnackBarHelper(getTranslated('enter_email_address', context));
-
                               }else{
                                 String email = _userInputController!.text.trim();
+
+                                if(!_isValidEmail(email)) {
+                                  showCustomSnackBarHelper(getTranslated('enter_valid_email_address', context) ?? 'Please enter a valid email address');
+                                  return;
+                                }
+
                                 ResponseModel? response =  await auth.forgetPassword(config: configModel, email: email);
 
                                 if(response != null && response.isSuccess) {

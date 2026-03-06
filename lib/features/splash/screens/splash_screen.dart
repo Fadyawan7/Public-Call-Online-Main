@@ -93,6 +93,10 @@ void _route() async {
     }
     
     debugPrint('✅ Config loaded: ${config == null ? 'null' : 'success'}');
+    if (config == null) {
+      RouterHelper.getLoginRoute(action: RouteAction.pushNamedAndRemoveUntil);
+      return;
+    }
     _onConfigAction(config, splashProvider, context);
   } catch (e) {
     debugPrint("🔴 Config fetch failed: $e");
@@ -168,7 +172,9 @@ void _route() async {
           if (!mounted) return;
           
           RouterHelper.getDashboardRoute(
-              action: RouteAction.pushNamedAndRemoveUntil,'home');
+            'home',
+            action: RouteAction.pushNamedAndRemoveUntil,
+          );
         }
       } catch (e) {
         debugPrint('❌ Error during config action navigation: $e');
