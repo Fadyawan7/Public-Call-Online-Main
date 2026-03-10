@@ -8,8 +8,20 @@ import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 
-class FreelancerBookingInfoWidget extends StatelessWidget {
+String _formatBookingDate(String? rawDate) {
+  if (rawDate == null || rawDate.isEmpty) {
+    return 'N/A';
+  }
 
+  final List<String> parts = rawDate.split('-');
+  if (parts.length != 3) {
+    return rawDate;
+  }
+
+  return '${parts[2]}-${parts[1]}-${parts[0]}';
+}
+
+class FreelancerBookingInfoWidget extends StatelessWidget {
   const FreelancerBookingInfoWidget({
     super.key,
   });
@@ -17,60 +29,58 @@ class FreelancerBookingInfoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-      child:Center(child:
-      Consumer<BookingProvider>(
-        builder: (context,bookingProvider,child){
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              BookingInfoItemWidget(
-                iconData: Iconsax.calendar,
-                mainTxt: 'Booking',
-                subTxt: '#${bookingProvider.bookingDetails!.bookingId}',
-                subTextColor: Theme.of(context).primaryColor,
-              ),
-              Divider(
-                indent: Dimensions.paddingSizeDefault,
-                color: Theme.of(context).hintColor.withOpacity(0.1),
-              ),
-              BookingInfoItemWidget(
-                iconData: Iconsax.user_octagon,
-                mainTxt: 'Freelancer ID',
-                subTxt: '#${bookingProvider.bookingDetails!.freelancerViewId}',
-              ),
-              Divider(
-                indent: Dimensions.paddingSizeDefault,
-                color: Theme.of(context).hintColor.withOpacity(0.1),
-              ),
-              BookingInfoItemWidget(
-                iconData: Iconsax.clock,
-                mainTxt: 'Date & Time',
-                subTxt: '${bookingProvider.bookingDetails!.date} - ${bookingProvider.bookingDetails!.time!.toCapitalized()}',
-              ),
-              Divider(
-                indent: Dimensions.paddingSizeDefault,
-                color: Theme.of(context).hintColor.withOpacity(0.1),
-              ),
-
-              BookingInfoItemWidget(
-                iconData: Iconsax.status,
-                mainTxt: 'Status',
-                subTxt: '${bookingProvider.bookingDetails!.status!.toCapitalized()} ',
-                subTextColor: ColorResources.buttonTextColorMap['${bookingProvider.bookingDetails!.status}'],
-              ),
-              Divider(
-                indent: Dimensions.paddingSizeDefault,
-                color: Theme.of(context).hintColor.withOpacity(0.1),
-              ),
-            ],
-          );
-        },
-      )
-      )
-
-    );
+        padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+        child: Center(child: Consumer<BookingProvider>(
+          builder: (context, bookingProvider, child) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                BookingInfoItemWidget(
+                  iconData: Iconsax.calendar,
+                  mainTxt: 'Booking',
+                  subTxt: '#${bookingProvider.bookingDetails!.bookingId}',
+                  subTextColor: Theme.of(context).primaryColor,
+                ),
+                Divider(
+                  indent: Dimensions.paddingSizeDefault,
+                  color: Theme.of(context).hintColor.withOpacity(0.1),
+                ),
+                BookingInfoItemWidget(
+                  iconData: Iconsax.user_octagon,
+                  mainTxt: 'Freelancer ID',
+                  subTxt:
+                      '#${bookingProvider.bookingDetails!.freelancerViewId}',
+                ),
+                Divider(
+                  indent: Dimensions.paddingSizeDefault,
+                  color: Theme.of(context).hintColor.withOpacity(0.1),
+                ),
+                BookingInfoItemWidget(
+                  iconData: Iconsax.clock,
+                  mainTxt: 'Date & Time',
+                  subTxt:
+                      '${_formatBookingDate(bookingProvider.bookingDetails!.date)} - ${bookingProvider.bookingDetails!.time!.toCapitalized()}',
+                ),
+                Divider(
+                  indent: Dimensions.paddingSizeDefault,
+                  color: Theme.of(context).hintColor.withOpacity(0.1),
+                ),
+                BookingInfoItemWidget(
+                  iconData: Iconsax.status,
+                  mainTxt: 'Status',
+                  subTxt:
+                      '${bookingProvider.bookingDetails!.status!.toCapitalized()} ',
+                  subTextColor: ColorResources.buttonTextColorMap[
+                      '${bookingProvider.bookingDetails!.status}'],
+                ),
+                Divider(
+                  indent: Dimensions.paddingSizeDefault,
+                  color: Theme.of(context).hintColor.withOpacity(0.1),
+                ),
+              ],
+            );
+          },
+        )));
   }
 }
-

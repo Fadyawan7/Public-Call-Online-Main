@@ -9,7 +9,6 @@ import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 
 class BookingAddressInfoWidget extends StatelessWidget {
-
   const BookingAddressInfoWidget({
     super.key,
   });
@@ -20,66 +19,80 @@ class BookingAddressInfoWidget extends StatelessWidget {
 
     return Padding(
         padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-        child:Center(child:
-        Consumer<BookingProvider>(
-          builder: (context,bookingProvider,child){
+        child: Center(child: Consumer<BookingProvider>(
+          builder: (context, bookingProvider, child) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Icon(Iconsax.house,size:Dimensions.fontSizeExtraLarge),
-                    Text(bookingProvider.bookingDetails!.deliveryAddress!.address ?? 'N/A',style: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: Dimensions.fontSizeDefault
-                    ),),
+                    const Icon(Iconsax.house,
+                        size: Dimensions.fontSizeExtraLarge),
+                    const SizedBox(width: Dimensions.paddingSizeSmall),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Text(
+                          bookingProvider
+                                  .bookingDetails!.deliveryAddress!.address ??
+                              'N/A',
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: Dimensions.fontSizeDefault,
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
-
-
                 Divider(
                   indent: Dimensions.paddingSizeDefault,
                   color: Theme.of(context).hintColor.withOpacity(0.1),
                 ),
                 if ((bookingProvider.bookingDetails?.status == 'completed' ||
-                    bookingProvider.bookingDetails?.status == 'confirmed') &&
-                    (Provider.of<ProfileProvider>(context, listen: false).isFreelancer ?? false))
-                  ...[
-                    Center(
-                      child: Container(
-                        width: width > 700 ? 700 : width/2,
-                        padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-                        child: CustomButtonWidget(
-                          height: Dimensions.paddingSizeLarge*2,
-                          iconData: Icons.directions,
-                          btnTxt: 'Get Direction',
-                          onTap: () async {
-                            double latitude = double.parse(bookingProvider.bookingDetails!.deliveryAddress!.latitude!); // Example: San Francisco latitude
-                            double longitude = double.parse(bookingProvider.bookingDetails!.deliveryAddress!.longitude!); // Example: San Francisco longitude
-                            try {
-                              await openMap(latitude, longitude);
-                            } catch (e) {
-                              if (e is PlatformException) {
-                                throw 'Failed to open the map. Please make sure Google Maps is installed.';
-                              } else {
-                                throw 'An unexpected error occurred: $e';
-                              }                        }
-                          },
-                        ),
+                        bookingProvider.bookingDetails?.status ==
+                            'confirmed') &&
+                    (Provider.of<ProfileProvider>(context, listen: false)
+                            .isFreelancer ??
+                        false)) ...[
+                  Center(
+                    child: Container(
+                      width: width > 700 ? 700 : width / 2,
+                      padding:
+                          const EdgeInsets.all(Dimensions.paddingSizeSmall),
+                      child: CustomButtonWidget(
+                        height: Dimensions.paddingSizeLarge * 2,
+                        iconData: Icons.directions,
+                        btnTxt: 'Get Direction',
+                        onTap: () async {
+                          double latitude = double.parse(bookingProvider
+                              .bookingDetails!
+                              .deliveryAddress!
+                              .latitude!); // Example: San Francisco latitude
+                          double longitude = double.parse(bookingProvider
+                              .bookingDetails!
+                              .deliveryAddress!
+                              .longitude!); // Example: San Francisco longitude
+                          try {
+                            await openMap(latitude, longitude);
+                          } catch (e) {
+                            if (e is PlatformException) {
+                              throw 'Failed to open the map. Please make sure Google Maps is installed.';
+                            } else {
+                              throw 'An unexpected error occurred: $e';
+                            }
+                          }
+                        },
                       ),
                     ),
-                  ]
+                  ),
+                ]
               ],
             );
           },
-        )
-        )
-
-    );
+        )));
   }
 }
-
