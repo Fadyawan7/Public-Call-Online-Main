@@ -146,8 +146,16 @@ class FreelancerProvider extends ChangeNotifier {
       String? message = apiResponse.response!.data['message'];
       callback(true, message);
     } else {
-      callback(
-          false, ApiCheckerHelper.getError(apiResponse).errors![0].message);
+      final errors = ApiCheckerHelper.getError(apiResponse).errors;
+      final String errorMessage =
+          (errors != null && errors.isNotEmpty &&
+                  (errors.first.message?.trim().isNotEmpty ?? false))
+              ? errors.first.message!.trim()
+              : (apiResponse.error?.toString().trim().isNotEmpty ?? false)
+                  ? apiResponse.error.toString().trim()
+                  : 'Something went wrong. Please try again.';
+
+      callback(false, errorMessage);
     }
 
     notifyListeners();

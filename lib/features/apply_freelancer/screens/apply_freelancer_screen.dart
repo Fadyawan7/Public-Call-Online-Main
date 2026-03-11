@@ -473,9 +473,9 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
                                                 isLoading:
                                                     profileProvider.isLoading,
                                                 onTap: () {
-                                                  if (!_validateFields(context)) {
-                                                    return;
-                                                  }
+                                                  // if (!_validateFields(context)) {
+                                                  //   return;
+                                                  // }
         
                                                   // All validations passed
                                                   ApplyFreelancerModel model =
@@ -599,53 +599,22 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
   }
 }
   bool _validateFields(BuildContext context) {
-    // Check cover image
-    if (_pickedCoverXFile == null) {
-      showCustomSnackBarHelper('Cover image is required');
-      return false;
-    }
-
-    // Check phone number
-    if (_phoneNumberController?.text.trim().isEmpty ?? true) {
-      showCustomSnackBarHelper('WhatsApp number is required');
-      return false;
-    }
-
-    // Check side visit charges field
-    if (_perdayChargesController?.text.trim().isEmpty ?? true) {
-      showCustomSnackBarHelper('Per Day charges are required');
-      return false;
-    }
-
-    // Validate side visit charges is a valid number
+    // Keep all fields optional. Only validate numeric inputs if user entered values.
     final sideVisitText = _perdayChargesController?.text.trim() ?? '';
-    if (double.tryParse(sideVisitText) == null) {
-      showCustomSnackBarHelper('Please enter Per Day visit charges');
+    if (sideVisitText.isNotEmpty && double.tryParse(sideVisitText) == null) {
+      showCustomSnackBarHelper('Please enter a valid Per Day charge');
       return false;
     }
 
-    // Check about me field
-    if (_aboutMeController?.text.trim().isEmpty ?? true) {
-      showCustomSnackBarHelper('About me is required');
+    final perKmText = _perkmChargesController?.text.trim() ?? '';
+    if (perKmText.isNotEmpty && double.tryParse(perKmText) == null) {
+      showCustomSnackBarHelper('Please enter a valid Per Km charge');
       return false;
     }
 
-    // Check Km field
-    if (_perkmChargesController?.text.trim().isEmpty ?? true) {
-      showCustomSnackBarHelper('Price Km is required');
-      return false;
-    }
-
-    // Validate Km is a valid number
-    final priceText = _perkmChargesController?.text.trim() ?? '';
-    if (double.tryParse(priceText) == null) {
-      showCustomSnackBarHelper('Please enter a valid price');
-      return false;
-    }
-    // Check category is selected
-    if (freelancerProvider.selectedCategoryID == null ||
-        freelancerProvider.selectedCategoryID == 0) {
-      showCustomSnackBarHelper('Please select a category');
+    final perHourText = _perhourController?.text.trim() ?? '';
+    if (perHourText.isNotEmpty && double.tryParse(perHourText) == null) {
+      showCustomSnackBarHelper('Please enter a valid Per Hour charge');
       return false;
     }
 

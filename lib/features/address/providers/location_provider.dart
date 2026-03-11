@@ -8,12 +8,10 @@ import 'package:flutter_restaurant/features/address/domain/models/prediction_mod
 import 'package:flutter_restaurant/features/address/domain/reposotories/location_repo.dart';
 import 'package:flutter_restaurant/helper/api_checker_helper.dart';
 import 'package:flutter_restaurant/main.dart';
-import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/utill/app_constants.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:google_maps_webservice/places.dart';
 
@@ -133,7 +131,9 @@ Future<String?> getCurrentLocation(BuildContext context, bool isUpdate, {GoogleM
   // 🔹 Only call geocode if user is logged in
   if (isLoggedIn) {
     _address = await getAddressFromGeocode(
-        LatLng(myPosition.latitude, myPosition.longitude), context);
+      LatLng(myPosition.latitude, myPosition.longitude),
+      isLoggedIn: isLoggedIn,
+    );
   } else {
     _address = null; // or "" if you prefer
   }
@@ -168,7 +168,9 @@ Future<String?> getCurrentLocation(BuildContext context, bool isUpdate, {GoogleM
           );
         }
         if (_changeAddress) {
-          String addressFromGeocode = await getAddressFromGeocode(LatLng(position.target.latitude, position.target.longitude,),context);
+          String addressFromGeocode = await getAddressFromGeocode(
+            LatLng(position.target.latitude, position.target.longitude),
+          );
           fromAddress ? _address = addressFromGeocode : _pickAddress = addressFromGeocode;
 
         } else {
@@ -385,10 +387,12 @@ Future<String?> getCurrentLocation(BuildContext context, bool isUpdate, {GoogleM
     _pickAddress = _address;
   }
 
-Future<String> getAddressFromGeocode(LatLng latLng, BuildContext context) async {
-  bool isLoggedIn = context.read<AuthProvider>().isLoggedIn();
+Future<String> getAddressFromGeocode(LatLng latLng, {bool? isLoggedIn}) async {
+  final bool loggedIn =
+      isLoggedIn ?? (sharedPreferences?.containsKey(AppConstants.token) ?? false);
 
-  ApiResponseModel response = await locationRepo!.getAddressFromGeocode(latLng, isLoggedIn);
+  ApiResponseModel response =
+      await locationRepo!.getAddressFromGeocode(latLng, loggedIn);
   String address = '';
 
   if (response.response?.statusCode == 200) {

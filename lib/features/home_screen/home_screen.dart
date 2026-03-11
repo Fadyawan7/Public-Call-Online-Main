@@ -46,6 +46,10 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) {
+        return;
+      }
+
       final homeProvider = Provider.of<HomeProvider>(context, listen: false);
       final categoryProvider =
           Provider.of<CategoryProvider>(context, listen: false);
@@ -76,8 +80,14 @@ class _HomeScreenState extends State<HomeScreen> {
             locationProvider.position.longitude,
           );
 
+          if (!mounted) {
+            return;
+          }
+
           String address = await locationProvider.getAddressFromGeocode(
-              currentLatLng, context);
+            currentLatLng,
+            isLoggedIn: _isLoggedIn,
+          );
 
           locationProvider.setAddress = address;
           locationProvider.setPickData();

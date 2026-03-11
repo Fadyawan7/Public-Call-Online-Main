@@ -195,8 +195,7 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                                         LatLng(
                                           selectedPosition.latitude,
                                           selectedPosition.longitude,
-                                        ),
-                                        context);
+                                        ));
 
                                 print(
                                     "formattedAddress.......$formattedAddress");
