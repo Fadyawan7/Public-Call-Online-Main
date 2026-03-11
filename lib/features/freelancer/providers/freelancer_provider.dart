@@ -47,6 +47,8 @@ class FreelancerProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  
+
   Future<void> getFreelancerList({int? categoryId, String? categoryName}) async {
     try {
       final ApiResponseModel apiResponse =

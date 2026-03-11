@@ -96,6 +96,7 @@ class OrderSuccessfulWidget extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge),
                   child: CustomButtonWidget(
+                    width: double.infinity,
                     btnTxt: getTranslated('back_home', context),
                     onTap: ()=> RouterHelper.getDashboardRoute('home', action: RouteAction.pushNamedAndRemoveUntil),
                   ),

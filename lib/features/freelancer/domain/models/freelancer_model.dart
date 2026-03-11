@@ -192,18 +192,18 @@ class FreelancerModel {
 
 class Portfolio {
   int? id;
-  String? imageUrl;
+  String? image_url;
 
-  Portfolio({this.id, this.imageUrl});
+  Portfolio({this.id, this.image_url});
 
   factory Portfolio.fromJson(Map<String, dynamic> json) => Portfolio(
         id: json['id'],
-        imageUrl: json['image_url'],
+        image_url: json['image_url'],
       );
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'image_url': imageUrl,
+        'image_url': image_url,
       };
 }
 
