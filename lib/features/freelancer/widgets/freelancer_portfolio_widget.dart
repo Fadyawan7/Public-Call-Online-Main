@@ -40,7 +40,7 @@ class FreelancerPortfolioWidget extends StatelessWidget {
                       containerWidth: 260,
                       fit: BoxFit.cover,
                       image:
-                      '${freelancer.portfolio![startIndex].imageUrl}',
+                      '${freelancer.portfolio![startIndex].image_url}',
                     ),
                   ),
                 const SizedBox(
@@ -57,7 +57,7 @@ class FreelancerPortfolioWidget extends StatelessWidget {
                           containerWidth: 255 / 2,
                           fit: BoxFit.cover,
                           image:
-                          '${freelancer.portfolio![startIndex + 1].imageUrl}',
+                          '${freelancer.portfolio![startIndex + 1].image_url}',
                         ),
                       ),
                       const SizedBox(
@@ -71,7 +71,7 @@ class FreelancerPortfolioWidget extends StatelessWidget {
                             containerWidth: 255 / 2,
                             fit: BoxFit.cover,
                             image:
-                            '${freelancer.portfolio![startIndex + 2].imageUrl}',
+                            '${freelancer.portfolio![startIndex + 2].image_url}',
                           ),
                         ),
                     ],

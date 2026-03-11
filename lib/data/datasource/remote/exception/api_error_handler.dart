@@ -9,6 +9,37 @@ import 'package:flutter_restaurant/main.dart';
 import 'package:flutter_restaurant/utill/app_constants.dart';
 
 class ApiErrorHandler {
+  static String? _extractValidationMessage(dynamic errors) {
+    if (errors == null) return null;
+
+    if (errors is List && errors.isNotEmpty) {
+      final first = errors.first;
+      if (first is Map<String, dynamic>) {
+        final message = first['message']?.toString();
+        if (message != null && message.trim().isNotEmpty) return message;
+      }
+      final message = first?.toString();
+      if (message != null && message.trim().isNotEmpty) return message;
+    }
+
+    if (errors is Map) {
+      for (final value in errors.values) {
+        if (value is List && value.isNotEmpty) {
+          final message = value.first?.toString();
+          if (message != null && message.trim().isNotEmpty) return message;
+        }
+        final message = value?.toString();
+        if (message != null && message.trim().isNotEmpty) return message;
+      }
+    }
+
+    if (errors is String && errors.trim().isNotEmpty) {
+      return errors;
+    }
+
+    return null;
+  }
+
   static dynamic getMessage(error) {
     dynamic errorDescription = "";
     if (error is Exception) {
@@ -35,14 +66,24 @@ class ApiErrorHandler {
 
                   if (errorResponse.errors != null &&
                       errorResponse.errors!.isNotEmpty) {
+                    final parsedMessage =
+                        errorResponse.errors![0].message?.trim();
+                    final fallbackMessage =
+                        _extractValidationMessage(data['errors']);
+
                     if (kDebugMode) {
                       print(
-                          'error----------------== ${errorResponse.errors![0].message} || error: ${error.response!.requestOptions.uri}');
+                          'error----------------== ${parsedMessage ?? fallbackMessage} || status: ${error.response?.statusCode} || error: ${error.response?.requestOptions.uri}');
                     }
                     errorDescription =
-                        errorResponse.errors![0].message ?? "Unknown error";
+                        (parsedMessage != null && parsedMessage.isNotEmpty)
+                            ? parsedMessage
+                            : (fallbackMessage ?? "Unknown error");
                   } else if (data.containsKey('message')) {
                     errorDescription = data['message'];
+                  } else if (data.containsKey('errors')) {
+                    errorDescription = _extractValidationMessage(data['errors']) ??
+                        "Failed to load data";
                   } else {
                     errorDescription =
                         "Failed to load data (invalid error format)";

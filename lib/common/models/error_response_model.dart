@@ -14,8 +14,18 @@ class ErrorResponseModel {
       final data = json["errors"];
 
       if (data is List) {
-        // Normal case
-        _errors = data.map((v) => Errors.fromJson(v)).toList();
+        // Support mixed list payloads, e.g. [{message: ...}] or ["..."]
+        _errors = data
+            .map((v) {
+              if (v is Map<String, dynamic>) {
+                return Errors.fromJson(v);
+              }
+              if (v is String) {
+                return Errors(message: v);
+              }
+              return Errors(message: v?.toString());
+            })
+            .toList();
       } else if (data is Map) {
         // API returned a single object instead of a list
         _errors = [Errors.fromJson(data)];

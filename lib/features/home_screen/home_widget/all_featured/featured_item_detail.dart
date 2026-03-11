@@ -272,7 +272,41 @@ class _FeaturedItemsDetailState extends State<FeaturedItemsDetail> {
                   ),
 
                   const SizedBox(height: 16),
+Container(
+  height: 200,
+  decoration: BoxDecoration(
+    borderRadius: BorderRadius.circular(16),
+    border: Border.all(color: Colors.grey.shade300),
+  ),
+  child: ClipRRect(
+    borderRadius: BorderRadius.circular(16),
+    child: PageView.builder(
+      itemCount: freelancer?.portfolio?.length ?? 0,
+      itemBuilder: (context, index) {
+        final portfolioItem = freelancer?.portfolio?[index];
 
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Image.network(
+              portfolioItem?.image_url ?? '',
+              fit: BoxFit.contain,
+              height: 150,
+              width: double.infinity,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return const SizedBox.shrink();
+              },
+              errorBuilder: (context, error, stackTrace) =>
+                  const Icon(Icons.error),
+            ),
+          ),
+        );
+      },
+    ),
+  ),
+),
                   // --- Reviews ---
                   Text('Reviews (${freelancer?.reviews?.length ?? 0})',
                       style: const TextStyle(

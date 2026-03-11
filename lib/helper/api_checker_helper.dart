@@ -11,8 +11,17 @@ import 'package:provider/provider.dart';
 class ApiCheckerHelper {
   static void checkApi(ApiResponseModel apiResponse,{bool firebaseResponse = false} ) {
     ErrorResponseModel error = getError(apiResponse);
-    if( error.errors![0].code == '401' || error.errors![0].code == 'auth-001'
-        &&  ModalRoute.of(Get.context!)?.settings.name != RouterHelper.loginScreen) {
+    final Errors firstError = (error.errors != null && error.errors!.isNotEmpty)
+        ? error.errors!.first
+        : Errors(
+            code: '',
+            message: apiResponse.error?.toString().trim().isNotEmpty == true
+                ? apiResponse.error.toString().trim()
+                : 'Something went wrong',
+          );
+
+    if ((firstError.code == '401' || firstError.code == 'auth-001') &&
+        ModalRoute.of(Get.context!)?.settings.name != RouterHelper.loginScreen) {
       Provider.of<AuthProvider>(Get.context!, listen: false).clearSharedData(Get.context!).then((value) {
         if(Get.context != null && ModalRoute.of(Get.context!)?.settings.name != RouterHelper.loginScreen) {
           RouterHelper.getLoginRoute(action: RouteAction.pushNamedAndRemoveUntil);
@@ -20,7 +29,11 @@ class ApiCheckerHelper {
       });
 
     }else {
-      showCustomSnackBarHelper(firebaseResponse ? error.errors?.first.message?.replaceAll('_', ' ').toCapitalized() : error.errors!.first.message);
+      final String message = firebaseResponse
+          ? (firstError.message?.replaceAll('_', ' ').toCapitalized() ??
+              'Something went wrong')
+          : (firstError.message ?? 'Something went wrong');
+      showCustomSnackBarHelper(message);
     }
   }
 
