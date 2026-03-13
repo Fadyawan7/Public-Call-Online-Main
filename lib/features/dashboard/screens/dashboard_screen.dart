@@ -36,61 +36,59 @@ class _DashboardScreenState extends State<DashboardScreen>
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey();
   late bool _isLoggedIn;
 
-@override
-void initState() {
-  super.initState();
-  _pageIndex = 0; 
+  @override
+  void initState() {
+    super.initState();
+    _pageIndex = widget.pageIndex;
 
-  final splashProvider = Provider.of<SplashProvider>(context, listen: false);
-  final locationProvider =
-      Provider.of<LocationProvider>(context, listen: false);
- _isLoggedIn =
+    final splashProvider = Provider.of<SplashProvider>(context, listen: false);
+    final locationProvider =
+        Provider.of<LocationProvider>(context, listen: false);
+    _isLoggedIn =
         Provider.of<AuthProvider>(context, listen: false).isLoggedIn();
-  if (splashProvider.policyModel == null) {
-    splashProvider.getPolicyPage();
-  }
+    if (splashProvider.policyModel == null) {
+      splashProvider.getPolicyPage();
+    }
 
-  BookingScreen.loadData(false);
+    BookingScreen.loadData(false);
 
-  locationProvider.checkPermission(
-    () => locationProvider
-        .getCurrentLocation(context, false,isLoggedIn:_isLoggedIn )
-        .then((currentAddress) {
-      locationProvider.onChangeCurrentAddress(currentAddress);
-    }),
-    canBeIgnoreDialog: true,
+    locationProvider.checkPermission(
+      () => locationProvider
+          .getCurrentLocation(context, false, isLoggedIn: _isLoggedIn)
+          .then((currentAddress) {
+        locationProvider.onChangeCurrentAddress(currentAddress);
+      }),
+      canBeIgnoreDialog: true,
+    );
 
-  );
+    _pageController = PageController(initialPage: _pageIndex);
 
-  _pageController = PageController(initialPage: 0);
+    _screens = [
+      const HomeScreen(),
+      const BookingScreen(),
+      const FreelancerScreen(),
+      const ChatScreen(),
+      MenuScreen(onTap: (int pageIndex) {
+        _setPage(pageIndex);
+      }),
+    ];
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final profileProvider =
+          Provider.of<ProfileProvider>(context, listen: false);
 
-  _screens = [
-    const HomeScreen(),
-    const BookingScreen(), 
-    const FreelancerScreen(),
-    const ChatScreen(),
-    MenuScreen(onTap: (int pageIndex) {
-      _setPage(pageIndex);
-    }),
-  ];
-WidgetsBinding.instance.addPostFrameCallback((_) {
-  final profileProvider =
-      Provider.of<ProfileProvider>(context, listen: false);
+      profileProvider.getUserInfo(true).then((_) {
+        if (!mounted) return; // check before updating UI
 
-  profileProvider.getUserInfo(true).then((_) {
-    if (!mounted) return; // check before updating UI
+        bool isFreelancer =
+            profileProvider.userInfoModel?.userType == 'freelancer';
 
-    bool isFreelancer =
-        profileProvider.userInfoModel?.userType == 'freelancer';
-
-    setState(() {
-      _screens[1] =
-          isFreelancer ? FreelancerBookingScreen() : const BookingScreen();
+        setState(() {
+          _screens[1] =
+              isFreelancer ? FreelancerBookingScreen() : const BookingScreen();
+        });
+      });
     });
-  });
-});
-
-}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -148,33 +146,32 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
                             children: [
                               BottomNavItemWidget(
                                 title: getTranslated('home', context)!,
-                                imageIcon: Images.homeicon,  
+                                imageIcon: Images.homeicon,
                                 isSelected: _pageIndex == 0,
                                 onTap: () => _setPage(0),
                               ),
                               BottomNavItemWidget(
                                 title: getTranslated('booking', context)!,
-                                                                imageIcon: Images.bookingicon,  
-
+                                imageIcon: Images.bookingicon,
                                 isSelected: _pageIndex == 1,
                                 onTap: () => _setPage(1),
                               ),
                               BottomNavItemWidget(
                                 title: getTranslated('freelancer', context)!
                                     .toCapitalized(),
-                                imageIcon: Images.mapicon,  
+                                imageIcon: Images.mapicon,
                                 isSelected: _pageIndex == 2,
                                 onTap: () => _setPage(2),
                               ),
                               BottomNavItemWidget(
                                 title: getTranslated('chat', context)!,
-                                imageIcon: Images.chaticons,  
+                                imageIcon: Images.chaticons,
                                 isSelected: _pageIndex == 3,
                                 onTap: () => _setPage(3),
                               ),
                               BottomNavItemWidget(
                                 title: getTranslated('menu', context)!,
-                                imageIcon: Images.profileicon,  
+                                imageIcon: Images.profileicon,
                                 isSelected: _pageIndex == 4,
                                 onTap: () => _setPage(4),
                               ),
@@ -189,12 +186,11 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
         ));
   }
 
-void _setPage(int pageIndex) {
-  if (!mounted) return; 
-  _pageController?.jumpToPage(pageIndex);
-  setState(() {
-    _pageIndex = pageIndex;
-  });
-}
-
+  void _setPage(int pageIndex) {
+    if (!mounted) return;
+    _pageController?.jumpToPage(pageIndex);
+    setState(() {
+      _pageIndex = pageIndex;
+    });
+  }
 }
