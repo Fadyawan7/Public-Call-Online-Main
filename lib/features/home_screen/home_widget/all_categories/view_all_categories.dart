@@ -31,6 +31,7 @@ class _AllCategoriesState extends State<AllCategories> {
         context: context,
         title: getTranslated('All Categories', context)!,
         centerTitle: true,
+        
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 8, right: 8, top: 20),

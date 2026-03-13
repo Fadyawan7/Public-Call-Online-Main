@@ -111,15 +111,13 @@ class _HomeScreenState extends State<HomeScreen> {
             Images.iconPco,
             width: 28,
             height: 28,
-            
           ),
         ),
         titleColor: Colors.white,
         context: context,
         title: getTranslated('Easy Business\nEvery Business', context),
         isBackButtonExist: !ResponsiveHelper.isMobile(),
-        actionView: 
-IconButton(
+        actionView: IconButton(
           icon: Icon(
             Iconsax.add_circle,
             color: Theme.of(context).primaryColor,
@@ -264,10 +262,11 @@ IconButton(
     return GestureDetector(
       onTap: () async {
         _isLoggedIn
-            ? await Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const SelectLocationScreen()),
-              )
+            ? RouterHelper.getDashboardRoute('freelancer')
+            //  await Navigator.push(
+            //     context,
+            //     MaterialPageRoute(builder: (_) => const SelectLocationScreen()),
+            //   )
             : SizedBox.shrink();
 
         setState(() {});
@@ -431,12 +430,7 @@ IconButton(
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             GestureDetector(
               onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AllFeaturedCategories(
-                        title: 'Featured',
-                      ),
+                Navigator.push( context, MaterialPageRoute(builder: (context) => AllFeaturedCategories(),
                     ));
               },
               child: Text("View All",
@@ -1007,4 +1001,3 @@ IconButton(
 //     );
 //   }
 // }
-

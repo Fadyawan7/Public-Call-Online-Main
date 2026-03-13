@@ -720,13 +720,16 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
         sourcePath: pickedFile.path,
         compressFormat: ImageCompressFormat.png,
         uiSettings: [
+
           AndroidUiSettings(
+            
             toolbarTitle: 'Crop Cover Image',
             toolbarColor: Theme.of(context).primaryColor,
             toolbarWidgetColor: Colors.white,
             statusBarColor: Theme.of(context).primaryColor,
         //    statusBarIconBrightness: Brightness.light,
             lockAspectRatio: false,
+            
             cropStyle: CropStyle.rectangle,
             aspectRatioPresets: const [
               CropAspectRatioPreset.original,
@@ -738,6 +741,7 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
           ),
           IOSUiSettings(
             title: 'Crop Cover Image',
+            
             aspectRatioLockEnabled: false,
             aspectRatioPickerButtonHidden: true,
             resetAspectRatioEnabled: true,
