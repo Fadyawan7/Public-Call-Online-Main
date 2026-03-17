@@ -30,13 +30,22 @@ class _FeaturedItemsDetailState extends State<FeaturedItemsDetail> {
   FreelancerModel? freelancer;
   bool _isLoading = true;
   late bool _isLoggedIn;
+  late final PageController _portfolioPageController;
+  int _portfolioPageIndex = 0;
 
   @override
   void initState() {
     super.initState();
+    _portfolioPageController = PageController();
     _loadFreelancerDetails();
     _isLoggedIn =
         Provider.of<AuthProvider>(context, listen: false).isLoggedIn();
+  }
+
+  @override
+  void dispose() {
+    _portfolioPageController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadFreelancerDetails() async {
@@ -56,9 +65,55 @@ class _FeaturedItemsDetailState extends State<FeaturedItemsDetail> {
     }
   }
 
+  Future<void> _openPortfolioImage(String imageUrl) async {
+    if (imageUrl.trim().isEmpty) return;
+
+    await showDialog(
+      context: context,
+      barrierColor: Colors.black87,
+      builder: (dialogContext) {
+        return Scaffold(
+          backgroundColor: Colors.black,
+          body: SafeArea(
+            child: Stack(
+              children: [
+                Center(
+                  child: InteractiveViewer(
+                    child: Image.network(
+                      imageUrl,
+                      fit: BoxFit.contain,
+                      width: double.infinity,
+                      height: double.infinity,
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(
+                          Icons.broken_image,
+                          color: Colors.white,
+                          size: 48,
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: IconButton(
+                    onPressed: () => Navigator.of(dialogContext).pop(),
+                    icon: const Icon(Icons.close, color: Colors.white),
+                    tooltip: 'Close',
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<FreelancerProvider>(context);
+    final int portfolioLength = freelancer?.portfolio?.length ?? 0;
 
     if (_isLoading) {
       return const Scaffold(
@@ -122,8 +177,7 @@ class _FeaturedItemsDetailState extends State<FeaturedItemsDetail> {
                               height: 200,
                               width: double.infinity,
                             )),
-                
-                
+
                   const SizedBox(height: 12),
 
                   // --- Category & Rating ---
@@ -284,77 +338,144 @@ class _FeaturedItemsDetailState extends State<FeaturedItemsDetail> {
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(16),
-                      child: PageView.builder(
-                        itemCount: freelancer?.portfolio?.length ?? 0,
-                        itemBuilder: (context, index) {
-                          final portfolioItem = freelancer?.portfolio?[index];
-                          final imageUrl = portfolioItem?.image_url ?? '';
+                      child: Stack(
+                        children: [
+                          PageView.builder(
+                            controller: _portfolioPageController,
+                            itemCount: portfolioLength,
+                            onPageChanged: (page) {
+                              if (!mounted) return;
+                              setState(() {
+                                _portfolioPageIndex = page;
+                              });
+                            },
+                            itemBuilder: (context, index) {
+                              final portfolioItem =
+                                  freelancer?.portfolio?[index];
+                              final imageUrl = portfolioItem?.image_url ?? '';
 
-                          return ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Stack(
-                              fit: StackFit.expand,
-                              children: [
-                                ImageFiltered(
-                                  imageFilter: ImageFilter.blur(
-                                    sigmaX: 16,
-                                    sigmaY: 16,
-                                  ),
-                                  child: Image.network(
-                                    imageUrl,
-                                    fit: BoxFit.cover,
-                                    height: 250,
-                                    width: double.infinity,
-                                    loadingBuilder:
-                                        (context, child, loadingProgress) {
-                                      if (loadingProgress == null) {
-                                        return child;
-                                      }
-                                      return Container(
-                                        color: Colors.grey.shade200,
-                                      );
-                                    },
-                                    errorBuilder:
-                                        (context, error, stackTrace) =>
-                                            Container(
-                                      color: Colors.grey.shade200,
-                                    ),
+                              return GestureDetector(
+                                onTap: () => _openPortfolioImage(imageUrl),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Stack(
+                                    fit: StackFit.expand,
+                                    children: [
+                                      ImageFiltered(
+                                        imageFilter: ImageFilter.blur(
+                                          sigmaX: 16,
+                                          sigmaY: 16,
+                                        ),
+                                        child: Image.network(
+                                          imageUrl,
+                                          fit: BoxFit.cover,
+                                          height: 250,
+                                          width: double.infinity,
+                                          loadingBuilder: (context, child,
+                                              loadingProgress) {
+                                            if (loadingProgress == null) {
+                                              return child;
+                                            }
+                                            return Container(
+                                              color: Colors.grey.shade200,
+                                            );
+                                          },
+                                          errorBuilder:
+                                              (context, error, stackTrace) =>
+                                                  Container(
+                                            color: Colors.grey.shade200,
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter,
+                                            colors: [
+                                              Colors.black.withOpacity(0.18),
+                                              Colors.black.withOpacity(0.10),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Center(
+                                        child: Image.network(
+                                          imageUrl,
+                                          fit: BoxFit.contain,
+                                          height: 250,
+                                          width: double.infinity,
+                                          loadingBuilder: (context, child,
+                                              loadingProgress) {
+                                            if (loadingProgress == null) {
+                                              return child;
+                                            }
+                                            return const SizedBox.shrink();
+                                          },
+                                          errorBuilder:
+                                              (context, error, stackTrace) =>
+                                                  const Icon(Icons.error),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      colors: [
-                                        Colors.black.withOpacity(0.18),
-                                        Colors.black.withOpacity(0.10),
-                                      ],
-                                    ),
+                              );
+                            },
+                          ),
+                          if (portfolioLength > 1)
+                            Positioned(
+                              left: 8,
+                              top: 0,
+                              bottom: 0,
+                              child: Center(
+                                child: CircleAvatar(
+                                  backgroundColor:
+                                      Colors.black.withOpacity(0.35),
+                                  child: IconButton(
+                                    icon: const Icon(Icons.arrow_back_ios_new,
+                                        color: Colors.white, size: 18),
+                                    onPressed: _portfolioPageIndex > 0
+                                        ? () {
+                                            _portfolioPageController
+                                                .previousPage(
+                                              duration: const Duration(
+                                                  milliseconds: 250),
+                                              curve: Curves.easeInOut,
+                                            );
+                                          }
+                                        : null,
                                   ),
                                 ),
-                                Center(
-                                  child: Image.network(
-                                    imageUrl,
-                                    fit: BoxFit.contain,
-                                    height: 250,
-                                    width: double.infinity,
-                                    loadingBuilder:
-                                        (context, child, loadingProgress) {
-                                      if (loadingProgress == null) {
-                                        return child;
-                                      }
-                                      return const SizedBox.shrink();
-                                    },
-                                    errorBuilder:
-                                        (context, error, stackTrace) =>
-                                            const Icon(Icons.error),
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
-                          );
-                        },
+                          if (portfolioLength > 1)
+                            Positioned(
+                              right: 8,
+                              top: 0,
+                              bottom: 0,
+                              child: Center(
+                                child: CircleAvatar(
+                                  backgroundColor:
+                                      Colors.black.withOpacity(0.35),
+                                  child: IconButton(
+                                    icon: const Icon(Icons.arrow_forward_ios,
+                                        color: Colors.white, size: 18),
+                                    onPressed: _portfolioPageIndex <
+                                            portfolioLength - 1
+                                        ? () {
+                                            _portfolioPageController.nextPage(
+                                              duration: const Duration(
+                                                  milliseconds: 250),
+                                              curve: Curves.easeInOut,
+                                            );
+                                          }
+                                        : null,
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
                     ),
                   ),

@@ -62,7 +62,8 @@ class _FreelancerDetailsBottomSheetState
         permission == LocationPermission.deniedForever) {
       if (mounted && showFeedback) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Location permission is required for directions')),
+          const SnackBar(
+              content: Text('Location permission is required for directions')),
         );
       }
       return null;
@@ -87,7 +88,8 @@ class _FreelancerDetailsBottomSheetState
     }
 
     try {
-      final Position? position = await _getCurrentPosition(showFeedback: showFeedback);
+      final Position? position =
+          await _getCurrentPosition(showFeedback: showFeedback);
       if (position == null) {
         return;
       }
@@ -152,7 +154,7 @@ class _FreelancerDetailsBottomSheetState
       return;
     }
 
-    Navigator.of(context).pop();
+    await Navigator.maybeOf(context)?.maybePop();
 
     final Uri directionUri = Uri.parse(
       'https://www.google.com/maps/dir/?api=1&origin=${position.latitude},${position.longitude}&destination=$destinationLat,$destinationLng&travelmode=driving',
@@ -192,7 +194,6 @@ class _FreelancerDetailsBottomSheetState
 
   @override
   Widget build(BuildContext context) {
-
     return SingleChildScrollView(
       padding:
           const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
@@ -245,12 +246,14 @@ class _FreelancerDetailsBottomSheetState
                           CustomOutlinedButton(
                             label: "Call",
                             icon: Icons.phone,
-                            onPressed: () {
-                              _launchCall(context, widget.freelancer.phone);
+                            onPressed: () async {
+                              await _launchCall(
+                                context,
+                                widget.freelancer.phone,
+                              );
                               // RouterHelper.getBookingDateSlotRoute(
                               //   widget.freelancer.id.toString(),
                               // );
-                              Navigator.of(context).pop();
                             },
                           ),
                           const SizedBox(width: Dimensions.paddingSizeDefault),
@@ -297,7 +300,8 @@ class _FreelancerDetailsBottomSheetState
                               width: 14,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    Theme.of(context).primaryColor),
                               ),
                             ),
                             const SizedBox(width: 8),
@@ -313,11 +317,14 @@ class _FreelancerDetailsBottomSheetState
                       : (_distanceKm != null && _etaMinutes != null)
                           ? Row(
                               children: [
-                                Icon(Icons.near_me_outlined, size: 16, color: Theme.of(context).primaryColor),
+                                Icon(Icons.near_me_outlined,
+                                    size: 16,
+                                    color: Theme.of(context).primaryColor),
                                 const SizedBox(width: 6),
                                 Text(
                                   'Distance: ${_distanceKm!.toStringAsFixed(1)} km',
-                                  style: rubikMedium.copyWith(fontSize: Dimensions.fontSizeSmall),
+                                  style: rubikMedium.copyWith(
+                                      fontSize: Dimensions.fontSizeSmall),
                                 ),
                                 const SizedBox(width: 10),
                                 Text(
@@ -472,7 +479,7 @@ class _FreelancerDetailsBottomSheetState
                             ),
                             ListTileWidget(
                               iconData: Icons.email_outlined,
-                              mainTxt: 'Email',
+                              mainTxt: 'email',
                               subTxt: '${widget.freelancer.email}',
                             ),
                             Divider(
@@ -482,7 +489,7 @@ class _FreelancerDetailsBottomSheetState
                             ),
                             ListTileWidget(
                               assetImage: Images.whatsapps,
-                              mainTxt: 'Contact',
+                              mainTxt: 'contact',
                               subTxt: '${widget.freelancer.phone}',
                             ),
                             Divider(
@@ -492,7 +499,7 @@ class _FreelancerDetailsBottomSheetState
                             ),
                             ListTileWidget(
                               iconData: Iconsax.global,
-                              mainTxt: 'Country',
+                              mainTxt: 'location',
                               subTxt: '${widget.freelancer.country}',
                             ),
                             Divider(
@@ -528,8 +535,8 @@ class _FreelancerDetailsBottomSheetState
 
 Future<void> _launchWhatsApp(
     BuildContext context, String? whatsappNumber) async {
-  // Close any open dialogs first
-  Navigator.of(context).pop();
+  // Dismiss the current sheet/dialog only when a back stack exists.
+  await Navigator.maybeOf(context)?.maybePop();
 
   // Phone number with country code (remove all non-digit characters)
   final whatsappUrl = Uri.parse(Platform.isAndroid
@@ -551,12 +558,13 @@ Future<void> _launchWhatsApp(
     );
   }
 }
+
 Future<void> _launchCall(
   BuildContext context,
   String? phoneNumber,
 ) async {
-  // Close dialog if open
-  Navigator.of(context).pop();
+  // Dismiss the current sheet/dialog only when a back stack exists.
+  await Navigator.maybeOf(context)?.maybePop();
 
   final Uri callUri = Uri.parse("tel:$phoneNumber");
 

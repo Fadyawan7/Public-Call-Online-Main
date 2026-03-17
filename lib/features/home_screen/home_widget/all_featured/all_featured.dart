@@ -19,7 +19,7 @@ class _AllFeaturedCategoriesState extends State<AllFeaturedCategories> {
     return Scaffold(
       appBar: CustomAppBarWidget(
         context: context,
-        title: getTranslated(widget.title, context)!,
+        title: getTranslated(widget.title, context),
         centerTitle: true,
       ),
       body: Consumer<HomeProvider>(

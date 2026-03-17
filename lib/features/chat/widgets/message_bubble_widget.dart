@@ -22,6 +22,46 @@ class _MessageBubbleWidgetState extends State<MessageBubbleWidget> {
   bool _initialFetchDone = false;
   final profileProvider = Provider.of<ProfileProvider>(Get.context!, listen: false);
 
+  Future<void> _showImagePreview(String imageUrl) async {
+    await showDialog(
+      context: context,
+      barrierColor: Colors.black87,
+      builder: (dialogContext) {
+        return Scaffold(
+          backgroundColor: Colors.black,
+          body: SafeArea(
+            child: Stack(
+              children: [
+                Center(
+                  child: InteractiveViewer(
+                    child: FadeInImage.assetNetwork(
+                      placeholder: Images.placeholderImage,
+                      image: imageUrl,
+                      fit: BoxFit.contain,
+                      imageErrorBuilder: (c, o, s) => Image.asset(
+                        Images.placeholderImage,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: IconButton(
+                    onPressed: () => Navigator.of(dialogContext).pop(),
+                    icon: const Icon(Icons.close, color: Colors.white),
+                    tooltip: 'Close',
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -84,29 +124,34 @@ class _MessageBubbleWidgetState extends State<MessageBubbleWidget> {
                                 widget.messages!.attachment != null
                                     ? Directionality(
                                   textDirection: TextDirection.rtl,
+                                  child: GestureDetector(
+                                  onTap: () => _showImagePreview(
+                                    '${AppConstants.baseUrl}/storage/${widget.messages!.attachment!.filePath!}',
+                                  ),
                                   child: ClipRRect(
                                     borderRadius:
                                     BorderRadius
-                                        .circular(5),
+                                      .circular(5),
                                     child: FadeInImage
-                                        .assetNetwork(
-                                      placeholder: Images
+                                      .assetNetwork(
+                                    placeholder: Images
+                                      .placeholderImage,
+                                    height: 200,
+                                    width: 200,
+                                    fit: BoxFit.cover,
+                                    image: '${AppConstants.baseUrl}/storage/${widget.messages!
+                                      .attachment!.filePath!}',
+                                    imageErrorBuilder: (c,
+                                      o, s) =>
+                                      Image.asset(
+                                        Images
                                           .placeholderImage,
-                                      height: 200,
-                                      width: 200,
-                                      fit: BoxFit.cover,
-                                      image: '${AppConstants.baseUrl}/storage/${widget.messages!
-                                          .attachment!.filePath!}',
-                                      imageErrorBuilder: (c,
-                                          o, s) =>
-                                          Image.asset(
-                                              Images
-                                                  .placeholderImage,
-                                              height: 100,
-                                              width: 100,
-                                              fit: BoxFit
-                                                  .cover),
+                                        height: 100,
+                                        width: 100,
+                                        fit: BoxFit
+                                          .cover),
                                     ),
+                                  ),
                                   ),
                                 )
                                     : const SizedBox(),
@@ -178,29 +223,34 @@ class _MessageBubbleWidgetState extends State<MessageBubbleWidget> {
                                 widget.messages!.attachment != null
                                     ? Directionality(
                                         textDirection: TextDirection.rtl,
-                                        child: ClipRRect(
-                                          borderRadius:
-                                          BorderRadius
-                                              .circular(5),
-                                          child: FadeInImage
-                                              .assetNetwork(
-                                            placeholder: Images
-                                                .placeholderImage,
-                                            height: 200,
-                                            width: 200,
-                                            fit: BoxFit.cover,
-                                            image: '${AppConstants.baseUrl}/storage/${widget.messages!
-                                                .attachment!.filePath!}',
-                                            imageErrorBuilder: (c,
-                                                o, s) =>
-                                                Image.asset(
-                                                    Images
-                                                        .placeholderImage,
-                                                    height: 100,
-                                                    width: 100,
-                                                    fit: BoxFit
-                                                        .cover),
-                                          ),
+                                    child: GestureDetector(
+                                      onTap: () => _showImagePreview(
+                                      '${AppConstants.baseUrl}/storage/${widget.messages!.attachment!.filePath!}',
+                                      ),
+                                      child: ClipRRect(
+                                      borderRadius:
+                                      BorderRadius
+                                        .circular(5),
+                                      child: FadeInImage
+                                        .assetNetwork(
+                                        placeholder: Images
+                                          .placeholderImage,
+                                        height: 200,
+                                        width: 200,
+                                        fit: BoxFit.cover,
+                                        image: '${AppConstants.baseUrl}/storage/${widget.messages!
+                                          .attachment!.filePath!}',
+                                        imageErrorBuilder: (c,
+                                          o, s) =>
+                                          Image.asset(
+                                            Images
+                                              .placeholderImage,
+                                            height: 100,
+                                            width: 100,
+                                            fit: BoxFit
+                                              .cover),
+                                      ),
+                                      ),
                                         ),
                                       )
                                     : const SizedBox(),
