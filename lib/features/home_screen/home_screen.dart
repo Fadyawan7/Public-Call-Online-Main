@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/widgets/custom_app_bar_widget.dart';
 import 'package:flutter_restaurant/common/widgets/toast_message.dart';
 import 'package:flutter_restaurant/features/address/providers/location_provider.dart';
-import 'package:flutter_restaurant/features/address/screens/select_location_screen.dart';
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/features/category/providers/category_provider.dart';
 import 'package:flutter_restaurant/features/freelancer/providers/freelancer_provider.dart';
@@ -430,7 +429,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             GestureDetector(
               onTap: () {
-                Navigator.push( context, MaterialPageRoute(builder: (context) => AllFeaturedCategories(),
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AllFeaturedCategories(),
                     ));
               },
               child: Text("View All",

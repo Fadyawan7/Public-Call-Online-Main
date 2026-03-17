@@ -5,6 +5,7 @@ import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/features/chat/domain/models/chat_model.dart';
 import 'package:flutter_restaurant/features/chat/providers/chat_provider.dart';
 import 'package:flutter_restaurant/features/chat/widgets/message_body_widget.dart';
+import 'package:flutter_restaurant/features/home_screen/home_widget/all_featured/featured_item_detail.dart';
 import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/main.dart';
@@ -58,19 +59,31 @@ class _ConversationScreenState extends State<ConversationScreen> {
           actions: <Widget>[
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Container(width: 50,height: 50,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                  border: Border.all(width: 1,color: theme.cardColor),
-                  color: theme.primaryColor.withOpacity(0.1),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(50),
-                  //todo need to add images
-                  child: CustomImageWidget(
-                    fit: BoxFit.cover,
-                    placeholder: Images.profile,
-                    image: '${widget.chat!.userImage}',
+              child: GestureDetector(
+                onTap: () {
+                   Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => FeaturedItemsDetail(
+                                  index:0,
+                                  freelanceId: widget.chat?.userId,
+                                )),
+                      );
+                },
+                child: Container(width: 50,height: 50,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                    border: Border.all(width: 1,color: theme.cardColor),
+                    color: theme.primaryColor.withOpacity(0.1),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(50),
+                    //todo need to add images
+                    child: CustomImageWidget(
+                      fit: BoxFit.cover,
+                      placeholder: Images.profile,
+                      image: '${widget.chat!.userImage}',
+                    ),
                   ),
                 ),
               ),
