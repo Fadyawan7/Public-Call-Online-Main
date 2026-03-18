@@ -19,7 +19,7 @@ class _AllFeaturedCategoriesState extends State<AllFeaturedCategories> {
     return Scaffold(
       appBar: CustomAppBarWidget(
         context: context,
-        title: getTranslated(widget.title, context),
+        title: 'All Categories',
         centerTitle: true,
       ),
       body: Consumer<HomeProvider>(
@@ -110,7 +110,7 @@ class _AllFeaturedCategoriesState extends State<AllFeaturedCategories> {
                               image: DecorationImage(
                                 fit: BoxFit.cover,
                                 image: NetworkImage(
-                                  freelancer.categoryIcon.toString(),
+                                  freelancer.cover_picture.toString(),
                                 ),
                               ),
                             ),
