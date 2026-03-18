@@ -1,11 +1,11 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/widgets/custom_image_widget.dart';
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/features/chat/domain/models/chat_model.dart';
 import 'package:flutter_restaurant/features/chat/providers/chat_provider.dart';
 import 'package:flutter_restaurant/features/chat/widgets/message_body_widget.dart';
-import 'package:flutter_restaurant/features/home_screen/home_widget/all_featured/featured_item_detail.dart';
+import 'package:flutter_restaurant/features/freelancer/providers/freelancer_provider.dart';
+import 'package:flutter_restaurant/features/freelancer/widgets/freelancer_detail_dialog_widget.dart';
 import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/main.dart';
@@ -24,7 +24,8 @@ class ConversationScreen extends StatefulWidget {
 
 class _ConversationScreenState extends State<ConversationScreen> {
   final TextEditingController _inputMessageController = TextEditingController();
-  final ProfileProvider profileProvider = Provider.of<ProfileProvider>(Get.context!, listen: false);
+  final ProfileProvider profileProvider =
+      Provider.of<ProfileProvider>(Get.context!, listen: false);
 
   @override
   void initState() {
@@ -33,25 +34,28 @@ class _ConversationScreenState extends State<ConversationScreen> {
     _loadMessage();
   }
 
-
   @override
   Widget build(BuildContext context) {
-
-    final AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
     final theme = Theme.of(context);
     return Consumer<ChatProvider>(builder: (context, chatProvider, _) {
       return Scaffold(
-        appBar:AppBar(centerTitle: true, title: Text( getTranslated('${widget.chat!.userName}', context)!,
-          style: rubikSemiBold.copyWith(
-            fontSize: Dimensions.fontSizeExtraLarge,
-            color: Colors.white,
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            getTranslated('${widget.chat!.userName}', context)!,
+            style: rubikSemiBold.copyWith(
+              fontSize: Dimensions.fontSizeExtraLarge,
+              color: Colors.white,
+            ),
           ),
-        ),
           backgroundColor: Theme.of(context).primaryColor,
           leading: IconButton(
             onPressed: () {
-                context.pop();
-                Provider.of<ChatProvider>(Get.context!,listen: false).resetConversation();
+              context.pop();
+              Provider.of<ChatProvider>(Get.context!, listen: false)
+                  .resetConversation();
             },
             icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
             padding: EdgeInsets.zero,
@@ -60,20 +64,62 @@ class _ConversationScreenState extends State<ConversationScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: GestureDetector(
-                onTap: () {
-                   Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => FeaturedItemsDetail(
-                                  index:0,
-                                  freelanceId: widget.chat?.userId,
-                                )),
-                      );
+                onTap: () async {
+                  if (!mounted) return;
+
+                  final FreelancerProvider freelancerProvider =
+                      Provider.of<FreelancerProvider>(context, listen: false);
+                  final int? freelancerId = widget.chat?.userId;
+
+                  if (freelancerId == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Freelancer not found')),
+                    );
+                    return;
+                  }
+
+                  await freelancerProvider.getFreelancerDetails(
+                    freelancerId.toString(),
+                    isApiCheck: false,
+                  );
+
+                  if (!mounted) return;
+                  final freelancer = freelancerProvider.freelancerDetails;
+
+                  if (freelancer == null ||
+                      freelancer.id == null ||
+                      freelancer.id == -1) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text('Unable to load freelancer details')),
+                    );
+                    return;
+                  }
+
+                  freelancerProvider.setSelectedFreelancer(
+                      freelancer: freelancer);
+
+                  await showModalBottomSheet(
+                    context: context,
+                    backgroundColor: Theme.of(context).canvasColor,
+                    isScrollControlled: true,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(20)),
+                    ),
+                    constraints: BoxConstraints(
+                      maxHeight: MediaQuery.of(context).size.height * 0.9,
+                    ),
+                    builder: (_) =>
+                        FreelancerDetailsBottomSheet(freelancer: freelancer),
+                  );
                 },
-                child: Container(width: 50,height: 50,
+                child: Container(
+                  width: 50,
+                  height: 50,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(50),
-                    border: Border.all(width: 1,color: theme.cardColor),
+                    border: Border.all(width: 1, color: theme.cardColor),
                     color: theme.primaryColor.withOpacity(0.1),
                   ),
                   child: ClipRRect(
@@ -90,32 +136,24 @@ class _ConversationScreenState extends State<ConversationScreen> {
             ),
           ],
         ),
-        body:  Consumer<ChatProvider>(
-            builder: (context, chatProvider, _) {
-              return  MessageBodyWidget(
-                isAdmin: false,
-                authProvider: authProvider,
-                inputMessageController: _inputMessageController,
-                chatId: widget.chat!.id,
-                loggedUserId:profileProvider.userInfoModel?.id ,
-              );
-            }
-        ) ,
+        body: Consumer<ChatProvider>(builder: (context, chatProvider, _) {
+          return MessageBodyWidget(
+            isAdmin: false,
+            authProvider: authProvider,
+            inputMessageController: _inputMessageController,
+            chatId: widget.chat!.id,
+            loggedUserId: profileProvider.userInfoModel?.id,
+          );
+        }),
       );
-    }
-    );
+    });
   }
 
-
   void _loadMessage() async {
-
-    final ChatProvider chatProvider = Provider.of<ChatProvider>(context, listen: false);
+    final ChatProvider chatProvider =
+        Provider.of<ChatProvider>(context, listen: false);
     await chatProvider.getConversationList(widget.chat!.id!);
     await profileProvider.getUserInfo(true);
     print('=====ID====${profileProvider.userInfoModel!.id}');
   }
-
 }
-
-
-
