@@ -37,6 +37,8 @@ class _FreelancerScreenState extends State<FreelancerScreen>
   final CustomInfoWindowController _customInfoWindowController =
       CustomInfoWindowController();
   String selectedFilterChip = 'All';
+  final Set<String> _searchVocabulary = <String>{};
+  String _lastSearchQuery = '';
 
   @override
   void initState() {
@@ -103,8 +105,13 @@ class _FreelancerScreenState extends State<FreelancerScreen>
 
     for (final freelancer in freelancers) {
       final categoryName = freelancer.category_name?.trim() ?? '';
+      final freelancerName = freelancer.name?.trim() ?? '';
       if (categoryName.isNotEmpty) {
         uniqueNames.add(categoryName);
+        _searchVocabulary.add(categoryName);
+      }
+      if (freelancerName.isNotEmpty) {
+        _searchVocabulary.add(freelancerName);
       }
     }
 
@@ -138,12 +145,29 @@ class _FreelancerScreenState extends State<FreelancerScreen>
     await _loadFreelancerMarkers();
   }
 
+  Future<void> _applySearchResultsOnMap() async {
+    if (!mounted) return;
+    _syncCategoriesFromFreelancers();
+    await _loadFreelancerMarkers();
+    await _focusOnFreelancers();
+  }
+
   void _openSearchDialog(
       BuildContext context, GoogleMapController? mapController) {
     showDialog(
       context: context,
-      builder: (context) =>
-          FreelancerSearchDialogWidget(mapController: mapController),
+      builder: (context) => FreelancerSearchDialogWidget(
+        mapController: mapController,
+        onResultsUpdated: _applySearchResultsOnMap,
+        onQueryApplied: (query) {
+          if (!mounted) return;
+          setState(() {
+            _lastSearchQuery = query;
+          });
+        },
+        suggestionPool: _searchVocabulary.toList()..sort(),
+        initialQuery: _lastSearchQuery,
+      ),
     );
   }
 
@@ -255,7 +279,9 @@ class _FreelancerScreenState extends State<FreelancerScreen>
                             const SizedBox(width: Dimensions.paddingSizeSmall),
                             Expanded(
                               child: Text(
-                                'Search workers, categories, location',
+                                _lastSearchQuery.isEmpty
+                                    ? 'Search workers, categories, location'
+                                    : _lastSearchQuery,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: rubikRegular.copyWith(
@@ -264,20 +290,36 @@ class _FreelancerScreenState extends State<FreelancerScreen>
                                 ),
                               ),
                             ),
+
                             GestureDetector(
                               onTap: () {
-                                if (profileProvider.isFreelancer ?? false) {
-                                  RouterHelper.getFreelancerPortfolioListRoute();
-                                } else {
-                                  RouterHelper.getApplyFreelancerRoute();
+                                if (_lastSearchQuery.isNotEmpty) {
+                                  setState(() {
+                                    _lastSearchQuery = '';
+                                  });
+                                  _applySearchResultsOnMap();
                                 }
-                              },
-                              child: Icon(
-                                Iconsax.add_circle,
+                              },  
+                              child: Icon( 
+                                Icons.clear,
                                 color: Theme.of(context).primaryColor,
-                                size: 28,
+                                size: 24,
                               ),
                             ),
+                            // GestureDetector(
+                            //   onTap: () {
+                            //     if (profileProvider.isFreelancer ?? false) {
+                            //       RouterHelper.getFreelancerPortfolioListRoute();
+                            //     } else {
+                            //       RouterHelper.getApplyFreelancerRoute();
+                            //     }
+                            //   },
+                            //   child: Icon(
+                            //     Iconsax.add_circle,
+                            //     color: Theme.of(context).primaryColor,
+                            //     size: 28,
+                            //   ),
+                            // ),
                             const SizedBox(width: Dimensions.paddingSizeExtraSmall),
                           ],
                         ),
@@ -391,7 +433,8 @@ class _FreelancerScreenState extends State<FreelancerScreen>
                       width: 46,
                       height: 46,
                       decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor.withOpacity(0.12),
+                        color:
+                            Theme.of(context).primaryColor.withValues(alpha: 0.12),
                         borderRadius:
                             BorderRadius.circular(Dimensions.radiusDefault),
                       ),
