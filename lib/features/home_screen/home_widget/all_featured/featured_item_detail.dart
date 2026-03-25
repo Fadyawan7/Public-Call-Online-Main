@@ -330,7 +330,8 @@ class _FeaturedItemsDetailState extends State<FeaturedItemsDetail> {
                   ),
 
                   const SizedBox(height: 16),
-                  Container(
+
+     portfolioLength == 0  ? SizedBox.shrink():            Container(
                     height: 250,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16),
