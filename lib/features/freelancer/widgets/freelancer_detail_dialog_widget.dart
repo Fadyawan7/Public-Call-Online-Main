@@ -213,7 +213,7 @@ class _FreelancerDetailsBottomSheetState
                 FreelancerBasicInfo(freelancer: widget.freelancer),
                 SizedBox(
                   height: 60,
-                  child: Padding(
+                  child: Padding( 
                     padding: const EdgeInsets.only(
                       left: Dimensions.paddingSizeDefault,
                     ),

@@ -94,7 +94,7 @@ class FreelancerModel {
         price: json['price']?.toString(),
         per_side: json['per_side']?.toString(),
         per_hour: json['per_hour']?.toString(),
-        image: json['profile_picture']?.toString(),
+        image: (json['image'] ?? json['profile_picture'])?.toString(),
         cover_picture: json['cover_picture']?.toString(),
         about: json['about']?.toString(),
         country: json['country_name']?.toString(),
@@ -157,7 +157,6 @@ class FreelancerModel {
         'per_side': per_side,
         'per_hour': per_hour,
         'profile_picture': image,
-        'cover_picture': cover_picture,
         'about': about,
         'country_name': country,
         'category_name': category_name,
@@ -170,7 +169,7 @@ class FreelancerModel {
         'current_status': current_status,
         'whatsapp_number': whatsapp_number,
         'total_jobs': total_jobs,
-        'rating': average_rating,
+        'average_rating': average_rating,
         'rating': rating,
         'portfolio': portfolio?.map((x) => x.toJson()).toList(),
         'reviews': reviews?.map((x) => x.toJson()).toList(),
@@ -186,7 +185,7 @@ class FreelancerModel {
         'category_id': category_id,
         'category_icon': categoryIcon,
         'promoted': promoted,
-        'cover_picture': coverPicture,
+        'cover_picture': coverPicture ?? cover_picture,
       };
 }
 

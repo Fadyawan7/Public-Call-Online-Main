@@ -28,6 +28,7 @@ class BookingProvider extends ChangeNotifier {
 
   ResponseModel? _responseModel;
   bool _isLoading = false;
+  final Set<String> _statusLoading = <String>{};
 
   // Other variables
   List<String> _availableTimes = [];
@@ -46,6 +47,7 @@ class BookingProvider extends ChangeNotifier {
 
   // ======== GETTERS ========
   bool get isLoading => _isLoading;
+  bool isStatusLoading(String status) => _statusLoading.contains(status);
   List<XFile>? get images => _images;
 
   List<BookingModel> get pendingList => _pendingList;
@@ -201,12 +203,13 @@ Future<void> pickImage(bool fromCamera) async {
   }
 
   Future<void> getBookingList(BuildContext context, String? status) async {
-    _isLoading = true;
+    final String bookingStatus = status ?? 'pending';
+    _statusLoading.add(bookingStatus);
     notifyListeners();
 
-    print("⏳ API call started for: $status");
+    print("⏳ API call started for: $bookingStatus");
 
-    ApiResponseModel apiResponse = await bookingRepo!.getBookingList(status);
+    ApiResponseModel apiResponse = await bookingRepo!.getBookingList(bookingStatus);
 
     List<BookingModel> newList = [];
 
@@ -226,24 +229,21 @@ Future<void> pickImage(bool fromCamera) async {
       print("✅ Received ${newList.length} records for $status");
 
       // Assign to correct list
-      if (status == 'pending') {
+      if (bookingStatus == 'pending') {
         _pendingList = newList;
-      } else if (status == 'confirmed') {
+      } else if (bookingStatus == 'confirmed') {
         _confirmedList = newList;
-      } else if (status == 'history') {
+      } else if (bookingStatus == 'history') {
         _historyList = newList;
       }
     } else {
       print("❌ API error: ${apiResponse.error}");
     }
 
-    // Delay rebuild until data assigned
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _isLoading = false;
-      notifyListeners();
-    });
+    _statusLoading.remove(bookingStatus);
+    notifyListeners();
 
-    print("🏁 UI updated for $status with count: ${newList.length}");
+    print("🏁 UI updated for $bookingStatus with count: ${newList.length}");
   }
 
   void stopLoader() {

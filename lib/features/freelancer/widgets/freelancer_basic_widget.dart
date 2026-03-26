@@ -39,7 +39,7 @@ class FreelancerBasicInfo extends StatelessWidget {
                 ),
               ),
               Text(
-                freelancer.category_name ?? 'Category',
+                freelancer.category ?? 'Category',
                 style: rubikMedium.copyWith(
                   fontSize: Dimensions.fontSizeLarge,
                 ),

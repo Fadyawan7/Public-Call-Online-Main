@@ -98,8 +98,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
 
                   freelancerProvider.setSelectedFreelancer(
                       freelancer: freelancer);
-
                   await showModalBottomSheet(
+                    // ignore: use_build_context_synchronously
                     context: context,
                     backgroundColor: Theme.of(context).canvasColor,
                     isScrollControlled: true,

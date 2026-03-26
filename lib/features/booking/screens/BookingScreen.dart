@@ -71,11 +71,11 @@ class _BookingScreenState extends State<BookingScreen>
 
         // ✅ Only call API if this tab’s list is currently empty
         if ((status == 'pending' &&
-                (bookingProvider.pendingList.isEmpty ?? true)) ||
+          bookingProvider.pendingList.isEmpty) ||
             (status == 'confirmed' &&
-                (bookingProvider.confirmedList.isEmpty ?? true)) ||
+          bookingProvider.confirmedList.isEmpty) ||
             (status == 'history' &&
-                (bookingProvider.historyList.isEmpty ?? true))) {
+          bookingProvider.historyList.isEmpty)) {
           bookingProvider.getBookingList(context, status);
         }
 
@@ -96,7 +96,7 @@ class _BookingScreenState extends State<BookingScreen>
       appBar: (CustomAppBarWidget(
         titleColor: Colors.white,
         context: context,
-        title: getTranslated('Easy Business\nEvery Business', context),
+        title: 'Easy Business\nEvery Business',
         isBackButtonExist: !ResponsiveHelper.isMobile(),
       )) as PreferredSizeWidget?,
       body: _isLoggedIn
@@ -133,9 +133,9 @@ class _BookingScreenState extends State<BookingScreen>
                                       indicator: const UnderlineTabIndicator(
                                           borderSide: BorderSide.none),
                                       tabs: [
-                                        _buildTab(context, 'Pending', 0),
-                                        _buildTab(context, 'Confirmed', 1),
-                                        _buildTab(context, 'History', 2),
+                                        _buildTab(context, 'pending', 0),
+                                        _buildTab(context, 'confirmed', 1),
+                                        _buildTab(context, 'history', 2),
                                       ],
                                     ),
                                   ),
