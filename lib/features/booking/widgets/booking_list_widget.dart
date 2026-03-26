@@ -15,15 +15,15 @@ class BookingListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<BookingProvider>(
       builder: (context, booking, child) {
-        bool isLoading = booking.isLoading ?? true;
+        final bool isLoading = booking.isStatusLoading(status);
 
         List<BookingModel> bookingList = [];
         if (status == 'pending') {
-          bookingList = booking.pendingList ?? [];
+          bookingList = booking.pendingList;
         } else if (status == 'confirmed') {
-          bookingList = booking.confirmedList ?? [];
+          bookingList = booking.confirmedList;
         } else {
-          bookingList = booking.historyList ?? [];
+          bookingList = booking.historyList;
         }
 
         if (isLoading) {

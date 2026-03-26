@@ -1,15 +1,12 @@
 import 'package:custom_info_window/custom_info_window.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_restaurant/features/address/widgets/freelancer_search_dialog_widget.dart';
 import 'package:flutter_restaurant/features/freelancer/providers/freelancer_provider.dart';
 import 'package:flutter_restaurant/features/freelancer/widgets/freelancer_detail_dialog_widget.dart';
 import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
-import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/main.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 
 class FreelancerScreen extends StatefulWidget {
@@ -36,9 +33,11 @@ class _FreelancerScreenState extends State<FreelancerScreen>
   GoogleMapController? googleMapController;
   final CustomInfoWindowController _customInfoWindowController =
       CustomInfoWindowController();
+  final TextEditingController _searchController = TextEditingController();
   String selectedFilterChip = 'All';
   final Set<String> _searchVocabulary = <String>{};
-  String _lastSearchQuery = '';
+  List<String> _querySuggestions = <String>[];
+  bool _isSearching = false;
 
   @override
   void initState() {
@@ -53,6 +52,7 @@ class _FreelancerScreenState extends State<FreelancerScreen>
 
   @override
   void dispose() {
+    _searchController.dispose();
     googleMapController?.dispose();
     _customInfoWindowController.dispose();
     super.dispose();
@@ -80,15 +80,42 @@ class _FreelancerScreenState extends State<FreelancerScreen>
           snippet: freelancer.category_name,
         ),
         onTap: () async {
-          freelancerProvider.setSelectedFreelancer(freelancer: freelancer);
           if (!mounted) return;
+
+          await freelancerProvider.getFreelancerDetails(
+            freelancer.id.toString(),
+            isApiCheck: false,
+          );
+
+          if (!mounted) return;
+          final selectedFreelancer = freelancerProvider.freelancerDetails;
+
+          if (selectedFreelancer == null ||
+              selectedFreelancer.id == null ||
+              selectedFreelancer.id == -1) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                  content: Text('Unable to load freelancer details')),
+            );
+            return;
+          }
+
+          freelancerProvider.setSelectedFreelancer(
+              freelancer: selectedFreelancer);
 
           await showModalBottomSheet(
             context: context,
             backgroundColor: Theme.of(context).canvasColor,
             isScrollControlled: true,
-            builder: (_) =>
-                FreelancerDetailsBottomSheet(freelancer: freelancer),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            ),
+            builder: (_) => FractionallySizedBox(
+              heightFactor: 0.85,
+              child: FreelancerDetailsBottomSheet(
+                freelancer: selectedFreelancer,
+              ),
+            ),
           );
         },
       );
@@ -152,23 +179,62 @@ class _FreelancerScreenState extends State<FreelancerScreen>
     await _focusOnFreelancers();
   }
 
-  void _openSearchDialog(
-      BuildContext context, GoogleMapController? mapController) {
-    showDialog(
-      context: context,
-      builder: (context) => FreelancerSearchDialogWidget(
-        mapController: mapController,
-        onResultsUpdated: _applySearchResultsOnMap,
-        onQueryApplied: (query) {
-          if (!mounted) return;
-          setState(() {
-            _lastSearchQuery = query;
-          });
-        },
-        suggestionPool: _searchVocabulary.toList()..sort(),
-        initialQuery: _lastSearchQuery,
-      ),
-    );
+  Future<void> _performSearch(String rawQuery) async {
+    final query = rawQuery.trim();
+    if (_isSearching) {
+      return;
+    }
+
+    setState(() {
+      _isSearching = true;
+    });
+
+    if (query.isEmpty) {
+      await freelancerProvider.getFreelancerList();
+    } else {
+      final results = await freelancerProvider.searchFreelancer(context, query);
+      freelancerProvider.updateFreelancerList(results);
+    }
+
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _querySuggestions = [];
+      _searchController.text = query;
+      _searchController.selection =
+          TextSelection.fromPosition(TextPosition(offset: query.length));
+    });
+
+    await _applySearchResultsOnMap();
+
+    if (mounted) {
+      setState(() {
+        _isSearching = false;
+      });
+    }
+  }
+
+  void _buildSuggestions(String value) {
+    final query = value.trim().toLowerCase();
+    if (query.isEmpty) {
+      if (_querySuggestions.isNotEmpty) {
+        setState(() {
+          _querySuggestions = <String>[];
+        });
+      }
+      return;
+    }
+
+    final suggestions = _searchVocabulary
+        .where((item) => item.toLowerCase().contains(query))
+        .take(6)
+        .toList();
+
+    setState(() {
+      _querySuggestions = suggestions;
+    });
   }
 
   Future<void> _zoomMapBy(double delta) async {
@@ -259,73 +325,107 @@ class _FreelancerScreenState extends State<FreelancerScreen>
                     borderRadius:
                         BorderRadius.circular(Dimensions.radiusExtraLarge),
                     color: Theme.of(context).cardColor,
-                    child: InkWell(
-                      borderRadius:
-                          BorderRadius.circular(Dimensions.radiusExtraLarge),
-                      onTap: () => _openSearchDialog(context, googleMapController),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: Dimensions.paddingSizeSmall,
-                          vertical: Dimensions.paddingSizeSmall,
-                        ),
-                        child: Row(
-                          children: [
-                            const SizedBox(width: Dimensions.paddingSizeExtraSmall),
-                            Icon(
-                              Icons.search,
-                              color: Theme.of(context).hintColor,
-                              size: 24,
-                            ),
-                            const SizedBox(width: Dimensions.paddingSizeSmall),
-                            Expanded(
-                              child: Text(
-                                _lastSearchQuery.isEmpty
-                                    ? 'Search workers, categories, location'
-                                    : _lastSearchQuery,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: rubikRegular.copyWith(
-                                  fontSize: Dimensions.fontSizeDefault,
-                                  color: Theme.of(context).hintColor,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: Dimensions.paddingSizeSmall,
+                        vertical: Dimensions.paddingSizeExtraSmall,
+                      ),
+                      child: TextField(
+                        controller: _searchController,
+                        textAlign: TextAlign.start,
+                        textAlignVertical: TextAlignVertical.center,
+                        textInputAction: TextInputAction.search,
+                        onSubmitted: _performSearch,
+                        onChanged: (value) {
+                          _buildSuggestions(value);
+                        },
+                        decoration: InputDecoration(
+                          isDense: true,
+                          hintText: 'Search workers, categories, location',
+                          hintStyle: rubikRegular.copyWith(
+                            fontSize: Dimensions.fontSizeDefault,
+                            color: Theme.of(context).hintColor,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: Dimensions.paddingSizeSmall,
+                            vertical: Dimensions.paddingSizeSmall,
+                          ),
+                          border: InputBorder.none,
+                          suffixIcon: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (_isSearching)
+                                SizedBox(
+                                  width: 18,
+                                  height: 18,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                )
+                              else
+                                IconButton(
+                                  onPressed: () =>
+                                      _performSearch(_searchController.text),
+                                  icon: const Icon(Icons.search),
+                                  color: Theme.of(context).primaryColor,
                                 ),
-                              ),
-                            ),
-
-                            GestureDetector(
-                              onTap: () {
-                                if (_lastSearchQuery.isNotEmpty) {
-                                  setState(() {
-                                    _lastSearchQuery = '';
-                                  });
-                                  _applySearchResultsOnMap();
-                                }
-                              },  
-                              child: Icon( 
-                                Icons.clear,
-                                color: Theme.of(context).primaryColor,
-                                size: 24,
-                              ),
-                            ),
-                            // GestureDetector(
-                            //   onTap: () {
-                            //     if (profileProvider.isFreelancer ?? false) {
-                            //       RouterHelper.getFreelancerPortfolioListRoute();
-                            //     } else {
-                            //       RouterHelper.getApplyFreelancerRoute();
-                            //     }
-                            //   },
-                            //   child: Icon(
-                            //     Iconsax.add_circle,
-                            //     color: Theme.of(context).primaryColor,
-                            //     size: 28,
-                            //   ),
-                            // ),
-                            const SizedBox(width: Dimensions.paddingSizeExtraSmall),
-                          ],
+                              if (_searchController.text.trim().isNotEmpty)
+                                IconButton(
+                                  onPressed: () async {
+                                    _searchController.clear();
+                                    _buildSuggestions('');
+                                    await _performSearch('');
+                                  },
+                                  icon: const Icon(Icons.clear),
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
+                  if (_querySuggestions.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: Dimensions.paddingSizeExtraSmall,
+                      ),
+                      child: Material(
+                        elevation: 4,
+                        borderRadius:
+                            BorderRadius.circular(Dimensions.radiusLarge),
+                        color: Theme.of(context).cardColor,
+                        child: ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: _querySuggestions.length,
+                          separatorBuilder: (_, __) => Divider(
+                            height: 1,
+                            color: Theme.of(context).dividerColor,
+                          ),
+                          itemBuilder: (context, index) {
+                            final suggestion = _querySuggestions[index];
+                            return ListTile(
+                              dense: true,
+                              title: Text(
+                                suggestion,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              onTap: () async {
+                                _searchController.text = suggestion;
+                                _searchController.selection =
+                                    TextSelection.fromPosition(
+                                  TextPosition(offset: suggestion.length),
+                                );
+                                await _performSearch(suggestion);
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ),
                   const SizedBox(height: Dimensions.paddingSizeSmall),
                   SizedBox(
                     height: 40,
@@ -335,7 +435,8 @@ class _FreelancerScreenState extends State<FreelancerScreen>
                       separatorBuilder: (_, __) =>
                           const SizedBox(width: Dimensions.paddingSizeSmall),
                       itemBuilder: (context, index) {
-                        final label = index == 0 ? 'All' : categories[index - 1];
+                        final label =
+                            index == 0 ? 'All' : categories[index - 1];
                         final isSelected = selectedFilterChip == label;
                         return ChoiceChip(
                           label: Text(
@@ -344,7 +445,10 @@ class _FreelancerScreenState extends State<FreelancerScreen>
                               fontSize: Dimensions.fontSizeSmall,
                               color: isSelected
                                   ? Theme.of(context).cardColor
-                                  : Theme.of(context).textTheme.bodyMedium?.color,
+                                  : Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.color,
                             ),
                           ),
                           selected: isSelected,
@@ -389,8 +493,8 @@ class _FreelancerScreenState extends State<FreelancerScreen>
                   child: Column(
                     children: [
                       InkWell(
-                        borderRadius:
-                            const BorderRadius.vertical(top: Radius.circular(15)),
+                        borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(15)),
                         onTap: () => _zoomMapBy(1),
                         child: const Padding(
                           padding: EdgeInsets.all(Dimensions.paddingSizeSmall),
@@ -433,8 +537,9 @@ class _FreelancerScreenState extends State<FreelancerScreen>
                       width: 46,
                       height: 46,
                       decoration: BoxDecoration(
-                        color:
-                            Theme.of(context).primaryColor.withValues(alpha: 0.12),
+                        color: Theme.of(context)
+                            .primaryColor
+                            .withValues(alpha: 0.12),
                         borderRadius:
                             BorderRadius.circular(Dimensions.radiusDefault),
                       ),

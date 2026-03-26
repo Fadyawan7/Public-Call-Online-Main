@@ -12,6 +12,7 @@ import 'package:flutter_restaurant/features/apply_freelancer/screens/request_sub
 import 'package:flutter_restaurant/features/auth/screens/create_account_screen.dart';
 import 'package:flutter_restaurant/features/auth/screens/login_screen.dart';
 import 'package:flutter_restaurant/features/auth/screens/send_otp_screen.dart';
+import 'package:flutter_restaurant/features/booking/screens/BookingScreen.dart';
 import 'package:flutter_restaurant/features/booking/screens/booking_detail_screen.dart';
 import 'package:flutter_restaurant/features/booking/screens/new_booking.dart';
 import 'package:flutter_restaurant/features/chat/domain/models/chat_model.dart';
@@ -26,7 +27,6 @@ import 'package:flutter_restaurant/features/forgot_password/screens/verification
 import 'package:flutter_restaurant/features/freelancer/domain/models/freelancer_model.dart';
 import 'package:flutter_restaurant/features/freelancer/screens/freelancer_screen.dart';
 import 'package:flutter_restaurant/features/freelancer_booking/screens/freelancer_booking_detail_screen.dart';
-import 'package:flutter_restaurant/features/freelancer_booking/screens/freelancer_booking_screen.dart';
 import 'package:flutter_restaurant/features/freelancer_portfolio/screens/freelancer_portfolio_add_screen.dart';
 import 'package:flutter_restaurant/features/freelancer_portfolio/screens/freelancer_portfolio_screen.dart';
 
@@ -416,7 +416,7 @@ class RouterHelper {
       GoRoute(
           path: freelancerBookingScreen,
           builder: (context, state) => _routeHandler(
-              context, path: _getPath(state), const FreelancerBookingScreen())),
+            context, path: _getPath(state), const BookingScreen())),
       GoRoute(
           path: dashboardScreen,
           builder: (context, state) {

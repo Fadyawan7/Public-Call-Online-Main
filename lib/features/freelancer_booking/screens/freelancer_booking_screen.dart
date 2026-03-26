@@ -31,7 +31,22 @@ class _FreelancerBookingScreenState extends State<FreelancerBookingScreen> with 
       Provider.of<FreelancerBookingProvider>(context, listen: false).getBookingList(context,'pending');
     }
     _tabController.addListener(() {
+      if (_tabController.indexIsChanging || !_isLoggedIn) {
+        return;
+      }
+
       _selectedIndex = _tabController.index;
+      final bookingProvider =
+          Provider.of<FreelancerBookingProvider>(context, listen: false);
+      final String status = ['pending', 'confirmed', 'history'][_selectedIndex];
+      final bool hasData = (status == 'pending' && bookingProvider.pendingList.isNotEmpty) ||
+          (status == 'confirmed' && bookingProvider.confirmedList.isNotEmpty) ||
+          (status == 'history' && bookingProvider.historyList.isNotEmpty);
+
+      if (!hasData) {
+        bookingProvider.getBookingList(context, status);
+      }
+
       if(mounted){
         setState(() {});
       }
@@ -81,7 +96,7 @@ class _FreelancerBookingScreenState extends State<FreelancerBookingScreen> with 
                           color: _selectedIndex == 0 ? Theme.of(context).primaryColor : Theme.of(context).canvasColor,
                         ),
                         child: Center(child: Text(
-                          getTranslated('Pending', context)!,
+                          getTranslated('pending', context)!,
                           style: rubikRegular.copyWith(
                             color: _selectedIndex == 0 ? Theme.of(context).cardColor : Theme.of(context).primaryColor,
                             fontWeight: _selectedIndex == 0 ? FontWeight.w700 : FontWeight.w400,
@@ -100,7 +115,7 @@ class _FreelancerBookingScreenState extends State<FreelancerBookingScreen> with 
                           getTranslated('Upcoming', context)!,
                           style: rubikRegular.copyWith(
                             color: _selectedIndex == 1 ? Theme.of(context).cardColor : Theme.of(context).primaryColor,
-                            fontWeight: _selectedIndex == 0 ? FontWeight.w700 : FontWeight.w400,
+                            fontWeight: _selectedIndex == 1 ? FontWeight.w700 : FontWeight.w400,
                           ),
                         )),
                       )),
@@ -112,10 +127,10 @@ class _FreelancerBookingScreenState extends State<FreelancerBookingScreen> with 
                           color: _selectedIndex == 2 ? Theme.of(context).primaryColor : Theme.of(context).canvasColor,
                         ),
                         child: Center(child: Text(
-                          getTranslated('History', context)!,
+                          getTranslated('history', context)!,
                           style: rubikRegular.copyWith(
                             color: _selectedIndex == 2 ? Theme.of(context).cardColor : Theme.of(context).primaryColor,
-                            fontWeight: _selectedIndex == 0 ? FontWeight.w700 : FontWeight.w400,
+                            fontWeight: _selectedIndex == 2 ? FontWeight.w700 : FontWeight.w400,
                           ),
                         )),
                       )),

@@ -15,35 +15,50 @@ class FreelancerBookingProvider extends ChangeNotifier {
   final SharedPreferences? sharedPreferences;
   FreelancerBookingProvider({ required this.sharedPreferences,required this.freelancerBookingRepo});
 
-  List<BookingModel>? _runningOrderList;
-  List<BookingModel>? _historyOrderList;
+  List<BookingModel> _pendingList = [];
+  List<BookingModel> _confirmedList = [];
+  List<BookingModel> _historyList = [];
   ResponseModel? _responseModel;
   bool _isLoading = false;
+  final Set<String> _statusLoading = <String>{};
 
 
-  List<BookingModel>? get runningOrderList => _runningOrderList;
+  List<BookingModel> get pendingList => _pendingList;
+  List<BookingModel> get confirmedList => _confirmedList;
+  List<BookingModel> get historyList => _historyList;
+  bool isStatusLoading(String status) => _statusLoading.contains(status);
   ResponseModel? get responseModel => _responseModel;
 
   bool get isLoading => _isLoading;
 
   Future<void> getBookingList(BuildContext context,String? status) async {
+    final String bookingStatus = status ?? 'pending';
     _isLoading = true;
+    _statusLoading.add(bookingStatus);
+    notifyListeners();
 
-    ApiResponseModel apiResponse = await freelancerBookingRepo!.getBookingList(status);
+    ApiResponseModel apiResponse = await freelancerBookingRepo!.getBookingList(bookingStatus);
+    final List<BookingModel> newList = [];
 
     if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-      _runningOrderList = [];
-      _historyOrderList = [];
       apiResponse.response!.data.forEach((booking) {
         BookingModel bookingModel = BookingModel.fromJson(booking);
-        bookingModel = BookingModel.fromJson(booking);
-        _runningOrderList!.add(bookingModel);
+        newList.add(bookingModel);
       });
+
+      if (bookingStatus == 'pending') {
+        _pendingList = newList;
+      } else if (bookingStatus == 'confirmed') {
+        _confirmedList = newList;
+      } else {
+        _historyList = newList;
+      }
 
     } else {
       ApiCheckerHelper.checkApi(apiResponse);
     }
-    _isLoading = false;
+    _statusLoading.remove(bookingStatus);
+    _isLoading = _statusLoading.isNotEmpty;
 
     notifyListeners();
   }

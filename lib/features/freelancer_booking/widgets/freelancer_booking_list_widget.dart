@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/widgets/no_data_widget.dart';
 import 'package:flutter_restaurant/features/booking/domain/models/booking_model.dart';
-import 'package:flutter_restaurant/features/booking/providers/booking_provider.dart';
 import 'package:flutter_restaurant/features/booking/widgets/booking_shimmer_widget.dart';
 import 'package:flutter_restaurant/features/freelancer_booking/providers/freelancer_booking_provider.dart';
 import 'package:flutter_restaurant/features/freelancer_booking/widgets/freelancer_booking_item_widget.dart';
@@ -21,20 +20,34 @@ class _FreelancerBookingListWidgetState extends State<FreelancerBookingListWidge
   @override
   void initState() {
     super.initState();
-    Provider.of<FreelancerBookingProvider>(context, listen: false).getBookingList(context,widget.status);
+    final provider = Provider.of<FreelancerBookingProvider>(context, listen: false);
+    final status = widget.status ?? 'pending';
+    final hasData = (status == 'pending' && provider.pendingList.isNotEmpty) ||
+        (status == 'confirmed' && provider.confirmedList.isNotEmpty) ||
+        (status == 'history' && provider.historyList.isNotEmpty);
+    if (!hasData) {
+      provider.getBookingList(context, status);
+    }
   }
   @override
   Widget build(BuildContext context) {
     return Consumer<FreelancerBookingProvider>(
       builder: (context, freelancerBooking, index) {
-        List<BookingModel>? bookingList =[];
-        if(freelancerBooking.runningOrderList != null) {
-          bookingList = freelancerBooking.runningOrderList ;
+        final status = widget.status ?? 'pending';
+        final bool isLoading = freelancerBooking.isStatusLoading(status);
+        List<BookingModel> bookingList = [];
+        if (status == 'pending') {
+          bookingList = freelancerBooking.pendingList;
+        } else if (status == 'confirmed') {
+          bookingList = freelancerBooking.confirmedList;
+        } else {
+          bookingList = freelancerBooking.historyList;
         }
 
-        return !freelancerBooking.isLoading ? bookingList!.isNotEmpty ? RefreshIndicator(
+        return !isLoading ? bookingList.isNotEmpty ? RefreshIndicator(
           onRefresh: () async {
-            await Provider.of<BookingProvider>(context, listen: false).getBookingList(context,widget.status);
+            await Provider.of<FreelancerBookingProvider>(context, listen: false)
+                .getBookingList(context, status);
           },
           backgroundColor: Theme.of(context).primaryColor,
           color: Theme.of(context).cardColor,
@@ -49,7 +62,11 @@ class _FreelancerBookingListWidgetState extends State<FreelancerBookingListWidge
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
-                      return FreelancerBookingItemWidget(freelancerBookingProvider: freelancerBooking, status: widget.status!, bookingItem: bookingList![index]);
+                      return FreelancerBookingItemWidget(
+                        freelancerBookingProvider: freelancerBooking,
+                        status: status,
+                        bookingItem: bookingList[index],
+                      );
                     },
                   ),
                 ),
