@@ -1,4 +1,3 @@
-
 class BookingModel {
   int? _id;
   int? _userId;
@@ -16,33 +15,29 @@ class BookingModel {
   bool? _freelancerReview;
   String? _freelancerViewId;
 
-
-
-  BookingModel(
-      {
-        int? id,
-        int? userId,
-        int? freelancerId,
-        String? bookingId,
-        String? status,
-        String? date,
-        String? time,
-        String? description,
-        String? freelancerName,
-        String? freelancerImage,
-        String? userName,
-        String? userImage,
-        String? freelancerViewId,
-        bool? userReview,
-        bool? freelancerReview,
-
-      }) {
+  BookingModel({
+    int? id,
+    int? userId,
+    int? freelancerId,
+    String? bookingId,
+    String? status,
+    String? date,
+    String? time,
+    String? description,
+    String? freelancerName,
+    String? freelancerImage,
+    String? userName,
+    String? userImage,
+    String? freelancerViewId,
+    bool? userReview,
+    bool? freelancerReview,
+  }) {
     _id = id;
     _userId = userId;
     _freelancerId = freelancerId;
     _bookingId = bookingId;
     _status = status;
-    _date=date;
+    _date = date;
     _description = description;
     _freelancerName = freelancerName;
     _freelancerImage = freelancerImage;
@@ -54,7 +49,6 @@ class BookingModel {
     _userReview = userReview;
     _freelancerReview = freelancerReview;
     _freelancerViewId = freelancerViewId;
-
   }
 
   int? get id => _id;
@@ -73,7 +67,6 @@ class BookingModel {
   bool? get userReview => _userReview;
   bool? get freelancerReview => _freelancerReview;
 
-
   BookingModel.fromJson(Map<String, dynamic> json) {
     _id = json['id'];
     _userId = json['user_id'];
@@ -91,8 +84,6 @@ class BookingModel {
     _freelancerViewId = json['freelancer_view_id'];
     _freelancerReview = json['freelancer_review'];
     _userReview = json['user_review'];
-
-
   }
 
   Map<String, dynamic> toJson() {
@@ -117,4 +108,3 @@ class BookingModel {
     return data;
   }
 }
-

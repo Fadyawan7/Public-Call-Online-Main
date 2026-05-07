@@ -49,18 +49,20 @@ class _ProfileImageWidgetState extends State<ProfileImageWidget> {
           // Crop to square
           final croppedImage = img.copyCrop(
             originalImage,
-            x:offsetX,
-            y:offsetY,
-            width:minDimension,
+            x: offsetX,
+            y: offsetY,
+            width: minDimension,
             height: minDimension,
           );
 
           // Resize to 500x500
-          final resizedImage = img.copyResize(croppedImage, width: 500, height: 500);
+          final resizedImage =
+              img.copyResize(croppedImage, width: 500, height: 500);
 
           // Save to temporary file
           final tempDir = await getTemporaryDirectory();
-          final processedFile = File('${tempDir.path}/processed_${DateTime.now().millisecondsSinceEpoch}.png');
+          final processedFile = File(
+              '${tempDir.path}/processed_${DateTime.now().millisecondsSinceEpoch}.png');
           await processedFile.writeAsBytes(img.encodePng(resizedImage));
 
           setState(() {
@@ -78,7 +80,8 @@ class _ProfileImageWidgetState extends State<ProfileImageWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraLarge),
+      margin: const EdgeInsets.symmetric(
+          vertical: Dimensions.paddingSizeExtraLarge),
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: ColorResources.borderColor,
@@ -95,12 +98,12 @@ class _ProfileImageWidgetState extends State<ProfileImageWidget> {
               child: _file != null
                   ? Image.file(_file!, width: 80, height: 80, fit: BoxFit.fill)
                   : CustomImageWidget(
-                placeholder: Images.placeholderUser,
-                width: 80,
-                height: 80,
-                fit: BoxFit.cover,
-                image: widget.imageUrl!,
-              ),
+                      placeholder: Images.placeholderUser,
+                      width: 80,
+                      height: 80,
+                      fit: BoxFit.cover,
+                      image: widget.imageUrl!,
+                    ),
             ),
             Positioned(
               bottom: 15,
@@ -109,7 +112,8 @@ class _ProfileImageWidgetState extends State<ProfileImageWidget> {
                 onTap: _chooseImage,
                 child: Container(
                   alignment: Alignment.center,
-                  padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
+                  padding:
+                      const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: Theme.of(context).primaryColor,

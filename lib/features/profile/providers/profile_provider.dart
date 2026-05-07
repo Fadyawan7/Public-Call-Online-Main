@@ -42,53 +42,54 @@ class ProfileProvider with ChangeNotifier {
   String? get countryCode => _countryCode;
   bool get isCountryChanged => _isCountryChanged;
 
-  void setCountryID({int? countryID,String? selectedCountryCode ,bool isUpdate = true, bool isReload = false}) {
-    if(isReload){
+  void setCountryID(
+      {int? countryID,
+      String? selectedCountryCode,
+      bool isUpdate = true,
+      bool isReload = false}) {
+    if (isReload) {
       _selectedCountryID = -1;
-    }else{
+    } else {
       _selectedCountryID = countryID!;
       _countryCode = selectedCountryCode;
       _isCountryChanged = true;
     }
-    if(isUpdate){
+    if (isUpdate) {
       notifyListeners();
     }
   }
 
-
-  void setCityID({int? cityID,bool isUpdate = true, bool isReload = false}) {
-    if(isReload){
+  void setCityID({int? cityID, bool isUpdate = true, bool isReload = false}) {
+    if (isReload) {
       _selectedCityID = -1;
-    }else{
+    } else {
       _selectedCityID = cityID!;
     }
-    if(isUpdate){
+    if (isUpdate) {
       notifyListeners();
     }
   }
-
 
   void resetCountryID() {
     _selectedCountryID = -1;
     notifyListeners();
-
   }
+
   void resetCityID() {
     _selectedCityID = -1;
     notifyListeners();
-
   }
 
   Future<void> getCountryList() async {
-    if(_countryList == null ) {
+    if (_countryList == null) {
       _isLoading = true;
 
       ApiResponseModel apiResponse = await profileRepo!.getCountryList();
-      if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+      if (apiResponse.response != null &&
+          apiResponse.response!.statusCode == 200) {
         _countryList = [];
-         apiResponse.response.data.forEach((country) => _countryList!.add(CountryModel.fromJson(country)));
-
-
+        apiResponse.response.data.forEach(
+            (country) => _countryList!.add(CountryModel.fromJson(country)));
       } else {
         ApiCheckerHelper.checkApi(apiResponse);
       }
@@ -98,28 +99,30 @@ class ProfileProvider with ChangeNotifier {
   }
 
   Future<void> getCityList(int? countryID) async {
-      _isLoading = true;
-      ApiResponseModel apiResponse = await profileRepo!.getCityList(countryID);
-      if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-        _cityList = [];
-        apiResponse.response.data.forEach((city) => _cityList!.add(CityModel.fromJson(city)));
-        print('=====CITY ===$_cityList');
-      } else {
-        ApiCheckerHelper.checkApi(apiResponse);
-      }
-      _isLoading = false;
-      notifyListeners();
-
+    _isLoading = true;
+    ApiResponseModel apiResponse = await profileRepo!.getCityList(countryID);
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
+      _cityList = [];
+      apiResponse.response.data
+          .forEach((city) => _cityList!.add(CityModel.fromJson(city)));
+      print('=====CITY ===$_cityList');
+    } else {
+      ApiCheckerHelper.checkApi(apiResponse);
+    }
+    _isLoading = false;
+    notifyListeners();
   }
 
   Future<void> getUserInfo(bool reload, {bool isUpdate = true}) async {
-    if(reload){
+    if (reload) {
       _userInfoModel = null;
     }
 
-    if(_userInfoModel == null){
+    if (_userInfoModel == null) {
       ApiResponseModel apiResponse = await profileRepo!.getUserInfo();
-      if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+      if (apiResponse.response != null &&
+          apiResponse.response!.statusCode == 200) {
         _userInfoModel = UserInfoModel.fromJson(apiResponse.response!.data);
         _loggedInUserId = _userInfoModel!.id!;
         _isFreelancer = _userInfoModel!.userType == 'freelancer';
@@ -128,31 +131,29 @@ class ProfileProvider with ChangeNotifier {
       }
     }
 
-    if(isUpdate){
+    if (isUpdate) {
       notifyListeners();
     }
-
   }
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  Future<ResponseModel> updateUserInfo(UserInfoModel updateUserModel, File? file, String token) async {
+  Future<ResponseModel> updateUserInfo(
+      UserInfoModel updateUserModel, File? file, String token) async {
     _isLoading = true;
     notifyListeners();
     ResponseModel responseModel;
 
-    http.StreamedResponse response = await profileRepo!.updateProfile(updateUserModel, file, token);
+    http.StreamedResponse response =
+        await profileRepo!.updateProfile(updateUserModel, file, token);
     Map map = jsonDecode(await response.stream.bytesToString());
     print("====REESPONSE===$map");
 
     if (response.statusCode == 200) {
-
-
       String? message = map["message"];
       _userInfoModel = updateUserModel;
       responseModel = ResponseModel(true, message);
-
     } else {
       String errorMessage = getErrorMessage(map);
 
@@ -164,20 +165,19 @@ class ProfileProvider with ChangeNotifier {
     return responseModel;
   }
 
-  Future<ResponseModel> updateUserPassword(String password,String confirmPassword, String token) async {
+  Future<ResponseModel> updateUserPassword(
+      String password, String confirmPassword, String token) async {
     _isLoading = true;
     notifyListeners();
     ResponseModel responseModel;
 
-    http.StreamedResponse response = await profileRepo!.updatePassword( password,confirmPassword, token);
+    http.StreamedResponse response =
+        await profileRepo!.updatePassword(password, confirmPassword, token);
     Map map = jsonDecode(await response.stream.bytesToString());
 
     if (response.statusCode == 200) {
-
-
       String? message = map["message"];
       responseModel = ResponseModel(true, message);
-
     } else {
       String errorMessage = getErrorMessage(map);
 
@@ -188,5 +188,4 @@ class ProfileProvider with ChangeNotifier {
     notifyListeners();
     return responseModel;
   }
-
 }

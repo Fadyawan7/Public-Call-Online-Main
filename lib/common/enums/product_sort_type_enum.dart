@@ -1,4 +1,4 @@
-enum ProductSortType{
+enum ProductSortType {
   defaultType,
   popular,
   priceHighToLow,

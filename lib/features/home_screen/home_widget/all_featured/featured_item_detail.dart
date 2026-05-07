@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/widgets/custom_app_bar_widget.dart';
+import 'package:flutter_restaurant/common/widgets/custom_button_widget.dart';
 import 'package:flutter_restaurant/common/widgets/not_logged_in_widget.dart';
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/features/freelancer/domain/models/freelancer_model.dart';
@@ -331,155 +332,168 @@ class _FeaturedItemsDetailState extends State<FeaturedItemsDetail> {
 
                   const SizedBox(height: 16),
 
-     portfolioLength == 0  ? SizedBox.shrink():            Container(
-                    height: 250,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.grey.shade300),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: Stack(
-                        children: [
-                          PageView.builder(
-                            controller: _portfolioPageController,
-                            itemCount: portfolioLength,
-                            onPageChanged: (page) {
-                              if (!mounted) return;
-                              setState(() {
-                                _portfolioPageIndex = page;
-                              });
-                            },
-                            itemBuilder: (context, index) {
-                              final portfolioItem =
-                                  freelancer?.portfolio?[index];
-                              final imageUrl = portfolioItem?.image_url ?? '';
-
-                              return GestureDetector(
-                                onTap: () => _openPortfolioImage(imageUrl),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: Stack(
-                                    fit: StackFit.expand,
-                                    children: [
-                                      ImageFiltered(
-                                        imageFilter: ImageFilter.blur(
-                                          sigmaX: 16,
-                                          sigmaY: 16,
-                                        ),
-                                        child: Image.network(
-                                          imageUrl,
-                                          fit: BoxFit.cover,
-                                          height: 250,
-                                          width: double.infinity,
-                                          loadingBuilder: (context, child,
-                                              loadingProgress) {
-                                            if (loadingProgress == null) {
-                                              return child;
-                                            }
-                                            return Container(
-                                              color: Colors.grey.shade200,
-                                            );
-                                          },
-                                          errorBuilder:
-                                              (context, error, stackTrace) =>
-                                                  Container(
-                                            color: Colors.grey.shade200,
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            begin: Alignment.topCenter,
-                                            end: Alignment.bottomCenter,
-                                            colors: [
-                                              Colors.black.withOpacity(0.18),
-                                              Colors.black.withOpacity(0.10),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      Center(
-                                        child: Image.network(
-                                          imageUrl,
-                                          fit: BoxFit.contain,
-                                          height: 250,
-                                          width: double.infinity,
-                                          loadingBuilder: (context, child,
-                                              loadingProgress) {
-                                            if (loadingProgress == null) {
-                                              return child;
-                                            }
-                                            return const SizedBox.shrink();
-                                          },
-                                          errorBuilder:
-                                              (context, error, stackTrace) =>
-                                                  const Icon(Icons.error),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
+                  portfolioLength == 0
+                      ? SizedBox.shrink()
+                      : Container(
+                          height: 250,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: Colors.grey.shade300),
                           ),
-                          if (portfolioLength > 1)
-                            Positioned(
-                              left: 8,
-                              top: 0,
-                              bottom: 0,
-                              child: Center(
-                                child: CircleAvatar(
-                                  backgroundColor:
-                                      Colors.black.withOpacity(0.35),
-                                  child: IconButton(
-                                    icon: const Icon(Icons.arrow_back_ios_new,
-                                        color: Colors.white, size: 18),
-                                    onPressed: _portfolioPageIndex > 0
-                                        ? () {
-                                            _portfolioPageController
-                                                .previousPage(
-                                              duration: const Duration(
-                                                  milliseconds: 250),
-                                              curve: Curves.easeInOut,
-                                            );
-                                          }
-                                        : null,
-                                  ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: Stack(
+                              children: [
+                                PageView.builder(
+                                  controller: _portfolioPageController,
+                                  itemCount: portfolioLength,
+                                  onPageChanged: (page) {
+                                    if (!mounted) return;
+                                    setState(() {
+                                      _portfolioPageIndex = page;
+                                    });
+                                  },
+                                  itemBuilder: (context, index) {
+                                    final portfolioItem =
+                                        freelancer?.portfolio?[index];
+                                    final imageUrl =
+                                        portfolioItem?.image_url ?? '';
+
+                                    return GestureDetector(
+                                      onTap: () =>
+                                          _openPortfolioImage(imageUrl),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(12),
+                                        child: Stack(
+                                          fit: StackFit.expand,
+                                          children: [
+                                            ImageFiltered(
+                                              imageFilter: ImageFilter.blur(
+                                                sigmaX: 16,
+                                                sigmaY: 16,
+                                              ),
+                                              child: Image.network(
+                                                imageUrl,
+                                                fit: BoxFit.cover,
+                                                height: 250,
+                                                width: double.infinity,
+                                                loadingBuilder: (context, child,
+                                                    loadingProgress) {
+                                                  if (loadingProgress == null) {
+                                                    return child;
+                                                  }
+                                                  return Container(
+                                                    color: Colors.grey.shade200,
+                                                  );
+                                                },
+                                                errorBuilder: (context, error,
+                                                        stackTrace) =>
+                                                    Container(
+                                                  color: Colors.grey.shade200,
+                                                ),
+                                              ),
+                                            ),
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                gradient: LinearGradient(
+                                                  begin: Alignment.topCenter,
+                                                  end: Alignment.bottomCenter,
+                                                  colors: [
+                                                    Colors.black
+                                                        .withOpacity(0.18),
+                                                    Colors.black
+                                                        .withOpacity(0.10),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            Center(
+                                              child: Image.network(
+                                                imageUrl,
+                                                fit: BoxFit.contain,
+                                                height: 250,
+                                                width: double.infinity,
+                                                loadingBuilder: (context, child,
+                                                    loadingProgress) {
+                                                  if (loadingProgress == null) {
+                                                    return child;
+                                                  }
+                                                  return const SizedBox
+                                                      .shrink();
+                                                },
+                                                errorBuilder: (context, error,
+                                                        stackTrace) =>
+                                                    const Icon(Icons.error),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 ),
-                              ),
-                            ),
-                          if (portfolioLength > 1)
-                            Positioned(
-                              right: 8,
-                              top: 0,
-                              bottom: 0,
-                              child: Center(
-                                child: CircleAvatar(
-                                  backgroundColor:
-                                      Colors.black.withOpacity(0.35),
-                                  child: IconButton(
-                                    icon: const Icon(Icons.arrow_forward_ios,
-                                        color: Colors.white, size: 18),
-                                    onPressed: _portfolioPageIndex <
-                                            portfolioLength - 1
-                                        ? () {
-                                            _portfolioPageController.nextPage(
-                                              duration: const Duration(
-                                                  milliseconds: 250),
-                                              curve: Curves.easeInOut,
-                                            );
-                                          }
-                                        : null,
+                                if (portfolioLength > 1)
+                                  Positioned(
+                                    left: 8,
+                                    top: 0,
+                                    bottom: 0,
+                                    child: Center(
+                                      child: CircleAvatar(
+                                        backgroundColor:
+                                            Colors.black.withOpacity(0.35),
+                                        child: IconButton(
+                                          icon: const Icon(
+                                              Icons.arrow_back_ios_new,
+                                              color: Colors.white,
+                                              size: 18),
+                                          onPressed: _portfolioPageIndex > 0
+                                              ? () {
+                                                  _portfolioPageController
+                                                      .previousPage(
+                                                    duration: const Duration(
+                                                        milliseconds: 250),
+                                                    curve: Curves.easeInOut,
+                                                  );
+                                                }
+                                              : null,
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
+                                if (portfolioLength > 1)
+                                  Positioned(
+                                    right: 8,
+                                    top: 0,
+                                    bottom: 0,
+                                    child: Center(
+                                      child: CircleAvatar(
+                                        backgroundColor:
+                                            Colors.black.withOpacity(0.35),
+                                        child: IconButton(
+                                          icon: const Icon(
+                                              Icons.arrow_forward_ios,
+                                              color: Colors.white,
+                                              size: 18),
+                                          onPressed: _portfolioPageIndex <
+                                                  portfolioLength - 1
+                                              ? () {
+                                                  _portfolioPageController
+                                                      .nextPage(
+                                                    duration: const Duration(
+                                                        milliseconds: 250),
+                                                    curve: Curves.easeInOut,
+                                                  );
+                                                }
+                                              : null,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                              ],
                             ),
-                        ],
-                      ),
-                    ),
-                  ),
+                          ),
+                        ),
+                  SizedBox(height: 10),
                   // --- Reviews ---
                   Text('Reviews (${freelancer?.reviews?.length ?? 0})',
                       style: const TextStyle(
@@ -508,6 +522,7 @@ class _FeaturedItemsDetailState extends State<FeaturedItemsDetail> {
                                   review.giverImage ??
                                       'https://publiccallonline.com/assets/admin/img/avatars/no-avatar.png',
                                 ),
+                                onBackgroundImageError: (_, __) {},
                               ),
                               const SizedBox(width: 12),
                               Expanded(
@@ -553,35 +568,29 @@ class _FeaturedItemsDetailState extends State<FeaturedItemsDetail> {
                     ),
 
                   const SizedBox(height: 24),
+                  CustomButtonWidget(
+                    width: double.infinity,
+                    btnTxt: "Book Now",
+                    textStyle: const TextStyle(
+                        fontSize: 13,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold),
+                    onTap: () {
+                      RouterHelper.getBookingDateSlotRoute(
+                        freelancer?.id.toString() ?? '',
+                      );
+                      Navigator.of(context).pop();
+                      // ScaffoldMessenger.of(context).showSnackBar(
+                      //   const SnackBar(
+                      //     content: Text('Booking feature coming soon!'),
+                      //   ),
+                      // );
+                    },
+                    height: 48,
+                    borderRadius: 10,
+                  )
 
                   // --- Book Now Button ---
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).primaryColor,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: const Text(
-                        'Book Now',
-                        style: TextStyle(fontSize: 16, color: Colors.white),
-                      ),
-                      onPressed: () {
-                        RouterHelper.getBookingDateSlotRoute(
-                          freelancer?.id.toString() ?? '',
-                        );
-                        Navigator.of(context).pop();
-                        // ScaffoldMessenger.of(context).showSnackBar(
-                        //   const SnackBar(
-                        //     content: Text('Booking feature coming soon!'),
-                        //   ),
-                        // );
-                      },
-                    ),
-                  )
                 ],
               ),
             )

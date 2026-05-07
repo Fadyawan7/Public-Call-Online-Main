@@ -7,7 +7,14 @@ class ChatModel {
   String? createdAt;
   String? updatedAt;
 
-  ChatModel({this.id,this.userId,this.userImage,this.userName,this.lastMessage,this.createdAt,this.updatedAt});
+  ChatModel(
+      {this.id,
+      this.userId,
+      this.userImage,
+      this.userName,
+      this.lastMessage,
+      this.createdAt,
+      this.updatedAt});
 
   ChatModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -17,7 +24,6 @@ class ChatModel {
     lastMessage = json['last_message'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-
   }
 
   Map<String, dynamic> toJson() {
@@ -33,4 +39,3 @@ class ChatModel {
     return data;
   }
 }
-

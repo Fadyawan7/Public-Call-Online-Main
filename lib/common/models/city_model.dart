@@ -3,12 +3,11 @@ class CityModel {
   String? _countryId;
   String? _cityName;
 
-  CityModel(
-      {int? id,
-        String? countryName,
-        String? countryId,
-
-      }) {
+  CityModel({
+    int? id,
+    String? countryName,
+    String? countryId,
+  }) {
     _id = id;
     _cityName = cityName;
     _countryId = countryId;

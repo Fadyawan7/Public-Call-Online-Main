@@ -8,9 +8,9 @@ import 'package:flutter_restaurant/helper/api_checker_helper.dart';
 
 class HomeProvider with ChangeNotifier {
   final LocationRepo? locationRepo;
-    final HomeScreenRepo? repo;
+  final HomeScreenRepo? repo;
 
-  HomeProvider({this.locationRepo,this.repo});
+  HomeProvider({this.locationRepo, this.repo});
 
   List<String> _bannerList = [];
   List<String> get bannerList => _bannerList;
@@ -18,13 +18,11 @@ class HomeProvider with ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-
   List<FreelancerCategoryResponse> _freelancers = [];
   List<FreelancerCategoryResponse> get freelancers => _freelancers;
 
   List<FreelancerCategoryResponse> _allFreelancers = [];
   List<FreelancerCategoryResponse> get allFreelancers => _allFreelancers;
-
 
   Future<void> getBanners() async {
     _isLoading = true;
@@ -61,55 +59,54 @@ class HomeProvider with ChangeNotifier {
 
   ///....................  get freelance category//////////////////
   ///
-Future<void> fetchFreelancersByCategory(int categoryId) async {
-  _isLoading = true;
-  notifyListeners();
+  Future<void> fetchFreelancersByCategory(int categoryId) async {
+    _isLoading = true;
+    notifyListeners();
 
-  try {
-    ApiResponseModel response = await repo!.freelanceCategory(categoryId);
+    try {
+      ApiResponseModel response = await repo!
+          .freelanceCategory(int.tryParse(categoryId.toString())?.toDouble());
 
-    if (response.response?.statusCode == 200 &&
-        response.response?.data != null) {
-      final data = response.response!.data['data'] as List<dynamic>;
-      _freelancers = data
-          .map((json) => FreelancerCategoryResponse.fromJson(json))
-          .toList();
-    } else {
+      if (response.response?.statusCode == 200 &&
+          response.response?.data != null) {
+        final data = response.response!.data['data'] as List<dynamic>;
+        _freelancers = data
+            .map((json) => FreelancerCategoryResponse.fromJson(json))
+            .toList();
+      } else {
+        _freelancers = [];
+      }
+    } catch (e) {
       _freelancers = [];
+      debugPrint("❌ Error in fetchFreelancersByCategory: $e");
     }
-  } catch (e) {
-    _freelancers = [];
-    debugPrint("❌ Error in fetchFreelancersByCategory: $e");
+
+    _isLoading = false;
+    notifyListeners();
   }
 
-  _isLoading = false;
-  notifyListeners();
-}
+  Future<void> freelanceAllCategory() async {
+    _isLoading = true;
+    notifyListeners();
 
+    try {
+      ApiResponseModel response = await repo!.freelanceAllCategory();
 
-Future<void> freelanceAllCategory() async {
-  _isLoading = true;
-  notifyListeners();
-
-  try {
-    ApiResponseModel response = await repo!.freelanceAllCategory();
-
-    if (response.response?.statusCode == 200 &&
-        response.response?.data != null) {
-      final data = response.response!.data['data'] as List<dynamic>;
-      _allFreelancers = data
-          .map((json) => FreelancerCategoryResponse.fromJson(json))
-          .toList();
-    } else {
+      if (response.response?.statusCode == 200 &&
+          response.response?.data != null) {
+        final data = response.response!.data['data'] as List<dynamic>;
+        _allFreelancers = data
+            .map((json) => FreelancerCategoryResponse.fromJson(json))
+            .toList();
+      } else {
+        _allFreelancers = [];
+      }
+    } catch (e) {
       _allFreelancers = [];
+      debugPrint("❌ Error in fetchFreelancersByCategory: $e");
     }
-  } catch (e) {
-    _allFreelancers = [];
-    debugPrint("❌ Error in fetchFreelancersByCategory: $e");
+
+    _isLoading = false;
+    notifyListeners();
   }
-
-  _isLoading = false;
-  notifyListeners();
-}
-
 }

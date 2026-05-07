@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/features/chat/domain/models/conversation_model.dart';
 import 'package:flutter_restaurant/features/chat/providers/chat_provider.dart';
 import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
+import 'package:flutter_restaurant/helper/date_converter_helper.dart';
 import 'package:flutter_restaurant/main.dart';
 import 'package:flutter_restaurant/utill/app_constants.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
@@ -12,7 +13,7 @@ import 'package:provider/provider.dart';
 class MessageBubbleWidget extends StatefulWidget {
   final ConversationModel? messages;
   final bool? isMe;
-  const MessageBubbleWidget({super.key, this.messages, this.isMe });
+  const MessageBubbleWidget({super.key, this.messages, this.isMe});
 
   @override
   State<MessageBubbleWidget> createState() => _MessageBubbleWidgetState();
@@ -20,7 +21,8 @@ class MessageBubbleWidget extends StatefulWidget {
 
 class _MessageBubbleWidgetState extends State<MessageBubbleWidget> {
   bool _initialFetchDone = false;
-  final profileProvider = Provider.of<ProfileProvider>(Get.context!, listen: false);
+  final profileProvider =
+      Provider.of<ProfileProvider>(Get.context!, listen: false);
 
   Future<void> _showImagePreview(String imageUrl) async {
     await showDialog(
@@ -69,207 +71,100 @@ class _MessageBubbleWidgetState extends State<MessageBubbleWidget> {
       _initialFetchDone = true;
     }
   }
+
   @override
   Widget build(BuildContext context) {
-
     return Consumer<ChatProvider>(
       builder: (context, chatProvider, child) {
         final userId = profileProvider.loggedInUserId;
         final senderId = widget.messages?.senderId;
-      return userId != senderId
-            ? Container(
-                decoration: BoxDecoration(
-                  borderRadius:
-                      BorderRadius.circular(Dimensions.paddingSizeSmall),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: Dimensions.paddingSizeSmall),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Flexible(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                if (widget.messages!.message != null && widget.messages!.message!.isNotEmpty)
-                                  Flexible(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Theme.of(context).hintColor.withOpacity(0.1),
-                                        borderRadius: const BorderRadius.only(
-                                          topRight: Radius.circular(10),
-                                          bottomRight: Radius.circular(10),
-                                          bottomLeft: Radius.circular(10),
-                                        ),
-                                      ),
-                                      child: Padding(
-                                        padding: EdgeInsets.all(
-                                            widget.messages!.message != null
-                                                ? Dimensions.paddingSizeDefault
-                                                : 0),
-                                        child: Text(
-                                            widget.messages!.message ?? '',style: Theme.of(context).textTheme.displayMedium!.copyWith(fontSize: Dimensions.fontSizeLarge),),
-                                      ),
-                                    ),
-                                  ),
-                                widget.messages!.attachment != null
-                                    ? const SizedBox(
-                                    height: Dimensions.paddingSizeSmall)
-                                    : const SizedBox(),
-                                widget.messages!.attachment != null
-                                    ? Directionality(
-                                  textDirection: TextDirection.rtl,
-                                  child: GestureDetector(
-                                  onTap: () => _showImagePreview(
-                                    '${AppConstants.baseUrl}/storage/${widget.messages!.attachment!.filePath!}',
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius:
-                                    BorderRadius
-                                      .circular(5),
-                                    child: FadeInImage
-                                      .assetNetwork(
-                                    placeholder: Images
-                                      .placeholderImage,
-                                    height: 200,
-                                    width: 200,
-                                    fit: BoxFit.cover,
-                                    image: '${AppConstants.baseUrl}/storage/${widget.messages!
-                                      .attachment!.filePath!}',
-                                    imageErrorBuilder: (c,
-                                      o, s) =>
-                                      Image.asset(
-                                        Images
-                                          .placeholderImage,
-                                        height: 100,
-                                        width: 100,
-                                        fit: BoxFit
-                                          .cover),
-                                    ),
-                                  ),
-                                  ),
-                                )
-                                    : const SizedBox(),
+        final bool isMe = userId == senderId;
+        final String? attachmentPath = widget.messages?.attachment?.filePath;
 
-                              ],
-                            ),
-                          ),
-                        ],
+        return Align(
+          alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+          child: Container(
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width * 0.78,
+            ),
+            margin: EdgeInsets.only(
+              left: isMe ? 54 : 4,
+              right: isMe ? 4 : 54,
+              top: 3,
+              bottom: 3,
+            ),
+            padding: const EdgeInsets.fromLTRB(8, 6, 8, 5),
+            decoration: BoxDecoration(
+              color: isMe ? const Color(0xFFD9FDD3) : Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(isMe ? 12 : 3),
+                topRight: Radius.circular(isMe ? 3 : 12),
+                bottomLeft: const Radius.circular(12),
+                bottomRight: const Radius.circular(12),
+              ),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x14000000),
+                  blurRadius: 1,
+                  offset: Offset(0, 1),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment:
+                  isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (widget.messages?.message != null &&
+                    widget.messages!.message!.isNotEmpty)
+                  Text(
+                    widget.messages!.message ?? '',
+                    style: rubikRegular.copyWith(
+                      color: const Color(0xFF111B21),
+                      fontSize: Dimensions.fontSizeDefault,
+                      height: 1.35,
+                    ),
+                  ),
+                if (attachmentPath != null) ...[
+                  if (widget.messages?.message != null &&
+                      widget.messages!.message!.isNotEmpty)
+                    const SizedBox(height: 6),
+                  GestureDetector(
+                    onTap: () => _showImagePreview(
+                      '${AppConstants.baseUrl}/storage/$attachmentPath',
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: FadeInImage.assetNetwork(
+                        placeholder: Images.placeholderImage,
+                        height: 190,
+                        width: 190,
+                        fit: BoxFit.cover,
+                        image:
+                            '${AppConstants.baseUrl}/storage/$attachmentPath',
+                        imageErrorBuilder: (c, o, s) => Image.asset(
+                          Images.placeholderImage,
+                          height: 100,
+                          width: 100,
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                      const SizedBox(height: Dimensions.paddingSizeSmall),
-                      const SizedBox(),
-                      Text(
-                        widget.messages!.createdAt!.toString(),
-                        style: rubikRegular.copyWith(
-                            color: Theme.of(context).hintColor,
-                            fontSize: Dimensions.fontSizeDefault),
-                      ),
-                    ],
+                    ),
+                  ),
+                ],
+                const SizedBox(height: 2),
+                Text(
+                  DateConverterHelper.chatTimeOnly(
+                      widget.messages?.createdAt, context),
+                  style: rubikRegular.copyWith(
+                    color: const Color(0xFF667781),
+                    fontSize: Dimensions.fontSizeSmall,
                   ),
                 ),
-              )
-            : Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: Dimensions.paddingSizeDefault),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius:
-                        BorderRadius.circular(Dimensions.paddingSizeSmall),
-                    //color: Colors.red
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Flexible(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                if (widget.messages!.message != null && widget.messages!.message!.isNotEmpty)
-                                  Flexible(
-                                    child: Container(
-                                      decoration: const BoxDecoration(
-                                        color: Color(0xFFD8FDD2),
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(10),
-                                          bottomRight: Radius.circular(10),
-                                          bottomLeft: Radius.circular(10),
-                                        ),
-                                      ),
-                                      child: Padding(
-                                        padding: EdgeInsets.all(
-                                            widget.messages!.message != null
-                                                ? Dimensions
-                                                    .paddingSizeDefault
-                                                : 0),
-                                        child: Text(
-                                            widget.messages!.message ?? '',style: Theme.of(context).textTheme.displayMedium!.copyWith(fontSize: Dimensions.fontSizeLarge),),
-                                      ),
-                                    ),
-                                  ),
-                                widget.messages!.attachment != null
-                                    ? const SizedBox(
-                                        height: Dimensions.paddingSizeSmall)
-                                    : const SizedBox(),
-                                widget.messages!.attachment != null
-                                    ? Directionality(
-                                        textDirection: TextDirection.rtl,
-                                    child: GestureDetector(
-                                      onTap: () => _showImagePreview(
-                                      '${AppConstants.baseUrl}/storage/${widget.messages!.attachment!.filePath!}',
-                                      ),
-                                      child: ClipRRect(
-                                      borderRadius:
-                                      BorderRadius
-                                        .circular(5),
-                                      child: FadeInImage
-                                        .assetNetwork(
-                                        placeholder: Images
-                                          .placeholderImage,
-                                        height: 200,
-                                        width: 200,
-                                        fit: BoxFit.cover,
-                                        image: '${AppConstants.baseUrl}/storage/${widget.messages!
-                                          .attachment!.filePath!}',
-                                        imageErrorBuilder: (c,
-                                          o, s) =>
-                                          Image.asset(
-                                            Images
-                                              .placeholderImage,
-                                            height: 100,
-                                            width: 100,
-                                            fit: BoxFit
-                                              .cover),
-                                      ),
-                                      ),
-                                        ),
-                                      )
-                                    : const SizedBox(),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: Dimensions.paddingSizeSmall),
-                      Text(
-                        widget.messages!.createdAt!.toString(),
-                        style: rubikRegular.copyWith(
-                            color: Theme.of(context).hintColor,
-                            fontSize: Dimensions.fontSizeDefault),
-                      ),
-                    ],
-                  ),
-                ),
-              );
+              ],
+            ),
+          ),
+        );
       },
     );
   }

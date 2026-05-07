@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_restaurant/common/widgets/gradient_button_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_outlined_button_widget.dart';
 import 'package:flutter_restaurant/common/widgets/list_tile_widget.dart';
 import 'package:flutter_restaurant/common/widgets/rate_review_widget.dart';
@@ -213,7 +214,7 @@ class _FreelancerDetailsBottomSheetState
                 FreelancerBasicInfo(freelancer: widget.freelancer),
                 SizedBox(
                   height: 60,
-                  child: Padding( 
+                  child: Padding(
                     padding: const EdgeInsets.only(
                       left: Dimensions.paddingSizeDefault,
                     ),
@@ -388,25 +389,20 @@ class _FreelancerDetailsBottomSheetState
                                                 Dimensions.paddingSizeDefault,
                                           ),
                                         ),
-                                        TextButton(
-                                          onPressed: () => RouterHelper
+                                        GradientButtonWidget(
+                                          onTap: () => RouterHelper
                                               .getRateReviewListRoute(
                                             widget.freelancer.id.toString(),
                                           ),
-                                          style: TextButton.styleFrom(
-                                            minimumSize: Size.zero,
-                                            tapTargetSize: MaterialTapTargetSize
-                                                .shrinkWrap,
-                                            padding: EdgeInsets.zero,
-                                            foregroundColor: Colors.transparent,
-                                          ),
+                                          height: 28,
+                                          borderRadius: 8,
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 4),
                                           child: Text(
-                                            getTranslated(
-                                                    'view_all', context) ??
+                                            getTranslated('view_all', context) ??
                                                 'View All',
                                             style: rubikMedium.copyWith(
-                                              color: Theme.of(context)
-                                                  .primaryColor,
+                                              color: Colors.white,
                                             ),
                                           ),
                                         ),

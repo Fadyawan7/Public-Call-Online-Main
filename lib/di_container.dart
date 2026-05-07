@@ -98,7 +98,10 @@ Future<void> init() async {
   sl.registerLazySingleton(() => AuthProvider(authRepo: sl()));
   sl.registerLazySingleton(
       () => LocationProvider(sharedPreferences: sl(), locationRepo: sl()));
-  sl.registerLazySingleton(() => HomeProvider(locationRepo: sl(),repo: HomeScreenRepo(dioClient: sl()),));
+  sl.registerLazySingleton(() => HomeProvider(
+        locationRepo: sl(),
+        repo: HomeScreenRepo(dioClient: sl()),
+      ));
 
   sl.registerLazySingleton(() => ProfileProvider(profileRepo: sl()));
   sl.registerLazySingleton(() => NotificationProvider(notificationRepo: sl()));

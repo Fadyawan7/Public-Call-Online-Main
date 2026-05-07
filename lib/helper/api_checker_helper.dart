@@ -9,7 +9,8 @@ import 'package:flutter_restaurant/helper/custom_snackbar_helper.dart';
 import 'package:provider/provider.dart';
 
 class ApiCheckerHelper {
-  static void checkApi(ApiResponseModel apiResponse,{bool firebaseResponse = false} ) {
+  static void checkApi(ApiResponseModel apiResponse,
+      {bool firebaseResponse = false}) {
     ErrorResponseModel error = getError(apiResponse);
     final Errors firstError = (error.errors != null && error.errors!.isNotEmpty)
         ? error.errors!.first
@@ -21,14 +22,19 @@ class ApiCheckerHelper {
           );
 
     if ((firstError.code == '401' || firstError.code == 'auth-001') &&
-        ModalRoute.of(Get.context!)?.settings.name != RouterHelper.loginScreen) {
-      Provider.of<AuthProvider>(Get.context!, listen: false).clearSharedData(Get.context!).then((value) {
-        if(Get.context != null && ModalRoute.of(Get.context!)?.settings.name != RouterHelper.loginScreen) {
-          RouterHelper.getLoginRoute(action: RouteAction.pushNamedAndRemoveUntil);
+        ModalRoute.of(Get.context!)?.settings.name !=
+            RouterHelper.loginScreen) {
+      Provider.of<AuthProvider>(Get.context!, listen: false)
+          .clearSharedData(Get.context!)
+          .then((value) {
+        if (Get.context != null &&
+            ModalRoute.of(Get.context!)?.settings.name !=
+                RouterHelper.loginScreen) {
+          RouterHelper.getLoginRoute(
+              action: RouteAction.pushNamedAndRemoveUntil);
         }
       });
-
-    }else {
+    } else {
       final String message = firebaseResponse
           ? (firstError.message?.replaceAll('_', ' ').toCapitalized() ??
               'Something went wrong')
@@ -37,16 +43,16 @@ class ApiCheckerHelper {
     }
   }
 
-  static ErrorResponseModel getError(ApiResponseModel apiResponse){
+  static ErrorResponseModel getError(ApiResponseModel apiResponse) {
     ErrorResponseModel error;
 
-    try{
+    try {
       error = ErrorResponseModel.fromJson(apiResponse);
-    }catch(e){
-      if(apiResponse.error is String){
-        error = ErrorResponseModel(errors: [Errors(code: '', message: apiResponse.error.toString())]);
-
-      }else{
+    } catch (e) {
+      if (apiResponse.error is String) {
+        error = ErrorResponseModel(
+            errors: [Errors(code: '', message: apiResponse.error.toString())]);
+      } else {
         error = ErrorResponseModel.fromJson(apiResponse.error);
       }
     }

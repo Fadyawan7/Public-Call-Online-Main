@@ -4,7 +4,7 @@ class UserLogData {
   String? email;
   String? password;
 
-  UserLogData({this.countryCode, this.phoneNumber,this.email, this.password});
+  UserLogData({this.countryCode, this.phoneNumber, this.email, this.password});
 
   UserLogData.fromJson(Map<String, dynamic> json) {
     countryCode = json['country_code'];

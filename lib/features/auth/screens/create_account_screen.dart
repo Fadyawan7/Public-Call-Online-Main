@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/models/response_model.dart';
 import 'package:flutter_restaurant/common/widgets/custom_app_bar_widget.dart';
+import 'package:flutter_restaurant/common/widgets/custom_button_widget.dart';
+import 'package:flutter_restaurant/common/widgets/custom_text_field_widget.dart';
 import 'package:flutter_restaurant/features/auth/domain/models/signup_model.dart';
 import 'package:flutter_restaurant/features/auth/domain/models/user_log_data.dart';
+import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
+import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
+import 'package:flutter_restaurant/helper/custom_snackbar_helper.dart';
 import 'package:flutter_restaurant/helper/email_checker_helper.dart';
 import 'package:flutter_restaurant/helper/profile_completed_helper.dart';
+import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
-import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
-import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
 import 'package:flutter_restaurant/utill/color_resources.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
-import 'package:flutter_restaurant/helper/router_helper.dart';
-import 'package:flutter_restaurant/common/widgets/custom_button_widget.dart';
-import 'package:flutter_restaurant/helper/custom_snackbar_helper.dart';
-import 'package:flutter_restaurant/common/widgets/custom_text_field_widget.dart';
 import 'package:provider/provider.dart';
 
 class CreateAccountScreen extends StatefulWidget {
@@ -35,7 +35,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final TextEditingController _numberController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   String? _countryDialCode;
 
   @override
@@ -47,44 +48,59 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    final config =  Provider.of<SplashProvider>(context, listen: false).configModel;
-    ProfileProvider profileProvider =  Provider.of<ProfileProvider>(context, listen: false);
+    final config =
+        Provider.of<SplashProvider>(context, listen: false).configModel;
+    ProfileProvider profileProvider =
+        Provider.of<ProfileProvider>(context, listen: false);
 
     return Scaffold(
-      appBar:CustomAppBarWidget(
-        titleColor: Colors.white,
+      appBar: CustomAppBarWidget(
+        titleColor: Theme.of(context).colorScheme.primary,
         title: getTranslated('create_account', context)!,
         isBackButtonExist: Navigator.canPop(context),
-        onBackPressed: ()=> Navigator.pop(context),
+        onBackPressed: () => Navigator.pop(context),
       ),
       body: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-
         child: Consumer<AuthProvider>(
           builder: (context, authProvider, child) => SafeArea(
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
-
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
                     child: Center(
                       child: Container(
                         width: width > 700 ? 700 : width,
-                        padding: width > 700 ? const EdgeInsets.all(Dimensions.paddingSizeDefault) : null,
-                        decoration: width > 700 ? BoxDecoration(
-                          color: Theme.of(context).canvasColor, borderRadius: BorderRadius.circular(10),
-                          boxShadow: [BoxShadow(color: Theme.of(context).shadowColor, blurRadius: 5, spreadRadius: 1)],
-                        ) : null,
+                        padding: width > 700
+                            ? const EdgeInsets.all(
+                                Dimensions.paddingSizeDefault)
+                            : null,
+                        decoration: width > 700
+                            ? BoxDecoration(
+                                color: Theme.of(context).canvasColor,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Theme.of(context).shadowColor,
+                                      blurRadius: 5,
+                                      spreadRadius: 1)
+                                ],
+                              )
+                            : null,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-
                             // for first name section
                             Text(
                               getTranslated('first_name', context)!,
-                              style: Theme.of(context).textTheme.displayMedium!.copyWith(color: ColorResources.getHintColor(context)),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displayMedium!
+                                  .copyWith(
+                                      color:
+                                          ColorResources.getHintColor(context)),
                             ),
                             const SizedBox(height: Dimensions.paddingSizeSmall),
                             CustomTextFieldWidget(
@@ -99,7 +115,12 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             const SizedBox(height: Dimensions.paddingSizeLarge),
                             Text(
                               getTranslated('email', context)!,
-                              style: Theme.of(context).textTheme.displayMedium!.copyWith(color: ColorResources.getHintColor(context)),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displayMedium!
+                                  .copyWith(
+                                      color:
+                                          ColorResources.getHintColor(context)),
                             ),
                             const SizedBox(height: Dimensions.paddingSizeSmall),
 
@@ -108,16 +129,20 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               isShowBorder: true,
                               controller: _emailController,
                               focusNode: _emailFocus,
-                              nextFocus:  _passwordFocus,
+                              nextFocus: _passwordFocus,
                               inputType: TextInputType.emailAddress,
                             ),
                             const SizedBox(height: Dimensions.paddingSizeLarge),
 
-
                             // for password section
                             Text(
                               getTranslated('password', context)!,
-                              style: Theme.of(context).textTheme.displayMedium!.copyWith(color: ColorResources.getHintColor(context)),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displayMedium!
+                                  .copyWith(
+                                      color:
+                                          ColorResources.getHintColor(context)),
                             ),
                             const SizedBox(height: Dimensions.paddingSizeSmall),
                             CustomTextFieldWidget(
@@ -134,7 +159,12 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             // for confirm password section
                             Text(
                               getTranslated('confirm_password', context)!,
-                              style: Theme.of(context).textTheme.displayMedium!.copyWith(color: ColorResources.getHintColor(context)),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displayMedium!
+                                  .copyWith(
+                                      color:
+                                          ColorResources.getHintColor(context)),
                             ),
                             const SizedBox(height: Dimensions.paddingSizeSmall),
                             CustomTextFieldWidget(
@@ -151,14 +181,21 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                authProvider.registrationErrorMessage!.isNotEmpty
-                                    ? CircleAvatar(backgroundColor: Theme.of(context).primaryColor, radius: 5)
+                                authProvider
+                                        .registrationErrorMessage!.isNotEmpty
+                                    ? CircleAvatar(
+                                        backgroundColor:
+                                            Theme.of(context).primaryColor,
+                                        radius: 5)
                                     : const SizedBox.shrink(),
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: Text(
                                     authProvider.registrationErrorMessage ?? "",
-                                    style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displayMedium!
+                                        .copyWith(
                                           fontSize: Dimensions.fontSizeSmall,
                                           color: Theme.of(context).primaryColor,
                                         ),
@@ -171,88 +208,129 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             const SizedBox(height: 10),
                             !authProvider.isLoading
                                 ? CustomButtonWidget(
-                              btnTxt: getTranslated('signup', context),
-                              onTap: () async {
-                                String firstName = _firstNameController.text.trim();
-                                String number = _numberController.text.trim();
-                                String email = _emailController.text.trim();
-                                String password = _passwordController.text.trim();
-                                String confirmPassword = _confirmPasswordController.text.trim();
+                                    btnTxt: getTranslated('signup', context),
+                                    onTap: () async {
+                                      String firstName =
+                                          _firstNameController.text.trim();
+                                      String number =
+                                          _numberController.text.trim();
+                                      String email =
+                                          _emailController.text.trim();
+                                      String password =
+                                          _passwordController.text.trim();
+                                      String confirmPassword =
+                                          _confirmPasswordController.text
+                                              .trim();
 
-                                if (firstName.isEmpty) {
-                                  showCustomSnackBarHelper(getTranslated('enter_first_name', context));
-                                } else if (email.isEmpty) {
-                                  showCustomSnackBarHelper(getTranslated('enter_email_address', context));
-                                } else if (EmailCheckerHelper.isNotValid(email)) {
-                                  showCustomSnackBarHelper(getTranslated('enter_valid_email', context));
-                                } else if (password.isEmpty) {
-                                  showCustomSnackBarHelper(getTranslated('enter_password', context));
-                                } else if (password.length < 8) {
-                                  showCustomSnackBarHelper(getTranslated('password_should_be', context));
-                                } else if (confirmPassword.isEmpty) {
-                                  showCustomSnackBarHelper(getTranslated('enter_confirm_password', context));
-                                } else if (password != confirmPassword) {
-                                  showCustomSnackBarHelper(getTranslated('password_did_not_match', context));
-                                } else {
-                                  SignUpModel signUpModel = SignUpModel(
-                                    name: firstName,
-                                    email: email,
-                                    password: password,
-                                    phone: '$_countryDialCode$number',
-                                  );
+                                      if (firstName.isEmpty) {
+                                        showCustomSnackBarHelper(getTranslated(
+                                            'enter_first_name', context));
+                                      } else if (email.isEmpty) {
+                                        showCustomSnackBarHelper(getTranslated(
+                                            'enter_email_address', context));
+                                      } else if (EmailCheckerHelper.isNotValid(
+                                          email)) {
+                                        showCustomSnackBarHelper(getTranslated(
+                                            'enter_valid_email', context));
+                                      } else if (password.isEmpty) {
+                                        showCustomSnackBarHelper(getTranslated(
+                                            'enter_password', context));
+                                      } else if (password.length < 8) {
+                                        showCustomSnackBarHelper(getTranslated(
+                                            'password_should_be', context));
+                                      } else if (confirmPassword.isEmpty) {
+                                        showCustomSnackBarHelper(getTranslated(
+                                            'enter_confirm_password', context));
+                                      } else if (password != confirmPassword) {
+                                        showCustomSnackBarHelper(getTranslated(
+                                            'password_did_not_match', context));
+                                      } else {
+                                        SignUpModel signUpModel = SignUpModel(
+                                          name: firstName,
+                                          email: email,
+                                          password: password,
+                                          phone: '$_countryDialCode$number',
+                                        );
 
-                                  // Optimized registration handler
-                                  final authProvider = Provider.of<AuthProvider>(context, listen: false);
-                                  final signUpResponse = await authProvider.registration(
-                                    signUpModel,
-                                    authProvider.getUserToken(),
-                                  );
+                                        // Optimized registration handler
+                                        final authProvider =
+                                            Provider.of<AuthProvider>(context,
+                                                listen: false);
+                                        final signUpResponse =
+                                            await authProvider.registration(
+                                          signUpModel,
+                                          authProvider.getUserToken(),
+                                        );
 
-                                  if (signUpResponse.isSuccess) {
-                                    // Handle successful registration
-                                    await _handleSuccessfulRegistration(
-                                      context: context,
-                                      authProvider: authProvider,
-                                      email: email,
-                                      password: password,
-                                      signUpResponse: signUpResponse,
-                                    );
-                                  } else {
-                                    // Handle registration error
-                                    showCustomSnackBarHelper(
-                                      getTranslated(signUpResponse.message, context),
-                                      isError: true,
-                                    );
-                                  }
-                                }
-                              },
-                            )
+                                        if (signUpResponse.isSuccess) {
+                                          // Handle successful registration
+                                          await _handleSuccessfulRegistration(
+                                            context: context,
+                                            authProvider: authProvider,
+                                            email: email,
+                                            password: password,
+                                            signUpResponse: signUpResponse,
+                                          );
+                                        } else {
+                                          // Handle registration error
+                                          showCustomSnackBarHelper(
+                                            getTranslated(
+                                                signUpResponse.message,
+                                                context),
+                                            isError: true,
+                                          );
+                                        }
+                                      }
+                                    },
+                                  )
                                 : Center(
                                     child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Theme.of(context).primaryColor),
                                   )),
 
                             // for already an account
                             const SizedBox(height: 11),
                             InkWell(
-                              onTap: ()=> RouterHelper.getLoginRoute(action: RouteAction.pushReplacement),
+                              onTap: () => RouterHelper.getLoginRoute(
+                                  action: RouteAction.pushReplacement),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      getTranslated('already_have_account', context)!,
-                                      style: Theme.of(context).textTheme.displayMedium!.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).hintColor.withOpacity(0.7)),
+                                      getTranslated(
+                                          'already_have_account', context)!,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displayMedium!
+                                          .copyWith(
+                                              fontSize:
+                                                  Dimensions.fontSizeSmall,
+                                              color: Theme.of(context)
+                                                  .hintColor
+                                                  .withOpacity(0.7)),
                                     ),
-                                    const SizedBox(width: Dimensions.paddingSizeSmall),
-                                    Text(getTranslated('login', context)!,
-                                      style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                                        fontSize: Dimensions.fontSizeDefault,
-                                        decoration: TextDecoration.underline,
-                                        decorationColor: Theme.of(context).colorScheme.error,
-                                        color: Theme.of(context).colorScheme.error,
-                                      ),
+                                    const SizedBox(
+                                        width: Dimensions.paddingSizeSmall),
+                                    Text(
+                                      getTranslated('login', context)!,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displaySmall!
+                                          .copyWith(
+                                            fontSize:
+                                                Dimensions.fontSizeDefault,
+                                            decoration:
+                                                TextDecoration.underline,
+                                            decorationColor: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                          ),
                                     ),
                                   ],
                                 ),
@@ -271,6 +349,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       ),
     );
   }
+
   Future<void> _handleSuccessfulRegistration({
     required BuildContext context,
     required AuthProvider authProvider,

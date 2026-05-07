@@ -2,7 +2,8 @@ import 'dart:async';
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart' show defaultTargetPlatform, kIsWeb, PlatformDispatcher;
+import 'package:flutter/foundation.dart'
+    show defaultTargetPlatform, kIsWeb, PlatformDispatcher;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -48,7 +49,7 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 final database = AppDatabase();
 
 Future<void> main() async {
-    WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   if (ResponsiveHelper.isMobilePhone()) {
     HttpOverrides.global = MyHttpOverrides();
   }
@@ -69,8 +70,6 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
- 
 
   ///firebase crashlytics
   // FlutterError.onError = (errorDetails) {
@@ -132,8 +131,7 @@ Future<void> main() async {
           create: (context) => di.sl<LocalizationProvider>()),
       ChangeNotifierProvider(create: (context) => di.sl<AuthProvider>()),
       ChangeNotifierProvider(create: (context) => di.sl<LocationProvider>()),
-            ChangeNotifierProvider(create: (context) => di.sl<HomeProvider>()),
-
+      ChangeNotifierProvider(create: (context) => di.sl<HomeProvider>()),
       ChangeNotifierProvider(create: (context) => di.sl<ProfileProvider>()),
       ChangeNotifierProvider(
           create: (context) => di.sl<NotificationProvider>()),
@@ -185,7 +183,8 @@ class _MyAppState extends State<MyApp> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
         debugPrint('🔵 Starting splash initialization...');
-        await Provider.of<SplashProvider>(context, listen: false).initSharedData();
+        await Provider.of<SplashProvider>(context, listen: false)
+            .initSharedData();
         debugPrint('🟢 initSharedData completed');
       } catch (e, stack) {
         debugPrint('🔴 Error initializing splash: $e');

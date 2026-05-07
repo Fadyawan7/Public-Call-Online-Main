@@ -1,8 +1,1 @@
-enum MenuType {
-  appLogo,
-  appName,
-  text,
-  search,
-  cart,
-  menu
-}
+enum MenuType { appLogo, appName, text, search, cart, menu }

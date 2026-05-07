@@ -5,6 +5,4 @@ class FreelancerRepo {
   final DioClient? dioClient;
   final SharedPreferences? sharedPreferences;
   FreelancerRepo({required this.dioClient, required this.sharedPreferences});
-
-
 }

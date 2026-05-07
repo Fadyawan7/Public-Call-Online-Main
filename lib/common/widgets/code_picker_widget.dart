@@ -126,7 +126,7 @@ class CodePickerWidget extends StatefulWidget {
     List<Map<String, String>> jsonList = countryList;
 
     List<CountryCode> elements =
-    jsonList.map((json) => CountryCode.fromJson(json)).toList();
+        jsonList.map((json) => CountryCode.fromJson(json)).toList();
 
     if (comparator != null) {
       elements.sort(comparator);
@@ -134,12 +134,12 @@ class CodePickerWidget extends StatefulWidget {
 
     if (countryFilter != null && countryFilter!.isNotEmpty) {
       final uppercaseCustomList =
-      countryFilter!.map((criteria) => criteria.toUpperCase()).toList();
+          countryFilter!.map((criteria) => criteria.toUpperCase()).toList();
       elements = elements
           .where((criteria) =>
-      uppercaseCustomList.contains(criteria.code) ||
-          uppercaseCustomList.contains(criteria.name) ||
-          uppercaseCustomList.contains(criteria.dialCode))
+              uppercaseCustomList.contains(criteria.code) ||
+              uppercaseCustomList.contains(criteria.name) ||
+              uppercaseCustomList.contains(criteria.dialCode))
           .toList();
     }
 
@@ -156,9 +156,8 @@ class CodePickerWidgetState extends State<CodePickerWidget> {
 
   @override
   Widget build(BuildContext context) {
-
-    final LocalizationProvider localizationController = Provider.of<LocalizationProvider>(context, listen: false);
-
+    final LocalizationProvider localizationController =
+        Provider.of<LocalizationProvider>(context, listen: false);
 
     Widget internalWidget;
     if (widget.builder != null) {
@@ -191,12 +190,12 @@ class CodePickerWidgetState extends State<CodePickerWidget> {
                         ? Clip.none
                         : Clip.hardEdge,
                     decoration: widget.flagDecoration,
-                    margin:
-                    widget.alignLeft
+                    margin: widget.alignLeft
                         ? const EdgeInsets.only(right: 10.0, left: 8.0)
                         : const EdgeInsets.only(right: 10.0),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+                      borderRadius:
+                          BorderRadius.circular(Dimensions.radiusSmall),
                       child: Image.asset(
                         selectedItem!.flagUri!,
                         package: 'country_code_picker',
@@ -205,11 +204,14 @@ class CodePickerWidgetState extends State<CodePickerWidget> {
                     ),
                   ),
                 ),
-              !localizationController.isLtr ? const SizedBox(width: Dimensions.paddingSizeSmall) : const SizedBox(),
+              !localizationController.isLtr
+                  ? const SizedBox(width: Dimensions.paddingSizeSmall)
+                  : const SizedBox(),
               if (!widget.hideMainText)
                 Flexible(
                   fit: widget.alignLeft ? FlexFit.tight : FlexFit.loose,
-                  child: CustomDirectionalityWidget(child: Text(
+                  child: CustomDirectionalityWidget(
+                      child: Text(
                     widget.showOnlyCountryWhenClosed
                         ? selectedItem!.toCountryStringOnly()
                         : selectedItem.toString(),
@@ -260,9 +262,9 @@ class CodePickerWidgetState extends State<CodePickerWidget> {
     if (oldWidget.initialSelection != widget.initialSelection) {
       if (widget.initialSelection != null) {
         selectedItem = elements.firstWhere(
-                (criteria) =>
-            (criteria.code!.toUpperCase() ==
-                widget.initialSelection!.toUpperCase()) ||
+            (criteria) =>
+                (criteria.code!.toUpperCase() ==
+                    widget.initialSelection!.toUpperCase()) ||
                 (criteria.dialCode == widget.initialSelection) ||
                 (criteria.name!.toUpperCase() ==
                     widget.initialSelection!.toUpperCase()),
@@ -280,9 +282,9 @@ class CodePickerWidgetState extends State<CodePickerWidget> {
 
     if (widget.initialSelection != null) {
       selectedItem = elements.firstWhere(
-              (item) =>
-          (item.code!.toUpperCase() ==
-              widget.initialSelection!.toUpperCase()) ||
+          (item) =>
+              (item.code!.toUpperCase() ==
+                  widget.initialSelection!.toUpperCase()) ||
               (item.dialCode == widget.initialSelection) ||
               (item.name!.toUpperCase() ==
                   widget.initialSelection!.toUpperCase()),
@@ -293,11 +295,11 @@ class CodePickerWidgetState extends State<CodePickerWidget> {
 
     favoriteElements = elements
         .where((item) =>
-    widget.favorite.firstWhereOrNull((criteria) =>
-    item.code!.toUpperCase() == criteria.toUpperCase() ||
-        item.dialCode == criteria ||
-        item.name!.toUpperCase() == criteria.toUpperCase()) !=
-        null)
+            widget.favorite.firstWhereOrNull((criteria) =>
+                item.code!.toUpperCase() == criteria.toUpperCase() ||
+                item.dialCode == criteria ||
+                item.name!.toUpperCase() == criteria.toUpperCase()) !=
+            null)
         .toList();
   }
 
@@ -308,12 +310,14 @@ class CodePickerWidgetState extends State<CodePickerWidget> {
       builder: (context) => Center(
         child: Dialog(
           insetPadding: EdgeInsets.symmetric(
-            horizontal: ResponsiveHelper.isDesktop(context) ? Dimensions.webScreenWidth / 4 : 0,
+            horizontal: ResponsiveHelper.isDesktop(context)
+                ? Dimensions.webScreenWidth / 4
+                : 0,
           ),
           child: SelectionDialog(
-            topBarPadding:const EdgeInsets.all(0),
+            topBarPadding: const EdgeInsets.all(0),
             hideHeaderText: false,
-            headerAlignment:MainAxisAlignment.start,
+            headerAlignment: MainAxisAlignment.start,
             headerTextStyle: const TextStyle(),
             elements,
             favoriteElements,
@@ -358,13 +362,13 @@ class CodePickerWidgetState extends State<CodePickerWidget> {
   }
 }
 
-class CountryPick{
+class CountryPick {
   static String? getCountryCode(String? number) {
     String? countryCode;
-    try{
-      countryCode = codes.firstWhere((item) =>
-          number!.contains('${item['dial_code']}'))['dial_code'];
-    }catch(error){
+    try {
+      countryCode = codes.firstWhere(
+          (item) => number!.contains('${item['dial_code']}'))['dial_code'];
+    } catch (error) {
       debugPrint('country error: $error');
     }
     return countryCode;

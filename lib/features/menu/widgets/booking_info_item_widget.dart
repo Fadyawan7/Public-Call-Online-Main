@@ -12,9 +12,14 @@ class BookingInfoItemWidget extends StatelessWidget {
   final Color? subTextColor;
 
   const BookingInfoItemWidget({
-    super.key, this.iconData, this.mainTxt, this.subTxt, this.iconColor, this.mainTextColor, this.subTextColor,
+    super.key,
+    this.iconData,
+    this.mainTxt,
+    this.subTxt,
+    this.iconColor,
+    this.mainTextColor,
+    this.subTextColor,
   });
-
 
   @override
   Widget build(BuildContext context) {
@@ -25,13 +30,20 @@ class BookingInfoItemWidget extends StatelessWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(iconData,size: Dimensions.fontSizeExtraLarge,color:iconColor ,),
+            Icon(
+              iconData,
+              size: Dimensions.fontSizeExtraLarge,
+              color: iconColor,
+            ),
             const SizedBox(width: Dimensions.paddingSizeDefault),
-
-            Text(getTranslated('$mainTxt', context)!, style: rubikMedium.copyWith(fontSize: Dimensions.fontSizeSmall,color: mainTextColor)),
+            Text(getTranslated('$mainTxt', context)!,
+                style: rubikMedium.copyWith(
+                    fontSize: Dimensions.fontSizeSmall, color: mainTextColor)),
           ],
         ),
-        Text('$subTxt', style: rubikBold.copyWith(fontSize: Dimensions.fontSizeDefault,color: subTextColor))
+        Text('$subTxt',
+            style: rubikBold.copyWith(
+                fontSize: Dimensions.fontSizeDefault, color: subTextColor))
       ],
     );
   }

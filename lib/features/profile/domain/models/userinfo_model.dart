@@ -20,27 +20,26 @@ class UserInfoModel {
   String? cityName;
   String? freelancerProfileRequest;
 
-
-  UserInfoModel(
-      {this.id,
-        this.name,
-        this.email,
-        this.image,
-        this.phone,
-        this.cmFirebaseToken,
-        this.aboutMe,
-        this.categoryId,
-        this.userType,
-        this.freelancerRequestStatus,
-        this.cityId,
-        this.countryId,
-        this.countryName,
-        this.cityName,
-        this.freelancerRequestNote,
-        this.freelancerProfileRequest,
-        this.whatsapp,
-        this.temporaryDisabled,
-      });
+  UserInfoModel({
+    this.id,
+    this.name,
+    this.email,
+    this.image,
+    this.phone,
+    this.cmFirebaseToken,
+    this.aboutMe,
+    this.categoryId,
+    this.userType,
+    this.freelancerRequestStatus,
+    this.cityId,
+    this.countryId,
+    this.countryName,
+    this.cityName,
+    this.freelancerRequestNote,
+    this.freelancerProfileRequest,
+    this.whatsapp,
+    this.temporaryDisabled,
+  });
 
   UserInfoModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -58,15 +57,13 @@ class UserInfoModel {
     categoryId = json['category_id'] ?? '';
 
     freelancerRequestStatus = json['freelancer_request_status'] ?? '';
-    userType = json['user_type'] ??'';
-    countryName = json['country_name'] ??'';
-    cityName = json['city_name'] ??'';
+    userType = json['user_type'] ?? '';
+    countryName = json['country_name'] ?? '';
+    cityName = json['city_name'] ?? '';
 
-    freelancerProfileRequest = json['freelancer_profile_update_request'] ??'';
+    freelancerProfileRequest = json['freelancer_profile_update_request'] ?? '';
     aboutMe = json['about'] ?? '';
     whatsapp = json['whatsapp_number'] ?? '';
-
-
   }
 
   Map<String, dynamic> toJson() {
@@ -115,4 +112,3 @@ class UserInfoModel {
     return data;
   }
 }
-

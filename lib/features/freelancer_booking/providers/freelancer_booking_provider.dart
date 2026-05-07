@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/models/api_response_model.dart';
 
@@ -13,7 +12,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class FreelancerBookingProvider extends ChangeNotifier {
   final FreelancerBookingRepo? freelancerBookingRepo;
   final SharedPreferences? sharedPreferences;
-  FreelancerBookingProvider({ required this.sharedPreferences,required this.freelancerBookingRepo});
+  FreelancerBookingProvider(
+      {required this.sharedPreferences, required this.freelancerBookingRepo});
 
   List<BookingModel> _pendingList = [];
   List<BookingModel> _confirmedList = [];
@@ -21,7 +21,6 @@ class FreelancerBookingProvider extends ChangeNotifier {
   ResponseModel? _responseModel;
   bool _isLoading = false;
   final Set<String> _statusLoading = <String>{};
-
 
   List<BookingModel> get pendingList => _pendingList;
   List<BookingModel> get confirmedList => _confirmedList;
@@ -31,16 +30,18 @@ class FreelancerBookingProvider extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
-  Future<void> getBookingList(BuildContext context,String? status) async {
+  Future<void> getBookingList(BuildContext context, String? status) async {
     final String bookingStatus = status ?? 'pending';
     _isLoading = true;
     _statusLoading.add(bookingStatus);
     notifyListeners();
 
-    ApiResponseModel apiResponse = await freelancerBookingRepo!.getBookingList(bookingStatus);
+    ApiResponseModel apiResponse =
+        await freelancerBookingRepo!.getBookingList(bookingStatus);
     final List<BookingModel> newList = [];
 
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
       apiResponse.response!.data.forEach((booking) {
         BookingModel bookingModel = BookingModel.fromJson(booking);
         newList.add(bookingModel);
@@ -53,7 +54,6 @@ class FreelancerBookingProvider extends ChangeNotifier {
       } else {
         _historyList = newList;
       }
-
     } else {
       ApiCheckerHelper.checkApi(apiResponse);
     }
@@ -62,18 +62,22 @@ class FreelancerBookingProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+
   void stopLoader() {
     _isLoading = false;
     notifyListeners();
   }
 
-  Future<void> setPlaceBooking(String placeBooking)async{
-    await sharedPreferences!.setString(AppConstants.placeOrderData, placeBooking);
+  Future<void> setPlaceBooking(String placeBooking) async {
+    await sharedPreferences!
+        .setString(AppConstants.placeOrderData, placeBooking);
   }
-  String? getPlaceBooking(){
+
+  String? getPlaceBooking() {
     return sharedPreferences!.getString(AppConstants.placeOrderData);
   }
-  Future<void> clearPlaceBooking()async{
+
+  Future<void> clearPlaceBooking() async {
     await sharedPreferences!.remove(AppConstants.placeOrderData);
   }
 }

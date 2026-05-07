@@ -5,8 +5,12 @@ import 'package:go_router/go_router.dart';
 
 class CustomDialogShapeWidget extends StatelessWidget {
   const CustomDialogShapeWidget({
-    super.key, this.child, this.maxHeight, this.maxWidth,
-    this.padding, this.margin,
+    super.key,
+    this.child,
+    this.maxHeight,
+    this.maxWidth,
+    this.padding,
+    this.margin,
   });
 
   final Widget? child;
@@ -22,33 +26,45 @@ class CustomDialogShapeWidget extends StatelessWidget {
 
     return Stack(children: [
       Container(
-        constraints: BoxConstraints(maxHeight: maxHeight ?? height * 0.85, maxWidth: maxWidth ?? 500),
+        constraints: BoxConstraints(
+            maxHeight: maxHeight ?? height * 0.85, maxWidth: maxWidth ?? 500),
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.vertical(
             top: const Radius.circular(Dimensions.radiusLarge),
-            bottom: Radius.circular(ResponsiveHelper.isMobile() ? 0 : Dimensions.radiusLarge),
+            bottom: Radius.circular(
+                ResponsiveHelper.isMobile() ? 0 : Dimensions.radiusLarge),
           ),
         ),
-        padding: padding ?? EdgeInsets.symmetric(
-          horizontal: isDesktop ? 80 : Dimensions.paddingSizeLarge,
-          vertical: isDesktop ? 40 : Dimensions.paddingSizeExtraSmall,
-        ),
-        margin: margin ?? EdgeInsets.all(isDesktop ? Dimensions.paddingSizeExtraLarge : 0),
+        padding: padding ??
+            EdgeInsets.symmetric(
+              horizontal: isDesktop ? 80 : Dimensions.paddingSizeLarge,
+              vertical: isDesktop ? 40 : Dimensions.paddingSizeExtraSmall,
+            ),
+        margin: margin ??
+            EdgeInsets.all(isDesktop ? Dimensions.paddingSizeExtraLarge : 0),
         child: child,
       ),
 
       /// for web dialog close button
-      if(isDesktop) Positioned(right: 0, top: 0, child: Material(
-        color: Theme.of(context).cardColor,
-        clipBehavior: Clip.hardEdge,
-        borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
-        child: InkWell(onTap: () => context.pop(), child: Container(
-          decoration: const BoxDecoration(shape: BoxShape.circle),
-          padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
-          child: const Icon(Icons.close, size: Dimensions.fontSizeDefault),
-        )),
-      )),
+      if (isDesktop)
+        Positioned(
+            right: 0,
+            top: 0,
+            child: Material(
+              color: Theme.of(context).cardColor,
+              clipBehavior: Clip.hardEdge,
+              borderRadius: BorderRadius.circular(Dimensions.radiusExtraLarge),
+              child: InkWell(
+                  onTap: () => context.pop(),
+                  child: Container(
+                    decoration: const BoxDecoration(shape: BoxShape.circle),
+                    padding:
+                        const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
+                    child: const Icon(Icons.close,
+                        size: Dimensions.fontSizeDefault),
+                  )),
+            )),
     ]);
   }
 }

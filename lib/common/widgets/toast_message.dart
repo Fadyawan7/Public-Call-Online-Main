@@ -10,7 +10,6 @@ class CustomToast {
   }) {
     final overlay = Overlay.of(context);
     final overlayEntry = OverlayEntry(
-      
       builder: (context) => _ToastWidget(
         message: message,
         backgroundColor: backgroundColor,

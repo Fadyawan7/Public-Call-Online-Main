@@ -10,16 +10,21 @@ import 'package:shared_preferences/shared_preferences.dart';
 class FreelancerPortfolioRepo {
   final DioClient? dioClient;
   final SharedPreferences? sharedPreferences;
-  FreelancerPortfolioRepo({required this.dioClient, required this.sharedPreferences});
+  FreelancerPortfolioRepo(
+      {required this.dioClient, required this.sharedPreferences});
 
+  Future<http.StreamedResponse> freelancerPortfolioAdd(
+      File? file, String token) async {
+    http.MultipartRequest request = http.MultipartRequest(
+        'POST',
+        Uri.parse(
+            '${AppConstants.baseUrl}${AppConstants.freelancerPortfolioAddUri}'));
 
-  Future<http.StreamedResponse> freelancerPortfolioAdd( File? file, String token) async {
-
-    http.MultipartRequest request = http.MultipartRequest('POST', Uri.parse('${AppConstants.baseUrl}${AppConstants.freelancerPortfolioAddUri}'));
-
-    request.headers.addAll(<String,String>{'Authorization': 'Bearer $token'});
-    if(file != null) {
-      request.files.add(http.MultipartFile('image', file.readAsBytes().asStream(), file.lengthSync(), filename: file.path.split('/').last));
+    request.headers.addAll(<String, String>{'Authorization': 'Bearer $token'});
+    if (file != null) {
+      request.files.add(http.MultipartFile(
+          'image', file.readAsBytes().asStream(), file.lengthSync(),
+          filename: file.path.split('/').last));
     }
     print('=======PORTFOLIO ADDD ===${request.files.length}');
 
@@ -29,23 +34,25 @@ class FreelancerPortfolioRepo {
 
   Future<ApiResponseModel> getFreelancerPortfolioList() async {
     try {
-      final response = await dioClient!.get(AppConstants.freelancerPortfolioListUri);
+      final response =
+          await dioClient!.get(AppConstants.freelancerPortfolioListUri);
       return ApiResponseModel.withSuccess(response);
     } catch (e) {
       return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
     }
   }
-  Future<ApiResponseModel> deleteFreelancerPortfolio(int portfolioID ) async {
+
+  Future<ApiResponseModel> deleteFreelancerPortfolio(int portfolioID) async {
     try {
       Map<String, dynamic> data = <String, dynamic>{};
       data['id'] = portfolioID;
       data['_method'] = 'post';
 
-      final response = await dioClient!.post(AppConstants.freelancerPortfolioDeleteUri, data: data);
+      final response = await dioClient!
+          .post(AppConstants.freelancerPortfolioDeleteUri, data: data);
       return ApiResponseModel.withSuccess(response);
     } catch (e) {
       return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
     }
   }
 }
-

@@ -30,91 +30,169 @@ class FreelancerBookingShimmerWidget extends StatelessWidget {
             ),
             child: Shimmer(
               duration: const Duration(seconds: 2),
-            enabled: Provider.of<BookingProvider>(context).pendingList == null &&
-         Provider.of<BookingProvider>(context).confirmedList == null &&
-         Provider.of<BookingProvider>(context).historyList == null,
-
-              child: ResponsiveHelper.isDesktop(context) ? Column(children: [
-
-                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                  Row(mainAxisSize: MainAxisSize.min, children: [
-                    Container(
-                      height: 70, width: 80,
-                      margin: const EdgeInsets.only(left: Dimensions.paddingSizeLarge),
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Theme.of(context).shadowColor.withOpacity(0.3)),
-                    ),
-                    const SizedBox(width: Dimensions.paddingSizeExtraSmall),
-
-                    Container(height: 15, width: 80, color: Theme.of(context).shadowColor.withOpacity(0.3)),
-                  ]),
-                  const SizedBox(width: Dimensions.paddingSizeSmall),
-
-                  Container(height: 15, width: 150, color: Theme.of(context).shadowColor.withOpacity(0.3)),
-                  const SizedBox(width: Dimensions.paddingSizeExtraSmall),
-
-                  Container(height: 15, width: 100, color: Theme.of(context).shadowColor.withOpacity(0.3)),
-                  const SizedBox(width: Dimensions.paddingSizeExtraSmall),
-
-                  Container(height: 15, width: 100, color: Theme.of(context).shadowColor.withOpacity(0.3)),
-                  const SizedBox(width: Dimensions.paddingSizeExtraSmall),
-
-                  Container(
-                    height: 20, width: 80,
-                    margin: const EdgeInsets.only(right: Dimensions.paddingSizeLarge),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-                      color: Theme.of(context).shadowColor.withOpacity(0.3),
-                    ),
-                  ),
-                ]),
-
-                Divider(color: Theme.of(context).hintColor.withOpacity(0.2), thickness: 0.5),
-
-              ]) : Row(children: [
-
-                Expanded(
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-                      child: Container(color: Theme.of(context).shadowColor.withOpacity(0.3), height: 65, width: 65),
-                    ),
-
-                  ]),
-                ),
-                const SizedBox(width: Dimensions.paddingSizeSmall),
-
-                Expanded(
-                  flex: 3,
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-
-                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                      Container(height: 15, width: 90, color: Theme.of(context).shadowColor.withOpacity(0.3)),
-                      const SizedBox(width: Dimensions.paddingSizeExtraSmall),
-
-                      Container(height: 15, width: 50, color: Theme.of(context).shadowColor.withOpacity(0.3)),
+              enabled: Provider.of<BookingProvider>(context).pendingList ==
+                      null &&
+                  Provider.of<BookingProvider>(context).confirmedList == null &&
+                  Provider.of<BookingProvider>(context).historyList == null,
+              child: ResponsiveHelper.isDesktop(context)
+                  ? Column(children: [
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(mainAxisSize: MainAxisSize.min, children: [
+                              Container(
+                                height: 70,
+                                width: 80,
+                                margin: const EdgeInsets.only(
+                                    left: Dimensions.paddingSizeLarge),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Theme.of(context)
+                                        .shadowColor
+                                        .withOpacity(0.3)),
+                              ),
+                              const SizedBox(
+                                  width: Dimensions.paddingSizeExtraSmall),
+                              Container(
+                                  height: 15,
+                                  width: 80,
+                                  color: Theme.of(context)
+                                      .shadowColor
+                                      .withOpacity(0.3)),
+                            ]),
+                            const SizedBox(width: Dimensions.paddingSizeSmall),
+                            Container(
+                                height: 15,
+                                width: 150,
+                                color: Theme.of(context)
+                                    .shadowColor
+                                    .withOpacity(0.3)),
+                            const SizedBox(
+                                width: Dimensions.paddingSizeExtraSmall),
+                            Container(
+                                height: 15,
+                                width: 100,
+                                color: Theme.of(context)
+                                    .shadowColor
+                                    .withOpacity(0.3)),
+                            const SizedBox(
+                                width: Dimensions.paddingSizeExtraSmall),
+                            Container(
+                                height: 15,
+                                width: 100,
+                                color: Theme.of(context)
+                                    .shadowColor
+                                    .withOpacity(0.3)),
+                            const SizedBox(
+                                width: Dimensions.paddingSizeExtraSmall),
+                            Container(
+                              height: 20,
+                              width: 80,
+                              margin: const EdgeInsets.only(
+                                  right: Dimensions.paddingSizeLarge),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(
+                                    Dimensions.radiusSmall),
+                                color: Theme.of(context)
+                                    .shadowColor
+                                    .withOpacity(0.3),
+                              ),
+                            ),
+                          ]),
+                      Divider(
+                          color: Theme.of(context).hintColor.withOpacity(0.2),
+                          thickness: 0.5),
+                    ])
+                  : Row(children: [
+                      Expanded(
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(
+                                    Dimensions.radiusSmall),
+                                child: Container(
+                                    color: Theme.of(context)
+                                        .shadowColor
+                                        .withOpacity(0.3),
+                                    height: 65,
+                                    width: 65),
+                              ),
+                            ]),
+                      ),
+                      const SizedBox(width: Dimensions.paddingSizeSmall),
+                      Expanded(
+                        flex: 3,
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                        height: 15,
+                                        width: 90,
+                                        color: Theme.of(context)
+                                            .shadowColor
+                                            .withOpacity(0.3)),
+                                    const SizedBox(
+                                        width:
+                                            Dimensions.paddingSizeExtraSmall),
+                                    Container(
+                                        height: 15,
+                                        width: 50,
+                                        color: Theme.of(context)
+                                            .shadowColor
+                                            .withOpacity(0.3)),
+                                  ]),
+                              const SizedBox(
+                                  height: Dimensions.paddingSizeSmall),
+                              Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                        height: 15,
+                                        width: 70,
+                                        color: Theme.of(context)
+                                            .shadowColor
+                                            .withOpacity(0.3)),
+                                    const SizedBox(
+                                        width:
+                                            Dimensions.paddingSizeExtraSmall),
+                                    Container(
+                                        height: 15,
+                                        width: 70,
+                                        color: Theme.of(context)
+                                            .shadowColor
+                                            .withOpacity(0.3)),
+                                  ]),
+                              const SizedBox(
+                                  height: Dimensions.paddingSizeSmall),
+                              Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                        height: 15,
+                                        width: 80,
+                                        color: Theme.of(context)
+                                            .shadowColor
+                                            .withOpacity(0.3)),
+                                    const SizedBox(
+                                        width:
+                                            Dimensions.paddingSizeExtraSmall),
+                                    Container(
+                                        height: 15,
+                                        width: 80,
+                                        color: Theme.of(context)
+                                            .shadowColor
+                                            .withOpacity(0.3)),
+                                  ]),
+                            ]),
+                      ),
                     ]),
-                    const SizedBox(height: Dimensions.paddingSizeSmall),
-
-                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                      Container(height: 15, width: 70, color: Theme.of(context).shadowColor.withOpacity(0.3)),
-                      const SizedBox(width: Dimensions.paddingSizeExtraSmall),
-
-                      Container(height: 15, width: 70, color: Theme.of(context).shadowColor.withOpacity(0.3)),
-                    ]),
-                    const SizedBox(height: Dimensions.paddingSizeSmall),
-
-                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                      Container(height: 15, width: 80, color: Theme.of(context).shadowColor.withOpacity(0.3)),
-                      const SizedBox(width: Dimensions.paddingSizeExtraSmall),
-
-                      Container(height: 15, width: 80, color: Theme.of(context).shadowColor.withOpacity(0.3)),
-                    ]),
-
-                  ]),
-                ),
-
-              ]),
             ),
           ),
         );

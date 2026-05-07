@@ -1,4 +1,3 @@
-
 class AddressModel {
   int? id;
   String? contactPersonName;

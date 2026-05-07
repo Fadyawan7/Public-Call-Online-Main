@@ -114,7 +114,6 @@ class _FreelancerBookingDetailsScreenState
           )),
         ])),
         const ButtonWidget(),
-       
       ]),
     );
   }

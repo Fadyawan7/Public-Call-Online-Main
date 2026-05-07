@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/models/booking_details_model.dart';
 import 'package:flutter_restaurant/features/booking/domain/models/booking_model.dart';
@@ -15,46 +14,50 @@ class SubmitRateReviewScreen extends StatefulWidget {
   final int bookingId;
   final int takerId;
 
-  const SubmitRateReviewScreen({super.key, required this.bookingId, required this.takerId});
+  const SubmitRateReviewScreen(
+      {super.key, required this.bookingId, required this.takerId});
 
   @override
-  State<SubmitRateReviewScreen>  createState() => _SubmitRateReviewScreenState();
+  State<SubmitRateReviewScreen> createState() => _SubmitRateReviewScreenState();
 }
 
-class _SubmitRateReviewScreenState extends State<SubmitRateReviewScreen> with TickerProviderStateMixin {
+class _SubmitRateReviewScreenState extends State<SubmitRateReviewScreen>
+    with TickerProviderStateMixin {
   BookingModel? bookingModel;
   List<BookingDetailsModel> bookingDetailsList = [];
 
-
   Future<void> _initLoading() async {
-    final ReviewProvider reviewProvider = Provider.of<ReviewProvider>(context, listen: false);
+    final ReviewProvider reviewProvider =
+        Provider.of<ReviewProvider>(context, listen: false);
     reviewProvider.updateSubmitted(false);
   }
-
 
   @override
   void initState() {
     super.initState();
     _initLoading();
-
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ( CustomAppBarWidget(context: context, title: getTranslated('rate_review', context), titleColor: Colors.white,)) as PreferredSizeWidget?,
-
+      appBar: (CustomAppBarWidget(
+        context: context,
+        title: getTranslated('rate_review', context),
+        titleColor: Colors.white,
+      )) as PreferredSizeWidget?,
       body: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-
         child: Consumer<BookingProvider>(builder: (context, booking, _) {
           return Column(children: [
-            Center(child: Container( color: Theme.of(context).cardColor,
-                child: BookingReviewWidget( bookingID: widget.bookingId,takerID:widget.takerId ,),
-        
+            Center(
+                child: Container(
+              color: Theme.of(context).cardColor,
+              child: BookingReviewWidget(
+                bookingID: widget.bookingId,
+                takerID: widget.takerId,
+              ),
             )),
-        
-        
           ]);
         }),
       ),

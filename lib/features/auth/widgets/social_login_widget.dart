@@ -19,7 +19,6 @@ import 'package:provider/provider.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
-
 class SocialLoginWidget extends StatefulWidget {
   const SocialLoginWidget({super.key});
 
@@ -30,12 +29,17 @@ class SocialLoginWidget extends StatefulWidget {
 class _SocialLoginWidgetState extends State<SocialLoginWidget> {
   SocialLoginModel socialLogin = SocialLoginModel();
 
-
-
-
-  void route(bool isRoute, String? token, String errorMessage, String? tempToken, UserInfoModel? userInfoModel, String? socialLoginMedium) async {
-    final AuthProvider authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final ProfileProvider profileProvider = Provider.of<ProfileProvider>(context, listen: false);
+  void route(
+      bool isRoute,
+      String? token,
+      String? errorMessage,
+      String? tempToken,
+      UserInfoModel? userInfoModel,
+      String? socialLoginMedium) async {
+    final AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
+    final ProfileProvider profileProvider =
+        Provider.of<ProfileProvider>(context, listen: false);
 
     if (isRoute) {
       if (token != null) {
@@ -43,9 +47,11 @@ class _SocialLoginWidgetState extends State<SocialLoginWidget> {
         // Ensure profileProvider.userInfoModel is not null before accessing its properties
         if (profileProvider.userInfoModel != null) {
           if (profileProvider.userInfoModel!.countryId == -1) {
-            RouterHelper.getProfileRoute('splash', action: RouteAction.pushReplacement);
+            RouterHelper.getProfileRoute('splash',
+                action: RouteAction.pushReplacement);
           } else {
-            RouterHelper.getMainRoute(action: RouteAction.pushNamedAndRemoveUntil);
+            RouterHelper.getMainRoute(
+                action: RouteAction.pushNamedAndRemoveUntil);
           }
         } else {
           // Handle case where userInfoModel is null
@@ -69,7 +75,9 @@ class _SocialLoginWidgetState extends State<SocialLoginWidget> {
           context,
           isDismissible: false,
           CustomAlertDialogWidget(
-            width: ResponsiveHelper.isDesktop(context) ? MediaQuery.of(context).size.width * 0.3 : null,
+            width: ResponsiveHelper.isDesktop(context)
+                ? MediaQuery.of(context).size.width * 0.3
+                : null,
             child: ExistingAccountBottomSheet(
               userInfoModel: userInfoModel,
               loginMedium: socialLoginMedium!,
@@ -80,7 +88,7 @@ class _SocialLoginWidgetState extends State<SocialLoginWidget> {
         // Show error message if no valid condition is met
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(errorMessage),
+              content: Text(errorMessage ?? 'Unable to complete social login.'),
             backgroundColor: Colors.red,
           ),
         );
@@ -89,45 +97,120 @@ class _SocialLoginWidgetState extends State<SocialLoginWidget> {
       // Show error message if isRoute is false
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(errorMessage),
+          content: Text(errorMessage ?? 'Unable to complete social login.'),
           backgroundColor: Colors.red,
         ),
       );
     }
   }
+
   @override
   Widget build(BuildContext context) {
-    final ConfigModel? configModel = Provider.of<SplashProvider>(context,listen: false).configModel;
+    final ConfigModel? configModel =
+        Provider.of<SplashProvider>(context, listen: false).configModel;
 
     List<String> socialLoginList = [];
 
+    socialLoginList.add("google");
 
-      socialLoginList.add("google");
+    socialLoginList.add("apple");
 
+    return Consumer<AuthProvider>(builder: (context, authProvider, _) {
+      if (socialLoginList.length == 1) {
+        return Row(children: [
+          Expanded(
+              child: InkWell(
+            onTap: () async {
+              try {
+                GoogleSignInAuthentication auth =
+                    await authProvider.googleLogin();
+                GoogleSignInAccount googleAccount = authProvider.googleAccount!;
+                  final String? socialToken = auth.accessToken ?? auth.idToken;
+                  if (socialToken == null || socialToken.isEmpty) {
+                    throw Exception('Failed to obtain Google auth token');
+                  }
 
-      socialLoginList.add("apple");
-
-
-    return Consumer<AuthProvider>(
-      builder: (context, authProvider, _) {
-
-        if(socialLoginList.length == 1){
-          return Row(children: [
-
-              Expanded(child: InkWell(
+                authProvider.socialLogin(
+                    SocialLoginModel(
+                      email: googleAccount.email,
+                        token: socialToken,
+                      uniqueId: googleAccount.id,
+                      medium: 'google',
+                    ),
+                    route);
+              } catch (er) {
+                debugPrint('Google Sign-In error: $er');
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Google Sign-In failed: ${er.toString()}'),
+                    backgroundColor: Colors.red,
+                    duration: const Duration(seconds: 3),
+                  ),
+                );
+              }
+            },
+            child: SocialLoginButtonWidget(
+              text: getTranslated('continue_with_google', context)!,
+              image: Images.google,
+            ),
+          )),
+          if (defaultTargetPlatform == TargetPlatform.iOS)
+            Expanded(
+              child: InkWell(
+                onTap: () async {
+                  final credential = await SignInWithApple.getAppleIDCredential(
+                    scopes: [
+                      AppleIDAuthorizationScopes.email,
+                      AppleIDAuthorizationScopes.fullName,
+                    ],
+                    webAuthenticationOptions: WebAuthenticationOptions(
+                      clientId: '${configModel?.appleLogin?.clientId}',
+                      redirectUri: Uri.parse(AppConstants.baseUrl),
+                    ),
+                  );
+                  authProvider.socialLogin(
+                      SocialLoginModel(
+                        email: credential.email,
+                        token: credential.authorizationCode,
+                        uniqueId: credential.authorizationCode,
+                        medium: 'apple',
+                      ),
+                      route);
+                },
+                child: SocialLoginButtonWidget(
+                  text: getTranslated('continue_with_apple', context)!,
+                  image: Images.appleLogo,
+                  color: Theme.of(context).textTheme.bodyMedium?.color,
+                ),
+              ),
+            ),
+        ]);
+      } else if (socialLoginList.length == 2) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+                child: InkWell(
               onTap: () async {
-                try{
-                  GoogleSignInAuthentication auth = await authProvider.googleLogin();
-                  GoogleSignInAccount googleAccount = authProvider.googleAccount!;
+                try {
+                  GoogleSignInAuthentication auth =
+                      await authProvider.googleLogin();
+                  GoogleSignInAccount googleAccount =
+                      authProvider.googleAccount!;
+                  final String? socialToken = auth.accessToken ?? auth.idToken;
+                  if (socialToken == null || socialToken.isEmpty) {
+                    throw Exception('Failed to obtain Google auth token');
+                  }
 
-                  authProvider.socialLogin(SocialLoginModel(
-                    email: googleAccount.email, 
-                    token: auth.accessToken, 
-                    uniqueId: googleAccount.id, 
-                    medium: 'google',
-                  ), route);
-
-                } catch(er) {
+                  authProvider.socialLogin(
+                      SocialLoginModel(
+                        email: googleAccount.email,
+                        token: socialToken,
+                        uniqueId: googleAccount.id,
+                        medium: 'google',
+                      ),
+                      route);
+                } catch (er) {
                   debugPrint('Google Sign-In error: $er');
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -139,73 +222,12 @@ class _SocialLoginWidgetState extends State<SocialLoginWidget> {
                 }
               },
               child: SocialLoginButtonWidget(
-                text: getTranslated('continue_with_google', context)!,
+                text: getTranslated('google', context)!,
                 image: Images.google,
               ),
-
             )),
-
-
-            if(defaultTargetPlatform == TargetPlatform.iOS)
-              Expanded(
-                child: InkWell(
-                  onTap: () async {
-                    final credential = await SignInWithApple.getAppleIDCredential(scopes: [
-                      AppleIDAuthorizationScopes.email,
-                      AppleIDAuthorizationScopes.fullName,
-                    ],
-                      webAuthenticationOptions: WebAuthenticationOptions(
-                        clientId: '${configModel?.appleLogin?.clientId}',
-                        redirectUri: Uri.parse(AppConstants.baseUrl),
-                      ),
-                    );
-                    authProvider.socialLogin(SocialLoginModel(
-                      email: credential.email, token: credential.authorizationCode, uniqueId: credential.authorizationCode, medium: 'apple',
-                    ), route);
-                  },
-                  child: SocialLoginButtonWidget(
-                    text: getTranslated('continue_with_apple', context)!,
-                    image: Images.appleLogo,
-                    color: Theme.of(context).textTheme.bodyMedium?.color,
-                  ),
-                ),
-              ),
-          ]);
-
-        }else if(socialLoginList.length == 2){
-          return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-
-              Expanded(child: InkWell(
-                onTap: () async {
-                  try{
-                    GoogleSignInAuthentication  auth = await authProvider.googleLogin();
-                    GoogleSignInAccount googleAccount = authProvider.googleAccount!;
-
-                    authProvider.socialLogin(SocialLoginModel(
-                      email: googleAccount.email, token: auth.accessToken, uniqueId: googleAccount.id, medium: 'google',
-                    ), route);
-
-
-                  } catch(er) {
-                    debugPrint('Google Sign-In error: $er');
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Google Sign-In failed: ${er.toString()}'),
-                        backgroundColor: Colors.red,
-                        duration: const Duration(seconds: 3),
-                      ),
-                    );
-                  }
-                },
-                child: SocialLoginButtonWidget(
-                  text: getTranslated('google', context)!,
-                  image: Images.google,
-                ),
-
-              )),
-            if( defaultTargetPlatform == TargetPlatform.iOS)
+            if (defaultTargetPlatform == TargetPlatform.iOS)
               const SizedBox(width: Dimensions.paddingSizeDefault),
-
 
             // if( defaultTargetPlatform == TargetPlatform.iOS)...[
             //   Expanded(
@@ -232,56 +254,70 @@ class _SocialLoginWidgetState extends State<SocialLoginWidget> {
             //     ),
             //   ),
             // ],
-
-          ],);
-        }else if(socialLoginList.length == 3){
-          return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-
-              InkWell(
-                onTap: () async {
-                  try{
-                    GoogleSignInAuthentication  auth = await authProvider.googleLogin();
-                    GoogleSignInAccount googleAccount = authProvider.googleAccount!;
-
-                    authProvider.socialLogin(SocialLoginModel(
-                      email: googleAccount.email, token: auth.accessToken, uniqueId: googleAccount.id, medium: 'google',
-                    ), route);
-
-
-                  } catch(er) {
-                    debugPrint('Google Sign-In error: $er');
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Google Sign-In failed: ${er.toString()}'),
-                        backgroundColor: Colors.red,
-                        duration: const Duration(seconds: 3),
-                      ),
-                    );
+          ],
+        );
+      } else if (socialLoginList.length == 3) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            InkWell(
+              onTap: () async {
+                try {
+                  GoogleSignInAuthentication auth =
+                      await authProvider.googleLogin();
+                  GoogleSignInAccount googleAccount =
+                      authProvider.googleAccount!;
+                  final String? socialToken = auth.accessToken ?? auth.idToken;
+                  if (socialToken == null || socialToken.isEmpty) {
+                    throw Exception('Failed to obtain Google auth token');
                   }
-                },
-                child: const SocialLoginButtonWidget(
-                  image: Images.google,
-                  padding: EdgeInsets.all(Dimensions.paddingSizeSmall),
-                ),
 
+                  authProvider.socialLogin(
+                      SocialLoginModel(
+                        email: googleAccount.email,
+                        token: socialToken,
+                        uniqueId: googleAccount.id,
+                        medium: 'google',
+                      ),
+                      route);
+                } catch (er) {
+                  debugPrint('Google Sign-In error: $er');
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Google Sign-In failed: ${er.toString()}'),
+                      backgroundColor: Colors.red,
+                      duration: const Duration(seconds: 3),
+                    ),
+                  );
+                }
+              },
+              child: const SocialLoginButtonWidget(
+                image: Images.google,
+                padding: EdgeInsets.all(Dimensions.paddingSizeSmall),
               ),
-              const SizedBox(width: Dimensions.paddingSizeLarge),
-
-            if(defaultTargetPlatform == TargetPlatform.iOS)...[
+            ),
+            const SizedBox(width: Dimensions.paddingSizeLarge),
+            if (defaultTargetPlatform == TargetPlatform.iOS) ...[
               InkWell(
                 onTap: () async {
-                  final credential = await SignInWithApple.getAppleIDCredential(scopes: [
-                    AppleIDAuthorizationScopes.email,
-                    AppleIDAuthorizationScopes.fullName,
-                  ],
+                  final credential = await SignInWithApple.getAppleIDCredential(
+                    scopes: [
+                      AppleIDAuthorizationScopes.email,
+                      AppleIDAuthorizationScopes.fullName,
+                    ],
                     webAuthenticationOptions: WebAuthenticationOptions(
                       clientId: '${configModel?.appleLogin?.clientId}',
                       redirectUri: Uri.parse(AppConstants.baseUrl),
                     ),
                   );
-                  authProvider.socialLogin(SocialLoginModel(
-                    email: credential.email, token: credential.authorizationCode, uniqueId: credential.authorizationCode, medium: 'apple',
-                  ), route);
+                  authProvider.socialLogin(
+                      SocialLoginModel(
+                        email: credential.email,
+                        token: credential.authorizationCode,
+                        uniqueId: credential.authorizationCode,
+                        medium: 'apple',
+                      ),
+                      route);
                 },
                 child: SocialLoginButtonWidget(
                   image: Images.appleLogo,
@@ -290,13 +326,12 @@ class _SocialLoginWidgetState extends State<SocialLoginWidget> {
                 ),
               ),
             ],
-
-          ],);
-        }else{
-          return Container();
-        }
+          ],
+        );
+      } else {
+        return Container();
       }
-    );
+    });
   }
 }
 
@@ -306,42 +341,53 @@ class SocialLoginButtonWidget extends StatelessWidget {
   final Color? color;
   final EdgeInsetsGeometry? padding;
   const SocialLoginButtonWidget({
-    super.key,this.text, required this.image, this.color, this.padding,
+    super.key,
+    this.text,
+    required this.image,
+    this.color,
+    this.padding,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: padding ?? const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall),
+      padding: padding ??
+          const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall),
       decoration: BoxDecoration(
         color: Theme.of(context).hintColor.withOpacity(0.08),
         borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-        border: Border.all(color: Theme.of(context).primaryColor.withOpacity(0.1)),
+        border:
+            Border.all(color: Theme.of(context).primaryColor.withOpacity(0.1)),
       ),
-      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-    
-        Image.asset(
-          image,
-          color: color,
-          height: ResponsiveHelper.isDesktop(context)
-              ? 25 :ResponsiveHelper.isTab(context)
-              ? 20 : 15,
-          width: ResponsiveHelper.isDesktop(context)
-              ? 25 : ResponsiveHelper.isTab(context)
-              ? 20 : 15,
-        ),
-
-
-        if(text != null)...[
-          const SizedBox(width: Dimensions.paddingSizeExtraSmall),
-          Text(text!, style: rubikSemiBold.copyWith(
-            fontSize: Dimensions.fontSizeDefault,
-            color: Theme.of(context).textTheme.bodyMedium?.color,
-          ),)
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(
+            image,
+            color: color,
+            height: ResponsiveHelper.isDesktop(context)
+                ? 25
+                : ResponsiveHelper.isTab(context)
+                    ? 20
+                    : 15,
+            width: ResponsiveHelper.isDesktop(context)
+                ? 25
+                : ResponsiveHelper.isTab(context)
+                    ? 20
+                    : 15,
+          ),
+          if (text != null) ...[
+            const SizedBox(width: Dimensions.paddingSizeExtraSmall),
+            Text(
+              text!,
+              style: rubikSemiBold.copyWith(
+                fontSize: Dimensions.fontSizeDefault,
+                color: Theme.of(context).textTheme.bodyMedium?.color,
+              ),
+            )
+          ],
         ],
-
-    
-      ],),
+      ),
     );
   }
 }

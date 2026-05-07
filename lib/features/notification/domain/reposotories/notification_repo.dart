@@ -1,4 +1,3 @@
-
 import 'package:flutter_restaurant/data/datasource/remote/dio/dio_client.dart';
 import 'package:flutter_restaurant/data/datasource/remote/exception/api_error_handler.dart';
 import 'package:flutter_restaurant/common/models/api_response_model.dart';
@@ -17,6 +16,4 @@ class NotificationRepo {
       return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
     }
   }
-
-
 }

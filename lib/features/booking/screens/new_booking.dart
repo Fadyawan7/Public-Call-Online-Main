@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_restaurant/common/widgets/custom_app_bar_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_button_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_outlined_button_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_pop_scope_widget.dart';
@@ -17,7 +18,6 @@ import 'package:flutter_restaurant/helper/custom_snackbar_helper.dart';
 import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/localization/app_localization.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
-import 'package:flutter_restaurant/common/widgets/custom_app_bar_widget.dart';
 import 'package:flutter_restaurant/utill/color_resources.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';
@@ -208,7 +208,7 @@ class _BookingDateSlotScreenState extends State<BookingDateSlotScreen>
                                                     BoxShadow(
                                                       color: Theme.of(context)
                                                           .shadowColor
-                                                          .withOpacity(0.5),
+                                                          .withOpacity(0.1),
                                                       blurRadius: Dimensions
                                                           .radiusDefault,
                                                       spreadRadius: Dimensions
@@ -407,8 +407,7 @@ class _BookingDateSlotScreenState extends State<BookingDateSlotScreen>
                                     bookingProvider.listImagePath.length + 1,
                                 itemBuilder: (BuildContext context, index) {
                                   final imageCount =
-                                      bookingProvider.listImagePath.length ??
-                                          0;
+                                      bookingProvider.listImagePath.length ?? 0;
 
                                   // Last item is the add button
                                   if (index == imageCount) {

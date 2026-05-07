@@ -26,24 +26,31 @@ class LanguageWidget extends StatelessWidget {
           languageProvider.setSelectIndex(index);
         },
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge, vertical: Dimensions.paddingSizeDefault),
+          padding: const EdgeInsets.symmetric(
+              horizontal: Dimensions.paddingSizeLarge,
+              vertical: Dimensions.paddingSizeDefault),
           decoration: BoxDecoration(
-            color: languageProvider.selectIndex == index ? Theme.of(context).primaryColor.withOpacity(0.05) : null,
-            border: Border.all(width: 1.0, color: languageProvider.selectIndex == index ? Theme.of(context).primaryColor : Colors.transparent),
+            color: languageProvider.selectIndex == index
+                ? Theme.of(context).primaryColor.withOpacity(0.05)
+                : null,
+            border: Border.all(
+                width: 1.0,
+                color: languageProvider.selectIndex == index
+                    ? Theme.of(context).primaryColor
+                    : Colors.transparent),
             borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
           ),
-          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Row(children: [
               Image.asset(languageModel.imageUrl!, width: 34, height: 34),
               const SizedBox(width: Dimensions.paddingSizeDefault),
-
               Text(
                 languageModel.languageName!,
-                style: Theme.of(context).textTheme.displayMedium!.copyWith(color: Theme.of(context).textTheme.bodyLarge!.color),
+                style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                    color: Theme.of(context).textTheme.bodyLarge!.color),
               ),
             ]),
-
           ]),
         ),
       ),

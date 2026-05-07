@@ -17,18 +17,23 @@ class CategoryScreen extends StatefulWidget {
   final String categoryId;
   final String? categoryName;
   final String? categoryBannerImage;
-  const CategoryScreen({super.key, required this.categoryId, this.categoryName, this.categoryBannerImage});
+  const CategoryScreen(
+      {super.key,
+      required this.categoryId,
+      this.categoryName,
+      this.categoryBannerImage});
 
   @override
   State<CategoryScreen> createState() => _CategoryScreenState();
 }
 
-class _CategoryScreenState extends State<CategoryScreen> with TickerProviderStateMixin {
+class _CategoryScreenState extends State<CategoryScreen>
+    with TickerProviderStateMixin {
   int _tabIndex = 0;
   String _type = 'all';
   final ScrollController _scrollController = ScrollController();
 
- @override
+  @override
   void initState() {
     super.initState();
 
@@ -36,13 +41,13 @@ class _CategoryScreenState extends State<CategoryScreen> with TickerProviderStat
   }
 
   void _loadData() async {
-   final categoryProvider = Provider.of<CategoryProvider>(context, listen: false);
+    final categoryProvider =
+        Provider.of<CategoryProvider>(context, listen: false);
 
-   categoryProvider.getCategoryList();
- }
+    categoryProvider.getCategoryList();
+  }
 
-
- @override
+  @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
@@ -50,171 +55,233 @@ class _CategoryScreenState extends State<CategoryScreen> with TickerProviderStat
 
   @override
   Widget build(BuildContext context) {
-   final SplashProvider splashProvider = Provider.of<SplashProvider>(context, listen: false);
+    final SplashProvider splashProvider =
+        Provider.of<SplashProvider>(context, listen: false);
 
-   final Size size = MediaQuery.sizeOf(context);
-   final double realSpaceNeeded = (size.width - Dimensions.webScreenWidth) / 2;
-   final isDesktop = ResponsiveHelper.isDesktop(context);
+    final Size size = MediaQuery.sizeOf(context);
+    final double realSpaceNeeded = (size.width - Dimensions.webScreenWidth) / 2;
+    final isDesktop = ResponsiveHelper.isDesktop(context);
 
     return Scaffold(
-      appBar:  null,
+      appBar: null,
       body: Consumer<CategoryProvider>(
         builder: (context, category, child) {
-          return category.isLoading || category.categoryList == null ?
-          _categoryShimmer(context, size.height, category) :
-          PaginatedListWidget(
-            scrollController: _scrollController,
-            onPaginate: (int? offset) async {
-
-            },
-            totalSize: category.categoryProductModel?.totalSize,
-            offset: category.categoryProductModel?.offset,
-            limit: category.categoryProductModel?.limit,
-            isDisableWebLoader: !ResponsiveHelper.isDesktop(context),
-            builder:(Widget loaderWidget)=> Expanded(child: CustomScrollView(
-              controller: _scrollController,
-              slivers: [
-
-                SliverAppBar(
-                  surfaceTintColor: Colors.transparent,
-                  backgroundColor: Theme.of(context).cardColor,
-                  expandedHeight: 200,
-                  toolbarHeight: 50 + MediaQuery.of(context).padding.top,
-                  pinned: true,
-                  floating: false,
-                  leading: isDesktop ? const SizedBox() : SizedBox(
-                    width: isDesktop ? Dimensions.webMaxWidth : MediaQuery.of(context).size.width,
-                    child: IconButton(
-                      icon: const Icon(Icons.chevron_left, color: Colors.white),
-                      onPressed: () => context.pop(),
-                    ),
-                  ),
-                  flexibleSpace: Container(
-                    color:Theme.of(context).canvasColor,
-                    margin: isDesktop? EdgeInsets.symmetric(horizontal: realSpaceNeeded) : const EdgeInsets.symmetric(horizontal: 0),
-                    width: isDesktop ? Dimensions.webScreenWidth : MediaQuery.of(context).size.width,
-                    child: FlexibleSpaceBar(
-                      title: Text(widget.categoryName ?? '', style: rubikSemiBold.copyWith(
-                        fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).cardColor,
-                      )),
-                      titlePadding: EdgeInsets.only(
-                        bottom: 54 + (MediaQuery.of(context).padding.top/2),
-                        left: 50,
-                        right: 50,
-                      ),
-                      background: Container(height: 50, width : isDesktop ? Dimensions.webScreenWidth : MediaQuery.of(context).size.width,
-                        margin: const EdgeInsets.only(bottom: 50),
-                        child: CustomImageWidget(
-                          placeholder: Images.categoryBanner, fit: BoxFit.cover,
-                          image: '${widget.categoryBannerImage}',
+          return category.isLoading || category.categoryList == null
+              ? _categoryShimmer(context, size.height, category)
+              : PaginatedListWidget(
+                  scrollController: _scrollController,
+                  onPaginate: (int? offset) async {},
+                  totalSize: category.categoryProductModel?.totalSize,
+                  offset: category.categoryProductModel?.offset,
+                  limit: category.categoryProductModel?.limit,
+                  isDisableWebLoader: !ResponsiveHelper.isDesktop(context),
+                  builder: (Widget loaderWidget) => Expanded(
+                      child: CustomScrollView(
+                    controller: _scrollController,
+                    slivers: [
+                      SliverAppBar(
+                        surfaceTintColor: Colors.transparent,
+                        backgroundColor: Theme.of(context).cardColor,
+                        expandedHeight: 200,
+                        toolbarHeight: 50 + MediaQuery.of(context).padding.top,
+                        pinned: true,
+                        floating: false,
+                        leading: isDesktop
+                            ? const SizedBox()
+                            : SizedBox(
+                                width: isDesktop
+                                    ? Dimensions.webMaxWidth
+                                    : MediaQuery.of(context).size.width,
+                                child: IconButton(
+                                  icon: const Icon(Icons.chevron_left,
+                                      color: Colors.white),
+                                  onPressed: () => context.pop(),
+                                ),
+                              ),
+                        flexibleSpace: Container(
+                          color: Theme.of(context).canvasColor,
+                          margin: isDesktop
+                              ? EdgeInsets.symmetric(
+                                  horizontal: realSpaceNeeded)
+                              : const EdgeInsets.symmetric(horizontal: 0),
+                          width: isDesktop
+                              ? Dimensions.webScreenWidth
+                              : MediaQuery.of(context).size.width,
+                          child: FlexibleSpaceBar(
+                            title: Text(widget.categoryName ?? '',
+                                style: rubikSemiBold.copyWith(
+                                  fontSize: Dimensions.fontSizeLarge,
+                                  color: Theme.of(context).cardColor,
+                                )),
+                            titlePadding: EdgeInsets.only(
+                              bottom:
+                                  54 + (MediaQuery.of(context).padding.top / 2),
+                              left: 50,
+                              right: 50,
+                            ),
+                            background: Container(
+                              height: 50,
+                              width: isDesktop
+                                  ? Dimensions.webScreenWidth
+                                  : MediaQuery.of(context).size.width,
+                              margin: const EdgeInsets.only(bottom: 50),
+                              child: CustomImageWidget(
+                                placeholder: Images.categoryBanner,
+                                fit: BoxFit.cover,
+                                image: '${widget.categoryBannerImage}',
+                              ),
+                            ),
+                          ),
+                        ),
+                        bottom: PreferredSize(
+                          preferredSize: const Size.fromHeight(30.0),
+                          child: category.subCategoryList != null
+                              ? Container(
+                                  width: isDesktop
+                                      ? Dimensions.webScreenWidth
+                                      : MediaQuery.of(context).size.width,
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).cardColor,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge!
+                                            .color!
+                                            .withOpacity(0.05),
+                                        blurRadius: 10,
+                                        spreadRadius:
+                                            0, // Adjust spread radius for shadow concentration
+                                        offset: const Offset(0,
+                                            10), // Shift shadow vertically downwards
+                                      ),
+                                    ],
+                                  ),
+                                  child: TabBar(
+                                    dividerColor: Colors.transparent,
+                                    controller: TabController(
+                                        initialIndex: _tabIndex,
+                                        length:
+                                            category.subCategoryList!.length +
+                                                1,
+                                        vsync: this),
+                                    isScrollable: true,
+                                    unselectedLabelColor: Theme.of(context)
+                                        .hintColor
+                                        .withOpacity(0.7),
+                                    indicatorWeight: 3,
+                                    indicatorSize: TabBarIndicatorSize.label,
+                                    indicatorColor:
+                                        Theme.of(context).primaryColor,
+                                    labelColor: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge!
+                                        .color,
+                                    tabs: _tabs(category),
+                                    onTap: (int index) {
+                                      _type = 'all';
+                                      _tabIndex = index;
+                                      if (index == 0) {
+                                      } else {}
+                                    },
+                                  ),
+                                )
+                              : const SizedBox(),
                         ),
                       ),
-                    ),
-                  ),
-                  bottom: PreferredSize(
-                    preferredSize: const Size.fromHeight(30.0),
-                    child: category.subCategoryList != null?Container(
-                      width:  isDesktop ? Dimensions.webScreenWidth : MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).cardColor,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(0.05),
-                            blurRadius: 10,
-                            spreadRadius: 0, // Adjust spread radius for shadow concentration
-                            offset: const Offset(0, 10), // Shift shadow vertically downwards
-                          ),
-                        ],
+                      SliverPadding(
+                        padding: ResponsiveHelper.isDesktop(context)
+                            ? EdgeInsets.symmetric(
+                                horizontal: realSpaceNeeded,
+                                vertical: Dimensions.paddingSizeSmall,
+                              )
+                            : const EdgeInsets.all(Dimensions.paddingSizeSmall),
+                        sliver: category.categoryProductModel == null ||
+                                (category.categoryProductModel?.products
+                                        ?.isNotEmpty ??
+                                    false)
+                            ? SliverGrid.builder(
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: isDesktop
+                                      ? 5
+                                      : ResponsiveHelper.isTab(context)
+                                          ? 3
+                                          : 2,
+                                  crossAxisSpacing: Dimensions.paddingSizeSmall,
+                                  mainAxisSpacing: Dimensions.paddingSizeSmall,
+                                  mainAxisExtent: 260,
+                                ),
+                                itemCount: category.categoryProductModel == null
+                                    ? 10
+                                    : category
+                                        .categoryProductModel!.products!.length,
+                                itemBuilder: (context, index) {
+                                  if (category.categoryProductModel == null) {
+                                    return const ProductShimmerWidget(
+                                      isEnabled: true,
+                                      isList: false,
+                                      width: double.maxFinite,
+                                    );
+                                  }
+                                  return null;
+                                },
+                              )
+                            : const SliverToBoxAdapter(
+                                child: NoDataWidget(isFooter: false)),
                       ),
-                      child: TabBar(
-                        dividerColor: Colors.transparent,
-                        controller: TabController(initialIndex: _tabIndex,
-                            length: category.subCategoryList!.length+1, vsync: this),
-                        isScrollable: true,
-                        unselectedLabelColor: Theme.of(context).hintColor.withOpacity(0.7),
-                        indicatorWeight: 3,
-                        indicatorSize: TabBarIndicatorSize.label,
-                        indicatorColor: Theme.of(context).primaryColor,
-                        labelColor: Theme.of(context).textTheme.bodyLarge!.color,
-                        tabs: _tabs(category),
-                        onTap: (int index) {
-                          _type = 'all';
-                          _tabIndex = index;
-                          if(index == 0) {
-                          }else {
-                          }
-                        },
-                      ),
-                    ):const SizedBox(),
-                  ),
-                ),
-
-
-                SliverPadding(
-                  padding: ResponsiveHelper.isDesktop(context) ? EdgeInsets.symmetric(
-                    horizontal: realSpaceNeeded,
-                    vertical: Dimensions.paddingSizeSmall,
-                  ) : const EdgeInsets.all(Dimensions.paddingSizeSmall),
-                  sliver: category.categoryProductModel == null || (category.categoryProductModel?.products?.isNotEmpty ?? false) ? SliverGrid.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: isDesktop ? 5 : ResponsiveHelper.isTab(context) ? 3 : 2,
-                      crossAxisSpacing: Dimensions.paddingSizeSmall,
-                      mainAxisSpacing: Dimensions.paddingSizeSmall,
-                      mainAxisExtent: 260,
-                    ),
-                    itemCount: category.categoryProductModel == null ? 10 : category.categoryProductModel!.products!.length,
-                    itemBuilder: (context, index) {
-                      if(category.categoryProductModel == null) {
-                        return const ProductShimmerWidget(
-                        isEnabled: true,
-                        isList: false,
-                        width: double.maxFinite,
-                      );
-                      }
-                      return null;
-
-                    },
-                  ) : const SliverToBoxAdapter(child: NoDataWidget(isFooter: false)),
-                ),
-
-
-
-
-              ],
-            )),
-          );
+                    ],
+                  )),
+                );
         },
       ),
     );
   }
 
-  SingleChildScrollView _categoryShimmer(BuildContext context, double height, CategoryProvider category) {
-   final isDesktop = ResponsiveHelper.isDesktop(context);
+  SingleChildScrollView _categoryShimmer(
+      BuildContext context, double height, CategoryProvider category) {
+    final isDesktop = ResponsiveHelper.isDesktop(context);
 
-    return SingleChildScrollView(child: Column(children: [
+    return SingleChildScrollView(
+        child: Column(children: [
       ConstrainedBox(
-        constraints: BoxConstraints(minHeight: !isDesktop && height < 600 ? height : height - 400),
-        child: Center(child: SizedBox(width: Dimensions.webScreenWidth, child: Column(children: [
-          Shimmer(
-            duration: const Duration(seconds: 2),
-            enabled: true,
-            child: Container(height: 200, width: double.infinity, color: Theme.of(context).shadowColor),
-          ),
-          GridView.builder(
-            shrinkWrap: true,
-            itemCount: 10,
-            physics: const NeverScrollableScrollPhysics(),
-            padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisSpacing: Dimensions.paddingSizeSmall, mainAxisSpacing: Dimensions.paddingSizeSmall,
-              crossAxisCount: isDesktop ? 5 : ResponsiveHelper.isTab(context) ? 3 : 2,
-              mainAxisExtent: isDesktop ? 260 : 260,
-            ),
-            itemBuilder: (context, index) {
-              return ProductShimmerWidget(isEnabled: category.categoryProductModel == null, isList: false, width: double.maxFinite);
-            },
-          ),
-        ]))),
+        constraints: BoxConstraints(
+            minHeight: !isDesktop && height < 600 ? height : height - 400),
+        child: Center(
+            child: SizedBox(
+                width: Dimensions.webScreenWidth,
+                child: Column(children: [
+                  Shimmer(
+                    duration: const Duration(seconds: 2),
+                    enabled: true,
+                    child: Container(
+                        height: 200,
+                        width: double.infinity,
+                        color: Theme.of(context).shadowColor),
+                  ),
+                  GridView.builder(
+                    shrinkWrap: true,
+                    itemCount: 10,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisSpacing: Dimensions.paddingSizeSmall,
+                      mainAxisSpacing: Dimensions.paddingSizeSmall,
+                      crossAxisCount: isDesktop
+                          ? 5
+                          : ResponsiveHelper.isTab(context)
+                              ? 3
+                              : 2,
+                      mainAxisExtent: isDesktop ? 260 : 260,
+                    ),
+                    itemBuilder: (context, index) {
+                      return ProductShimmerWidget(
+                          isEnabled: category.categoryProductModel == null,
+                          isList: false,
+                          width: double.maxFinite);
+                    },
+                  ),
+                ]))),
       ),
     ]));
   }

@@ -7,7 +7,6 @@ import 'package:flutter_restaurant/features/chat/widgets/image_diaglog_widget.da
 import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 
-
 class BookingAttachmentsWidget extends StatelessWidget {
   const BookingAttachmentsWidget({
     super.key,
@@ -20,33 +19,41 @@ class BookingAttachmentsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    return Column(
-        children: [
+    return Column(children: [
       GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2 ,
-        crossAxisSpacing: Dimensions.paddingSizeExtraSmall,
-        mainAxisSpacing: Dimensions.paddingSizeExtraSmall,
-        childAspectRatio: (bookingProvider.bookingDetails!.attachments!.length ?? 0) == 2 ? 0.8 : 1,
-      ),
-      itemCount: min((bookingProvider.bookingDetails!.attachments!.length ?? 0), 4),
-      itemBuilder: (context, index) {
-        return InkWell(
-          onTap: () => showDialog(context: context, builder: (ctx)  =>  ImageDialogWidget(imageUrl:'${bookingProvider.bookingDetails!.attachmentUrl}/${bookingProvider.bookingDetails!.attachments![index]}'), ),
-
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-            child: CustomImageWidget(
-              image: '${bookingProvider.bookingDetails!.attachmentUrl}/${bookingProvider.bookingDetails!.attachments![index]}',
-              height: 30, width: 30,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: Dimensions.paddingSizeExtraSmall,
+          mainAxisSpacing: Dimensions.paddingSizeExtraSmall,
+          childAspectRatio:
+              (bookingProvider.bookingDetails!.attachments!.length ?? 0) == 2
+                  ? 0.8
+                  : 1,
+        ),
+        itemCount:
+            min((bookingProvider.bookingDetails!.attachments!.length ?? 0), 4),
+        itemBuilder: (context, index) {
+          return InkWell(
+            onTap: () => showDialog(
+              context: context,
+              builder: (ctx) => ImageDialogWidget(
+                  imageUrl:
+                      '${bookingProvider.bookingDetails!.attachmentUrl}/${bookingProvider.bookingDetails!.attachments![index]}'),
             ),
-          ),
-        );
-      } ,
-    )
-        ]);
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+              child: CustomImageWidget(
+                image:
+                    '${bookingProvider.bookingDetails!.attachmentUrl}/${bookingProvider.bookingDetails!.attachments![index]}',
+                height: 30,
+                width: 30,
+              ),
+            ),
+          );
+        },
+      )
+    ]);
   }
 }

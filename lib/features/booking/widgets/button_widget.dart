@@ -1,21 +1,20 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-
+import 'package:flutter_restaurant/common/widgets/custom_button_widget.dart';
+import 'package:flutter_restaurant/common/widgets/gradient_button_widget.dart';
 import 'package:flutter_restaurant/common/widgets/slider_button_widget.dart';
 import 'package:flutter_restaurant/features/booking/providers/booking_provider.dart';
 import 'package:flutter_restaurant/features/booking/widgets/booking_cancel_dialog_widget.dart';
 import 'package:flutter_restaurant/features/language/providers/localization_provider.dart';
 import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
-
+import 'package:flutter_restaurant/helper/custom_snackbar_helper.dart';
+import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/main.dart';
 import 'package:flutter_restaurant/utill/color_resources.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
-import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
-import 'package:flutter_restaurant/common/widgets/custom_button_widget.dart';
-import 'package:flutter_restaurant/helper/custom_snackbar_helper.dart';
 import 'package:provider/provider.dart';
 
 class ButtonWidget extends StatelessWidget {
@@ -25,9 +24,9 @@ class ButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Consumer<BookingProvider>(builder: (context, bookingProvider, _) {
-      final profileProvider = Provider.of<ProfileProvider>(context, listen: false);
+      final profileProvider =
+          Provider.of<ProfileProvider>(context, listen: false);
       final userType = profileProvider.userInfoModel!.userType;
       final bookingStatus = bookingProvider.bookingDetails?.status;
       final width = MediaQuery.of(context).size.width;
@@ -40,22 +39,23 @@ class ButtonWidget extends StatelessWidget {
         required VoidCallback onPressed,
       }) {
         return Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
-            child: TextButton(
-              style: TextButton.styleFrom(
-                minimumSize: const Size(1, 50),
-                backgroundColor: backgroundColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              onPressed: onPressed,
-              child: Text(
-                getTranslated(text, context)!,
-                style: rubikBold.copyWith(
-                  color: textColor,
-                  fontSize: Dimensions.fontSizeLarge,
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
+              child: GradientButtonWidget(
+                onTap: onPressed,
+                height: 50,
+                borderRadius: 10,
+                gradientColors: [
+                  backgroundColor,
+                  Theme.of(context).primaryColor,
+                ],
+                child: Text(
+                  getTranslated(text, context)!,
+                  style: rubikBold.copyWith(
+                    color: textColor,
+                    fontSize: Dimensions.fontSizeLarge,
+                  ),
                 ),
               ),
             ),
@@ -70,7 +70,8 @@ class ButtonWidget extends StatelessWidget {
           margin: const EdgeInsets.all(Dimensions.paddingSizeSmall),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(Dimensions.paddingSizeSmall),
-            border: Border.all(color: Theme.of(context).dividerColor.withOpacity(.05)),
+            border: Border.all(
+                color: Theme.of(context).dividerColor.withOpacity(.05)),
             color: Theme.of(context).canvasColor,
           ),
           child: Transform.rotate(
@@ -84,11 +85,13 @@ class ButtonWidget extends StatelessWidget {
                     'completed',
                     _callback,
                   );
-
                 },
                 label: Text(
                   getTranslated('Swipe to Complete Booking', context)!,
-                  style: Theme.of(context).textTheme.displaySmall!.copyWith(color: Theme.of(context).primaryColor),
+                  style: Theme.of(context)
+                      .textTheme
+                      .displaySmall!
+                      .copyWith(color: Theme.of(context).primaryColor),
                 ),
                 dismissThresholds: 0.5,
                 dismissible: false,
@@ -121,7 +124,8 @@ class ButtonWidget extends StatelessWidget {
                   children: [
                     buildActionButton(
                       text: 'Cancel Booking',
-                      backgroundColor: Theme.of(context).hintColor.withOpacity(0.2),
+                      backgroundColor:
+                          Theme.of(context).hintColor.withOpacity(0.2),
                       textColor: ColorResources.homePageSectionTitleColor,
                       onPressed: () {
                         showDialog(
@@ -130,13 +134,19 @@ class ButtonWidget extends StatelessWidget {
                           builder: (context) => BookingCancelDialogWidget(
                             popUpTxt: "are_you_sure_to_cancel",
                             status: "cancelled",
-                            bookingID: bookingProvider.bookingDetails!.id.toString(),
-                            callback: (String message, bool isSuccess, String bookingID) {
+                            bookingID:
+                                bookingProvider.bookingDetails!.id.toString(),
+                            callback: (String message, bool isSuccess,
+                                String bookingID) {
                               if (isSuccess) {
-                                showCustomSnackBarHelper(message, isError: false);
-                                RouterHelper.getMainRoute(action: RouteAction.pushNamedAndRemoveUntil);
+                                showCustomSnackBarHelper(message,
+                                    isError: false);
+                                RouterHelper.getMainRoute(
+                                    action:
+                                        RouteAction.pushNamedAndRemoveUntil);
                               } else {
-                                showCustomSnackBarHelper(message, isError: true);
+                                showCustomSnackBarHelper(message,
+                                    isError: true);
                               }
                             },
                           ),
@@ -166,14 +176,20 @@ class ButtonWidget extends StatelessWidget {
                           builder: (context) => BookingCancelDialogWidget(
                             popUpTxt: "are_you_sure_to_confirm",
                             status: "confirmed",
-                            bookingID: bookingProvider.bookingDetails!.id.toString(),
-                            callback: (String message, bool isSuccess, String bookingID) {
+                            bookingID:
+                                bookingProvider.bookingDetails!.id.toString(),
+                            callback: (String message, bool isSuccess,
+                                String bookingID) {
                               if (isSuccess) {
-                                bookingProvider.getBookingDetails(bookingID).then((_) {
-                                  showCustomSnackBarHelper(message, isError: false);
+                                bookingProvider
+                                    .getBookingDetails(bookingID)
+                                    .then((_) {
+                                  showCustomSnackBarHelper(message,
+                                      isError: false);
                                 });
                               } else {
-                                showCustomSnackBarHelper(message, isError: true);
+                                showCustomSnackBarHelper(message,
+                                    isError: true);
                               }
                             },
                           ),
@@ -185,11 +201,13 @@ class ButtonWidget extends StatelessWidget {
               ),
             ),
           ],
-
           if (bookingStatus == 'completed' &&
-              ((bookingProvider.bookingDetails!.userReview == false && profileProvider.userInfoModel!.userType != "freelancer")||
-            bookingProvider.bookingDetails!.freelancerReview == false && profileProvider.userInfoModel!.userType == "freelancer")
-          ) ...[
+              ((bookingProvider.bookingDetails!.userReview == false &&
+                      profileProvider.userInfoModel!.userType !=
+                          "freelancer") ||
+                  bookingProvider.bookingDetails!.freelancerReview == false &&
+                      profileProvider.userInfoModel!.userType ==
+                          "freelancer")) ...[
             Center(
               child: Container(
                 width: width > 700 ? 700 : width,
@@ -199,8 +217,11 @@ class ButtonWidget extends StatelessWidget {
                   onTap: () {
                     String? takerId = userType == "freelancer"
                         ? bookingProvider.bookingDetails!.userId.toString()
-                        : bookingProvider.bookingDetails!.freelancerId.toString();
-                    RouterHelper.getSubmitRateReviewRoute(bookingId: bookingProvider.bookingDetails!.id, takerId: takerId);
+                        : bookingProvider.bookingDetails!.freelancerId
+                            .toString();
+                    RouterHelper.getSubmitRateReviewRoute(
+                        bookingId: bookingProvider.bookingDetails!.id,
+                        takerId: takerId);
                   },
                 ),
               ),
@@ -225,14 +246,20 @@ class ButtonWidget extends StatelessWidget {
                           builder: (context) => BookingCancelDialogWidget(
                             popUpTxt: "are_you_sure_to_complete",
                             status: "completed",
-                            bookingID: bookingProvider.bookingDetails!.id.toString(),
-                            callback: (String message, bool isSuccess, String bookingID) {
+                            bookingID:
+                                bookingProvider.bookingDetails!.id.toString(),
+                            callback: (String message, bool isSuccess,
+                                String bookingID) {
                               if (isSuccess) {
-                                bookingProvider.getBookingDetails(bookingID).then((_) {
-                                  showCustomSnackBarHelper(message, isError: false);
+                                bookingProvider
+                                    .getBookingDetails(bookingID)
+                                    .then((_) {
+                                  showCustomSnackBarHelper(message,
+                                      isError: false);
                                 });
                               } else {
-                                showCustomSnackBarHelper(message, isError: true);
+                                showCustomSnackBarHelper(message,
+                                    isError: true);
                               }
                             },
                           ),
@@ -243,7 +270,6 @@ class ButtonWidget extends StatelessWidget {
                 ),
               ),
             ),
-
           ],
         ],
       );
@@ -252,13 +278,15 @@ class ButtonWidget extends StatelessWidget {
 
   void _callback(String message, bool isSuccess, String bookingID) async {
     if (isSuccess) {
-      Provider.of<BookingProvider>(Get.context!, listen: false).getBookingDetails(bookingID.toString()).then((_) {
-        showCustomSnackBarHelper('Booking completed Successfully!', isError: false);
+      Provider.of<BookingProvider>(Get.context!, listen: false)
+          .getBookingDetails(bookingID.toString())
+          .then((_) {
+        showCustomSnackBarHelper('Booking completed Successfully!',
+            isError: false);
       });
       showCustomSnackBarHelper(message, isError: false);
     } else {
       showCustomSnackBarHelper(message);
     }
   }
-
 }

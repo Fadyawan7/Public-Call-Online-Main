@@ -12,7 +12,6 @@ import 'package:flutter_restaurant/utill/app_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
-
 class AuthRepo {
   final DioClient? dioClient;
   final SharedPreferences? sharedPreferences;
@@ -35,15 +34,18 @@ class AuthRepo {
   //   }
   // }
 
+  Future<http.StreamedResponse> registration(
+      SignUpModel signUpModel, String token) async {
+    http.MultipartRequest request = http.MultipartRequest('POST',
+        Uri.parse('${AppConstants.baseUrl}${AppConstants.registerUri}'));
 
-  Future<http.StreamedResponse> registration(SignUpModel signUpModel, String token) async {
-
-    http.MultipartRequest request = http.MultipartRequest('POST', Uri.parse('${AppConstants.baseUrl}${AppConstants.registerUri}'));
-
-    request.headers.addAll(<String,String>{'Authorization': 'Bearer $token'});
+    request.headers.addAll(<String, String>{'Authorization': 'Bearer $token'});
     Map<String, String> fields = {};
     fields.addAll(<String, String>{
-      '_method': 'post',  'name': signUpModel.name!,'email': signUpModel.email!,'password': signUpModel.password!
+      '_method': 'post',
+      'name': signUpModel.name!,
+      'email': signUpModel.email!,
+      'password': signUpModel.password!
     });
 
     request.fields.addAll(fields);
@@ -63,9 +65,8 @@ class AuthRepo {
     }
   }
 
-
-
-  Future<ApiResponseModel> registerWithSocialMedia(String name, {required String email,String? phone}) async {
+  Future<ApiResponseModel> registerWithSocialMedia(String name,
+      {required String email, String? phone}) async {
     try {
       Response response = await dioClient!.post(
         AppConstants.registerWithSocialMedia,
@@ -77,11 +78,20 @@ class AuthRepo {
     }
   }
 
-  Future<ApiResponseModel> existingAccountCheck({String? email, required String phone, required int userResponse, required String medium}) async {
+  Future<ApiResponseModel> existingAccountCheck(
+      {String? email,
+      required String phone,
+      required int userResponse,
+      required String medium}) async {
     try {
       Response response = await dioClient!.post(
         AppConstants.existingAccountCheck,
-        data: {"email": email, 'phone': phone,  "user_response": userResponse, "medium": medium},
+        data: {
+          "email": email,
+          'phone': phone,
+          "user_response": userResponse,
+          "medium": medium
+        },
       );
       return ApiResponseModel.withSuccess(response);
     } catch (e) {
@@ -90,9 +100,9 @@ class AuthRepo {
   }
 
   Future<void> subscribeTokenToTopic(token, topic) async {
-    await dioClient?.post(AppConstants.subscribeToTopic, data: {"fcm_token": '$token'});
+    await dioClient
+        ?.post(AppConstants.subscribeToTopic, data: {"fcm_token": '$token'});
   }
-
 
   Future<ApiResponseModel> updateDeviceToken({String? fcmToken}) async {
     try {
@@ -100,19 +110,27 @@ class AuthRepo {
 
       if (defaultTargetPlatform == TargetPlatform.iOS) {
         try {
-          FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(alert: true, badge: true, sound: true);
-          NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
-            alert: true, announcement: false, badge: true, carPlay: false,
-            criticalAlert: false, provisional: false, sound: true,
+          FirebaseMessaging.instance
+              .setForegroundNotificationPresentationOptions(
+                  alert: true, badge: true, sound: true);
+          NotificationSettings settings =
+              await FirebaseMessaging.instance.requestPermission(
+            alert: true,
+            announcement: false,
+            badge: true,
+            carPlay: false,
+            criticalAlert: false,
+            provisional: false,
+            sound: true,
           );
-          if(settings.authorizationStatus == AuthorizationStatus.authorized) {
+          if (settings.authorizationStatus == AuthorizationStatus.authorized) {
             deviceToken = (await getDeviceToken()) ?? '@';
           }
         } catch (e) {
           debugPrint('🔴 iOS notification permission error: $e');
           // Fallback to '@' if permission fails
         }
-      }else {
+      } else {
         try {
           deviceToken = (await getDeviceToken()) ?? '@';
         } catch (e) {
@@ -120,18 +138,21 @@ class AuthRepo {
         }
       }
 
-      if(!kIsWeb){
+      if (!kIsWeb) {
         if (defaultTargetPlatform == TargetPlatform.iOS ||
             defaultTargetPlatform == TargetPlatform.macOS) {
           try {
-            final String? apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+            final String? apnsToken =
+                await FirebaseMessaging.instance.getAPNSToken();
             if (apnsToken == null) {
               debugPrint('⚠️ APNS token not set yet, skipping topic update');
             } else {
-              if(fcmToken == null) {
-                await FirebaseMessaging.instance.subscribeToTopic(AppConstants.topic);
-              }else{
-                await FirebaseMessaging.instance.unsubscribeFromTopic(AppConstants.topic);
+              if (fcmToken == null) {
+                await FirebaseMessaging.instance
+                    .subscribeToTopic(AppConstants.topic);
+              } else {
+                await FirebaseMessaging.instance
+                    .unsubscribeFromTopic(AppConstants.topic);
               }
             }
           } catch (e) {
@@ -140,24 +161,30 @@ class AuthRepo {
           }
         } else {
           try {
-            if(fcmToken == null) {
-              await FirebaseMessaging.instance.subscribeToTopic(AppConstants.topic);
-            }else{
-              await FirebaseMessaging.instance.unsubscribeFromTopic(AppConstants.topic);
+            if (fcmToken == null) {
+              await FirebaseMessaging.instance
+                  .subscribeToTopic(AppConstants.topic);
+            } else {
+              await FirebaseMessaging.instance
+                  .unsubscribeFromTopic(AppConstants.topic);
             }
           } catch (e) {
             debugPrint('🔴 Topic subscription error: $e');
           }
         }
-      }else{
+      } else {
         try {
-          await subscribeTokenToTopic(deviceToken, fcmToken ?? AppConstants.topic);
+          await subscribeTokenToTopic(
+              deviceToken, fcmToken ?? AppConstants.topic);
         } catch (e) {
           debugPrint('🔴 Web topic subscription error: $e');
         }
       }
 
-      Map<String, dynamic> data = {"_method": "post", "fcm_token": fcmToken ?? deviceToken};
+      Map<String, dynamic> data = {
+        "_method": "post",
+        "fcm_token": fcmToken ?? deviceToken
+      };
 
       debugPrint('📤 Sending device token: $data');
 
@@ -176,7 +203,7 @@ class AuthRepo {
 
   Future<String?> getDeviceToken() async {
     String? deviceToken = '@';
-    try{
+    try {
       deviceToken = (await FirebaseMessaging.instance.getToken());
       if (deviceToken == null) {
         debugPrint('⚠️ FCM getToken returned null');
@@ -184,7 +211,7 @@ class AuthRepo {
       } else {
         debugPrint('✅ FCM token obtained: ${deviceToken.substring(0, 10)}...');
       }
-    } catch(error){
+    } catch (error) {
       debugPrint('🔴 FCM getToken error: $error');
       deviceToken = '@';
     }
@@ -194,7 +221,8 @@ class AuthRepo {
   // for forgot password
   Future<ApiResponseModel> forgetPassword(String email) async {
     try {
-      Response response = await dioClient!.post(AppConstants.forgetPasswordUri, data: {"email": email});
+      Response response = await dioClient!
+          .post(AppConstants.forgetPasswordUri, data: {"email": email});
       return ApiResponseModel.withSuccess(response);
     } catch (e) {
       return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
@@ -203,18 +231,27 @@ class AuthRepo {
 
   Future<ApiResponseModel> verifyToken(String email, String token) async {
     try {
-      Response response = await dioClient!.post(AppConstants.verifyTokenUri, data: {"email": email, "token": token});
+      Response response = await dioClient!.post(AppConstants.verifyTokenUri,
+          data: {"email": email, "token": token});
       return ApiResponseModel.withSuccess(response);
     } catch (e) {
       return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
     }
   }
 
-  Future<ApiResponseModel> resetPassword(String? mail, String? resetToken, String password, String confirmPassword, {required String type}) async {
+  Future<ApiResponseModel> resetPassword(
+      String? mail, String? resetToken, String password, String confirmPassword,
+      {required String type}) async {
     try {
       Response response = await dioClient!.post(
         AppConstants.resetPasswordUri,
-        data: {"_method": "put", "token": resetToken, "password": password, "password_confirmation": confirmPassword, "email": mail},
+        data: {
+          "_method": "put",
+          "token": resetToken,
+          "password": password,
+          "password_confirmation": confirmPassword,
+          "email": mail
+        },
       );
       return ApiResponseModel.withSuccess(response);
     } catch (e) {
@@ -225,7 +262,8 @@ class AuthRepo {
   // for verify email number
   Future<ApiResponseModel> checkEmail(String email) async {
     try {
-      Response response = await dioClient!.post(AppConstants.checkEmailUri, data: {"email": email});
+      Response response = await dioClient!
+          .post(AppConstants.checkEmailUri, data: {"email": email});
       return ApiResponseModel.withSuccess(response);
     } catch (e) {
       return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
@@ -234,20 +272,21 @@ class AuthRepo {
 
   Future<ApiResponseModel> verifyEmail(String email, String token) async {
     try {
-      Response response = await dioClient!.post(AppConstants.verifyEmailUri, data: {"email": email, "token": token});
+      Response response = await dioClient!.post(AppConstants.verifyEmailUri,
+          data: {"email": email, "token": token});
       return ApiResponseModel.withSuccess(response);
     } catch (e) {
       return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
     }
   }
 
-
-
   //verify phone number
 
   Future<ApiResponseModel> checkPhone(String phone) async {
     try {
-      Response response = await dioClient!.post(AppConstants.baseUrl + AppConstants.checkPhoneUri + phone, data: {"phone" : phone});
+      Response response = await dioClient!.post(
+          AppConstants.baseUrl + AppConstants.checkPhoneUri + phone,
+          data: {"phone": phone});
       return ApiResponseModel.withSuccess(response);
     } catch (e) {
       return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
@@ -256,8 +295,8 @@ class AuthRepo {
 
   Future<ApiResponseModel> verifyPhone(String phone, String token) async {
     try {
-      Response response = await dioClient!.post(
-          AppConstants.verifyPhoneUri, data: {"phone": phone.trim(), "token": token});
+      Response response = await dioClient!.post(AppConstants.verifyPhoneUri,
+          data: {"phone": phone.trim(), "token": token});
       return ApiResponseModel.withSuccess(response);
     } catch (e) {
       return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
@@ -266,35 +305,31 @@ class AuthRepo {
 
   Future<ApiResponseModel> verifyOtp(String phone, String token) async {
     try {
-      Response response = await dioClient!.post(
-          AppConstants.verifyOtpUri, data: {"phone": phone.trim(), "token": token});
+      Response response = await dioClient!.post(AppConstants.verifyOtpUri,
+          data: {"phone": phone.trim(), "token": token});
       return ApiResponseModel.withSuccess(response);
     } catch (e) {
       return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
     }
   }
 
-
-  Future<ApiResponseModel> verifyProfileInfo(String userInput, String token, String type) async {
+  Future<ApiResponseModel> verifyProfileInfo(
+      String userInput, String token, String type) async {
     try {
       print('=====EMAIL===$userInput');
-      Response response = await dioClient!.post(
-          AppConstants.verifyOtpUri, data: {"email": userInput, "token": token});
+      Response response = await dioClient!.post(AppConstants.verifyOtpUri,
+          data: {"email": userInput, "token": token});
       return ApiResponseModel.withSuccess(response);
     } catch (e) {
       return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
     }
   }
-
-
-
 
   // for  user token
   Future<void> saveUserToken(String token) async {
     dioClient!.updateHeader(getToken: token);
 
     try {
-
       await sharedPreferences!.setString(AppConstants.token, token);
     } catch (e) {
       rethrow;
@@ -310,19 +345,20 @@ class AuthRepo {
   }
 
   Future<bool> clearSharedData() async {
-    if(!kIsWeb) {
+    if (!kIsWeb) {
       Future.delayed(const Duration(milliseconds: 100)).then((value) async =>
-      await FirebaseMessaging.instance.unsubscribeFromTopic(AppConstants.topic));
+          await FirebaseMessaging.instance
+              .unsubscribeFromTopic(AppConstants.topic));
     }
 
-   try{
-     await dioClient!.post(
-       AppConstants.updateProfileUri,
-       data: {"_method": "put", "fcm_token": '@'},
-     );
-   }catch(error){
+    try {
+      await dioClient!.post(
+        AppConstants.updateProfileUri,
+        data: {"_method": "put", "fcm_token": '@'},
+      );
+    } catch (error) {
       debugPrint('error $error');
-   }
+    }
     print('------------(update device token) -----from clearSharedData|repo');
 
     await updateDeviceToken(fcmToken: '@');
@@ -350,58 +386,20 @@ class AuthRepo {
   }
 
   Future<ApiResponseModel> deleteUser() async {
-    try{
+    try {
       Response response = await dioClient!.delete(AppConstants.customerRemove);
       return ApiResponseModel.withSuccess(response);
-    }catch(e) {
+    } catch (e) {
       return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
     }
-
   }
 
-  Future<ApiResponseModel> disableAccount({bool temporaryDisabled = false}) async {
-    try{
+  Future<ApiResponseModel> disableAccount(
+      {bool temporaryDisabled = false}) async {
+    try {
       Response response = await dioClient!.post(
         AppConstants.disableAccount,
         data: {'temporary_disabled': temporaryDisabled},
-      );
-      return ApiResponseModel.withSuccess(response);
-    }catch(e) {
-      return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
-    }
-  }
-
-  
-Future<ApiResponseModel> socialLogin(SocialLoginModel socialLogin) async {
-  try {
-    print('Social Login body => ${socialLogin.toJson()}');
-
-    final response = await dioClient!.post(AppConstants.socialLogin, data: socialLogin.toJson());
-
-    print('Response => statusCode: ${response.statusCode}, data: ${response.data}');
-    return ApiResponseModel.withSuccess(response);
-
-  } on DioException catch (e) {
-    print('Dio error during socialLogin => ${e.response?.statusCode}, ${e.response?.data}');
-    return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
-  } catch (e) {
-    print('Unknown error during socialLogin => $e');
-    return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
-  }
-}
-
-
-
-  Future<ApiResponseModel> firebaseAuthVerify({required String phoneNumber, required String session, required String otp, required bool isForgetPassword}) async {
-    try {
-      Response response = await dioClient!.post(
-        AppConstants.firebaseAuthVerify,
-        data: {
-          'sessionInfo' : session,
-          'phoneNumber' : phoneNumber,
-          'code' : otp,
-          'is_reset_token' : isForgetPassword ? 1 : 0,
-        },
       );
       return ApiResponseModel.withSuccess(response);
     } catch (e) {
@@ -409,7 +407,44 @@ Future<ApiResponseModel> socialLogin(SocialLoginModel socialLogin) async {
     }
   }
 
+  Future<ApiResponseModel> socialLogin(SocialLoginModel socialLogin) async {
+    try {
+      print('Social Login body => ${socialLogin.toJson()}');
 
+      final response = await dioClient!
+          .post(AppConstants.socialLogin, data: socialLogin.toJson());
 
+      print(
+          'Response => statusCode: ${response.statusCode}, data: ${response.data}');
+      return ApiResponseModel.withSuccess(response);
+    } on DioException catch (e) {
+      print(
+          'Dio error during socialLogin => ${e.response?.statusCode}, ${e.response?.data}');
+      return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
+    } catch (e) {
+      print('Unknown error during socialLogin => $e');
+      return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
+    }
+  }
 
+  Future<ApiResponseModel> firebaseAuthVerify(
+      {required String phoneNumber,
+      required String session,
+      required String otp,
+      required bool isForgetPassword}) async {
+    try {
+      Response response = await dioClient!.post(
+        AppConstants.firebaseAuthVerify,
+        data: {
+          'sessionInfo': session,
+          'phoneNumber': phoneNumber,
+          'code': otp,
+          'is_reset_token': isForgetPassword ? 1 : 0,
+        },
+      );
+      return ApiResponseModel.withSuccess(response);
+    } catch (e) {
+      return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
+    }
+  }
 }

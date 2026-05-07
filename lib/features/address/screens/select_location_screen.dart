@@ -156,7 +156,9 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                   children: [
                     InkWell(
                       onTap: () => _checkPermission(() {
-                        locationProvider.getCurrentLocation(context, true, mapController: _controller, isLoggedIn: _isLoggedIn);
+                        locationProvider.getCurrentLocation(context, true,
+                            mapController: _controller,
+                            isLoggedIn: _isLoggedIn);
                       }),
                       child: Container(
                         width: 50,
@@ -191,11 +193,10 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                                     "selectedPosition.......$selectedPosition");
 
                                 final formattedAddress = await locationProvider
-                                    .getAddressFromGeocode(
-                                        LatLng(
-                                          selectedPosition.latitude,
-                                          selectedPosition.longitude,
-                                        ));
+                                    .getAddressFromGeocode(LatLng(
+                                  selectedPosition.latitude,
+                                  selectedPosition.longitude,
+                                ));
 
                                 print(
                                     "formattedAddress.......$formattedAddress");

@@ -15,7 +15,7 @@ class BottomNavItemWidget extends StatelessWidget {
     this.onTap,
     this.isSelected = false,
     required this.title,
-     this.icon,
+    this.icon,
     this.imageIcon,
   });
 
@@ -27,7 +27,6 @@ class BottomNavItemWidget extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-
             // 🔥 Show Image if imageIcon is provided, otherwise show Icon
             imageIcon != null && imageIcon!.isNotEmpty
                 ? CustomAssetImageWidget(

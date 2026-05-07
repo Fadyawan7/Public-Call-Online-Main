@@ -8,14 +8,13 @@ class AppConstants {
   static const AppMode appMode = AppMode.release;
   static const String baseUrl = 'https://publiccallonline.com';
   // static const String baseUrl =  'http://192.168.100.73:8000';
-
   static const String categoryUri = '/api/freelancers/categories';
   static const String frelanceCategoryUri =
       '/api/freelancers/categories/freelancer';
   static const String allFreelances =
       '/api/freelancers/categories/freelancer/rating';
   static const String bannerUri = '/api/banner';
-    static const String servicesCategories = '/api/freelancers/categories/rating';
+  static const String servicesCategories = '/api/freelancers/categories/rating';
 
   static const String latestProductUri = '/api/products/latest';
   static const String popularProductUri = '/api/products/popular';

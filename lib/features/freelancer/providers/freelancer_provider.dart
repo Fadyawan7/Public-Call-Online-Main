@@ -47,15 +47,14 @@ class FreelancerProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  
-
-  Future<void> getFreelancerList({int? categoryId, String? categoryName}) async {
+  Future<void> getFreelancerList(
+      {int? categoryId, String? categoryName}) async {
     try {
       final ApiResponseModel apiResponse =
           await freelancerRepo!.getFreelancerList(
-            categoryId: categoryId,
-            categoryName: categoryName,
-          );
+        categoryId: categoryId,
+        categoryName: categoryName,
+      );
       final responseData = apiResponse.response!.data;
 
       if (responseData["status"] == true) {
@@ -74,14 +73,6 @@ class FreelancerProvider extends ChangeNotifier {
     }
   }
 
-  
-  
-  
-  
-  
-  
-  
-  
   void setCategoryID(
       {int? categoryID, bool isUpdate = true, bool isReload = false}) {
     if (isReload) {
@@ -149,13 +140,13 @@ class FreelancerProvider extends ChangeNotifier {
       callback(true, message);
     } else {
       final errors = ApiCheckerHelper.getError(apiResponse).errors;
-      final String errorMessage =
-          (errors != null && errors.isNotEmpty &&
-                  (errors.first.message?.trim().isNotEmpty ?? false))
-              ? errors.first.message!.trim()
-              : (apiResponse.error?.toString().trim().isNotEmpty ?? false)
-                  ? apiResponse.error.toString().trim()
-                  : 'Something went wrong. Please try again.';
+      final String errorMessage = (errors != null &&
+              errors.isNotEmpty &&
+              (errors.first.message?.trim().isNotEmpty ?? false))
+          ? errors.first.message!.trim()
+          : (apiResponse.error?.toString().trim().isNotEmpty ?? false)
+              ? apiResponse.error.toString().trim()
+              : 'Something went wrong. Please try again.';
 
       callback(false, errorMessage);
     }
@@ -212,57 +203,57 @@ class FreelancerProvider extends ChangeNotifier {
     );
   }
 
-Future<BitmapDescriptor> createBorderedMarkerFromUrl(
-  String imageUrl, {
-  double size = 80,
-  double borderSize = 6,
-  String currentStatus = 'available', // pass status
-}) async {
-  final recorder = ui.PictureRecorder();
-  final canvas = Canvas(recorder);
-  final paint = Paint();
+  Future<BitmapDescriptor> createBorderedMarkerFromUrl(
+    String imageUrl, {
+    double size = 80,
+    double borderSize = 6,
+    String currentStatus = 'available', // pass status
+  }) async {
+    final recorder = ui.PictureRecorder();
+    final canvas = Canvas(recorder);
+    final paint = Paint();
 
-  final radius = size / 2;
+    final radius = size / 2;
 
-  // Determine border color based on currentStatus
-final borderColor = (currentStatus.trim().toLowerCase() == 'available')
-    ? Colors.green
-    : Colors.red;
-  // Draw border
-  paint.color = borderColor;
-  canvas.drawCircle(Offset(radius, radius), radius, paint);
+    // Determine border color based on currentStatus
+    final borderColor = (currentStatus.trim().toLowerCase() == 'available')
+        ? Colors.green
+        : Colors.red;
+    // Draw border
+    paint.color = borderColor;
+    canvas.drawCircle(Offset(radius, radius), radius, paint);
 
-  // Draw white inner circle
-  paint.color = Colors.white;
-  canvas.drawCircle(Offset(radius, radius), radius - borderSize, paint);
+    // Draw white inner circle
+    paint.color = Colors.white;
+    canvas.drawCircle(Offset(radius, radius), radius - borderSize, paint);
 
-  // Load image from URL
-  final Uint8List imgBytes = await fetchNetworkImageBytes(imageUrl);
-  final ui.Codec codec = await ui.instantiateImageCodec(imgBytes);
-  final ui.FrameInfo frameInfo = await codec.getNextFrame();
-  final ui.Image image = frameInfo.image;
+    // Load image from URL
+    final Uint8List imgBytes = await fetchNetworkImageBytes(imageUrl);
+    final ui.Codec codec = await ui.instantiateImageCodec(imgBytes);
+    final ui.FrameInfo frameInfo = await codec.getNextFrame();
+    final ui.Image image = frameInfo.image;
 
-  // Clip circle (image inside)
-  canvas.clipPath(Path()
-    ..addOval(Rect.fromCircle(
-      center: Offset(radius, radius),
-      radius: radius - borderSize,
-    )));
+    // Clip circle (image inside)
+    canvas.clipPath(Path()
+      ..addOval(Rect.fromCircle(
+        center: Offset(radius, radius),
+        radius: radius - borderSize,
+      )));
 
-  canvas.drawImageRect(
-    image,
-    Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()),
-    Rect.fromLTWH(
-        borderSize, borderSize, size - borderSize * 2, size - borderSize * 2),
-    paint,
-  );
+    canvas.drawImageRect(
+      image,
+      Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()),
+      Rect.fromLTWH(
+          borderSize, borderSize, size - borderSize * 2, size - borderSize * 2),
+      paint,
+    );
 
-  final picture = recorder.endRecording();
-  final img = await picture.toImage(size.toInt(), size.toInt());
-  final bytes = await img.toByteData(format: ui.ImageByteFormat.png);
+    final picture = recorder.endRecording();
+    final img = await picture.toImage(size.toInt(), size.toInt());
+    final bytes = await img.toByteData(format: ui.ImageByteFormat.png);
 
-  return BitmapDescriptor.fromBytes(bytes!.buffer.asUint8List());
-}
+    return BitmapDescriptor.fromBytes(bytes!.buffer.asUint8List());
+  }
 
   Future<Uint8List> fetchNetworkImageBytes(String url) async {
     final http.Response response = await http.get(Uri.parse(url));

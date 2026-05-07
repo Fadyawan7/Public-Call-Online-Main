@@ -15,9 +15,8 @@ class ApplyFreelancerModel {
     this.whatsapp_number,
     this.price,
     this.per_side,
-        this.per_hour,
-        this.other_category,
-
+    this.per_hour,
+    this.other_category,
     this.cover_picture,
   });
 
@@ -27,8 +26,8 @@ class ApplyFreelancerModel {
     whatsapp_number = json['whatsapp_number'];
     price = json['price'];
     per_side = json['per_side'];
-        per_hour = json['per_hour'];
-        other_category = json['other_category'];
+    per_hour = json['per_hour'];
+    other_category = json['other_category'];
   }
 
   Map<String, dynamic> toJson() {

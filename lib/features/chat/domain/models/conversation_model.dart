@@ -1,4 +1,3 @@
-
 class ConversationModel {
   int? id;
   int? chatId;

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_restaurant/common/widgets/custom_app_bar_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_loader_widget.dart';
+import 'package:flutter_restaurant/common/widgets/gradient_card_widget.dart';
+import 'package:flutter_restaurant/common/widgets/no_data_widget.dart';
+import 'package:flutter_restaurant/features/notification/providers/notification_provider.dart';
+import 'package:flutter_restaurant/features/notification/widgets/notification_dialog_widget.dart';
+import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
 import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
-import 'package:flutter_restaurant/features/notification/providers/notification_provider.dart';
-import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
 import 'package:flutter_restaurant/main.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
-import 'package:flutter_restaurant/common/widgets/custom_app_bar_widget.dart';
-import 'package:flutter_restaurant/common/widgets/no_data_widget.dart';
-import 'package:flutter_restaurant/features/notification/widgets/notification_dialog_widget.dart';
 import 'package:flutter_restaurant/utill/images.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -38,14 +39,18 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
     return Scaffold(
       appBar: (CustomAppBarWidget(
-         leading: InkWell(
-          onTap: () {
-            if(Get.context!.canPop()) {
-              Get.context!.pop();
-            }
-          },
-          child: const Icon(Icons.arrow_back_ios, size: 20,color: Colors.red,),
-        ),
+              leading: InkWell(
+                onTap: () {
+                  if (Get.context!.canPop()) {
+                    Get.context!.pop();
+                  }
+                },
+                child: const Icon(
+                  Icons.arrow_back_ios,
+                  size: 20,
+                  color: Colors.red,
+                ),
+              ),
               context: context,
               titleColor: Colors.white,
               title: getTranslated('notification', context)))
@@ -97,15 +102,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Container(
+                                      GradientCardWidget(
                                         padding: const EdgeInsets.symmetric(
                                             horizontal:
                                                 Dimensions.paddingSizeLarge),
-                                        decoration: BoxDecoration(
-                                          color: Theme.of(context).cardColor,
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
+                                        borderRadius: 10,
                                         child: Column(children: [
                                           const SizedBox(
                                               height: Dimensions
@@ -117,7 +118,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                               child: ClipRRect(
                                                 borderRadius:
                                                     BorderRadiusGeometry
-                                                        .circular(10),
+                                                        .circular(25),
                                                 child: Image.asset(
                                                   Images.pcosplash,
                                                 ),
@@ -136,7 +137,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                                   .displayMedium!
                                                   .copyWith(
                                                     fontSize: Dimensions
-                                                        .fontSizeLarge,
+                                                        .fontSizeDefault,
                                                   ),
                                               maxLines: 2,
                                               overflow: TextOverflow.ellipsis,

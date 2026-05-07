@@ -15,9 +15,8 @@ class BookingRepo {
 
   Future<ApiResponseModel> getBookingList(String? status) async {
     try {
-
       final response = await dioClient!.get('${AppConstants.bookingListUri}'
-      '?status=$status');
+          '?status=$status');
       return ApiResponseModel.withSuccess(response);
     } catch (e) {
       return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
@@ -26,8 +25,8 @@ class BookingRepo {
 
   Future<ApiResponseModel> getFreelancerReviewList(int? freelancerId) async {
     try {
-
-      final response = await dioClient!.get('${AppConstants.freelancerReviewUri}$freelancerId');
+      final response = await dioClient!
+          .get('${AppConstants.freelancerReviewUri}$freelancerId');
 
       return ApiResponseModel.withSuccess(response);
     } catch (e) {
@@ -37,34 +36,34 @@ class BookingRepo {
 
   Future<ApiResponseModel> getBookingDetails(String bookingID) async {
     try {
-      final response = await dioClient!.get('${AppConstants.bookingDetailsUri}$bookingID');
+      final response =
+          await dioClient!.get('${AppConstants.bookingDetailsUri}$bookingID');
       return ApiResponseModel.withSuccess(response);
     } catch (e) {
       return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
     }
   }
 
-
-  Future<ApiResponseModel> updateBookingStatus(String bookingID ,String? status) async {
+  Future<ApiResponseModel> updateBookingStatus(
+      String bookingID, String? status) async {
     try {
       Map<String, dynamic> data = <String, dynamic>{};
       data['booking_id'] = int.parse(bookingID);
       data['status'] = status;
       data['_method'] = 'post';
-      final response = await dioClient!.post(AppConstants.updateBookingStatusUri, data: data);
+      final response = await dioClient!
+          .post(AppConstants.updateBookingStatusUri, data: data);
       return ApiResponseModel.withSuccess(response);
     } catch (e) {
       return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
     }
   }
 
-
-
   Future<http.StreamedResponse> placeBooking(
-      PlaceBookingBody bookingBody,
-      List<String> imageList,
-      String token,
-      ) async {
+    PlaceBookingBody bookingBody,
+    List<String> imageList,
+    String token,
+  ) async {
     // Create a MultipartRequest
     http.MultipartRequest request = http.MultipartRequest(
       'POST',
@@ -78,7 +77,7 @@ class BookingRepo {
 
     // Convert bookingBody to a map
     Map<String, dynamic> data = bookingBody.toJson();
- print("======BOOKINGDATA====$data");
+    print("======BOOKINGDATA====$data");
     // Add fields to the request
     request.fields.addAll(<String, String>{
       '_method': 'post',
@@ -87,7 +86,6 @@ class BookingRepo {
       'date': data['date'],
       'description': data['description'],
       'address_id': data['address_id'].toString(),
-
     });
 
     // Add each image to the request
@@ -95,7 +93,8 @@ class BookingRepo {
       request.files.add(await http.MultipartFile.fromPath(
         'attachments[]', // Use "attachments[]" for Laravel to handle multiple files
         path,
-        filename: "${DateTime.now().millisecondsSinceEpoch}.${path.split('.').last}",
+        filename:
+            "${DateTime.now().millisecondsSinceEpoch}.${path.split('.').last}",
       ));
     }
 
@@ -106,11 +105,11 @@ class BookingRepo {
 
   Future<ApiResponseModel> submitReview(ReviewBody reviewBody) async {
     try {
-      final response = await dioClient!.postMultipart(AppConstants.reviewUri, data: reviewBody.toJson());
+      final response = await dioClient!
+          .postMultipart(AppConstants.reviewUri, data: reviewBody.toJson());
       return ApiResponseModel.withSuccess(response);
     } catch (e) {
       return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
     }
   }
 }
-

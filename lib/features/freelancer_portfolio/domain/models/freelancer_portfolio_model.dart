@@ -3,22 +3,12 @@ class FreelancerPortfolioModel {
   String? image;
   String? imageUrl;
 
-
-
-  FreelancerPortfolioModel(
-      {this.id,
-        this.image,
-        this.imageUrl
-
-
-      });
+  FreelancerPortfolioModel({this.id, this.image, this.imageUrl});
 
   FreelancerPortfolioModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     image = json['image'];
     imageUrl = json['image_url'];
-
-
   }
 
   Map<String, dynamic> toJson() {

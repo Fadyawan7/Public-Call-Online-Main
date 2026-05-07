@@ -11,7 +11,6 @@ class SocialLoginModel {
     uniqueId = json['unique_id'];
     medium = json['medium'];
     email = json['email'];
-
   }
 
   Map<String, dynamic> toJson() {

@@ -11,7 +11,8 @@ class FreelancerRepo {
   final SharedPreferences? sharedPreferences;
   FreelancerRepo({required this.dioClient, required this.sharedPreferences});
 
-  Future<ApiResponseModel> getFreelancerList({int? categoryId, String? categoryName}) async {
+  Future<ApiResponseModel> getFreelancerList(
+      {int? categoryId, String? categoryName}) async {
     try {
       final Map<String, dynamic> queryParams = {};
 
@@ -35,46 +36,44 @@ class FreelancerRepo {
     }
   }
 
-Future<ApiResponseModel> applyFreelancer(ApplyFreelancerModel model) async {
-  try {
-    Map<String, dynamic> fields = model.toJson();
-
-    List<XFile?> images = [];
-    if (model.cover_picture != null && model.cover_picture!.isNotEmpty) {
-      images.add(XFile(model.cover_picture!));
-    }
-
-    final response = await dioClient!.postMultipartImages(
-      AppConstants.applyFreelancerUri,
-      data: fields,
-      files: images,
-      fileKey: "cover_picture", 
-    );
-
-    return ApiResponseModel.withSuccess(response);
-
-  } catch (e) {
-    return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
-  }
-}
-
-
-  Future<ApiResponseModel> searchFreelancer(String text, ) async {
+  Future<ApiResponseModel> applyFreelancer(ApplyFreelancerModel model) async {
     try {
-      final response = await dioClient!.getWithoutToken('${AppConstants.frelanceCategoryUri}?categoryName=$text');
+      Map<String, dynamic> fields = model.toJson();
+
+      List<XFile?> images = [];
+      if (model.cover_picture != null && model.cover_picture!.isNotEmpty) {
+        images.add(XFile(model.cover_picture!));
+      }
+
+      final response = await dioClient!.postMultipartImages(
+        AppConstants.applyFreelancerUri,
+        data: fields,
+        files: images,
+        fileKey: "cover_picture",
+      );
+
       return ApiResponseModel.withSuccess(response);
     } catch (e) {
       return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
     }
   }
 
+  Future<ApiResponseModel> searchFreelancer(
+    String text,
+  ) async {
+    try {
+      final response = await dioClient!.getWithoutToken(
+          '${AppConstants.frelanceCategoryUri}?categoryName=$text');
+      return ApiResponseModel.withSuccess(response);
+    } catch (e) {
+      return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
+    }
+  }
 
-
-
-  
   Future<ApiResponseModel> getFreelancerDetails(String freelancerID) async {
     try {
-      final response = await dioClient!.get('${AppConstants.freelancerDetailUri}$freelancerID');
+      final response = await dioClient!
+          .get('${AppConstants.freelancerDetailUri}$freelancerID');
       return ApiResponseModel.withSuccess(response);
     } catch (e) {
       return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));

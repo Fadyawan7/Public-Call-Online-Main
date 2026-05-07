@@ -1,4 +1,3 @@
-
 class Dimensions {
   static const double fontSizeExtraSmall = 10.0;
   static const double fontSizeSmall = 12.0;
@@ -24,6 +23,4 @@ class Dimensions {
   static const double radiusExtraLarge = 20.0;
 
   static const double webMaxWidth = 1200;
-
-
 }

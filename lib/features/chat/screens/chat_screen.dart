@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_restaurant/common/widgets/custom_app_bar_widget.dart';
+import 'package:flutter_restaurant/common/widgets/gradient_button_widget.dart';
 import 'package:flutter_restaurant/common/widgets/no_data_widget.dart';
 import 'package:flutter_restaurant/features/chat/providers/chat_provider.dart';
 import 'package:flutter_restaurant/features/chat/widgets/chat_item_widget.dart';
@@ -32,18 +32,29 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Consumer<ChatProvider>(builder: (context, chatProvider, _) {
       return Scaffold(
-        appBar: CustomAppBarWidget(
-          titleColor: Colors.white,
-          context: context,
-          title: getTranslated('Easy Business\nEvery Business', context),
-          isBackButtonExist: !ResponsiveHelper.isMobile(),
-        ) as PreferredSizeWidget?,
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          elevation: 0,
+          toolbarHeight: 68,
+          backgroundColor: const Color(0xFF075E54),
+          automaticallyImplyLeading: !ResponsiveHelper.isMobile(),
+          iconTheme: const IconThemeData(color: Colors.white),
+          titleSpacing: ResponsiveHelper.isMobile() ? 20 : 0,
+          title: Text(
+            getTranslated('Easy Business\nEvery Business', context) ??
+                'Messages',
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              height: 1.15,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
         body: Consumer<ChatProvider>(builder: (context, chatProvider, _) {
-          return const Padding(
-            padding:
-                EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault),
-            child: MessageListWidget(),
-          );
+          return const MessageListWidget();
         }),
       );
     });
@@ -66,107 +77,133 @@ class MessageListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
 
-    return Scaffold(
-        body: CustomScrollView(
-      slivers: [
-        SliverToBoxAdapter(
-          child: Consumer<ChatProvider>(
-            builder: (context, chatProvider, child) {
-              return RefreshIndicator(
-                onRefresh: () async {
-                  await Provider.of<ChatProvider>(context, listen: false)
-                      .getChatList();
-                },
-                backgroundColor: Theme.of(context).primaryColor,
-                color: Theme.of(context).cardColor,
-                child: chatProvider.chatList == null
-                    ? _ChatListShimmerWidget(
-                        isEnabled: chatProvider.chatList == null)
-                    : chatProvider.chatList!.isNotEmpty
-                        ? ListView.builder(
-                            padding: const EdgeInsets.all(
-                                Dimensions.paddingSizeLarge),
-                            itemCount: chatProvider.chatList?.length ?? 0,
-                            physics: const BouncingScrollPhysics(),
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              final chatItem = chatProvider.chatList![index];
-                              return Dismissible(
-                                key: Key(chatItem.id
-                                    .toString()), // Each item needs a unique key
-                                direction: DismissDirection
-                                    .endToStart, // Only allow swipe from right to left
-                                background: Container(
-                                  alignment: Alignment.centerRight,
-                                  padding: const EdgeInsets.only(right: 20),
-                                  color: Colors.red,
-                                  child: const Icon(Icons.delete,
-                                      color: Colors.white),
-                                ),
-                                confirmDismiss: (direction) async {
-                                  // Show confirmation dialog
-                                  return await showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      title: const Text("Delete Message"),
-                                      content: const Text(
-                                          "Are you sure you want to delete this message?"),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.of(context).pop(false),
-                                          child: const Text("Cancel"),
+    return ColoredBox(
+        color: Colors.white,
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Consumer<ChatProvider>(
+                builder: (context, chatProvider, child) {
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      await Provider.of<ChatProvider>(context, listen: false)
+                          .getChatList();
+                    },
+                    backgroundColor: Theme.of(context).primaryColor,
+                    color: Theme.of(context).cardColor,
+                    child: chatProvider.chatList == null
+                        ? _ChatListShimmerWidget(
+                            isEnabled: chatProvider.chatList == null)
+                        : chatProvider.chatList!.isNotEmpty
+                            ? ListView.builder(
+                                padding:
+                                    const EdgeInsets.only(top: 6, bottom: 16),
+                                itemCount: chatProvider.chatList?.length ?? 0,
+                                physics: const BouncingScrollPhysics(),
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) {
+                                  final chatItem =
+                                      chatProvider.chatList![index];
+                                  return Dismissible(
+                                    key: Key(chatItem.id
+                                        .toString()), // Each item needs a unique key
+                                    direction: DismissDirection
+                                        .endToStart, // Only allow swipe from right to left
+                                    background: Container(
+                                      alignment: Alignment.centerRight,
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 12, vertical: 4),
+                                      padding: const EdgeInsets.only(right: 22),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFFE53935),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: const Icon(Icons.delete,
+                                          color: Colors.white),
+                                    ),
+                                    confirmDismiss: (direction) async {
+                                      // Show confirmation dialog
+                                      return await showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          title: const Text("Delete Message"),
+                                          content: const Text(
+                                              "Are you sure you want to delete this message?"),
+                                          actions: [
+                                            GradientButtonWidget(
+                                              onTap: () => Navigator.of(context)
+                                                  .pop(false),
+                                              height: 36,
+                                              borderRadius: 8,
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 12,
+                                                      vertical: 6),
+                                              child: const Text(
+                                                "Cancel",
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                            GradientButtonWidget(
+                                              onTap: () => Navigator.of(context)
+                                                  .pop(true),
+                                              height: 36,
+                                              borderRadius: 8,
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 12,
+                                                      vertical: 6),
+                                              child: const Text(
+                                                "Delete",
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.of(context).pop(true),
-                                          child: const Text("Delete",
-                                              style:
-                                                  TextStyle(color: Colors.red)),
-                                        ),
-                                      ],
+                                      );
+                                    },
+                                    onDismissed: (direction) {
+                                      // Remove the item from the data source
+                                      chatProvider
+                                          .deleteChat(chatItem.id!, index)
+                                          .then((chat) {
+                                        showCustomSnackBarHelper(
+                                            'Chat Deleted Successfully !',
+                                            isError: false);
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                        bottom: index ==
+                                                (chatProvider
+                                                            .chatList?.length ??
+                                                        0) -
+                                                    1
+                                            ? 42
+                                            : 0,
+                                      ),
+                                      child: ChatItemWidget(chats: chatItem),
                                     ),
                                   );
                                 },
-                                onDismissed: (direction) {
-                                  // Remove the item from the data source
-                                  chatProvider
-                                      .deleteChat(chatItem.id!, index)
-                                      .then((chat) {
-                                    showCustomSnackBarHelper(
-                                        'Chat Deleted Successfully !',
-                                        isError: false);
-                                  });
-                                },
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                    bottom: index ==
-                                            (chatProvider.chatList?.length ??
-                                                    0) -
-                                                1
-                                        ? 50
-                                        : Dimensions.paddingSizeDefault,
-                                  ),
-                                  child: ChatItemWidget(chats: chatItem),
-                                ),
-                              );
-                            },
-                          )
-                        : SizedBox(
-                            height: size.height,
-                            child: const Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                NoDataWidget(isFooter: false, isChat: true),
-                              ],
-                            )),
-              );
-            },
-          ),
-        ),
-      ],
-    ));
+                              )
+                            : SizedBox(
+                                height: size.height,
+                                child: const Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    NoDataWidget(isFooter: false, isChat: true),
+                                  ],
+                                )),
+                  );
+                },
+              ),
+            ),
+          ],
+        ));
   }
 }
 
@@ -177,18 +214,16 @@ class _ChatListShimmerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      padding: EdgeInsets.all(ResponsiveHelper.isDesktop(context)
-          ? 0
-          : Dimensions.paddingSizeSmall),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       itemCount: 5,
       shrinkWrap: true,
       physics: const BouncingScrollPhysics(),
       itemBuilder: (context, index) => Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-          color: Theme.of(context).hintColor.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(12),
+          color: const Color(0xFFF0F2F5),
         ),
-        margin: const EdgeInsets.only(bottom: Dimensions.paddingSizeSmall),
+        margin: const EdgeInsets.only(bottom: 10),
         clipBehavior: Clip.hardEdge,
         child: Shimmer(
             enabled: isEnabled,
@@ -196,9 +231,7 @@ class _ChatListShimmerWidget extends StatelessWidget {
               padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
               child: Row(children: [
                 Container(
-                    width: 20,
-                    height: 20,
-                    color: Theme.of(context).hintColor.withOpacity(0.2)),
+                    width: 52, height: 52, color: const Color(0xFFE1E6E8)),
                 const SizedBox(width: Dimensions.paddingSizeDefault),
                 Expanded(
                   child: Padding(
@@ -210,23 +243,19 @@ class _ChatListShimmerWidget extends StatelessWidget {
                         children: [
                           Container(
                               width: 150,
-                              height: 20,
-                              color:
-                                  Theme.of(context).hintColor.withOpacity(0.2)),
+                              height: 16,
+                              color: const Color(0xFFE1E6E8)),
                           const SizedBox(height: Dimensions.paddingSizeDefault),
                           Container(
                               width: 200,
-                              height: 20,
-                              color:
-                                  Theme.of(context).hintColor.withOpacity(0.2)),
+                              height: 14,
+                              color: const Color(0xFFE1E6E8)),
                         ],
                       )),
                 ),
                 const SizedBox(width: Dimensions.paddingSizeDefault),
                 Container(
-                    width: 20,
-                    height: 20,
-                    color: Theme.of(context).hintColor.withOpacity(0.2)),
+                    width: 44, height: 12, color: const Color(0xFFE1E6E8)),
               ]),
             )),
       ),

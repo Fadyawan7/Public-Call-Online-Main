@@ -19,7 +19,7 @@ class DefaultFirebaseOptions {
     if (kIsWeb) {
       throw UnsupportedError(
         'DefaultFirebaseOptions have not been configured for web - '
-            'use FlutterFire CLI to configure web for pco-app-3d42d.',
+        'use FlutterFire CLI to configure web for pco-app-3d42d.',
       );
     }
     switch (defaultTargetPlatform) {
@@ -36,7 +36,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
-              'you can reconfigure this by running the FlutterFire CLI again.',
+          'you can reconfigure this by running the FlutterFire CLI again.',
         );
       default:
         throw UnsupportedError(
@@ -59,8 +59,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '906367301565',
     projectId: 'pco-app-3d42d',
     storageBucket: 'pco-app-3d42d.firebasestorage.app',
-    androidClientId: '906367301565-hh59gc4j68ii464ob22pf3oqd1k12h51.apps.googleusercontent.com',
-    iosClientId: '906367301565-u8itonvvbjlbvttft2un9fgb0un3j54v.apps.googleusercontent.com',
+    androidClientId:
+        '906367301565-hh59gc4j68ii464ob22pf3oqd1k12h51.apps.googleusercontent.com',
+    iosClientId:
+        '906367301565-u8itonvvbjlbvttft2un9fgb0un3j54v.apps.googleusercontent.com',
     iosBundleId: 'com.pcobh.app',
   );
 
@@ -70,9 +72,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '906367301565',
     projectId: 'pco-app-3d42d',
     storageBucket: 'pco-app-3d42d.firebasestorage.app',
-    androidClientId: '906367301565-hh59gc4j68ii464ob22pf3oqd1k12h51.apps.googleusercontent.com',
-    iosClientId: '906367301565-u8itonvvbjlbvttft2un9fgb0un3j54v.apps.googleusercontent.com',
+    androidClientId:
+        '906367301565-hh59gc4j68ii464ob22pf3oqd1k12h51.apps.googleusercontent.com',
+    iosClientId:
+        '906367301565-u8itonvvbjlbvttft2un9fgb0un3j54v.apps.googleusercontent.com',
     iosBundleId: 'com.pcobh.app',
   );
-
 }

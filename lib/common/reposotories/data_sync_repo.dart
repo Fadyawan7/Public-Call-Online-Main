@@ -11,9 +11,15 @@ class DataSyncRepo {
 
   DataSyncRepo({required this.dioClient, required this.sharedPreferences});
 
-  Future<ApiResponseModel<T>> fetchData<T>(String uri, DataSourceEnum source) async {
+  Future<ApiResponseModel<T>> fetchData<T>(
+      String uri, DataSourceEnum source) async {
     try {
-      return await _fetchFromClient<T>(uri) ;
+      if (source == DataSourceEnum.local) {
+        return ApiResponseModel.withError(
+            'Local cache is not implemented yet.');
+      }
+
+      return await _fetchFromClient<T>(uri);
     } catch (e) {
       debugPrint('DataSyncRepo: ===> $source $e ($uri)');
 
@@ -26,6 +32,4 @@ class DataSyncRepo {
 
     return ApiResponseModel.withSuccess(response as T);
   }
-
-
 }

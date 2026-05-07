@@ -27,6 +27,15 @@ import '../../../helper/api_checker_helper.dart';
 import '../../../helper/custom_snackbar_helper.dart';
 import 'package:http/http.dart' as http;
 
+typedef SocialLoginCallback = void Function(
+  bool isRoute,
+  String? token,
+  String? errorMessage,
+  String? tempToken,
+  UserInfoModel? userInfoModel,
+  String? socialLoginMedium,
+);
+
 class AuthProvider with ChangeNotifier {
   final AuthRepo? authRepo;
 
@@ -177,14 +186,16 @@ class AuthProvider with ChangeNotifier {
     try {
       ApiResponseModel apiResponse = await authRepo!.forgetPassword(email);
 
-      if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+      if (apiResponse.response != null &&
+          apiResponse.response!.statusCode == 200) {
         return ResponseModel(true, apiResponse.response!.data["message"]);
       }
 
       final errorModel = ApiCheckerHelper.getError(apiResponse);
-      final String message = (errorModel.errors != null && errorModel.errors!.isNotEmpty)
-          ? (errorModel.errors!.first.message ?? 'Invalid email address')
-          : 'Invalid email address';
+      final String message =
+          (errorModel.errors != null && errorModel.errors!.isNotEmpty)
+              ? (errorModel.errors!.first.message ?? 'Invalid email address')
+              : 'Invalid email address';
 
       return ResponseModel(false, message);
     } catch (_) {
@@ -440,8 +451,9 @@ class AuthProvider with ChangeNotifier {
 
       final GoogleSignInAuthentication auth =
           await googleAccount!.authentication;
-      if (auth.accessToken == null) {
-        throw Exception('Failed to get access token');
+      if ((auth.accessToken == null || auth.accessToken!.isEmpty) &&
+          (auth.idToken == null || auth.idToken!.isEmpty)) {
+        throw Exception('Failed to get Google auth token');
       }
 
       return auth;
@@ -451,65 +463,80 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future socialLogin(SocialLoginModel socialLogin, Function callback) async {
+  Future<void> socialLogin(
+      SocialLoginModel socialLogin, SocialLoginCallback callback) async {
     _isLoading = true;
     notifyListeners();
-    ApiResponseModel apiResponse = await authRepo!.socialLogin(socialLogin);
-    print(
-        '------------(update device token) -----from socialLogin ${apiResponse.response}');
 
-    _isLoading = false;
-    if (apiResponse.response != null &&
-        apiResponse.response!.statusCode == 200) {
-      Map map = apiResponse.response!.data;
-      String? message = '';
-      String? token = '';
-      String? tempToken = '';
-      UserInfoModel? userInfoModel;
-      try {
-        message = map['error_message'] ?? '';
-      } catch (e) {
-        debugPrint('error ===> $e');
-      }
+    try {
+      ApiResponseModel apiResponse = await authRepo!.socialLogin(socialLogin);
+      print(
+          '------------(update device token) -----from socialLogin ${apiResponse.response}');
 
-      try {
-        token = map['token'];
-      } catch (e) {}
+      if (apiResponse.response != null &&
+          apiResponse.response!.statusCode == 200) {
+        final dynamic map = apiResponse.response!.data;
+        final String message = map is Map && map['error_message'] is String
+            ? map['error_message']
+            : '';
+        final String? token =
+            map is Map && map['token'] is String ? map['token'] : null;
+        final String? tempToken = map is Map && map['temp_token'] is String
+            ? map['temp_token']
+            : null;
+        UserInfoModel? userInfoModel;
 
-      try {
-        tempToken = map['temp_token'];
-      } catch (e) {}
+        if (map is Map && map.containsKey('user')) {
+          try {
+            userInfoModel = UserInfoModel.fromJson(map['user']);
+          } catch (e) {
+            debugPrint('Failed to parse social user model: $e');
+          }
+        }
+        print('------------(update device token) -----from socialLogin $token');
 
-      if (map.containsKey('user')) {
-        try {
-          userInfoModel = UserInfoModel.fromJson(map['user']);
+        if (token != null && token.isNotEmpty) {
+          authRepo!.saveUserToken(token);
+          print('------------(update device token) -----from socialLogin');
+
+          await authRepo!.updateDeviceToken();
+          final ProfileProvider profileProvider =
+              Provider.of<ProfileProvider>(Get.context!, listen: false);
+          await profileProvider.getUserInfo(true);
+          await clearUserLogData();
+          callback(true, token, message, null, null, null);
+        } else if (tempToken != null && tempToken.isNotEmpty) {
+          callback(true, null, message, tempToken, null, null);
+        } else if (userInfoModel != null) {
           callback(
               true, null, message, null, userInfoModel, socialLogin.medium);
-        } catch (e) {}
+        } else {
+          callback(
+              false,
+              null,
+              message.isNotEmpty ? message : 'Unable to complete social login.',
+              null,
+              null,
+              null);
+        }
+      } else {
+        String? errorMessage =
+            ApiCheckerHelper.getError(apiResponse).errors?.first.message;
+        callback(
+            false,
+            null,
+            errorMessage ?? 'Social login failed. Please try again.',
+            null,
+            null,
+            null);
       }
-      print('------------(update device token) -----from socialLogin $token');
-
-      if (token != null) {
-        authRepo!.saveUserToken(token);
-        print('------------(update device token) -----from socialLogin');
-
-        await authRepo!.updateDeviceToken();
-        final ProfileProvider profileProvider =
-            Provider.of<ProfileProvider>(Get.context!, listen: false);
-        profileProvider.getUserInfo(true);
-        clearUserLogData();
-        callback(true, token, message, null, null, null);
-      }
-
-      if (tempToken != null) {
-        callback(true, null, message, tempToken, null, null);
-      }
-
-      notifyListeners();
-    } else {
-      String? errorMessage =
-          ApiCheckerHelper.getError(apiResponse).errors?.first.message;
-      callback(false, '', errorMessage, null, null, null);
+    } catch (e, stack) {
+      debugPrint('Social login error: $e');
+      debugPrint('Stack: $stack');
+      callback(false, null, 'Social login failed. Please try again.', null,
+          null, null);
+    } finally {
+      _isLoading = false;
       notifyListeners();
     }
   }

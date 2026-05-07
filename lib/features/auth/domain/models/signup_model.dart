@@ -4,7 +4,7 @@ class SignUpModel {
   String? email;
   String? password;
 
-  SignUpModel({this.name, this.phone, this.email='', this.password});
+  SignUpModel({this.name, this.phone, this.email = '', this.password});
 
   SignUpModel.fromJson(Map<String, dynamic> json) {
     name = json['f_name'];

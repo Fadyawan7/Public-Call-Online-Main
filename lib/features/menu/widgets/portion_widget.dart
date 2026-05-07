@@ -12,11 +12,16 @@ class PortionWidget extends StatelessWidget {
   final Color? iconColor;
   final Color? textColor;
   final String? suffix;
-  const  PortionWidget({
-    super.key,  this.imageIcon, required this.title,
-    this.hideDivider = false, this.suffix, this.icon, this.onRoute,
-    this.iconColor,this.textColor
-  });
+  const PortionWidget(
+      {super.key,
+      this.imageIcon,
+      required this.title,
+      this.hideDivider = false,
+      this.suffix,
+      this.icon,
+      this.onRoute,
+      this.iconColor,
+      this.textColor});
 
   @override
   Widget build(BuildContext context) {
@@ -31,31 +36,49 @@ class PortionWidget extends StatelessWidget {
               shape: BoxShape.circle,
               color: Theme.of(context).shadowColor.withOpacity(0.3),
             ),
-            child: icon != null ? Icon(icon, size: 16, color: iconColor ?? Theme.of(context).hintColor) : CustomAssetImageWidget(
-              imageIcon!, height: 16, width: 16, color: iconColor ?? Theme.of(context).hintColor,
-            ),
+            child: icon != null
+                ? Icon(icon,
+                    size: 16, color: iconColor ?? Theme.of(context).hintColor)
+                : CustomAssetImageWidget(
+                    imageIcon!,
+                    height: 16,
+                    width: 16,
+                    color: iconColor ?? Theme.of(context).hintColor,
+                  ),
           ),
           const SizedBox(width: Dimensions.paddingSizeSmall),
-
-          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            const SizedBox(height: Dimensions.paddingSizeDefault),
-            Text(title, style: rubikRegular.copyWith(fontSize: Dimensions.fontSizeLarge,color: textColor),),
-
-            suffix != null ? Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.error,
-                borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-              ),
-              padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraSmall, horizontal: Dimensions.paddingSizeExtraSmall),
-              child: Text(suffix!, style: rubikRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).cardColor)),
-            ) : const SizedBox(),
-
-
-            hideDivider ? const SizedBox(height: Dimensions.paddingSizeSmall) :
-            Divider(
-              color: Theme.of(context).hintColor.withOpacity(0.1),
-            ),
-          ])),
+          Expanded(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                const SizedBox(height: Dimensions.paddingSizeDefault),
+                Text(
+                  title,
+                  style: rubikRegular.copyWith(
+                      fontSize: Dimensions.fontSizeLarge, color: textColor),
+                ),
+                suffix != null
+                    ? Container(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.error,
+                          borderRadius:
+                              BorderRadius.circular(Dimensions.radiusDefault),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: Dimensions.paddingSizeExtraSmall,
+                            horizontal: Dimensions.paddingSizeExtraSmall),
+                        child: Text(suffix!,
+                            style: rubikRegular.copyWith(
+                                fontSize: Dimensions.fontSizeSmall,
+                                color: Theme.of(context).cardColor)),
+                      )
+                    : const SizedBox(),
+                hideDivider
+                    ? const SizedBox(height: Dimensions.paddingSizeSmall)
+                    : Divider(
+                        color: Theme.of(context).hintColor.withOpacity(0.1),
+                      ),
+              ])),
         ]),
       ),
     );

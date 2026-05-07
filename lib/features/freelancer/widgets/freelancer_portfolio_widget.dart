@@ -39,12 +39,10 @@ class FreelancerPortfolioWidget extends StatelessWidget {
                       containerHeight: 250,
                       containerWidth: 260,
                       fit: BoxFit.cover,
-                      image:
-                      '${freelancer.portfolio![startIndex].image_url}',
+                      image: '${freelancer.portfolio![startIndex].image_url}',
                     ),
                   ),
-                const SizedBox(
-                    width: Dimensions.paddingSizeSmall),
+                const SizedBox(width: Dimensions.paddingSizeSmall),
                 if (startIndex + 1 < freelancer.portfolio!.length)
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -57,13 +55,11 @@ class FreelancerPortfolioWidget extends StatelessWidget {
                           containerWidth: 255 / 2,
                           fit: BoxFit.cover,
                           image:
-                          '${freelancer.portfolio![startIndex + 1].image_url}',
+                              '${freelancer.portfolio![startIndex + 1].image_url}',
                         ),
                       ),
-                      const SizedBox(
-                          height: Dimensions.paddingSizeSmall),
-                      if (startIndex + 2 <
-                          freelancer.portfolio!.length)
+                      const SizedBox(height: Dimensions.paddingSizeSmall),
+                      if (startIndex + 2 < freelancer.portfolio!.length)
                         ClipRRect(
                           borderRadius: BorderRadius.circular(20),
                           child: CustomImageWidget(
@@ -71,7 +67,7 @@ class FreelancerPortfolioWidget extends StatelessWidget {
                             containerWidth: 255 / 2,
                             fit: BoxFit.cover,
                             image:
-                            '${freelancer.portfolio![startIndex + 2].image_url}',
+                                '${freelancer.portfolio![startIndex + 2].image_url}',
                           ),
                         ),
                     ],

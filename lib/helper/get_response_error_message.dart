@@ -7,7 +7,8 @@ String getErrorMessage(Map<dynamic, dynamic> map) {
   if (errors != null && errors.isNotEmpty) {
     errorMessage = errors.values.first; // Get the first error message
   } else {
-    errorMessage = map["message"] ?? 'An error occurred'; // Fallback to a generic message
+    errorMessage =
+        map["message"] ?? 'An error occurred'; // Fallback to a generic message
   }
 
   return errorMessage!;

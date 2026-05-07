@@ -23,28 +23,27 @@ class PhoneNumberFieldView extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.only(left: Dimensions.paddingSizeSmall),
       decoration: BoxDecoration(
-
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Theme.of(context).primaryColor.withOpacity(0.2))
-      ),
+          border: Border.all(
+              color: Theme.of(context).primaryColor.withOpacity(0.2))),
       child: Row(children: [
         CodePickerWidget(
-          onChanged: ( value)=> onValueChange(value.code!),
+          onChanged: (value) => onValueChange(value.code!),
           initialSelection: countryCode,
           favorite: [countryCode ?? ''],
           showDropDownButton: true,
           padding: EdgeInsets.zero,
           showFlagMain: true,
-          textStyle: TextStyle(color: Theme.of(context).textTheme.displayLarge!.color),
-
+          textStyle:
+              TextStyle(color: Theme.of(context).textTheme.displayLarge!.color),
         ),
-        Expanded(child: CustomTextFieldWidget(
+        Expanded(
+            child: CustomTextFieldWidget(
           controller: phoneNumberTextController,
           focusNode: phoneFocusNode,
           inputType: TextInputType.phone,
           hintText: getTranslated('number_hint', context),
-
         )),
       ]),
     );

@@ -1,10 +1,12 @@
 import 'dart:async';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/enums/data_source_enum.dart';
 import 'package:flutter_restaurant/common/models/config_model.dart';
 import 'package:flutter_restaurant/common/widgets/custom_asset_image_widget.dart';
+import 'package:flutter_restaurant/features/address/providers/location_provider.dart';
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
 import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
@@ -12,9 +14,9 @@ import 'package:flutter_restaurant/helper/custom_snackbar_helper.dart';
 import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/helper/version_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
-import 'package:flutter_restaurant/main.dart';
 import 'package:flutter_restaurant/utill/app_constants.dart';
 import 'package:flutter_restaurant/utill/images.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -27,7 +29,6 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
-  final GlobalKey<ScaffoldMessengerState> _globalKey = GlobalKey();
   StreamSubscription<List<ConnectivityResult>>? subscription;
 
   late AnimationController animationController;
@@ -70,50 +71,74 @@ class _SplashScreenState extends State<SplashScreen>
     animationController.forward();
   }
 
-void _route() async {
-  final splashProvider = Provider.of<SplashProvider>(context, listen: false);
+  void _route() async {
+    final currentContext = context;
+    final splashProvider = Provider.of<SplashProvider>(context, listen: false);
+    final locationProvider =
+        Provider.of<LocationProvider>(context, listen: false);
+    final isLoggedIn =
+        Provider.of<AuthProvider>(context, listen: false).isLoggedIn();
 
-  try {
-    // Add delay to ensure GoRouter is ready
-    await Future.delayed(const Duration(milliseconds: 500));
-    
-    debugPrint('🔵 Starting config initialization...');
-    
-    // Add timeout to prevent iOS from hanging
-    final config = await splashProvider
-        .initConfig(context, DataSourceEnum.client)
-        .timeout(const Duration(seconds: 15), onTimeout: () {
-      debugPrint('❌ Config initialization timeout after 15 seconds');
-      return null;
-    });
+    locationProvider.checkPermission(() async {
+      if (!mounted) {
+        return;
+      }
 
-    if (!mounted) {
-      debugPrint('⚠️ Widget unmounted before config loaded');
-      return;
-    }
-    
-    debugPrint('✅ Config loaded: ${config == null ? 'null' : 'success'}');
-    if (config == null) {
-      RouterHelper.getLoginRoute(action: RouteAction.pushNamedAndRemoveUntil);
-      return;
-    }
-    _onConfigAction(config, splashProvider, context);
-  } catch (e) {
-    debugPrint("🔴 Config fetch failed: $e");
-    if (!mounted) return;
-    
-    await Future.delayed(const Duration(milliseconds: 500));
-    if (mounted) {
-      try {
-        debugPrint('🔵 Navigating to login as fallback...');
-        RouterHelper.getLoginRoute(action: RouteAction.pushNamedAndRemoveUntil);
-      } catch (e) {
-        debugPrint('❌ Failed to navigate to login: $e');
+      await locationProvider.getCurrentLocation(
+        context,
+        false,
+        isLoggedIn: isLoggedIn,
+      );
+    }, canBeIgnoreDialog: false);
+
+    try {
+      // Add delay to ensure GoRouter is ready
+      await Future.delayed(const Duration(milliseconds: 500));
+      if (!currentContext.mounted) {
+        debugPrint('⚠️ Widget unmounted before config initialization');
+        return;
+      }
+
+      debugPrint('🔵 Starting config initialization...');
+
+      // Add timeout to prevent iOS from hanging
+      final config = await splashProvider
+          .initConfig(currentContext, DataSourceEnum.client)
+          .timeout(const Duration(seconds: 15), onTimeout: () {
+        debugPrint('❌ Config initialization timeout after 15 seconds');
+        return null;
+      });
+
+      if (!mounted) {
+        debugPrint('⚠️ Widget unmounted before config loaded');
+        return;
+      }
+
+      debugPrint('✅ Config loaded: ${config == null ? 'null' : 'success'}');
+      if (config == null) {
+        debugPrint(' 🔴 Config is null, navigating to login as fallback');
+        if (currentContext.mounted) {
+          currentContext.go(RouterHelper.loginScreen);
+        }
+        return;
+      }
+      if (!currentContext.mounted) return;
+      _onConfigAction(config, splashProvider, currentContext);
+    } catch (e) {
+      debugPrint("🔴 Config fetch failed: $e");
+      if (!currentContext.mounted) return;
+
+      await Future.delayed(const Duration(milliseconds: 500));
+      if (currentContext.mounted) {
+        try {
+          debugPrint('🔵 Navigating to login as fallback...');
+          currentContext.go(RouterHelper.loginScreen);
+        } catch (e) {
+          debugPrint('❌ Failed to navigate to login: $e');
+        }
       }
     }
   }
-}
-
 
   void _onConfigAction(ConfigModel? value, SplashProvider splashProvider,
       BuildContext context) async {
@@ -131,20 +156,23 @@ void _route() async {
 
       try {
         if (config.maintenanceMode == 1) {
-          RouterHelper.getMaintainRoute(
-              action: RouteAction.pushNamedAndRemoveUntil);
+          if (context.mounted) {
+            context.go(RouterHelper.maintain);
+          }
         } else if (VersionHelper.parse('$minimumVersion') >
             VersionHelper.parse(AppConstants.appVersion)) {
-          RouterHelper.getUpdateRoute(
-              action: RouteAction.pushNamedAndRemoveUntil);
-        } else if (Provider.of<AuthProvider>(Get.context!, listen: false)
+          if (context.mounted) {
+            context.go(RouterHelper.update);
+          }
+        } else if (Provider.of<AuthProvider>(context, listen: false)
             .isLoggedIn()) {
           final ProfileProvider profileProvider =
               Provider.of<ProfileProvider>(context, listen: false);
 
           try {
             debugPrint('🔵 Calling updateToken...');
-            await Provider.of<AuthProvider>(Get.context!, listen: false).updateToken();
+            await Provider.of<AuthProvider>(context, listen: false)
+                .updateToken();
             debugPrint('✅ updateToken completed');
           } catch (e) {
             debugPrint('⚠️ updateToken failed: $e');
@@ -160,28 +188,26 @@ void _route() async {
             // Continue even if getUserInfo fails
           }
 
-          if (!mounted) return;
-          
-          profileProvider.userInfoModel!.countryId == -1
-              ? RouterHelper.getProfileRoute('splash',
-                  action: RouteAction.pushReplacement)
-              : RouterHelper.getMainRoute(
-                  action: RouteAction.pushNamedAndRemoveUntil);
+          if (!context.mounted) return;
+
+          if (profileProvider.userInfoModel!.countryId == -1) {
+            context
+                .pushReplacement('${RouterHelper.profileScreen}?page=splash');
+          } else {
+            context.go(RouterHelper.dashboard);
+          }
         } else {
           await Future.delayed(const Duration(milliseconds: 10));
-          if (!mounted) return;
-          
-          RouterHelper.getDashboardRoute(
-            'home',
-            action: RouteAction.pushNamedAndRemoveUntil,
-          );
+          if (!context.mounted) return;
+
+          context.go('${RouterHelper.dashboardScreen}?page=home');
         }
       } catch (e) {
         debugPrint('❌ Error during config action navigation: $e');
-        if (mounted) {
+        if (context.mounted) {
           await Future.delayed(const Duration(milliseconds: 500));
-          if (mounted) {
-            RouterHelper.getLoginRoute(action: RouteAction.pushNamedAndRemoveUntil);
+          if (context.mounted) {
+            context.go(RouterHelper.loginScreen);
           }
         }
       }
@@ -190,34 +216,39 @@ void _route() async {
 
   @override
   Widget build(BuildContext context) {
-    return  const CustomAssetImageWidget(
-          Images.splashBackground,
-          fit: BoxFit.cover,
-        );
+    return const CustomAssetImageWidget(
+      Images.splashBackground,
+      fit: BoxFit.cover,
+    );
   }
 
   void _checkConnectivity() {
     bool isFirst = true;
+    final currentContext = context;
     subscription = Connectivity()
         .onConnectivityChanged
         .listen((List<ConnectivityResult> result) {
+      if (!currentContext.mounted) {
+        return;
+      }
+
       bool isConnected = result.contains(ConnectivityResult.wifi) ||
           result.contains(ConnectivityResult.mobile);
 
       if (isFirst && !isConnected) {
         showCustomSnackBarHelper(
-            getTranslated('no_internet_connection', context),
+            getTranslated('no_internet_connection', currentContext),
             isError: true);
       } else if (!isFirst && mounted) {
         // Check if widget is still mounted
         showCustomSnackBarHelper(
-            getTranslated(
-                isConnected ? 'connected' : 'no_internet_connection', context),
+            getTranslated(isConnected ? 'connected' : 'no_internet_connection',
+                currentContext),
             isError: !isConnected);
 
         if (isConnected &&
             mounted &&
-            ModalRoute.of(context)?.settings.name ==
+            ModalRoute.of(currentContext)?.settings.name ==
                 RouterHelper.splashScreen) {
           _route();
         }

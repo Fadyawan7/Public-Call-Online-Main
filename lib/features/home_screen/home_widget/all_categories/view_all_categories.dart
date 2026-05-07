@@ -4,8 +4,6 @@ import 'package:flutter_restaurant/common/widgets/custom_app_bar_widget.dart';
 import 'package:flutter_restaurant/features/home_screen/home_widget/relevant_category/relevant_categories.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 
-
-
 class AllCategories extends StatefulWidget {
   final List<OnlyCategoryModel> allCategories;
 
@@ -31,7 +29,6 @@ class _AllCategoriesState extends State<AllCategories> {
         context: context,
         title: getTranslated('All Categories', context)!,
         centerTitle: true,
-        
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 8, right: 8, top: 20),

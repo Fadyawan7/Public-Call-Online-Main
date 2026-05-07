@@ -4,14 +4,12 @@ class ReviewBody {
   int? _rating;
   String? _comment;
 
-
-  ReviewBody(
-      {
-        int? takerId,
-        int? bookingId,
-        int? rating,
-        String? comment,
-      }) {
+  ReviewBody({
+    int? takerId,
+    int? bookingId,
+    int? rating,
+    String? comment,
+  }) {
     _takerId = takerId;
     _bookingId = bookingId;
     _comment = comment;

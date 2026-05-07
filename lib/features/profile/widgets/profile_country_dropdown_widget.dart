@@ -18,14 +18,16 @@ class CountryDropdownWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final profileProvider = Provider.of<ProfileProvider>(context, listen: false);
+    final profileProvider =
+        Provider.of<ProfileProvider>(context, listen: false);
 
     String? selectedCountryId;
     if (profileProvider.userInfoModel!.countryId == -1) {
       // Find selected country if available
       try {
         selectedCountryId = profileProvider.countryList
-            ?.firstWhere((country) => country.id == profileProvider.selectedCountryID)
+            ?.firstWhere(
+                (country) => country.id == profileProvider.selectedCountryID)
             .id
             .toString();
       } catch (e) {
@@ -36,14 +38,13 @@ class CountryDropdownWidget extends StatelessWidget {
       selectedCountryId = profileProvider.userInfoModel?.countryId.toString();
     }
 
-
     return DropdownButtonHideUnderline(
       child: DropdownButton2<String>(
         autofocus: true,
         iconStyleData: IconStyleData(
           icon: Icon(
             Icons.keyboard_arrow_down_rounded,
-            color:Theme.of(context).hintColor,
+            color: Theme.of(context).hintColor,
           ),
         ),
         isExpanded: true,
@@ -56,26 +57,25 @@ class CountryDropdownWidget extends StatelessWidget {
         ),
         selectedItemBuilder: (BuildContext context) {
           return profileProvider.countryList?.map((CountryModel country) {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  country.countryName ?? "",
-                  style: rubikRegular.copyWith(
-                    fontSize: Dimensions.fontSizeDefault,
-                    color:  Theme.of(context).textTheme.bodyMedium?.color
-                  ),
-                ),
-                Text(
-                  country.countryFlag ?? "",
-                  style: rubikRegular.copyWith(
-                    fontSize: Dimensions.fontSizeOverLarge,
-                    color:Theme.of(context).textTheme.bodyMedium?.color
-                  ),
-                ),
-              ],
-            );
-          }).toList() ?? [];
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      country.countryName ?? "",
+                      style: rubikRegular.copyWith(
+                          fontSize: Dimensions.fontSizeDefault,
+                          color: Theme.of(context).textTheme.bodyMedium?.color),
+                    ),
+                    Text(
+                      country.countryFlag ?? "",
+                      style: rubikRegular.copyWith(
+                          fontSize: Dimensions.fontSizeOverLarge,
+                          color: Theme.of(context).textTheme.bodyMedium?.color),
+                    ),
+                  ],
+                );
+              }).toList() ??
+              [];
         },
         items: profileProvider.countryList?.map((CountryModel country) {
           return DropdownMenuItem<String>(
@@ -132,7 +132,8 @@ class CountryDropdownWidget extends StatelessWidget {
               maxLines: null,
               decoration: InputDecoration(
                 isDense: true,
-                contentPadding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+                contentPadding:
+                    const EdgeInsets.all(Dimensions.paddingSizeSmall),
                 hintText: getTranslated('select_country', context)!,
                 hintStyle: const TextStyle(fontSize: Dimensions.fontSizeSmall),
                 border: OutlineInputBorder(
@@ -144,7 +145,10 @@ class CountryDropdownWidget extends StatelessWidget {
           searchMatchFn: (item, searchValue) {
             final country = profileProvider.countryList
                 ?.firstWhere((element) => element.id.toString() == item.value);
-            return country?.countryName?.toLowerCase().contains(searchValue.toLowerCase()) ?? false;
+            return country?.countryName
+                    ?.toLowerCase()
+                    .contains(searchValue.toLowerCase()) ??
+                false;
           },
         ),
         buttonStyleData: ButtonStyleData(

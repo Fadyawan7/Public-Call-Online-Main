@@ -100,7 +100,8 @@ class Datum {
       fcmToken: json['fcm_token'] ?? "",
       profilePicture: json['profile_picture'] ?? "",
       temporaryDisabled: json['temporary_disabled'],
-      freelancerProfileUpdateRequest: json['freelancer_profile_update_request'] ?? "",
+      freelancerProfileUpdateRequest:
+          json['freelancer_profile_update_request'] ?? "",
       countryId: json['country_id'].toString(),
       countryName: json['country_name'] ?? "",
       countryEmoji: json['country_emoji'] ?? "",

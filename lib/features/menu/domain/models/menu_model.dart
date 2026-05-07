@@ -7,5 +7,10 @@ class MenuModel {
   Widget? iconWidget;
   bool showActive;
 
-  MenuModel({required this.icon, required this.title, required this.route, this.iconWidget, this.showActive = false});
+  MenuModel(
+      {required this.icon,
+      required this.title,
+      required this.route,
+      this.iconWidget,
+      this.showActive = false});
 }

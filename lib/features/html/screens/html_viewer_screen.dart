@@ -14,7 +14,6 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
 class HtmlViewerScreen extends StatelessWidget {
   final HtmlType htmlType;
   const HtmlViewerScreen({super.key, required this.htmlType});
@@ -22,41 +21,45 @@ class HtmlViewerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
-    final policyModel = Provider.of<SplashProvider>(context, listen: false).policyModel;
+    final policyModel =
+        Provider.of<SplashProvider>(context, listen: false).policyModel;
 
     String data = 'no_data_found';
     String appBarText = '';
 
     switch (htmlType) {
-      case HtmlType.termsAndCondition :
+      case HtmlType.termsAndCondition:
         data = policyModel?.termsAndCondition ?? '';
         appBarText = 'terms_and_condition';
         break;
-      case HtmlType.aboutUs :
+      case HtmlType.aboutUs:
         data = policyModel?.aboutUs ?? '';
         appBarText = 'about_us';
         break;
-      case HtmlType.privacyPolicy :
+      case HtmlType.privacyPolicy:
         data = policyModel?.privacyPolicy ?? '';
         appBarText = 'privacy_policy';
         break;
     }
 
-    if(data.isNotEmpty) {
+    if (data.isNotEmpty) {
       data = data.replaceAll('href=', 'target="_blank" href=');
     }
 
     return Scaffold(
-      appBar: ( CustomAppBarWidget(
-         leading: InkWell(
+      appBar: (CustomAppBarWidget(
+        leading: InkWell(
           onTap: () {
-            if(Get.context!.canPop()) {
+            if (Get.context!.canPop()) {
               Get.context!.pop();
             }
           },
-          child: const Icon(Icons.arrow_back_ios, size: 20,color: Colors.red,),
+          child: const Icon(
+            Icons.arrow_back_ios,
+            size: 20,
+            color: Colors.red,
+          ),
         ),
-
         titleColor: Colors.white,
         title: getTranslated(appBarText, context),
         context: context,
@@ -67,53 +70,63 @@ class HtmlViewerScreen extends StatelessWidget {
             Center(
               child: SizedBox(
                 width: 1170,
-                child:  ResponsiveHelper.isDesktop(context) ? Column(
-                  children: [
-                    Container(
-                      height: 100, alignment: Alignment.center,
-                      child: SelectableText(getTranslated(appBarText, context)!,
-                        style: rubikBold.copyWith(fontSize: Dimensions.fontSizeExtraLarge, color: Theme.of(context).textTheme.bodyLarge?.color),
+                child: ResponsiveHelper.isDesktop(context)
+                    ? Column(
+                        children: [
+                          Container(
+                            height: 100,
+                            alignment: Alignment.center,
+                            child: SelectableText(
+                              getTranslated(appBarText, context)!,
+                              style: rubikBold.copyWith(
+                                  fontSize: Dimensions.fontSizeExtraLarge,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.color),
+                            ),
+                          ),
+                          const SizedBox(height: 30),
+                          ConstrainedBox(
+                            constraints: BoxConstraints(
+                                minHeight:
+                                    height < 600 ? height : height - 400),
+                            child: HtmlWidget(
+                              data,
+                              factoryBuilder: () => MyWidgetFactory(),
+                              key: Key(htmlType.toString()),
+                              onTapUrl: (String url) {
+                                return launchUrl(Uri.parse(url),
+                                    mode: LaunchMode.externalApplication);
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 30),
+                        ],
+                      )
+                    : SingleChildScrollView(
+                        padding:
+                            const EdgeInsets.all(Dimensions.paddingSizeSmall),
+                        physics: const BouncingScrollPhysics(),
+                        child: HtmlWidget(
+                          data,
+                          key: Key(htmlType.toString()),
+                          onTapUrl: (String url) {
+                            return launchUrl(Uri.parse(url),
+                                mode: LaunchMode.externalApplication);
+                          },
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 30),
-                    ConstrainedBox(
-                      constraints: BoxConstraints(minHeight:  height < 600 ? height : height - 400),
-                      child: HtmlWidget(data,
-                        factoryBuilder: () => MyWidgetFactory(),
-                        key: Key(htmlType.toString()),
-                        onTapUrl: (String url) {
-                          return launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-                        },),
-                    ),
-                    const SizedBox(height: 30),
-                  ],
-                ) : SingleChildScrollView(
-                  padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-                  physics: const BouncingScrollPhysics(),
-                  child: HtmlWidget(
-                    data,
-                    key: Key(htmlType.toString()),
-                    onTapUrl: (String url) {
-                      return launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-                    },
-                  ),
-                ),
               ),
             ),
-
           ],
         ),
       ),
     );
-
-
   }
 }
 
 class MyWidgetFactory extends WidgetFactory with SelectableTextFactory {
-
   @override
-  SelectionChangedCallback  get selectableTextOnChanged => (selection, cause) {};
-
-
+  SelectionChangedCallback get selectableTextOnChanged => (selection, cause) {};
 }

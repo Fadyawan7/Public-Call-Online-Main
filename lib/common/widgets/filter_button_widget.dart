@@ -8,32 +8,40 @@ import 'package:flutter_restaurant/utill/images.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
 import 'package:provider/provider.dart';
 
-
 class FilterButtonWidget extends StatelessWidget {
   final List<String> items;
   final bool isBorder;
   final bool isSmall;
   final Function(String value) onSelected;
 
-  const FilterButtonWidget({super.key,
-    required this.onSelected, required this.items,  this.isBorder = false, this.isSmall = false,
+  const FilterButtonWidget({
+    super.key,
+    required this.onSelected,
+    required this.items,
+    this.isBorder = false,
+    this.isSmall = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    final bool ltr = Provider.of<LocalizationProvider>(context) .isLtr;
+    final bool ltr = Provider.of<LocalizationProvider>(context).isLtr;
 
-    return  Consumer<SplashProvider>(
-        builder: (c, splashProvider, _) {
-          return Visibility(
-            visible: true,
-            child: Align(alignment: Alignment.center, child: Container(
+    return Consumer<SplashProvider>(builder: (c, splashProvider, _) {
+      return Visibility(
+        visible: true,
+        child: Align(
+            alignment: Alignment.center,
+            child: Container(
               height: ResponsiveHelper.isMobile() ? 35 : 40,
-              margin: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall),
-              decoration: isBorder ? null : BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(Dimensions.radiusSmall)),
-                border: Border.all(color: Theme.of(context).primaryColor),
-              ),
+              margin: const EdgeInsets.symmetric(
+                  vertical: Dimensions.paddingSizeSmall),
+              decoration: isBorder
+                  ? null
+                  : BoxDecoration(
+                      borderRadius: const BorderRadius.all(
+                          Radius.circular(Dimensions.radiusSmall)),
+                      border: Border.all(color: Theme.of(context).primaryColor),
+                    ),
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: items.length,
@@ -42,33 +50,51 @@ class FilterButtonWidget extends StatelessWidget {
                   return InkWell(
                     onTap: () => onSelected(items[index]),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault),
-                      margin: isBorder ? const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeExtraSmall) : EdgeInsets.zero,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: Dimensions.paddingSizeDefault),
+                      margin: isBorder
+                          ? const EdgeInsets.symmetric(
+                              horizontal: Dimensions.paddingSizeExtraSmall)
+                          : EdgeInsets.zero,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        borderRadius: isBorder ? const BorderRadius.all(Radius.circular(Dimensions.radiusSmall)) : BorderRadius.horizontal(
-                          left: Radius.circular( Dimensions.radiusSmall,
-                          ),
-                          right: Radius.circular(Dimensions.radiusSmall ,
-                          ),
-                        ),
-                        color:  Theme.of(context).canvasColor,
-
-                        border: isBorder ?  Border.all(width: 1.3, color: Theme.of(context).primaryColor.withOpacity(0.4)) : null ,
+                        borderRadius: isBorder
+                            ? const BorderRadius.all(
+                                Radius.circular(Dimensions.radiusSmall))
+                            : BorderRadius.horizontal(
+                                left: Radius.circular(
+                                  Dimensions.radiusSmall,
+                                ),
+                                right: Radius.circular(
+                                  Dimensions.radiusSmall,
+                                ),
+                              ),
+                        color: Theme.of(context).canvasColor,
+                        border: isBorder
+                            ? Border.all(
+                                width: 1.3,
+                                color: Theme.of(context)
+                                    .primaryColor
+                                    .withOpacity(0.4))
+                            : null,
                       ),
                       child: Row(
                         children: [
-                          items[index] != items[0]  ? Padding(
-                            padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-                            child: Image.asset(
-                              Images.getImageUrl(items[index]),
-                            ),
-                          ) : const SizedBox(),
+                          items[index] != items[0]
+                              ? Padding(
+                                  padding: const EdgeInsets.all(
+                                      Dimensions.paddingSizeSmall),
+                                  child: Image.asset(
+                                    Images.getImageUrl(items[index]),
+                                  ),
+                                )
+                              : const SizedBox(),
                           Text(
                             getTranslated(items[index], context)!,
-                            style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).hintColor),
+                            style: robotoRegular.copyWith(
+                                fontSize: Dimensions.fontSizeDefault,
+                                color: Theme.of(context).hintColor),
                           ),
-
                         ],
                       ),
                     ),
@@ -76,9 +102,7 @@ class FilterButtonWidget extends StatelessWidget {
                 },
               ),
             )),
-          );
-        }
-    );
+      );
+    });
   }
 }
-

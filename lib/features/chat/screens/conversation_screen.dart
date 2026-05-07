@@ -38,31 +38,35 @@ class _ConversationScreenState extends State<ConversationScreen> {
   Widget build(BuildContext context) {
     final AuthProvider authProvider =
         Provider.of<AuthProvider>(context, listen: false);
-    final theme = Theme.of(context);
     return Consumer<ChatProvider>(builder: (context, chatProvider, _) {
       return Scaffold(
+        backgroundColor: const Color(0xFFECE5DD),
         appBar: AppBar(
-          centerTitle: true,
+          centerTitle: false,
+          elevation: 0,
+          toolbarHeight: 68,
           title: Text(
             getTranslated('${widget.chat!.userName}', context)!,
             style: rubikSemiBold.copyWith(
-              fontSize: Dimensions.fontSizeExtraLarge,
+              fontSize: Dimensions.fontSizeLarge,
               color: Colors.white,
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
-          backgroundColor: Theme.of(context).primaryColor,
+          backgroundColor: const Color(0xFF075E54),
           leading: IconButton(
             onPressed: () {
               context.pop();
               Provider.of<ChatProvider>(Get.context!, listen: false)
                   .resetConversation();
             },
-            icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
             padding: EdgeInsets.zero,
           ),
           actions: <Widget>[
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.only(right: 12),
               child: GestureDetector(
                 onTap: () async {
                   if (!mounted) return;
@@ -115,15 +119,15 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   );
                 },
                 child: Container(
-                  width: 50,
-                  height: 50,
+                  width: 44,
+                  height: 44,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    border: Border.all(width: 1, color: theme.cardColor),
-                    color: theme.primaryColor.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                    border: Border.all(width: 1.5, color: Colors.white),
+                    color: const Color(0xFF128C7E),
                   ),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(50),
+                    borderRadius: BorderRadius.circular(44),
                     //todo need to add images
                     child: CustomImageWidget(
                       fit: BoxFit.cover,

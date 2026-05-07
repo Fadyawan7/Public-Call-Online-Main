@@ -7,7 +7,7 @@ class HomeScreenRepo {
   final DioClient? dioClient;
   HomeScreenRepo({this.dioClient});
 
-  Future<ApiResponseModel> freelanceCategory([int? categoryId]) async {
+  Future<ApiResponseModel> freelanceCategory([double? categoryId]) async {
     try {
       String url = AppConstants.frelanceCategoryUri;
 

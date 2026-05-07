@@ -28,7 +28,6 @@ class SendOtpScreen extends StatefulWidget {
 }
 
 class _SendOtpScreenState extends State<SendOtpScreen> {
-
   String? countryCode;
   TextEditingController? _phoneNumberController;
 
@@ -37,29 +36,32 @@ class _SendOtpScreenState extends State<SendOtpScreen> {
     super.initState();
     _phoneNumberController = TextEditingController();
 
-    final ConfigModel configModel = Provider.of<SplashProvider>(context, listen: false).configModel!;
-    final AuthProvider authProvider =  Provider.of<AuthProvider>(context, listen: false);
+    final ConfigModel configModel =
+        Provider.of<SplashProvider>(context, listen: false).configModel!;
+    final AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
     authProvider.toggleIsNumberLogin(value: false, isUpdate: false);
 
     UserLogData? userData = authProvider.getUserData();
-    if(userData != null) {
-      if(userData.phoneNumber != null){
-        _phoneNumberController!.text = NumberCheckerHelper.getPhoneNumber(userData.phoneNumber ?? '', userData.countryCode ?? '') ?? '';
+    if (userData != null) {
+      if (userData.phoneNumber != null) {
+        _phoneNumberController!.text = NumberCheckerHelper.getPhoneNumber(
+                userData.phoneNumber ?? '', userData.countryCode ?? '') ??
+            '';
         authProvider.toggleIsNumberLogin(isUpdate: false);
       }
       countryCode ??= userData.countryCode;
-    }else{
+    } else {
       countryCode ??= "+973";
     }
-
   }
 
   @override
   Widget build(BuildContext context) {
-
     final double width = MediaQuery.of(context).size.width;
     final Size size = MediaQuery.of(context).size;
-    final ConfigModel configModel = Provider.of<SplashProvider>(context, listen: false).configModel!;
+    final ConfigModel configModel =
+        Provider.of<SplashProvider>(context, listen: false).configModel!;
 
     return CustomPopScopeWidget(
       child: Scaffold(
@@ -67,158 +69,217 @@ class _SendOtpScreenState extends State<SendOtpScreen> {
         body: SafeArea(
           child: Center(
             child: CustomScrollView(slivers: [
-      
-              SliverToBoxAdapter(child: Center(
-                child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      
-                  if(ResponsiveHelper.isDesktop(context))
-                    SizedBox(height: size.width * 0.02),
-      
-                  Center(child: Container(
-                    width: width > 700 ? 450 : width,
-                    margin: const EdgeInsets.only(top: Dimensions.paddingSizeLarge),
-                    padding: width > 700 ? const EdgeInsets.all(Dimensions.paddingSizeDefault) : null,
-                    decoration: width > 700 ? BoxDecoration(
-                      color: Theme.of(context).canvasColor, borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(0.07),
-                          blurRadius: 30,
-                          offset: const Offset(0,10),
-                          spreadRadius: 0,
-                        ),
-                      ],
-                    ) : null,
-                    child: Center(
-                      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-
-      
-
-                        Row(children: [
-      
-                          Expanded(child: Container()),
-      
-                          Expanded(flex: 7, child: Column(children: [
-                                    
-                            CustomTextFieldWidget(
-                              countryDialCode: countryCode,
-                              onCountryChanged: (CountryCode value) {
-                                countryCode = value.dialCode;
-                              },
-                              hintText: getTranslated('number_hint', context),
-                              isShowBorder: true,
-                              controller: _phoneNumberController,
-                              inputType: TextInputType.phone,
-                              label: getTranslated('mobile_number', context),
-                            ),
-                            SizedBox(height: size.height * 0.03),
-                                    
-                            Consumer<AuthProvider>(builder: (context, authProvider, child) {
-                              return InkWell(
-                                onTap: ()=> authProvider.toggleRememberMe(),
-                                child: Row(children: [
-      
-                                  Container(width: 18, height: 18,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      border: Border.all(color: Theme.of(context).secondaryHeaderColor),
-                                      borderRadius: BorderRadius.circular(3),
-                                    ),
-                                    child: authProvider.isActiveRememberMe
-                                        ? Icon(Icons.done, color: Theme.of(context).secondaryHeaderColor, size: 14)
-                                        : const SizedBox.shrink(),
-                                    ),
-                                  const SizedBox(width: Dimensions.paddingSizeSmall),
-      
-                                  Text(getTranslated('remember_me', context)!,
-                                    style: Theme.of(context).textTheme.displayMedium!.copyWith(
-                                      fontSize: Dimensions.fontSizeSmall,
-                                      color: ColorResources.getHintColor(context),
-                                    ),
+              SliverToBoxAdapter(
+                  child: Center(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (ResponsiveHelper.isDesktop(context))
+                        SizedBox(height: size.width * 0.02),
+                      Center(
+                          child: Container(
+                        width: width > 700 ? 450 : width,
+                        margin: const EdgeInsets.only(
+                            top: Dimensions.paddingSizeLarge),
+                        padding: width > 700
+                            ? const EdgeInsets.all(
+                                Dimensions.paddingSizeDefault)
+                            : null,
+                        decoration: width > 700
+                            ? BoxDecoration(
+                                color: Theme.of(context).canvasColor,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .color!
+                                        .withOpacity(0.07),
+                                    blurRadius: 30,
+                                    offset: const Offset(0, 10),
+                                    spreadRadius: 0,
                                   ),
-                                  const SizedBox(height: Dimensions.paddingSizeSmall),
-      
+                                ],
+                              )
+                            : null,
+                        child: Center(
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Row(children: [
+                                  Expanded(child: Container()),
+                                  Expanded(
+                                      flex: 7,
+                                      child: Column(children: [
+                                        CustomTextFieldWidget(
+                                          countryDialCode: countryCode,
+                                          onCountryChanged:
+                                              (CountryCode value) {
+                                            countryCode = value.dialCode;
+                                          },
+                                          hintText: getTranslated(
+                                              'number_hint', context),
+                                          isShowBorder: true,
+                                          controller: _phoneNumberController,
+                                          inputType: TextInputType.phone,
+                                          label: getTranslated(
+                                              'mobile_number', context),
+                                        ),
+                                        SizedBox(height: size.height * 0.03),
+                                        Consumer<AuthProvider>(builder:
+                                            (context, authProvider, child) {
+                                          return InkWell(
+                                            onTap: () =>
+                                                authProvider.toggleRememberMe(),
+                                            child: Row(children: [
+                                              Container(
+                                                width: 18,
+                                                height: 18,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  border: Border.all(
+                                                      color: Theme.of(context)
+                                                          .secondaryHeaderColor),
+                                                  borderRadius:
+                                                      BorderRadius.circular(3),
+                                                ),
+                                                child: authProvider
+                                                        .isActiveRememberMe
+                                                    ? Icon(Icons.done,
+                                                        color: Theme.of(context)
+                                                            .secondaryHeaderColor,
+                                                        size: 14)
+                                                    : const SizedBox.shrink(),
+                                              ),
+                                              const SizedBox(
+                                                  width: Dimensions
+                                                      .paddingSizeSmall),
+                                              Text(
+                                                getTranslated(
+                                                    'remember_me', context)!,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .displayMedium!
+                                                    .copyWith(
+                                                      fontSize: Dimensions
+                                                          .fontSizeSmall,
+                                                      color: ColorResources
+                                                          .getHintColor(
+                                                              context),
+                                                    ),
+                                              ),
+                                              const SizedBox(
+                                                  height: Dimensions
+                                                      .paddingSizeSmall),
+                                            ]),
+                                          );
+                                        }),
+                                        SizedBox(height: size.height * 0.03),
+                                        Consumer<AuthProvider>(builder:
+                                            (context, authProvider, child) {
+                                          return !authProvider
+                                                  .isPhoneNumberVerificationButtonLoading
+                                              ? CustomButtonWidget(
+                                                  btnTxt: getTranslated(
+                                                      'get_otp', context),
+                                                  onTap: () async {
+                                                    if (_phoneNumberController!
+                                                        .text.isEmpty) {
+                                                      showCustomSnackBarHelper(
+                                                          getTranslated(
+                                                              'enter_phone_number',
+                                                              context));
+                                                    } else {
+                                                      String
+                                                          phoneWithCountryCode =
+                                                          countryCode! +
+                                                              _phoneNumberController!
+                                                                  .text
+                                                                  .trim();
+
+                                                      // await authProvider.checkPhoneForOtp(phoneWithCountryCode);
+                                                    }
+                                                  },
+                                                )
+                                              : Center(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    valueColor:
+                                                        AlwaysStoppedAnimation<
+                                                                Color>(
+                                                            Theme.of(context)
+                                                                .primaryColor),
+                                                  ),
+                                                );
+                                        }),
+                                        const SizedBox(
+                                            height: Dimensions
+                                                .paddingSizeExtraLarge),
+                                        if (_isShowSocialLoginButton(
+                                            configModel)) ...[
+                                          Center(
+                                            child: Text(
+                                              getTranslated('or', context)!,
+                                              style: robotoRegular.copyWith(
+                                                fontSize:
+                                                    Dimensions.fontSizeDefault,
+                                                color:
+                                                    Theme.of(context).hintColor,
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                              height: Dimensions
+                                                  .paddingSizeDefault),
+                                          const SocialLoginWidget(),
+                                          const SizedBox(
+                                              height:
+                                                  Dimensions.paddingSizeLarge),
+                                        ],
+                                      ])),
+                                  Expanded(child: Container()),
                                 ]),
-                              );
-                            }),
-                            SizedBox(height: size.height * 0.03),
-      
-                            Consumer<AuthProvider>(builder: (context, authProvider, child) {
-                              return !authProvider.isPhoneNumberVerificationButtonLoading? CustomButtonWidget(
-                                btnTxt: getTranslated('get_otp', context),
-                                onTap: () async {
-      
-                                  if (_phoneNumberController!.text.isEmpty) {
-                                    showCustomSnackBarHelper(getTranslated('enter_phone_number', context));
-                                  }else {
-                                    String phoneWithCountryCode = countryCode! + _phoneNumberController!.text.trim();
-
-                                      // await authProvider.checkPhoneForOtp(phoneWithCountryCode);
-
-                                  }
-      
-                                },
-                              ) : Center(child: CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
-                              ),);
-                            }),
-                            const SizedBox(height: Dimensions.paddingSizeExtraLarge),
-      
-                            if(_isShowSocialLoginButton(configModel))...[
-                              Center(child: Text(
-                                  getTranslated('or', context)!,
-                                  style: robotoRegular.copyWith(
-                                    fontSize: Dimensions.fontSizeDefault,
-                                    color: Theme.of(context).hintColor,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: Dimensions.paddingSizeDefault),
-      
-                              const SocialLoginWidget(),
-                              const SizedBox(height: Dimensions.paddingSizeLarge),
-                            ],
-      
-                          ])),
-      
-                          Expanded(child: Container()),
-      
-                        ]),
-      
-      
-      
-                        if( !Navigator.canPop(context))...[
-                          Center(child: InkWell(
-                            onTap: () => RouterHelper.getDashboardRoute('home', ),
-                            child: RichText(text: TextSpan(children: [
-                              TextSpan(text: '${getTranslated('continue_as_a', context)} ',
-                                style: poppinsRegular.copyWith(
-                                  fontSize: Dimensions.fontSizeSmall,
-                                  color: Theme.of(context).hintColor,
-                                ),
-                              ),
-                              TextSpan(text: getTranslated('guest', context),
-                                style: poppinsRegular.copyWith(
-                                  color: Theme.of(context).colorScheme.onSurface,
-                                ),
-                              ),
-                            ],),),
-                          )),
-      
-                        ],
-      
-                        if(ResponsiveHelper.isDesktop(context)) SizedBox(height: size.height * 0.02),
-      
-      
-                      ]),
-                    ),
-                  )),
-      
-
-                ]),
+                                if (!Navigator.canPop(context)) ...[
+                                  Center(
+                                      child: InkWell(
+                                    onTap: () => RouterHelper.getDashboardRoute(
+                                      'home',
+                                    ),
+                                    child: RichText(
+                                      text: TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text:
+                                                '${getTranslated('continue_as_a', context)} ',
+                                            style: poppinsRegular.copyWith(
+                                              fontSize:
+                                                  Dimensions.fontSizeSmall,
+                                              color:
+                                                  Theme.of(context).hintColor,
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            text:
+                                                getTranslated('guest', context),
+                                            style: poppinsRegular.copyWith(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onSurface,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )),
+                                ],
+                                if (ResponsiveHelper.isDesktop(context))
+                                  SizedBox(height: size.height * 0.02),
+                              ]),
+                        ),
+                      )),
+                    ]),
               )),
-      
-
             ]),
           ),
         ),
@@ -227,7 +288,6 @@ class _SendOtpScreenState extends State<SendOtpScreen> {
   }
 }
 
-
-bool _isShowSocialLoginButton (ConfigModel configModel){
+bool _isShowSocialLoginButton(ConfigModel configModel) {
   return true;
 }

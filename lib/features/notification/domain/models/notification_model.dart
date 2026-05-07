@@ -9,12 +9,12 @@ class NotificationModel {
 
   NotificationModel(
       {this.id,
-        this.title,
-        this.description,
-        this.image,
-        this.status,
-        this.createdAt,
-        this.updatedAt});
+      this.title,
+      this.description,
+      this.image,
+      this.status,
+      this.createdAt,
+      this.updatedAt});
 
   NotificationModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];

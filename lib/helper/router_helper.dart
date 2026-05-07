@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/enums/html_type_enum.dart';
@@ -18,7 +19,6 @@ import 'package:flutter_restaurant/features/booking/screens/new_booking.dart';
 import 'package:flutter_restaurant/features/chat/domain/models/chat_model.dart';
 import 'package:flutter_restaurant/features/chat/screens/chat_screen.dart';
 import 'package:flutter_restaurant/features/chat/screens/conversation_screen.dart';
-
 import 'package:flutter_restaurant/features/dashboard/screens/dashboard_screen.dart';
 import 'package:flutter_restaurant/features/force_update/screens/force_update_screen.dart';
 import 'package:flutter_restaurant/features/forgot_password/screens/create_new_password_screen.dart';
@@ -29,30 +29,26 @@ import 'package:flutter_restaurant/features/freelancer/screens/freelancer_screen
 import 'package:flutter_restaurant/features/freelancer_booking/screens/freelancer_booking_detail_screen.dart';
 import 'package:flutter_restaurant/features/freelancer_portfolio/screens/freelancer_portfolio_add_screen.dart';
 import 'package:flutter_restaurant/features/freelancer_portfolio/screens/freelancer_portfolio_screen.dart';
-
 import 'package:flutter_restaurant/features/html/screens/html_viewer_screen.dart';
 import 'package:flutter_restaurant/features/language/screens/choose_language_screen.dart';
 import 'package:flutter_restaurant/features/maintenance/screens/maintenance_screen.dart';
 import 'package:flutter_restaurant/features/notification/screens/notification_screen.dart';
 import 'package:flutter_restaurant/features/onboarding/screens/onboarding_screen.dart';
-
 import 'package:flutter_restaurant/features/page_not_found/screens/page_not_found_screen.dart';
 import 'package:flutter_restaurant/features/profile/screens/change_password_screen.dart';
-
 import 'package:flutter_restaurant/features/profile/screens/profile_screen.dart';
 import 'package:flutter_restaurant/features/profile/screens/user_detail_screen.dart';
-import 'package:flutter_restaurant/features/rating_reviews/screens/submit_rate_review_screen.dart';
 import 'package:flutter_restaurant/features/rating_reviews/screens/rating_review_list_screen.dart';
-
+import 'package:flutter_restaurant/features/rating_reviews/screens/submit_rate_review_screen.dart';
 import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
 import 'package:flutter_restaurant/features/splash/screens/splash_screen.dart';
 import 'package:flutter_restaurant/features/support/screens/support_screen.dart';
 import 'package:flutter_restaurant/features/welcome/screens/welcome_screen.dart';
 import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/main.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_web_plugins/url_strategy.dart';
 
 enum RouteAction { push, pushReplacement, popAndPush, pushNamedAndRemoveUntil }
 
@@ -300,10 +296,34 @@ class RouterHelper {
       final context = Get.context;
       if (context == null) {
         debugPrint('⚠️ Navigation attempted but context is null for: $path');
-        // Delay and retry if context not ready
-        Future.delayed(const Duration(milliseconds: 500), () {
-          _navigateRoute(path, route: route);
-        });
+        debugPrint('⚠️ Trying to use GoRouter directly...');
+
+        // Try to use GoRouter directly if available
+        try {
+          final router = GoRouter.of(navigatorKey.currentContext ??
+              navigatorKey.currentState!.context);
+          debugPrint(
+              '🔄 Using GoRouter directly. Navigating to: $path with action: $route');
+
+          if (route == RouteAction.pushNamedAndRemoveUntil) {
+            router.go(path);
+            if (kIsWeb) {
+              historyUrlStrategy.replaceState(null, '', '/');
+            }
+          } else if (route == RouteAction.pushReplacement) {
+            router.pushReplacement(path);
+          } else {
+            router.push(path);
+          }
+          debugPrint('✅ Successfully navigated (via GoRouter) to: $path');
+          return path;
+        } catch (routerError) {
+          debugPrint('❌ GoRouter direct navigation failed: $routerError');
+          // Queue for retry
+          Future.delayed(const Duration(milliseconds: 500), () {
+            _navigateRoute(path, route: route);
+          });
+        }
         return path;
       }
 
@@ -327,14 +347,20 @@ class RouterHelper {
     return path;
   }
 
-  static Widget _routeHandler(BuildContext context, Widget route,
-      {bool isBranchCheck = false, required String? path}) {
-    print('=====PATH-====$path');
-    return Provider.of<SplashProvider>(context, listen: false).configModel ==
-            null
+  static Widget _routeHandler(
+    BuildContext context,
+    Widget route, {
+    bool isBranchCheck = false,
+    bool allowWithoutConfig = false,
+    required String? path,
+  }) {
+    debugPrint('=====PATH-====$path');
+    final configModel =
+        Provider.of<SplashProvider>(context, listen: false).configModel;
+
+    return configModel == null && !allowWithoutConfig
         ? SplashScreen(routeTo: path)
-        : _isMaintenance(Provider.of<SplashProvider>(context, listen: false)
-                .configModel!)
+        : configModel != null && _isMaintenance(configModel)
             ? const MaintenanceScreen()
             : route;
   }
@@ -378,7 +404,11 @@ class RouterHelper {
       GoRoute(
           path: loginScreen,
           builder: (context, state) => _routeHandler(
-              context, path: _getPath(state), const LoginScreen())),
+                context,
+                path: _getPath(state),
+                const LoginScreen(),
+                allowWithoutConfig: true,
+              )),
       GoRoute(
           path: verify,
           builder: (context, state) {
@@ -398,7 +428,11 @@ class RouterHelper {
       GoRoute(
           path: forgotPassScreen,
           builder: (context, state) => _routeHandler(
-              context, path: _getPath(state), const ForgotPasswordScreen())),
+                context,
+                path: _getPath(state),
+                const ForgotPasswordScreen(),
+                allowWithoutConfig: true,
+              )),
       GoRoute(
           path: createNewPassScreen,
           builder: (context, state) => _routeHandler(
@@ -408,15 +442,20 @@ class RouterHelper {
                 emailOrPhone: Uri.decodeComponent(
                     state.uri.queryParameters['email_or_phone'] ?? ''),
                 resetToken: state.uri.queryParameters['token'],
-              ))),
+              ),
+              allowWithoutConfig: true)),
       GoRoute(
           path: createAccountScreen,
           builder: (context, state) => _routeHandler(
-              context, path: _getPath(state), const CreateAccountScreen())),
+                context,
+                path: _getPath(state),
+                const CreateAccountScreen(),
+                allowWithoutConfig: true,
+              )),
       GoRoute(
           path: freelancerBookingScreen,
           builder: (context, state) => _routeHandler(
-            context, path: _getPath(state), const BookingScreen())),
+              context, path: _getPath(state), const BookingScreen())),
       GoRoute(
           path: dashboardScreen,
           builder: (context, state) {
@@ -430,7 +469,10 @@ class RouterHelper {
                           ? 2
                           : state.uri.queryParameters['page'] == 'chat'
                               ? 3
-                              : state.uri.queryParameters['page'] == 'menu'
+                              : state.uri.queryParameters['page'] ==
+                                          'profile' ||
+                                      state.uri.queryParameters['page'] ==
+                                          'menu'
                                   ? 4
                                   : 0,
                 ),

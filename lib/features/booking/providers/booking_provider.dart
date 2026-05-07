@@ -144,27 +144,28 @@ class BookingProvider extends ChangeNotifier {
   //   }
   //   Future.microtask(() => notifyListeners());
   // }
-Future<void> pickImage(bool fromCamera) async {
- if (_listImagePath.length >= 2) return;
+  Future<void> pickImage(bool fromCamera) async {
+    if (_listImagePath.length >= 2) return;
 
-  final ImagePicker picker = ImagePicker();
+    final ImagePicker picker = ImagePicker();
 
-  if (fromCamera) {
-    final XFile? image = await picker.pickImage(source: ImageSource.camera);
-    if (image != null && _listImagePath.length < 2) {
-      _listImagePath.add(image.path);
+    if (fromCamera) {
+      final XFile? image = await picker.pickImage(source: ImageSource.camera);
+      if (image != null && _listImagePath.length < 2) {
+        _listImagePath.add(image.path);
+      }
+    } else {
+      final List<XFile> images = await picker.pickMultiImage(limit: 2);
+      for (XFile file in images) {
+        if (_listImagePath.length < 2) {
+          _listImagePath.add(file.path);
+        }
+      }
     }
-  } else {
-    final List<XFile> images = await picker.pickMultiImage(limit: 2);
-    for (XFile file in images) {
- if (_listImagePath.length < 2) {
-        _listImagePath.add(file.path);
-      }      }
-  }
 
-  /// 🔥 You forgot this line
-  notifyListeners();
-}
+    /// 🔥 You forgot this line
+    notifyListeners();
+  }
 
   void removeImage(int index, bool fromColor) {
     _listImagePath.removeAt(index);
@@ -209,7 +210,8 @@ Future<void> pickImage(bool fromCamera) async {
 
     print("⏳ API call started for: $bookingStatus");
 
-    ApiResponseModel apiResponse = await bookingRepo!.getBookingList(bookingStatus);
+    ApiResponseModel apiResponse =
+        await bookingRepo!.getBookingList(bookingStatus);
 
     List<BookingModel> newList = [];
 

@@ -1,23 +1,17 @@
-import 'package:flutter/foundation.dart';
+import 'package:floating_bottom_bar/animated_bottom_navigation_bar.dart'
+    hide Images;
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/widgets/custom_pop_scope_widget.dart';
 import 'package:flutter_restaurant/features/address/providers/location_provider.dart';
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
-import 'package:flutter_restaurant/features/chat/screens/chat_screen.dart';
-
-import 'package:flutter_restaurant/features/dashboard/widgets/bottom_nav_item_widget.dart';
-import 'package:flutter_restaurant/features/freelancer/screens/freelancer_screen.dart';
 import 'package:flutter_restaurant/features/booking/screens/BookingScreen.dart';
-import 'package:flutter_restaurant/features/freelancer_booking/screens/freelancer_booking_screen.dart';
+import 'package:flutter_restaurant/features/chat/screens/chat_screen.dart';
+import 'package:flutter_restaurant/features/freelancer/screens/freelancer_screen.dart';
 import 'package:flutter_restaurant/features/home_screen/home_screen.dart';
 import 'package:flutter_restaurant/features/menu/screens/menu_screen.dart';
 import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
-
 import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
-import 'package:flutter_restaurant/localization/app_localization.dart';
-import 'package:flutter_restaurant/localization/language_constrants.dart';
-import 'package:flutter_restaurant/utill/dimensions.dart';
-import 'package:flutter_restaurant/utill/images.dart';
+import 'package:flutter_restaurant/utill/images.dart' show Images;
 import 'package:provider/provider.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -76,24 +70,12 @@ class _DashboardScreenState extends State<DashboardScreen>
       final profileProvider =
           Provider.of<ProfileProvider>(context, listen: false);
 
-      profileProvider.getUserInfo(true).then((_) {
-        if (!mounted) return; // check before updating UI
-
-        bool isFreelancer =
-            profileProvider.userInfoModel?.userType == 'freelancer';
-
-        setState(() {
-          _screens[1] =
-              isFreelancer ? FreelancerBookingScreen() : const BookingScreen();
-        });
-      });
+      profileProvider.getUserInfo(true);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.sizeOf(context);
-
     return CustomPopScopeWidget(
         isExit: _pageIndex == 0,
         onPopInvoked: () async {
@@ -103,85 +85,23 @@ class _DashboardScreenState extends State<DashboardScreen>
         },
         child: Scaffold(
           key: _scaffoldKey,
+          extendBody: true,
           // floatingActionButton: !ResponsiveHelper.isDesktop(context) && _pageIndex == 0
           //     ? Container(margin: const EdgeInsets.only(bottom: 80), child: const ThirdPartyChatWidget()) : null,
-          body: Stack(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(
-                    bottom:
-                        defaultTargetPlatform == TargetPlatform.iOS ? 80 : 65),
-                child: PageView.builder(
-                  controller: _pageController,
-                  itemCount: _screens.length,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return _screens[index];
-                  },
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Consumer<SplashProvider>(
-                    builder: (ctx, splashController, _) {
-                  return Container(
-                    width: size.width,
-                    height:
-                        defaultTargetPlatform == TargetPlatform.iOS ? 80 : 65,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).cardColor,
-                      borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(Dimensions.radiusLarge)),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.black.withOpacity(0.1), blurRadius: 5)
-                      ],
-                    ),
-                    child: Center(
-                      child: SizedBox(
-                        width: size.width,
-                        height: 80,
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              BottomNavItemWidget(
-                                title: getTranslated('home', context)!,
-                                imageIcon: Images.homeicon,
-                                isSelected: _pageIndex == 0,
-                                onTap: () => _setPage(0),
-                              ),
-                              BottomNavItemWidget(
-                                title: getTranslated('booking', context)!,
-                                imageIcon: Images.bookingicon,
-                                isSelected: _pageIndex == 1,
-                                onTap: () => _setPage(1),
-                              ),
-                              BottomNavItemWidget(
-                                title: getTranslated('freelancer', context)!
-                                    .toCapitalized(),
-                                imageIcon: Images.mapicon,
-                                isSelected: _pageIndex == 2,
-                                onTap: () => _setPage(2),
-                              ),
-                              BottomNavItemWidget(
-                                title: getTranslated('chat', context)!,
-                                imageIcon: Images.chaticons,
-                                isSelected: _pageIndex == 3,
-                                onTap: () => _setPage(3),
-                              ),
-                              BottomNavItemWidget(
-                                title: getTranslated('menu', context)!,
-                                imageIcon: Images.profileicon,
-                                isSelected: _pageIndex == 4,
-                                onTap: () => _setPage(4),
-                              ),
-                            ]),
-                      ),
-                    ),
-                  );
-                }),
-              ),
-            ],
+          floatingActionButton: const SizedBox(height: 50, width: 50),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
+          body: PageView.builder(
+            controller: _pageController,
+            itemCount: _screens.length,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              return _screens[index];
+            },
+          ),
+          bottomNavigationBar: _FloatingDashboardBottomBar(
+            currentIndex: _pageIndex,
+            onTap: _setPage,
           ),
         ));
   }
@@ -192,5 +112,122 @@ class _DashboardScreenState extends State<DashboardScreen>
     setState(() {
       _pageIndex = pageIndex;
     });
+  }
+}
+
+class _FloatingDashboardBottomBar extends StatelessWidget {
+  final int currentIndex;
+  final ValueChanged<int> onTap;
+
+  const _FloatingDashboardBottomBar({
+    required this.currentIndex,
+    required this.onTap,
+  });
+
+  static const Color _accentColor = Color(0xFF5C6CFF);
+  static const Color _inactiveColor = Color(0xFF8B96A5);
+
+  @override
+  Widget build(BuildContext context) {
+    final bool isCenterSelected = currentIndex == 2;
+    return Container(
+      decoration: BoxDecoration(
+        //  color: _barColor,
+        borderRadius: BorderRadius.circular(20),
+
+        // 👇 Yeh floating effect dega (gray bg ki jagah)
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: Colors.black.withOpacity(0.08),
+        //     blurRadius: 20,
+        //     spreadRadius: 2,
+        //     offset: const Offset(0, 6),
+        //   ),
+        // ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: AnimatedBottomNavigationBar(
+          key: ValueKey<int>(currentIndex),
+          //  barColor: Colors.transparent, // IMPORTANT
+          controller: FloatingBottomBarController(
+            initialIndex: _bottomBarIndex,
+          ),
+          bottomBar: [
+            _item(Images.home, 0, currentIndex),
+            _item(Images.bookingicon, 1, currentIndex),
+            _item(Images.chaticons, 3, currentIndex),
+            _item(Images.profileicon, 4, currentIndex),
+          ],
+          bottomBarCenterModel: BottomBarCenterModel(
+            centerBackgroundColor:
+                isCenterSelected ? _accentColor : _inactiveColor,
+            centerIcon: FloatingCenterButton(
+              child: GestureDetector(
+                onTap: () => onTap(2),
+                child: SizedBox.expand(
+                  child: Center(
+                    child: Image.asset(
+                      Images.bookLocation,
+                      width: 30,
+                      height: 30,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            centerIconChild: [
+              FloatingCenterButtonChild(
+                onTap: () => onTap(2),
+                child: Image.asset(
+                  Images.bookLocation,
+                  width: 28,
+                  height: 28,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  BottomBarItem _item(String image, int index, int currentIndex) {
+    final bool isSelected = currentIndex == index;
+    return BottomBarItem(
+      icon: Image.asset(
+        image,
+        width: 28,
+        height: 28,
+        color: _inactiveColor,
+      ),
+      iconSelected: Image.asset(
+        image,
+        width: 28,
+        height: 28,
+        color: isSelected ? _accentColor : _inactiveColor,
+      ),
+      title: '',
+      titleStyle: const TextStyle(fontSize: 0, height: 0),
+      dotColor: isSelected ? _accentColor : Colors.transparent,
+      onTap: (_) => onTap(index),
+    );
+  }
+
+  int get _bottomBarIndex {
+    switch (currentIndex) {
+      case 0:
+        return 0;
+      case 1:
+        return 1;
+      case 3:
+        return 2;
+      case 4:
+        return 3;
+      default:
+        return 0;
+    }
   }
 }

@@ -26,13 +26,24 @@ class CustomImageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  SizedBox(
+    return SizedBox(
       width: containerWidth,
       height: containerHeight,
       child: CachedNetworkImage(
-        imageUrl: image, height: height, width: width, fit: fit,
-        placeholder: (context, url) => Image.asset(placeholder.isNotEmpty ? placeholder : Images.placeholderImage, height: height, width: width, fit: fit),
-        errorWidget: (context, url, error) => Image.asset(placeholder.isNotEmpty ? placeholder : Images.placeholderImage, height: height, width: width, fit: fit),
+        imageUrl: image,
+        height: height,
+        width: width,
+        fit: fit,
+        placeholder: (context, url) => Image.asset(
+            placeholder.isNotEmpty ? placeholder : Images.placeholderImage,
+            height: height,
+            width: width,
+            fit: fit),
+        errorWidget: (context, url, error) => Image.asset(
+            placeholder.isNotEmpty ? placeholder : Images.placeholderImage,
+            height: height,
+            width: width,
+            fit: fit),
       ),
     );
   }

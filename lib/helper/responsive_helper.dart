@@ -3,11 +3,10 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_restaurant/main.dart';
 
 class ResponsiveHelper {
-
   static bool isMobilePhone() {
     if (!kIsWeb) {
       return true;
-    }else {
+    } else {
       return false;
     }
   }
@@ -43,17 +42,15 @@ class ResponsiveHelper {
     }
   }
 
-  static void showDialogOrBottomSheet(BuildContext context, Widget view, {bool isDismissible = true}){
-
-      showModalBottomSheet(
-        isDismissible: isDismissible,
-        backgroundColor: Colors.transparent,
-        isScrollControlled: false,
-        // useSafeArea: true,
-        context: context,
-        builder: (ctx) => view,
-      );
-
+  static void showDialogOrBottomSheet(BuildContext context, Widget view,
+      {bool isDismissible = true}) {
+    showModalBottomSheet(
+      isDismissible: isDismissible,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: false,
+      // useSafeArea: true,
+      context: context,
+      builder: (ctx) => view,
+    );
   }
-
 }

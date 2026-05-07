@@ -1,1 +1,1 @@
-enum FromPage {login, forget, otp, social, profile}
+enum FromPage { login, forget, otp, social, profile }

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/models/api_response_model.dart';
 import 'package:flutter_restaurant/common/models/booking_details_model.dart';
@@ -8,7 +7,6 @@ import 'package:flutter_restaurant/features/rating_reviews/domain/models/review_
 import 'package:flutter_restaurant/helper/api_checker_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/main.dart';
-
 
 class ReviewProvider extends ChangeNotifier {
   final BookingRepo? bookingRepo;
@@ -26,14 +24,11 @@ class ReviewProvider extends ChangeNotifier {
   bool get isReviewSubmitted => _isReviewSubmitted;
   List<int> get ratingList => _ratingList;
 
-
-
   List<Reviews>? get reviewList => _reviewList;
   List<bool> get loadingList => _loadingList;
   List<bool> get submitList => _submitList;
   bool get isLoading => _isLoading;
   int get rateIndex => _rateIndex;
-
 
   void initRatingData(List<BookingDetailsModel> bookingDetailsList) {
     _ratingList = [];
@@ -49,7 +44,7 @@ class ReviewProvider extends ChangeNotifier {
   void setRatingIndex(int index, {bool isUpdate = true}) {
     _rateIndex = index;
 
-    if(isUpdate) {
+    if (isUpdate) {
       notifyListeners();
     }
   }
@@ -59,21 +54,20 @@ class ReviewProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-
-
-
   Future<ResponseModel> submitBookingReview(ReviewBody reviewBody) async {
     _isLoading = true;
     notifyListeners();
     ApiResponseModel response = await bookingRepo!.submitReview(reviewBody);
     ResponseModel responseModel;
     if (response.response != null && response.response!.statusCode == 200) {
-      responseModel = ResponseModel(true, getTranslated('review_submitted_successfully', Get.context!));
+      responseModel = ResponseModel(
+          true, getTranslated('review_submitted_successfully', Get.context!));
       updateSubmitted(true);
 
       notifyListeners();
     } else {
-      responseModel = ResponseModel(false, ApiCheckerHelper.getError(response).errors?.first.message);
+      responseModel = ResponseModel(
+          false, ApiCheckerHelper.getError(response).errors?.first.message);
     }
     _isLoading = false;
     notifyListeners();
@@ -84,21 +78,20 @@ class ReviewProvider extends ChangeNotifier {
     _isReviewSubmitted = value;
   }
 
-
   Future<void> getFreelancerReviewList(int? freelancerId) async {
     _reviewList = [];
 
     _isLoading = true;
     notifyListeners();
-    ApiResponseModel apiResponse = await bookingRepo!.getFreelancerReviewList(freelancerId);
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-
+    ApiResponseModel apiResponse =
+        await bookingRepo!.getFreelancerReviewList(freelancerId);
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
       apiResponse.response!.data.forEach((review) {
         Reviews reviews = Reviews.fromJson(review);
         reviews = Reviews.fromJson(review);
         _reviewList!.add(reviews);
       });
-
     } else {
       ApiCheckerHelper.checkApi(apiResponse);
     }
@@ -106,6 +99,4 @@ class ReviewProvider extends ChangeNotifier {
 
     notifyListeners();
   }
-
 }
-

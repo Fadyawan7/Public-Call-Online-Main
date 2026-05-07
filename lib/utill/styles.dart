@@ -2,25 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 
 const rubikRegular = TextStyle(
-  fontFamily: 'Rubik',
+  fontFamily: 'Poppins',
   fontSize: Dimensions.fontSizeDefault,
   fontWeight: FontWeight.w400,
 );
 
 const rubikMedium = TextStyle(
-  fontFamily: 'Rubik',
+  fontFamily: 'Poppins',
   fontSize: Dimensions.fontSizeDefault,
   fontWeight: FontWeight.w500,
 );
 
 const rubikSemiBold = TextStyle(
-  fontFamily: 'Rubik',
+  fontFamily: 'Poppins',
   fontSize: Dimensions.fontSizeDefault,
   fontWeight: FontWeight.w600,
 );
 
 const rubikBold = TextStyle(
-  fontFamily: 'Rubik',
+  fontFamily: 'Poppins',
   fontSize: Dimensions.fontSizeDefault,
   fontWeight: FontWeight.w700,
 );

@@ -52,7 +52,7 @@ class FilterDialog extends StatefulWidget {
 }
 
 class _FilterDialogState extends State<FilterDialog> {
-  late List<String> selectedCategories=[];
+  late List<String> selectedCategories = [];
 
   @override
   void initState() {
@@ -73,10 +73,10 @@ class _FilterDialogState extends State<FilterDialog> {
         ],
       ),
       content: Consumer<CategoryProvider>(
-        builder: (context,categoryProvider,child){
+        builder: (context, categoryProvider, child) {
           return SingleChildScrollView(
             child: Consumer<FreelancerProvider>(
-              builder: (context,freelancerProvider,child){
+              builder: (context, freelancerProvider, child) {
                 return Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,17 +85,22 @@ class _FilterDialogState extends State<FilterDialog> {
                       spacing: 8.0,
                       runSpacing: 8.0,
                       children: categoryProvider.categoryList!.map((category) {
-                        final isSelected = freelancerProvider.selectedCategoryID == category.id!;
+                        final isSelected =
+                            freelancerProvider.selectedCategoryID ==
+                                category.id!;
                         return FilterChip(
                           selectedColor: Theme.of(context).primaryColor,
-                          label: Text(category.name!,style: rubikRegular.copyWith(
-                            fontSize:
-                            Dimensions.paddingSizeDefault,
-                          ),),
+                          label: Text(
+                            category.name!,
+                            style: rubikRegular.copyWith(
+                              fontSize: Dimensions.paddingSizeDefault,
+                            ),
+                          ),
                           selected: isSelected,
                           onSelected: (selected) {
                             setState(() {
-                                freelancerProvider.setCategoryID(categoryID:category.id);
+                              freelancerProvider.setCategoryID(
+                                  categoryID: category.id);
                             });
                           },
                         );
@@ -109,9 +114,12 @@ class _FilterDialogState extends State<FilterDialog> {
                           onTap: () => freelancerProvider.resetCategoryID(),
                           borderRadius: BorderRadius.circular(8),
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 8),
                             decoration: BoxDecoration(
-                              color: Theme.of(context).primaryColor.withOpacity(0.1),
+                              color: Theme.of(context)
+                                  .primaryColor
+                                  .withOpacity(0.1),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
@@ -124,19 +132,18 @@ class _FilterDialogState extends State<FilterDialog> {
                             ),
                           ),
                         ),
-
                         CustomButtonWidget(
-                          onTap: (){
-                            freelancerProvider.getFreelancerList(categoryId:freelancerProvider.selectedCategoryID );
+                          onTap: () {
+                            freelancerProvider.getFreelancerList(
+                                categoryId:
+                                    freelancerProvider.selectedCategoryID);
 
                             Navigator.pop(context);
-
-                          } ,
+                          },
                           btnTxt: "Apply",
-                          width: Dimensions.paddingSizeOverLarge*2,
-                          height: Dimensions.paddingSizeLarge*2,
+                          width: Dimensions.paddingSizeOverLarge * 2,
+                          height: Dimensions.paddingSizeLarge * 2,
                         ),
-
                       ],
                     ),
                   ],
@@ -144,7 +151,8 @@ class _FilterDialogState extends State<FilterDialog> {
               },
             ),
           );
-        } ,),
+        },
+      ),
     );
   }
 }
@@ -159,7 +167,7 @@ class MyHomePage extends StatelessWidget {
     'Health'
   ];
 
-   MyHomePage({super.key});
+  MyHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {

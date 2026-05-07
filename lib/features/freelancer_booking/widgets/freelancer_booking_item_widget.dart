@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_restaurant/common/widgets/gradient_button_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_button_widget.dart';
 import 'package:flutter_restaurant/features/booking/domain/models/booking_model.dart';
 import 'package:flutter_restaurant/features/booking/providers/booking_provider.dart';
@@ -131,36 +132,22 @@ class FreelancerBookingItemWidget extends StatelessWidget {
                                 margin: EdgeInsets.zero,
                                 child: Consumer<BookingProvider>(
                                   builder: (context, bookingProvider, child) {
-                                    return OutlinedButton(
-                                      onPressed: () {
-                                        RouterHelper.getBookingDetailsRoute( bookingItem.id.toString());
+                                    return GradientButtonWidget(
+                                      onTap: () {
+                                        RouterHelper.getBookingDetailsRoute(
+                                            bookingItem.id.toString());
                                       },
-                                      style: OutlinedButton.styleFrom(
-                                        side: BorderSide(
-                                            color: Theme.of(context)
-                                                .primaryColor), // Border color
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              8), // Adjust border radius as needed
+                                      height: Dimensions.paddingSizeLarge * 2,
+                                      borderRadius: 8,
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical:
+                                              Dimensions.paddingSizeSmall),
+                                      child: Text(
+                                        "View",
+                                        style: rubikSemiBold.copyWith(
+                                          color: Colors.white,
+                                          fontSize: Dimensions.fontSizeLarge,
                                         ),
-                                        padding:const EdgeInsets.symmetric(
-                                            vertical: Dimensions
-                                                .paddingSizeSmall), // Adjust padding
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "View",
-                                            style: rubikSemiBold.copyWith(
-                                              color: Theme.of(context)
-                                                  .primaryColor, // Text color
-                                              fontSize:
-                                                  Dimensions.fontSizeLarge,
-                                            ),
-                                          ),
-                                        ],
                                       ),
                                     );
                                   },
@@ -168,50 +155,53 @@ class FreelancerBookingItemWidget extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(width: Dimensions.fontSizeDefault),
-
-                            if(bookingItem.status == 'pending')...[Expanded(
-                              child: Container(
-                                height: Dimensions.paddingSizeLarge * 2,
-                                margin: EdgeInsets.zero,
-                                child: Consumer<BookingProvider>(
-                                  builder: (context, bookingProvider, child) {
-                                    return CustomButtonWidget(
-                                      isLoading: bookingProvider.isLoading,
-                                      btnTxt: getTranslated('Reject', context),
-                                      onTap: () => {
-                                        showDialog(
-                                          context: context,
-                                          barrierDismissible: false,
-                                          builder: (context) =>
-                                              BookingCancelDialogWidget(
-                                            popUpTxt:"are_you_sure_to_reject",
-                                                status:"rejected",
-                                                bookingID: bookingItem.id
-                                                .toString(),
-                                            callback: (String message,
-                                                bool isSuccess,
-                                                String bookingID) {
-                                              if (isSuccess) {
-                                                showCustomSnackBarHelper(
-                                                    message,
-                                                    isError: false);
-                                                RouterHelper.getMainRoute(
-                                                    action: RouteAction
-                                                        .pushNamedAndRemoveUntil);
-                                              } else {
-                                                showCustomSnackBarHelper(
-                                                    message,
-                                                    isError: true);
-                                              }
-                                            },
-                                          ),
-                                        )
-                                      },
-                                    );
-                                  },
+                            if (bookingItem.status == 'pending') ...[
+                              Expanded(
+                                child: Container(
+                                  height: Dimensions.paddingSizeLarge * 2,
+                                  margin: EdgeInsets.zero,
+                                  child: Consumer<BookingProvider>(
+                                    builder: (context, bookingProvider, child) {
+                                      return CustomButtonWidget(
+                                        isLoading: bookingProvider.isLoading,
+                                        btnTxt:
+                                            getTranslated('Reject', context),
+                                        onTap: () => {
+                                          showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (context) =>
+                                                BookingCancelDialogWidget(
+                                              popUpTxt:
+                                                  "are_you_sure_to_reject",
+                                              status: "rejected",
+                                              bookingID:
+                                                  bookingItem.id.toString(),
+                                              callback: (String message,
+                                                  bool isSuccess,
+                                                  String bookingID) {
+                                                if (isSuccess) {
+                                                  showCustomSnackBarHelper(
+                                                      message,
+                                                      isError: false);
+                                                  RouterHelper.getMainRoute(
+                                                      action: RouteAction
+                                                          .pushNamedAndRemoveUntil);
+                                                } else {
+                                                  showCustomSnackBarHelper(
+                                                      message,
+                                                      isError: true);
+                                                }
+                                              },
+                                            ),
+                                          )
+                                        },
+                                      );
+                                    },
+                                  ),
                                 ),
-                              ),
-                            )],
+                              )
+                            ],
                           ],
                         ),
                       ]),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/widgets/custom_asset_image_widget.dart';
+import 'package:flutter_restaurant/common/widgets/gradient_button_widget.dart';
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/features/menu/widgets/portion_widget.dart';
 import 'package:flutter_restaurant/features/menu/widgets/sign_out_dialog_widget.dart';
@@ -21,256 +22,460 @@ class OptionsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isLoggedIn =
+        Provider.of<AuthProvider>(context, listen: false).isLoggedIn();
+    return Consumer<AuthProvider>(
+        builder: (context, authProvider, _) => SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Ink(
+                padding:
+                    const EdgeInsets.only(top: Dimensions.paddingSizeLarge),
+                child: Column(children: [
+                  Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: Dimensions.paddingSizeDefault),
+                          child: Text(getTranslated('general', context)!,
+                              style: rubikSemiBold.copyWith(
+                                  fontSize: Dimensions.fontSizeLarge)),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).cardColor,
+                            borderRadius:
+                                BorderRadius.circular(Dimensions.radiusDefault),
+                            boxShadow: const [
+                              BoxShadow(
+                                  color: Colors.black12,
+                                  spreadRadius: 1,
+                                  blurRadius: 5)
+                            ],
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: Dimensions.paddingSizeDefault),
+                          margin: const EdgeInsets.all(
+                              Dimensions.paddingSizeDefault),
+                          child: Consumer<ProfileProvider>(
+                            builder: (context, profileProvider, child) {
+                              return Column(children: [
+                                PortionWidget(
+                                    imageIcon: Images.profileSvg,
+                                    title: getTranslated('profile', context)!,
+                                    onRoute: () =>
+                                        RouterHelper.getProfileRoute('main')),
 
-    final bool isLoggedIn = Provider.of<AuthProvider>(context, listen: false).isLoggedIn();
-    return Consumer<AuthProvider>(builder: (context, authProvider, _)=> SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      child: Ink(
-        padding: const EdgeInsets.only(top: Dimensions.paddingSizeLarge),
-        child: Column(children: [
+                                if (profileProvider.userInfoModel != null &&
+                                    profileProvider.userInfoModel!.userType ==
+                                        'freelancer') ...[
+                                  // Status Toggle Widget
+                                  InkWell(
+                                    onTap:
+                                        null, // Disable tap as the switch handles interaction
+                                    child: Container(
+                                      padding: const EdgeInsets.only(
+                                          left: Dimensions.paddingSizeSmall),
+                                      child: Row(children: [
+                                        Container(
+                                          padding: const EdgeInsets.all(
+                                              Dimensions.paddingSizeExtraSmall),
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Theme.of(context)
+                                                .shadowColor
+                                                .withOpacity(0.1),
+                                          ),
+                                          child: Icon(Icons.work_outline,
+                                              size: 16,
+                                              color:
+                                                  Theme.of(context).hintColor),
+                                        ),
+                                        const SizedBox(
+                                            width: Dimensions.paddingSizeSmall),
+                                        Expanded(
+                                            child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                              const SizedBox(
+                                                  height: Dimensions
+                                                      .paddingSizeDefault),
+                                              Row(
+                                                children: [
+                                                  Text('Work Status',
+                                                      style: rubikRegular.copyWith(
+                                                          fontSize: Dimensions
+                                                              .fontSizeLarge)),
+                                                  const Spacer(),
+                                                  const ThemeSwitchButtonWidget(),
+                                                ],
+                                              ),
+                                              Divider(
+                                                color: Theme.of(context)
+                                                    .hintColor
+                                                    .withOpacity(0.1),
+                                              ),
+                                            ])),
+                                      ]),
+                                    ),
+                                  ),
 
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault),
-              child: Text(getTranslated('general', context)!, style: rubikSemiBold.copyWith(fontSize: Dimensions.fontSizeLarge)),
-            ),
-
-            Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
-                borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                boxShadow: const [BoxShadow(color: Colors.black12, spreadRadius: 1, blurRadius: 5)],
-              ),
-              padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeDefault),
-              margin: const EdgeInsets.all(Dimensions.paddingSizeDefault),
-              child: Consumer<ProfileProvider>(
-                builder: (context, profileProvider,child){
-                  return Column(children: [
-                    PortionWidget(imageIcon: Images.profileSvg, title: getTranslated('profile', context)!, onRoute:()=> RouterHelper.getProfileRoute('main')),
-
-                    if(profileProvider.userInfoModel != null && profileProvider.userInfoModel!.userType == 'freelancer')...[
-                      // Status Toggle Widget
-                      InkWell(
-                        onTap: null, // Disable tap as the switch handles interaction
-                        child: Container(
-                          padding: const EdgeInsets.only(left: Dimensions.paddingSizeSmall),
-                          child: Row(children: [
-                            Container(
-                              padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Theme.of(context).shadowColor.withOpacity(0.3),
-                              ),
-                              child: Icon(Icons.work_outline, size: 16, color: Theme.of(context).hintColor),
-                            ),
-                            const SizedBox(width: Dimensions.paddingSizeSmall),
-                            
-                            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                              const SizedBox(height: Dimensions.paddingSizeDefault),
-                              Row(
-                                children: [
-                                  Text('Work Status', style: rubikRegular.copyWith(fontSize: Dimensions.fontSizeLarge)),
-                                  const Spacer(),
-                                  const ThemeSwitchButtonWidget(),
+                                  // PortionWidget(
+                                  //     icon: Icons.calendar_month,
+                                  //     title: getTranslated(
+                                  //         'my_bookings', context)!,
+                                  //     onRoute: () => RouterHelper
+                                  //         .getFreelancerBookingRoute()),
+                                  PortionWidget(
+                                      icon: Iconsax.gallery,
+                                      title: getTranslated(
+                                          'my_portfolio', context)!,
+                                      onRoute: () => RouterHelper
+                                          .getFreelancerPortfolioListRoute()),
                                 ],
-                              ),
-                              Divider(
-                                color: Theme.of(context).hintColor.withOpacity(0.1),
-                              ),
-                            ])),
-                          ]),
+                                PortionWidget(
+                                    icon: Iconsax.home,
+                                    title:
+                                        getTranslated('my_address', context)!,
+                                    onRoute: () =>
+                                        RouterHelper.getAddressRoute()),
+                                PortionWidget(
+                                    icon: Icons.change_circle,
+                                    title: getTranslated(
+                                        'change_password', context)!,
+                                    onRoute: () =>
+                                        RouterHelper.getChangePasswordRoute()),
+
+                                PortionWidget(
+                                    imageIcon: Images.notification,
+                                    title:
+                                        getTranslated('notification', context)!,
+                                    onRoute: () =>
+                                        RouterHelper.getNotificationRoute()),
+
+                                Consumer<ProfileProvider>(
+                                  builder: (context, profileProvider, child) {
+                                    String? applicationStatus = profileProvider
+                                            .userInfoModel
+                                            ?.freelancerRequestStatus ??
+                                        '';
+                                    String? applicationStatusNote =
+                                        profileProvider.userInfoModel
+                                                ?.freelancerRequestNote ??
+                                            '';
+
+                                    return PortionWidget(
+                                      iconColor: (applicationStatus.isEmpty ||
+                                              applicationStatus == 'no-request')
+                                          ? Colors.green
+                                          : Colors.red.withOpacity(0.6),
+                                      icon: Icons.person_add_sharp,
+                                      textColor: (applicationStatus.isEmpty ||
+                                              applicationStatus == 'no-request')
+                                          ? Colors.green
+                                          : Colors.red.withOpacity(0.6),
+                                      imageIcon: Images.addressSvg,
+                                      title:
+                                          'Apply For Worker - ( ${applicationStatus.toCapitalized().replaceAll('-', ' ')} )',
+                                      suffix: (applicationStatus ==
+                                                  'needed_more_data' ||
+                                              applicationStatus == 'rejected')
+                                          ? applicationStatusNote
+                                          : null,
+                                      onRoute: (applicationStatus.isEmpty ||
+                                              (applicationStatus !=
+                                                      'approved' &&
+                                                  applicationStatus !=
+                                                      'pending'))
+                                          ? () => RouterHelper
+                                              .getApplyFreelancerRoute()
+                                          : null,
+                                    );
+                                  },
+                                )
+
+                                // PortionWidget(imageIcon: Images.languageSvg, title: getTranslated('language', context)!, onRoute:()=> RouterHelper.getLanguageRoute(true), hideDivider: true),
+                              ]);
+                            },
+                          ),
+                        )
+                      ]),
+                  Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: Dimensions.paddingSizeDefault),
+                          child: Text(getTranslated('menu_more', context)!,
+                              style: rubikSemiBold.copyWith(
+                                  fontSize: Dimensions.fontSizeLarge)),
                         ),
-                      ),
-
-                      PortionWidget(icon: Icons.calendar_month, title: getTranslated('my_bookings', context)!, onRoute:()=> RouterHelper.getFreelancerBookingRoute()),
-                      PortionWidget(icon: Iconsax.gallery, title: getTranslated('my_portfolio', context)!, onRoute:()=> RouterHelper.getFreelancerPortfolioListRoute()),
-                    ],
-                    PortionWidget(icon: Iconsax.home, title: getTranslated('my_address', context)!, onRoute:()=> RouterHelper.getAddressRoute()),
-                    PortionWidget(icon:  Icons.change_circle, title: getTranslated('change_password', context)!, onRoute:()=> RouterHelper.getChangePasswordRoute()),
-
-                    PortionWidget(imageIcon: Images.notification, title: getTranslated('notification', context)!, onRoute:()=> RouterHelper.getNotificationRoute()),
-
-                    Consumer<ProfileProvider>(
-                      builder: (context,profileProvider,child){
-                        String? applicationStatus = profileProvider.userInfoModel?.freelancerRequestStatus ?? '';
-                        String? applicationStatusNote = profileProvider.userInfoModel?.freelancerRequestNote ?? '';
-
-                        return PortionWidget(
-                            iconColor:(applicationStatus.isEmpty || applicationStatus== 'no-request') ? Colors.green:Colors.red.withOpacity(0.6) ,
-                            icon: Icons.person_add_sharp,
-                            textColor:(applicationStatus.isEmpty  || applicationStatus== 'no-request')? Colors.green:Colors.red.withOpacity(0.6) ,
-                            imageIcon: Images.addressSvg,
-                            title:'Apply For Worker - ( ${applicationStatus.toCapitalized().replaceAll('-', ' ') } )',
-                            suffix: (applicationStatus == 'needed_more_data' || applicationStatus == 'rejected') ? applicationStatusNote : null,
-                            onRoute: (applicationStatus.isEmpty || (applicationStatus != 'approved' && applicationStatus != 'pending'))
-                              ? () => RouterHelper.getApplyFreelancerRoute()
-                              : null,
-                        );
-                      }
-                      ,
-                    )
-
-                    // PortionWidget(imageIcon: Images.languageSvg, title: getTranslated('language', context)!, onRoute:()=> RouterHelper.getLanguageRoute(true), hideDivider: true),
-                  ]);
-                },
-              ),
-            )
-          ]),
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault),
-              child: Text(getTranslated('menu_more', context)!, style: rubikSemiBold.copyWith(fontSize: Dimensions.fontSizeLarge)),
-            ),
-
-            Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
-                borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                boxShadow: const [BoxShadow(color: Colors.black12, spreadRadius: 1, blurRadius: 5)],
-              ),
-              padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeDefault),
-              margin: const EdgeInsets.all(Dimensions.paddingSizeDefault),
-              child: Column(children: [
-                PortionWidget(imageIcon: Images.supportSvg, title: getTranslated('help_and_support', context)!, onRoute:()=> RouterHelper.getSupportRoute()),
-                PortionWidget(imageIcon: Images.documentSvg, title: getTranslated('privacy_policy', context)!, onRoute:()=> RouterHelper.getPolicyRoute()),
-                PortionWidget(imageIcon: Images.documentAltSvg, title: getTranslated('terms_and_condition', context)!, onRoute:()=> RouterHelper.getTermsRoute()),
-                PortionWidget(imageIcon: Images.infoSvg, title: getTranslated('about_us', context)!, onRoute:()=> RouterHelper.getAboutUsRoute()),
-
-                isLoggedIn ? PortionWidget(
-                  iconColor: Theme.of(context).primaryColor,
-                  icon: Icons.delete,
-                  imageIcon: null,
-                  title: getTranslated('delete_account', context)!,
-                  onRoute: ()=> showDialog(
-                    context: context,
-                    barrierDismissible: true,
-                    builder: (dialogContext) {
-                      return Consumer<AuthProvider>(
-                        builder: (context, authProvider, _) {
-                          return Dialog(
-                            insetPadding: const EdgeInsets.symmetric(horizontal: 24),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                            child: Container(
-                              constraints: const BoxConstraints(maxWidth: 420),
-                              padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: Theme.of(dialogContext).cardColor,
-                              ),
-                              child: Column(mainAxisSize: MainAxisSize.min, children: [
-                                Container(
-                                  width: 64,
-                                  height: 64,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Theme.of(dialogContext).colorScheme.error.withOpacity(0.12),
-                                  ),
-                                  child: Icon(Icons.delete_outline_rounded, color: Theme.of(dialogContext).colorScheme.error, size: 32),
-                                ),
-                                const SizedBox(height: Dimensions.paddingSizeDefault),
-
-                                Text(
-                                  getTranslated('are_you_sure_to_delete_account', dialogContext) ?? '',
-                                  style: rubikBold.copyWith(fontSize: Dimensions.fontSizeLarge),
-                                  textAlign: TextAlign.center,
-                                ),
-                                const SizedBox(height: Dimensions.paddingSizeSmall),
-
-                                Text(
-                                  getTranslated('it_will_remove_your_all_information', dialogContext) ?? '',
-                                  style: rubikRegular.copyWith(
-                                    color: Theme.of(dialogContext).hintColor,
-                                    fontSize: Dimensions.fontSizeDefault,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                const SizedBox(height: Dimensions.paddingSizeLarge),
-
-                                Row(children: [
-                                  Expanded(
-                                    child: OutlinedButton(
-                                      onPressed: authProvider.isLoading ? null : () => Navigator.pop(dialogContext),
-                                      style: OutlinedButton.styleFrom(
-                                        minimumSize: const Size.fromHeight(46),
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                      ),
-                                      child: Text(getTranslated('no', dialogContext) ?? 'No', style: rubikMedium),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).cardColor,
+                            borderRadius:
+                                BorderRadius.circular(Dimensions.radiusDefault),
+                            boxShadow: const [
+                              BoxShadow(
+                                  color: Colors.black12,
+                                  spreadRadius: 1,
+                                  blurRadius: 5)
+                            ],
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: Dimensions.paddingSizeDefault),
+                          margin: const EdgeInsets.all(
+                              Dimensions.paddingSizeDefault),
+                          child: Column(children: [
+                            PortionWidget(
+                                imageIcon: Images.supportSvg,
+                                title:
+                                    getTranslated('help_and_support', context)!,
+                                onRoute: () => RouterHelper.getSupportRoute()),
+                            PortionWidget(
+                                imageIcon: Images.documentSvg,
+                                title:
+                                    getTranslated('privacy_policy', context)!,
+                                onRoute: () => RouterHelper.getPolicyRoute()),
+                            PortionWidget(
+                                imageIcon: Images.documentAltSvg,
+                                title: getTranslated(
+                                    'terms_and_condition', context)!,
+                                onRoute: () => RouterHelper.getTermsRoute()),
+                            PortionWidget(
+                                imageIcon: Images.infoSvg,
+                                title: getTranslated('about_us', context)!,
+                                onRoute: () => RouterHelper.getAboutUsRoute()),
+                            isLoggedIn
+                                ? PortionWidget(
+                                    iconColor: Theme.of(context).primaryColor,
+                                    icon: Icons.delete,
+                                    imageIcon: null,
+                                    title: getTranslated(
+                                        'delete_account', context)!,
+                                    onRoute: () => showDialog(
+                                      context: context,
+                                      barrierDismissible: true,
+                                      builder: (dialogContext) {
+                                        return Consumer<AuthProvider>(
+                                          builder: (context, authProvider, _) {
+                                            return Dialog(
+                                              insetPadding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 24),
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          20)),
+                                              child: Container(
+                                                constraints:
+                                                    const BoxConstraints(
+                                                        maxWidth: 420),
+                                                padding: const EdgeInsets.all(
+                                                    Dimensions
+                                                        .paddingSizeLarge),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  color: Theme.of(dialogContext)
+                                                      .cardColor,
+                                                ),
+                                                child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Container(
+                                                        width: 64,
+                                                        height: 64,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          color: Theme.of(
+                                                                  dialogContext)
+                                                              .colorScheme
+                                                              .error
+                                                              .withOpacity(
+                                                                  0.12),
+                                                        ),
+                                                        child: Icon(
+                                                            Icons
+                                                                .delete_outline_rounded,
+                                                            color: Theme.of(
+                                                                    dialogContext)
+                                                                .colorScheme
+                                                                .error,
+                                                            size: 32),
+                                                      ),
+                                                      const SizedBox(
+                                                          height: Dimensions
+                                                              .paddingSizeDefault),
+                                                      Text(
+                                                        getTranslated(
+                                                                'are_you_sure_to_delete_account',
+                                                                dialogContext) ??
+                                                            '',
+                                                        style: rubikBold.copyWith(
+                                                            fontSize: Dimensions
+                                                                .fontSizeLarge),
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      ),
+                                                      const SizedBox(
+                                                          height: Dimensions
+                                                              .paddingSizeSmall),
+                                                      Text(
+                                                        getTranslated(
+                                                                'it_will_remove_your_all_information',
+                                                                dialogContext) ??
+                                                            '',
+                                                        style: rubikRegular
+                                                            .copyWith(
+                                                          color: Theme.of(
+                                                                  dialogContext)
+                                                              .hintColor,
+                                                          fontSize: Dimensions
+                                                              .fontSizeDefault,
+                                                        ),
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      ),
+                                                      const SizedBox(
+                                                          height: Dimensions
+                                                              .paddingSizeLarge),
+                                                      Row(children: [
+                                                        Expanded(
+                                                          child:
+                                                              GradientButtonWidget(
+                                                            onTap: authProvider
+                                                                    .isLoading
+                                                                ? null
+                                                                : () => Navigator
+                                                                    .pop(
+                                                                        dialogContext),
+                                                            height: 46,
+                                                            borderRadius: 12,
+                                                            child: Text(
+                                                              getTranslated(
+                                                                      'no',
+                                                                      dialogContext) ??
+                                                                  'No',
+                                                              style: rubikMedium
+                                                                  .copyWith(
+                                                                      color: Colors
+                                                                          .white),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                            width: Dimensions
+                                                                .paddingSizeSmall),
+                                                        Expanded(
+                                                          child:
+                                                              GradientButtonWidget(
+                                                            onTap: authProvider
+                                                                    .isLoading
+                                                                ? null
+                                                                : () => authProvider
+                                                                    .deleteUser(),
+                                                            height: 46,
+                                                            borderRadius: 12,
+                                                            child: authProvider
+                                                                    .isLoading
+                                                                ? const SizedBox(
+                                                                    width: 20,
+                                                                    height: 20,
+                                                                    child: CircularProgressIndicator(
+                                                                        strokeWidth:
+                                                                            2,
+                                                                        color: Colors
+                                                                            .white),
+                                                                  )
+                                                                : Text(
+                                                                    getTranslated(
+                                                                            'yes',
+                                                                            dialogContext) ??
+                                                                        'Yes',
+                                                                    style: rubikMedium
+                                                                        .copyWith(
+                                                                            color:
+                                                                                Colors.white)),
+                                                          ),
+                                                        ),
+                                                      ]),
+                                                    ]),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  )
+                                : const SizedBox(),
+                            InkWell(
+                              onTap: () {
+                                if (authProvider.isLoggedIn()) {
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: true,
+                                    builder: (_) => const SignOutDialogWidget(),
+                                  );
+                                } else {
+                                  RouterHelper.getLoginRoute();
+                                }
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: Dimensions.paddingSizeSmall),
+                                child: Row(children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(
+                                        Dimensions.paddingSizeExtraSmall),
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal:
+                                            Dimensions.paddingSizeSmall),
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Theme.of(context)
+                                          .primaryColor
+                                          .withOpacity(0.1),
+                                    ),
+                                    child: CustomAssetImageWidget(
+                                      isLoggedIn
+                                          ? Images.logoutSvg
+                                          : Images.login,
+                                      height: 16,
+                                      width: 16,
+                                      color: isLoggedIn
+                                          ? null
+                                          : Theme.of(context).primaryColor,
                                     ),
                                   ),
-                                  const SizedBox(width: Dimensions.paddingSizeSmall),
-                                  Expanded(
-                                    child: FilledButton(
-                                      onPressed: authProvider.isLoading ? null : () => authProvider.deleteUser(),
-                                      style: FilledButton.styleFrom(
-                                        backgroundColor: Theme.of(dialogContext).colorScheme.error,
-                                        minimumSize: const Size.fromHeight(46),
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                      ),
-                                      child: authProvider.isLoading
-                                        ? const SizedBox(
-                                            width: 20,
-                                            height: 20,
-                                            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                                          )
-                                        : Text(getTranslated('yes', dialogContext) ?? 'Yes', style: rubikMedium.copyWith(color: Colors.white)),
-                                    ),
-                                  ),
+                                  Text(
+                                      getTranslated(
+                                          isLoggedIn ? 'logout' : 'login',
+                                          context)!,
+                                      style: rubikRegular)
                                 ]),
-                              ]),
+                              ),
                             ),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                ): const SizedBox(),
-
-                InkWell(
-                  onTap: (){
-                    if(authProvider.isLoggedIn()) {
-                      showDialog(
-                        context: context,
-                        barrierDismissible: true,
-                        builder: (_) => const SignOutDialogWidget(),
-                      );
-
-                    }else {
-                      RouterHelper.getLoginRoute();
-                    }
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall),
-                    child: Row(children: [
-                      Container(
-                        padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
-                        margin: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Theme.of(context).primaryColor.withOpacity(0.1),
-                        ),
-                        child: CustomAssetImageWidget(
-                          isLoggedIn ? Images.logoutSvg : Images.login, height: 16, width: 16,
-                          color: isLoggedIn ? null : Theme.of(context).primaryColor,
-                        ),
-                      ),
-
-                      Text(getTranslated(isLoggedIn ? 'logout' : 'login', context)!, style: rubikRegular)
-                    ]),
-                  ),
-                ),
-
-              ]),
-            )
-          ]),
-          const SizedBox(height: Dimensions.paddingSizeExtraSmall),
-
-          Text('${getTranslated('v', context)} ${AppConstants.appVersion}', style: rubikRegular.copyWith(
-            color: Theme.of(context).textTheme.titleMedium?.color?.withOpacity(0.4),
-          )),
-          const SizedBox(height: Dimensions.paddingSizeExtraLarge),
-
-        ]),
-      ),
-    ));
+                          ]),
+                        )
+                      ]),
+                  const SizedBox(height: Dimensions.paddingSizeExtraSmall),
+                  Text(
+                      '${getTranslated('v', context)} ${AppConstants.appVersion}',
+                      style: rubikRegular.copyWith(
+                        color: Theme.of(context)
+                            .textTheme
+                            .titleMedium
+                            ?.color
+                            ?.withOpacity(0.4),
+                      )),
+                  const SizedBox(height: Dimensions.paddingSizeExtraLarge),
+                ]),
+              ),
+            ));
   }
 }

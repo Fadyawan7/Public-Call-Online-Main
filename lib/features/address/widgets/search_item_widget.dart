@@ -6,7 +6,8 @@ import 'package:flutter_restaurant/utill/dimensions.dart';
 class SearchItemWidget extends StatelessWidget {
   final FreelancerModel? suggestion;
   const SearchItemWidget({
-    super.key, this.suggestion,
+    super.key,
+    this.suggestion,
   });
 
   @override
@@ -19,7 +20,9 @@ class SearchItemWidget extends StatelessWidget {
           CircleAvatar(
             backgroundImage: suggestion?.image != null
                 ? NetworkImage(suggestion!.image!)
-                : const AssetImage('assets/image/placeholder_user.png') as ImageProvider,
+                : const AssetImage('assets/image/placeholder_user.png')
+                    as ImageProvider,
+            onBackgroundImageError: (_, __) {},
             radius: 20, // Adjust the size of the circle
           ),
           const SizedBox(width: Dimensions.paddingSizeSmall),
@@ -32,13 +35,14 @@ class SearchItemWidget extends StatelessWidget {
               children: [
                 // Freelancer Name
                 Text(
-                  suggestion?.name ?? getTranslated('no_freelancer_found', context)!,
+                  suggestion?.name ??
+                      getTranslated('no_freelancer_found', context)!,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                    color: Theme.of(context).textTheme.bodyLarge?.color,
-                    fontSize: Dimensions.fontSizeDefault,
-                  ),
+                        color: Theme.of(context).textTheme.bodyLarge?.color,
+                        fontSize: Dimensions.fontSizeDefault,
+                      ),
                 ),
 
                 // Freelancer Category
@@ -48,9 +52,9 @@ class SearchItemWidget extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).hintColor,
-                      fontSize: Dimensions.fontSizeSmall,
-                    ),
+                          color: Theme.of(context).hintColor,
+                          fontSize: Dimensions.fontSizeSmall,
+                        ),
                   ),
               ],
             ),

@@ -167,7 +167,7 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
                                   margin: EdgeInsets.only(top: 10),
                                   width: double.infinity,
                                   height: Dimensions.paddingSizeExtraLarge),
-      
+
                               /// TOP HEADER
                               Row(
                                 children: [
@@ -193,7 +193,7 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
                                       width: Dimensions.paddingSizeOverLarge),
                                 ],
                               ),
-      
+
                               /// TOP BANNER IMAGE
                               Container(
                                 margin: const EdgeInsets.symmetric(
@@ -221,7 +221,7 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
                                                   '${profileProvider.userInfoModel!.image}',
                                             ),
                                     ),
-      
+
                                     /// ----------- PICK BUTTON (BOTTOM RIGHT) ---------------
                                     Positioned(
                                       bottom: 8,
@@ -246,7 +246,7 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
                                   ],
                                 ),
                               ),
-      
+
                               /// EXPANDED AREA BELOW
                               Expanded(
                                 child: Stack(
@@ -260,7 +260,7 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
                                             ProfileCustomPainterWidget(context),
                                       ),
                                     ),
-      
+
                                     /// PROFILE CIRCLE OVERLAPPING
                                     Positioned(
                                       top: -20,
@@ -291,7 +291,7 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
                                         ),
                                       ),
                                     ),
-      
+
                                     /// SCROLL FORM AREA
                                     Positioned.fill(
                                       top:
@@ -311,7 +311,7 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
                                                       CrossAxisAlignment.start,
                                                   children: [
                                                     SizedBox(height: 20),
-      
+
                                                     ProfileTextFieldWidget(
                                                       isShowBorder: true,
                                                       controller:
@@ -331,9 +331,9 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
                                                       prefixIconUrl:
                                                           Images.profileIconSvg,
                                                     ),
-      
+
                                                     SizedBox(height: 20),
-      
+
                                                     /// CATEGORY DROPDOWN
                                                     Text(
                                                       getTranslated(
@@ -350,9 +350,9 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
                                                         WidgetsBinding.instance
                                                             .addPostFrameCallback(
                                                                 (_) {
-                                                          if (_selectedCategoryValue ==
-                                                                  null &&
-                                                              freelancerProvider.selectedCategoryID ==
+                                                          if (_selectedCategoryValue == null &&
+                                                              freelancerProvider
+                                                                      .selectedCategoryID ==
                                                                   -1 &&
                                                               categoryProvider
                                                                       .categoryList !=
@@ -378,14 +378,15 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
                                                             }
                                                           }
                                                         });
-      
+
                                                         return Row(
                                                           children: [
                                                             Expanded(
                                                               child:
                                                                   DropdownButtonHideUnderline(
                                                                 child:
-                                                                    DropdownButton2<String>(
+                                                                    DropdownButton2<
+                                                                        String>(
                                                                   isExpanded:
                                                                       true,
                                                                   items: [
@@ -393,7 +394,8 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
                                                                         .categoryList!
                                                                         .map(
                                                                       (cat) =>
-                                                                          DropdownMenuItem<String>(
+                                                                          DropdownMenuItem<
+                                                                              String>(
                                                                         value: cat
                                                                             .id
                                                                             .toString(),
@@ -426,8 +428,10 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
                                                                               Alignment.centerLeft,
                                                                           child:
                                                                               Text(
-                                                                            cat.name ?? '',
-                                                                            overflow: TextOverflow.ellipsis,
+                                                                            cat.name ??
+                                                                                '',
+                                                                            overflow:
+                                                                                TextOverflow.ellipsis,
                                                                           ),
                                                                         ),
                                                                       ),
@@ -450,15 +454,15 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
                                                                         null) {
                                                                       return;
                                                                     }
-      
+
                                                                     if (value ==
                                                                         _newCategoryValue) {
                                                                       _showCustomCategoryInput();
-                                                                     //     Navigator.of(context).pop(); 
-      
+                                                                      //     Navigator.of(context).pop();
+
                                                                       return;
                                                                     }
-      
+
                                                                     setState(
                                                                         () {
                                                                       _selectedCategoryValue =
@@ -482,7 +486,8 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
                                                                           color:
                                                                               Theme.of(context).hintColor),
                                                                       borderRadius:
-                                                                          BorderRadius.circular(Dimensions.radiusDefault),
+                                                                          BorderRadius.circular(
+                                                                              Dimensions.radiusDefault),
                                                                     ),
                                                                   ),
                                                                 ),
@@ -490,13 +495,13 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
                                                             ),
                                                             const SizedBox(
                                                                 width: 8),
-                                                          
                                                           ],
                                                         );
                                                       },
                                                     ),
                                                     if (_showNewCategoryField) ...[
-                                                      const SizedBox(height: 12),
+                                                      const SizedBox(
+                                                          height: 12),
                                                       CustomTextFieldWidget(
                                                         controller:
                                                             _newCategoryController,
@@ -505,16 +510,23 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
                                                             'Enter new category',
                                                         isShowBorder: true,
                                                       ),
-                                                      const SizedBox(height: 12),
+                                                      const SizedBox(
+                                                          height: 12),
                                                       Align(
-                                                        alignment:
-                                                            Alignment.centerRight,
-                                                        child: CustomButtonWidget(btnTxt: 'Add', onTap:_addCustomCategory ,width: 100,height: 40,)
-                                                      ),
+                                                          alignment: Alignment
+                                                              .centerRight,
+                                                          child:
+                                                              CustomButtonWidget(
+                                                            btnTxt: 'Add',
+                                                            onTap:
+                                                                _addCustomCategory,
+                                                            width: 100,
+                                                            height: 40,
+                                                          )),
                                                     ],
-      
+
                                                     SizedBox(height: 20),
-      
+
                                                     /// PHONE
                                                     ProfileTextFieldWidget(
                                                       isShowBorder: true,
@@ -530,14 +542,14 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
                                                       prefixIconUrl:
                                                           Images.whatsapp,
                                                     ),
-      
+
                                                     SizedBox(height: 20),
-      
+
                                                     ///Price
-      
+
                                                     Text('Price per day ',
                                                         style: rubikSemiBold),
-      
+
                                                     CustomTextFieldWidget(
                                                       controller:
                                                           _perdayChargesController,
@@ -548,14 +560,14 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
                                                           'Enter your price',
                                                       isShowBorder: true,
                                                     ),
-      
+
                                                     SizedBox(height: 30),
-      
+
                                                     //Per km charges
-      
+
                                                     Text('Per Km charges',
                                                         style: rubikSemiBold),
-      
+
                                                     CustomTextFieldWidget(
                                                       controller:
                                                           _perkmChargesController,
@@ -566,11 +578,11 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
                                                           'Per Km charges',
                                                       isShowBorder: true,
                                                     ),
-      
+
                                                     SizedBox(height: 30),
                                                     Text('Per per hour (Rs)',
                                                         style: rubikSemiBold),
-      
+
                                                     CustomTextFieldWidget(
                                                       controller:
                                                           _perhourController,
@@ -581,9 +593,9 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
                                                           'Per hour charges',
                                                       isShowBorder: true,
                                                     ),
-      
+
                                                     SizedBox(height: 30),
-      
+
                                                     /// ABOUT ME
                                                     Text(
                                                         getTranslated(
@@ -596,14 +608,14 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
                                                       maxLines: 5,
                                                       isShowBorder: true,
                                                     ),
-      
+
                                                     SizedBox(height: 30),
                                                   ],
                                                 ),
                                               ),
                                             ),
                                           ),
-      
+
                                           /// BUTTON
                                           Padding(
                                             padding: const EdgeInsets.all(
@@ -619,7 +631,7 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
                                                 // if (!_validateFields(context)) {
                                                 //   return;
                                                 // }
-      
+
                                                 final bool isCustomCategory =
                                                     _selectedCategoryValue ==
                                                         _newCategoryValue;
@@ -672,9 +684,8 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
                                                       isCustomCategory
                                                           ? _customCategoryName
                                                           : null,
-      
                                                 );
-      
+
                                                 freelancerProvider
                                                     .applyFreelancer(
                                                         model, _callback);
@@ -708,63 +719,61 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
     }
   }
 
- Future<void> _pickCoverImage() async {
-  try {
-    final pickedFile = await _picker.pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 50,
-    );
-
-    if (pickedFile != null) {
-      final CroppedFile? croppedFile = await ImageCropper().cropImage(
-        sourcePath: pickedFile.path,
-        compressFormat: ImageCompressFormat.png,
-        uiSettings: [
-
-          AndroidUiSettings(
-            
-            toolbarTitle: 'Crop Cover Image',
-            toolbarColor: Theme.of(context).primaryColor,
-            toolbarWidgetColor: Colors.white,
-            statusBarColor: Theme.of(context).primaryColor,
-        //    statusBarIconBrightness: Brightness.light,
-            lockAspectRatio: false,
-            
-            cropStyle: CropStyle.rectangle,
-            aspectRatioPresets: const [
-              CropAspectRatioPreset.original,
-              CropAspectRatioPreset.ratio16x9,
-              CropAspectRatioPreset.ratio4x3,
-              CropAspectRatioPreset.square,
-            ],
-            hideBottomControls: false,
-          ),
-          IOSUiSettings(
-            title: 'Crop Cover Image',
-            
-            aspectRatioLockEnabled: false,
-            aspectRatioPickerButtonHidden: true,
-            resetAspectRatioEnabled: true,
-            aspectRatioPresets: [
-              CropAspectRatioPreset.original,
-              CropAspectRatioPreset.ratio16x9,
-              CropAspectRatioPreset.ratio4x3,
-              CropAspectRatioPreset.square,
-            ],
-          ),
-        ],
+  Future<void> _pickCoverImage() async {
+    try {
+      final pickedFile = await _picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 50,
       );
 
-      if (croppedFile == null) return;
+      if (pickedFile != null) {
+        final CroppedFile? croppedFile = await ImageCropper().cropImage(
+          sourcePath: pickedFile.path,
+          compressFormat: ImageCompressFormat.png,
+          uiSettings: [
+            AndroidUiSettings(
+              toolbarTitle: 'Crop Cover Image',
+              toolbarColor: Theme.of(context).primaryColor,
+              toolbarWidgetColor: Colors.white,
+              statusBarColor: Theme.of(context).primaryColor,
+              //    statusBarIconBrightness: Brightness.light,
+              lockAspectRatio: false,
 
-      setState(() {
-        _pickedCoverXFile = XFile(croppedFile.path);
-      });
+              cropStyle: CropStyle.rectangle,
+              aspectRatioPresets: const [
+                CropAspectRatioPreset.original,
+                CropAspectRatioPreset.ratio16x9,
+                CropAspectRatioPreset.ratio4x3,
+                CropAspectRatioPreset.square,
+              ],
+              hideBottomControls: false,
+            ),
+            IOSUiSettings(
+              title: 'Crop Cover Image',
+              aspectRatioLockEnabled: false,
+              aspectRatioPickerButtonHidden: true,
+              resetAspectRatioEnabled: true,
+              aspectRatioPresets: [
+                CropAspectRatioPreset.original,
+                CropAspectRatioPreset.ratio16x9,
+                CropAspectRatioPreset.ratio4x3,
+                CropAspectRatioPreset.square,
+              ],
+            ),
+          ],
+        );
+
+        if (croppedFile == null) return;
+
+        setState(() {
+          _pickedCoverXFile = XFile(croppedFile.path);
+        });
+      }
+    } catch (e) {
+      debugPrint('Cover Image Process Error: $e');
     }
-  } catch (e) {
-    debugPrint('Cover Image Process Error: $e');
   }
-}
+
   bool _validateFields(BuildContext context) {
     // Keep all fields optional. Only validate numeric inputs if user entered values.
     final sideVisitText = _perdayChargesController?.text.trim() ?? '';

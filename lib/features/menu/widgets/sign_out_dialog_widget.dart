@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_restaurant/localization/language_constrants.dart';
+import 'package:flutter_restaurant/common/widgets/gradient_button_widget.dart';
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
-import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/helper/router_helper.dart';
+import 'package:flutter_restaurant/localization/language_constrants.dart';
+import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
 import 'package:provider/provider.dart';
 
@@ -30,17 +31,16 @@ class SignOutDialogWidget extends StatelessWidget {
                 shape: BoxShape.circle,
                 color: Theme.of(context).primaryColor.withOpacity(0.12),
               ),
-              child: Icon(Icons.logout_rounded, color: Theme.of(context).primaryColor, size: 32),
+              child: Icon(Icons.logout_rounded,
+                  color: Theme.of(context).primaryColor, size: 32),
             ),
             const SizedBox(height: Dimensions.paddingSizeDefault),
-
             Text(
               getTranslated('want_to_sign_out', context) ?? '',
               style: rubikBold.copyWith(fontSize: Dimensions.fontSizeLarge),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: Dimensions.paddingSizeSmall),
-
             Text(
               'You can sign in again anytime.',
               style: rubikRegular.copyWith(
@@ -50,39 +50,45 @@ class SignOutDialogWidget extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: Dimensions.paddingSizeLarge),
-
             Row(children: [
               Expanded(
-                child: OutlinedButton(
-                  onPressed: auth.isLoading ? null : () => Navigator.pop(context),
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(46),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                child: GradientButtonWidget(
+                  onTap: auth.isLoading ? null : () => Navigator.pop(context),
+                  height: 46,
+                  borderRadius: 12,
+                  child: Text(
+                    getTranslated('no', context) ?? 'No',
+                    style: rubikMedium.copyWith(color: Colors.white),
                   ),
-                  child: Text(getTranslated('no', context) ?? 'No', style: rubikMedium),
                 ),
               ),
               const SizedBox(width: Dimensions.paddingSizeSmall),
               Expanded(
-                child: FilledButton(
-                  onPressed: auth.isLoading ? null : () {
-                    Provider.of<AuthProvider>(context, listen: false).clearSharedData(context).then((condition) {
-                      Navigator.pop(context);
-                      RouterHelper.getLoginRoute(action: RouteAction.pushNamedAndRemoveUntil);
-                    });
-                  },
-                  style: FilledButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    minimumSize: const Size.fromHeight(46),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  ),
+                child: GradientButtonWidget(
+                  onTap: auth.isLoading
+                      ? null
+                      : () {
+                          Provider.of<AuthProvider>(context, listen: false)
+                              .clearSharedData(context)
+                              .then((condition) {
+                            Navigator.pop(context);
+                            RouterHelper.getLoginRoute(
+                                action: RouteAction.pushNamedAndRemoveUntil);
+                          });
+                        },
+                  height: 46,
+                  borderRadius: 12,
                   child: auth.isLoading
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                      )
-                    : Text(getTranslated('yes', context) ?? 'Yes', style: rubikMedium.copyWith(color: Colors.white)),
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                              strokeWidth: 2, color: Colors.white),
+                        )
+                      : Text(
+                          getTranslated('yes', context) ?? 'Yes',
+                          style: rubikMedium.copyWith(color: Colors.white),
+                        ),
                 ),
               ),
             ]),

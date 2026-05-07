@@ -325,63 +325,57 @@ class _FreelancerScreenState extends State<FreelancerScreen>
                     borderRadius:
                         BorderRadius.circular(Dimensions.radiusExtraLarge),
                     color: Theme.of(context).cardColor,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: Dimensions.paddingSizeSmall,
-                        vertical: Dimensions.paddingSizeExtraSmall,
-                      ),
-                      child: TextField(
-                        controller: _searchController,
-                        textAlign: TextAlign.start,
-                        textAlignVertical: TextAlignVertical.center,
-                        textInputAction: TextInputAction.search,
-                        onSubmitted: _performSearch,
-                        onChanged: (value) {
-                          _buildSuggestions(value);
-                        },
-                        decoration: InputDecoration(
-                          isDense: true,
-                          hintText: 'Search workers, categories, location',
-                          hintStyle: rubikRegular.copyWith(
-                            fontSize: Dimensions.fontSizeDefault,
-                            color: Theme.of(context).hintColor,
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: Dimensions.paddingSizeSmall,
-                            vertical: Dimensions.paddingSizeSmall,
-                          ),
-                          border: InputBorder.none,
-                          suffixIcon: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              if (_isSearching)
-                                SizedBox(
-                                  width: 18,
-                                  height: 18,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                )
-                              else
-                                IconButton(
-                                  onPressed: () =>
-                                      _performSearch(_searchController.text),
-                                  icon: const Icon(Icons.search),
+                    child: TextField(
+                      controller: _searchController,
+                      textAlign: TextAlign.start,
+                      textAlignVertical: TextAlignVertical.center,
+                      textInputAction: TextInputAction.search,
+                      onSubmitted: _performSearch,
+                      onChanged: (value) {
+                        _buildSuggestions(value);
+                      },
+                      decoration: InputDecoration(
+                        isDense: true,
+                        hintText: 'Search workers, categories, location',
+                        hintStyle: rubikRegular.copyWith(
+                          fontSize: Dimensions.fontSizeDefault,
+                          color: Theme.of(context).hintColor,
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: Dimensions.paddingSizeSmall,
+                          vertical: Dimensions.paddingSizeSmall,
+                        ),
+                        border: InputBorder.none,
+                        suffixIcon: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (_isSearching)
+                              SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
                                   color: Theme.of(context).primaryColor,
                                 ),
-                              if (_searchController.text.trim().isNotEmpty)
-                                IconButton(
-                                  onPressed: () async {
-                                    _searchController.clear();
-                                    _buildSuggestions('');
-                                    await _performSearch('');
-                                  },
-                                  icon: const Icon(Icons.clear),
-                                  color: Theme.of(context).primaryColor,
-                                ),
-                            ],
-                          ),
+                              )
+                            else
+                              IconButton(
+                                onPressed: () =>
+                                    _performSearch(_searchController.text),
+                                icon: const Icon(Icons.search),
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            if (_searchController.text.trim().isNotEmpty)
+                              IconButton(
+                                onPressed: () async {
+                                  _searchController.clear();
+                                  _buildSuggestions('');
+                                  await _performSearch('');
+                                },
+                                icon: const Icon(Icons.clear),
+                                color: Theme.of(context).primaryColor,
+                              ),
+                          ],
                         ),
                       ),
                     ),
@@ -442,7 +436,7 @@ class _FreelancerScreenState extends State<FreelancerScreen>
                           label: Text(
                             label,
                             style: rubikMedium.copyWith(
-                              fontSize: Dimensions.fontSizeSmall,
+                              fontSize: 11,
                               color: isSelected
                                   ? Theme.of(context).cardColor
                                   : Theme.of(context)
@@ -521,61 +515,61 @@ class _FreelancerScreenState extends State<FreelancerScreen>
               ],
             ),
           ),
-          Positioned(
-            left: Dimensions.paddingSizeDefault,
-            right: Dimensions.paddingSizeDefault,
-            bottom: Dimensions.paddingSizeLarge,
-            child: Material(
-              elevation: 6,
-              borderRadius: BorderRadius.circular(Dimensions.radiusLarge),
-              color: Theme.of(context).cardColor,
-              child: Padding(
-                padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 46,
-                      height: 46,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context)
-                            .primaryColor
-                            .withValues(alpha: 0.12),
-                        borderRadius:
-                            BorderRadius.circular(Dimensions.radiusDefault),
-                      ),
-                      child: Icon(
-                        Icons.people_alt_outlined,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                    ),
-                    const SizedBox(width: Dimensions.paddingSizeDefault),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            '$freelancerCount workers nearby',
-                            style: rubikSemiBold.copyWith(
-                              fontSize: Dimensions.fontSizeLarge,
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            'Tap marker to view worker profile',
-                            style: rubikRegular.copyWith(
-                              fontSize: Dimensions.fontSizeSmall,
-                              color: Theme.of(context).hintColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+          // Positioned(
+          //   left: Dimensions.paddingSizeDefault,
+          //   right: Dimensions.paddingSizeDefault,
+          //   bottom: Dimensions.paddingSizeLarge,
+          //   child: Material(
+          //     elevation: 6,
+          //     borderRadius: BorderRadius.circular(Dimensions.radiusLarge),
+          //     color: Theme.of(context).cardColor,
+          //     child: Padding(
+          //       padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
+          //       child: Row(
+          //         children: [
+          //           Container(
+          //             width: 46,
+          //             height: 46,
+          //             decoration: BoxDecoration(
+          //               color: Theme.of(context)
+          //                   .primaryColor
+          //                   .withValues(alpha: 0.12),
+          //               borderRadius:
+          //                   BorderRadius.circular(Dimensions.radiusDefault),
+          //             ),
+          //             child: Icon(
+          //               Icons.people_alt_outlined,
+          //               color: Theme.of(context).primaryColor,
+          //             ),
+          //           ),
+          //           const SizedBox(width: Dimensions.paddingSizeDefault),
+          //           Expanded(
+          //             child: Column(
+          //               crossAxisAlignment: CrossAxisAlignment.start,
+          //               mainAxisSize: MainAxisSize.min,
+          //               children: [
+          //                 Text(
+          //                   '$freelancerCount workers nearby',
+          //                   style: rubikSemiBold.copyWith(
+          //                     fontSize: Dimensions.fontSizeLarge,
+          //                   ),
+          //                 ),
+          //                 const SizedBox(height: 2),
+          //                 Text(
+          //                   'Tap marker to view worker profile',
+          //                   style: rubikRegular.copyWith(
+          //                     fontSize: Dimensions.fontSizeSmall,
+          //                     color: Theme.of(context).hintColor,
+          //                   ),
+          //                 ),
+          //               ],
+          //             ),
+          //           ),
+          //         ],
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );

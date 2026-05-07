@@ -14,32 +14,33 @@ class RequestSubmitedScreen extends StatefulWidget {
   final int status;
   final String? message;
 
-  const RequestSubmitedScreen({super.key,required this.status, this.message});
+  const RequestSubmitedScreen({super.key, required this.status, this.message});
 
   @override
   State<RequestSubmitedScreen> createState() => _RequestSubmitedScreenState();
 }
 
 class _RequestSubmitedScreenState extends State<RequestSubmitedScreen> {
-
   @override
   void initState() {
     ///delay for widget tree load and fix issue for notify controller
-    Future.delayed(const Duration(milliseconds: 300)).then((_){
+    Future.delayed(const Duration(milliseconds: 300)).then((_) {
       FreelancerScreen.loadData(true);
-    });    super.initState();
+    });
+    super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Theme.of(context).cardColor,
       appBar: null,
       body: SafeArea(
-        child: OrderSuccessfulWidget(widget: widget, success: true,message: widget.message!,)
-      ),
+          child: OrderSuccessfulWidget(
+        widget: widget,
+        success: true,
+        message: widget.message!,
+      )),
     );
   }
 }
@@ -50,60 +51,69 @@ class OrderSuccessfulWidget extends StatelessWidget {
     required this.widget,
     required this.success,
     required this.message,
-
   });
 
   final RequestSubmitedScreen widget;
   final bool success;
   final String message;
 
-
   @override
   Widget build(BuildContext context) {
-    final FreelancerProvider freelancerProvider = Provider.of<FreelancerProvider>(context, listen:false);
+    final FreelancerProvider freelancerProvider =
+        Provider.of<FreelancerProvider>(context, listen: false);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
-        child: Center(child: SizedBox(
+        child: Center(
+            child: SizedBox(
           width: Dimensions.webScreenWidth,
-          child: freelancerProvider.isLoading ? const CircularProgressIndicator() :  Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-
-              Container(
-                height: 100, width: 100,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withOpacity(0.2),
-                  shape: BoxShape.circle,
+          child: freelancerProvider.isLoading
+              ? const CircularProgressIndicator()
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: 100,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor.withOpacity(0.2),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        widget.status == 0
+                            ? Icons.check_circle
+                            : widget.status == 1
+                                ? Icons.sms_failed
+                                : widget.status == 2
+                                    ? Icons.question_mark
+                                    : Icons.cancel,
+                        color: Theme.of(context).primaryColor,
+                        size: 80,
+                      ),
+                    ),
+                    const SizedBox(height: Dimensions.paddingSizeLarge),
+                    Text(
+                      widget.message!,
+                      style: rubikSemiBold.copyWith(
+                          fontSize: Dimensions.fontSizeLarge),
+                    ),
+                    const SizedBox(height: Dimensions.paddingSizeSmall),
+                    SizedBox(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: Dimensions.paddingSizeLarge),
+                        child: CustomButtonWidget(
+                          width: double.infinity,
+                          btnTxt: getTranslated('back_home', context),
+                          onTap: () => RouterHelper.getDashboardRoute('home',
+                              action: RouteAction.pushNamedAndRemoveUntil),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                child: Icon(
-                  widget.status == 0 ? Icons.check_circle : widget.status == 1 ? Icons.sms_failed : widget.status == 2 ? Icons.question_mark : Icons.cancel,
-                  color: Theme.of(context).primaryColor, size: 80,
-                ),
-              ),
-              const SizedBox(height: Dimensions.paddingSizeLarge),
-
-
-              Text(widget.message!,
-                style: rubikSemiBold.copyWith(fontSize: Dimensions.fontSizeLarge),
-              ),
-              const SizedBox(height: Dimensions.paddingSizeSmall),
-
-
-              SizedBox(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge),
-                  child: CustomButtonWidget(
-                    width: double.infinity,
-                    btnTxt: getTranslated('back_home', context),
-                    onTap: ()=> RouterHelper.getDashboardRoute('home', action: RouteAction.pushNamedAndRemoveUntil),
-                  ),
-                ),
-              ),
-            ],
-          ),
         )),
       ),
     );

@@ -18,7 +18,8 @@ class CityDropdownWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final profileProvider = Provider.of<ProfileProvider>(context, listen: false);
+    final profileProvider =
+        Provider.of<ProfileProvider>(context, listen: false);
 
     String? selectedCityId;
     if (profileProvider.selectedCityID != -1) {
@@ -30,8 +31,7 @@ class CityDropdownWidget extends StatelessWidget {
       }
     }
 
-
-    return  DropdownButtonHideUnderline(
+    return DropdownButtonHideUnderline(
       child: DropdownButton2<String>(
         iconStyleData: IconStyleData(
           icon: Icon(
@@ -49,19 +49,20 @@ class CityDropdownWidget extends StatelessWidget {
         ),
         selectedItemBuilder: (BuildContext context) {
           return profileProvider.cityList?.map((CityModel city) {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  city.cityName ?? "",
-                  style: rubikRegular.copyWith(
-                    fontSize: Dimensions.fontSizeDefault,
-                    color:Theme.of(context).textTheme.bodyMedium?.color,
-                  ),
-                ),
-              ],
-            );
-          }).toList() ?? [];
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      city.cityName ?? "",
+                      style: rubikRegular.copyWith(
+                        fontSize: Dimensions.fontSizeDefault,
+                        color: Theme.of(context).textTheme.bodyMedium?.color,
+                      ),
+                    ),
+                  ],
+                );
+              }).toList() ??
+              [];
         },
         items: profileProvider.cityList?.map((CityModel city) {
           return DropdownMenuItem<String>(
@@ -73,8 +74,7 @@ class CityDropdownWidget extends StatelessWidget {
                   city.cityName ?? "",
                   style: rubikRegular.copyWith(
                     fontSize: Dimensions.fontSizeDefault,
-                    color: Theme.of(context).textTheme.bodyMedium?.color
-                        ,
+                    color: Theme.of(context).textTheme.bodyMedium?.color,
                   ),
                 ),
               ],
@@ -82,7 +82,7 @@ class CityDropdownWidget extends StatelessWidget {
           );
         }).toList(),
         value: selectedCityId,
-        onChanged:(String? value) {
+        onChanged: (String? value) {
           if (value != null) {
             profileProvider.setCityID(cityID: int.parse(value));
           }
@@ -103,7 +103,8 @@ class CityDropdownWidget extends StatelessWidget {
               maxLines: null,
               decoration: InputDecoration(
                 isDense: true,
-                contentPadding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+                contentPadding:
+                    const EdgeInsets.all(Dimensions.paddingSizeSmall),
                 hintText: getTranslated('select_city', context)!,
                 hintStyle: const TextStyle(fontSize: Dimensions.fontSizeSmall),
                 border: OutlineInputBorder(
@@ -113,21 +114,21 @@ class CityDropdownWidget extends StatelessWidget {
             ),
           ),
           searchMatchFn: (item, searchValue) {
-  final city = profileProvider.cityList?.firstWhere(
-    (element) => element.id.toString() == item.value,
-    orElse: () => CityModel(), // return empty model
-  );
+            final city = profileProvider.cityList?.firstWhere(
+              (element) => element.id.toString() == item.value,
+              orElse: () => CityModel(), // return empty model
+            );
 
-  return city?.cityName
-          ?.toLowerCase()
-          .contains(searchValue.toLowerCase()) ??
-      false;
-},
+            return city?.cityName
+                    ?.toLowerCase()
+                    .contains(searchValue.toLowerCase()) ??
+                false;
+          },
         ),
         buttonStyleData: ButtonStyleData(
           decoration: BoxDecoration(
             border: Border.all(
-              color:  Theme.of(context).hintColor ,
+              color: Theme.of(context).hintColor,
             ),
             borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
           ),

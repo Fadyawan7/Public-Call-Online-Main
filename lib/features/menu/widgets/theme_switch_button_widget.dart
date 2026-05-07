@@ -8,7 +8,8 @@ class ThemeSwitchButtonWidget extends StatefulWidget {
   const ThemeSwitchButtonWidget({super.key, this.fromWebBar = true});
 
   @override
-  State<ThemeSwitchButtonWidget> createState() => _ThemeSwitchButtonWidgetState();
+  State<ThemeSwitchButtonWidget> createState() =>
+      _ThemeSwitchButtonWidgetState();
 }
 
 class _ThemeSwitchButtonWidgetState extends State<ThemeSwitchButtonWidget> {
@@ -16,10 +17,12 @@ class _ThemeSwitchButtonWidgetState extends State<ThemeSwitchButtonWidget> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final profileProvider = Provider.of<ProfileProvider>(context, listen: false);
+      final profileProvider =
+          Provider.of<ProfileProvider>(context, listen: false);
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
       if (profileProvider.userInfoModel != null) {
-        authProvider.updateAvailabilityStatus(!profileProvider.userInfoModel!.temporaryDisabled!);
+        authProvider.updateAvailabilityStatus(
+            !profileProvider.userInfoModel!.temporaryDisabled!);
       }
     });
   }
@@ -39,7 +42,7 @@ class _ThemeSwitchButtonWidgetState extends State<ThemeSwitchButtonWidget> {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                                  Switch.adaptive(
+                  Switch.adaptive(
                     value: isAvailable,
                     onChanged: (bool value) {
                       // When switch is enabled (true) = Available, so temporaryDisabled should be false

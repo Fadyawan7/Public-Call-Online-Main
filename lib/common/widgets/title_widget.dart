@@ -16,39 +16,50 @@ class TitleWidget extends StatelessWidget {
   final Function? onTap;
 
   const TitleWidget({
-    super.key, required this.title, this.onTap, this.subTitle,
-    this.leadingIcon, this.isShowLeadingIcon = false, this.trailingIcon, this.isShowTrailingIcon = false,
+    super.key,
+    required this.title,
+    this.onTap,
+    this.subTitle,
+    this.leadingIcon,
+    this.isShowLeadingIcon = false,
+    this.trailingIcon,
+    this.isShowTrailingIcon = false,
   });
 
   @override
   Widget build(BuildContext context) {
-
-    final ThemeProvider themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    final ThemeProvider themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
 
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-
       Row(mainAxisSize: MainAxisSize.min, children: [
-        if(isShowLeadingIcon && leadingIcon != null)...[
+        if (isShowLeadingIcon && leadingIcon != null) ...[
           const SizedBox(width: Dimensions.paddingSizeSmall),
           leadingIcon ?? const SizedBox(),
           const SizedBox(width: Dimensions.paddingSizeSmall),
         ],
-
-        Text(title!, style: rubikBold.copyWith(color: themeProvider.darkTheme ? null : ColorResources.homePageSectionTitleColor)),
+        Text(title!,
+            style: rubikBold.copyWith(
+                color: themeProvider.darkTheme
+                    ? null
+                    : ColorResources.homePageSectionTitleColor)),
       ]),
-
-      if(isShowTrailingIcon && trailingIcon != null) trailingIcon!,
-
-      if(onTap != null && !isShowTrailingIcon) InkWell(
-        onTap: onTap as void Function()?,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(10, 5, 0, 5),
-          child: Text(
-            subTitle ?? getTranslated('view_all', context)!,
-            style: rubikRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: themeProvider.darkTheme ? null : ColorResources.homePageSectionTitleColor),
+      if (isShowTrailingIcon && trailingIcon != null) trailingIcon!,
+      if (onTap != null && !isShowTrailingIcon)
+        InkWell(
+          onTap: onTap as void Function()?,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(10, 5, 0, 5),
+            child: Text(
+              subTitle ?? getTranslated('view_all', context)!,
+              style: rubikRegular.copyWith(
+                  fontSize: Dimensions.fontSizeSmall,
+                  color: themeProvider.darkTheme
+                      ? null
+                      : ColorResources.homePageSectionTitleColor),
+            ),
           ),
         ),
-      ),
     ]);
   }
 }

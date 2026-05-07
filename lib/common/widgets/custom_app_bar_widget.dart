@@ -117,18 +117,14 @@
 //       );
 // }
 
-
-
-
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/main.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:go_router/go_router.dart';
 
-class CustomAppBarWidget extends StatelessWidget implements PreferredSizeWidget {
+class CustomAppBarWidget extends StatelessWidget
+    implements PreferredSizeWidget {
   final String? title;
   final bool isBackButtonExist;
   final Function? onBackPressed;
@@ -157,49 +153,55 @@ class CustomAppBarWidget extends StatelessWidget implements PreferredSizeWidget 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text(title ?? '',style: TextStyle(color: Colors.red,),textAlign: TextAlign.center,),
+      title: Text(
+        title ?? '',
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.primary,
+        ),
+        textAlign: TextAlign.center,
+      ),
       centerTitle: centerTitle,
       leading: isBackButtonExist
-    ? (leading != null
-        ? GestureDetector(
-            onTap: () {
-              if (onBackPressed != null) {
-                onBackPressed!();
-              } else if (context.canPop()) {
-                context.pop();
-              }
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: leading,
-            ),
-          )
-        : IconButton(
-            icon: const Icon(Icons.arrow_back_ios),
-            color: titleColor ?? Colors.red,
-            onPressed: () {
-              if (onBackPressed != null) {
-                onBackPressed!();
-              } else if (context.canPop()) {
-                context.pop();
-              }
-            },
-          ))
-    : (leading != null
-        ? GestureDetector(
-            onTap: () {
-              if (onBackPressed != null) {
-                onBackPressed!();
-              } else if (context.canPop()) {
-                context.pop();
-              }
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: leading,
-            ),
-          )
-        : const SizedBox()),
+          ? (leading != null
+              ? GestureDetector(
+                  onTap: () {
+                    if (onBackPressed != null) {
+                      onBackPressed!();
+                    } else if (context.canPop()) {
+                      context.pop();
+                    }
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: leading,
+                  ),
+                )
+              : IconButton(
+                  icon: const Icon(Icons.arrow_back_ios),
+                  color: titleColor ?? Colors.red,
+                  onPressed: () {
+                    if (onBackPressed != null) {
+                      onBackPressed!();
+                    } else if (context.canPop()) {
+                      context.pop();
+                    }
+                  },
+                ))
+          : (leading != null
+              ? GestureDetector(
+                  onTap: () {
+                    if (onBackPressed != null) {
+                      onBackPressed!();
+                    } else if (context.canPop()) {
+                      context.pop();
+                    }
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: leading,
+                  ),
+                )
+              : const SizedBox()),
       actions: actionView != null
           ? [
               Padding(

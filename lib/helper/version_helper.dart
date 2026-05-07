@@ -1,7 +1,6 @@
-
 class VersionHelper implements Comparable<VersionHelper> {
   static final RegExp _versionRegex =
-  RegExp(r"^([\d.]+)(-([0-9A-Za-z\-.]+))?(\+([0-9A-Za-z\-.]+))?$");
+      RegExp(r"^([\d.]+)(-([0-9A-Za-z\-.]+))?(\+([0-9A-Za-z\-.]+))?$");
   static final RegExp _buildRegex = RegExp(r"^[0-9A-Za-z\-.]+$");
   static final RegExp _preReleaseRegex = RegExp(r"^[0-9A-Za-z\-]+$");
 
@@ -50,7 +49,8 @@ class VersionHelper implements Comparable<VersionHelper> {
   bool operator <=(dynamic o) => o is VersionHelper && _compare(this, o) <= 0;
 
   @override
-  bool operator == (dynamic other) => other is VersionHelper && _compare(this, other) == 0;
+  bool operator ==(dynamic other) =>
+      other is VersionHelper && _compare(this, other) == 0;
 
   bool operator >(dynamic o) => o is VersionHelper && _compare(this, o) > 0;
 
@@ -93,8 +93,7 @@ class VersionHelper implements Comparable<VersionHelper> {
       newPreRelease.add("1");
     }
 
-    return VersionHelper(major, minor, patch,
-        preRelease: newPreRelease);
+    return VersionHelper(major, minor, patch, preRelease: newPreRelease);
   }
 
   @override

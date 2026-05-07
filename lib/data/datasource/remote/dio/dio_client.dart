@@ -14,45 +14,43 @@ class DioClient {
   Dio? dio;
   String? token;
 
-  DioClient(this.baseUrl,
-      Dio? dioC, {
-        required this.loggingInterceptor,
-        required this.sharedPreferences,
-      }) {
+  DioClient(
+    this.baseUrl,
+    Dio? dioC, {
+    required this.loggingInterceptor,
+    required this.sharedPreferences,
+  }) {
     token = sharedPreferences.getString(AppConstants.token);
     dio = dioC ?? Dio();
 
     updateHeader(dioC: dioC, getToken: token);
-
-
   }
 
-  Future<void> updateHeader({String? getToken, Dio? dioC})async {
+  Future<void> updateHeader({String? getToken, Dio? dioC}) async {
     dio
       ?..options.baseUrl = baseUrl
       ..options.connectTimeout = const Duration(seconds: 30)
       ..options.receiveTimeout = const Duration(seconds: 30)
       ..httpClientAdapter
       ..options.headers = {
-
         // 'Content-Type': 'application/json; charset=UTF-8',
-        'X-localization': sharedPreferences.getString(AppConstants.languageCode)
-            ?? AppConstants.languages[0].languageCode,
+        'X-localization':
+            sharedPreferences.getString(AppConstants.languageCode) ??
+                AppConstants.languages[0].languageCode,
         'Authorization': 'Bearer $getToken',
-
       };
     dio?.interceptors.add(loggingInterceptor);
   }
 
-
-
-  Future<Response> get(String uri, {
+  Future<Response> get(
+    String uri, {
     Map<String, dynamic>? queryParameters,
     CancelToken? cancelToken,
     ProgressCallback? onReceiveProgress,
   }) async {
     try {
-      debugPrint('apiCall ==> url=> $uri \nparams---> $queryParameters\nheader=> ${dio!.options.headers}');
+      debugPrint(
+          'apiCall ==> url=> $uri \nparams---> $queryParameters\nheader=> ${dio!.options.headers}');
 
       var response = await dio!.get(
         uri,
@@ -71,44 +69,50 @@ class DioClient {
       rethrow;
     }
   }
-Future<Response> getWithoutToken(String uri, {
-  Map<String, dynamic>? queryParameters,
-  CancelToken? cancelToken,
-  ProgressCallback? onReceiveProgress,
-}) async {
-  try {
-    // Clone dio headers
-    Map<String, String> headers = Map.from(dio!.options.headers);
 
-    // Remove Authorization header
-    headers.remove('Authorization');
+  Future<Response> getWithoutToken(
+    String uri, {
+    Map<String, dynamic>? queryParameters,
+    CancelToken? cancelToken,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    try {
+      // Clone dio headers
+      Map<String, String> headers = Map.from(dio!.options.headers);
 
-    debugPrint('apiCall (without token) ==> url=> $uri \nparams---> $queryParameters\nheader=> $headers');
+      // Remove Authorization header
+      headers.remove('Authorization');
 
-    var response = await dio!.get(
-      uri,
-      queryParameters: queryParameters,
-      cancelToken: cancelToken,
-      onReceiveProgress: onReceiveProgress,
-      options: Options(headers: headers),
-    );
+      debugPrint(
+          'apiCall (without token) ==> url=> $uri \nparams---> $queryParameters\nheader=> $headers');
 
-    debugPrint('apiCalll ==${response.data}');
-    return response;
-  } catch (e) {
-    rethrow;
+      var response = await dio!.get(
+        uri,
+        queryParameters: queryParameters,
+        cancelToken: cancelToken,
+        onReceiveProgress: onReceiveProgress,
+        options: Options(headers: headers),
+      );
+
+      debugPrint('apiCalll ==${response.data}');
+      return response;
+    } catch (e) {
+      rethrow;
+    }
   }
-}
 
-  Future<Response> post(String uri, {
+  Future<Response> post(
+    String uri, {
     data,
     Map<String, dynamic>? queryParameters,
     CancelToken? cancelToken,
     ProgressCallback? onSendProgress,
-    ProgressCallback? onReceiveProgress,  Options? options,
+    ProgressCallback? onReceiveProgress,
+    Options? options,
   }) async {
     try {
-      debugPrint('apiCall ==> url=> $uri \nparams---> $queryParameters\nheader=> ${dio!.options.headers} \nbody---> $data');
+      debugPrint(
+          'apiCall ==> url=> $uri \nparams---> $queryParameters\nheader=> ${dio!.options.headers} \nbody---> $data');
 
       var response = await dio!.post(
         uri,
@@ -118,7 +122,7 @@ Future<Response> getWithoutToken(String uri, {
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
       );
-      
+
       return response;
     } on FormatException catch (_) {
       throw const FormatException("Unable to process the data");
@@ -127,14 +131,16 @@ Future<Response> getWithoutToken(String uri, {
     }
   }
 
-  Future<Response> put(String uri, {
+  Future<Response> put(
+    String uri, {
     data,
     Map<String, dynamic>? queryParameters,
     CancelToken? cancelToken,
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    debugPrint('apiCall ==> url=> $uri \nparams---> $queryParameters\nheader=> ${dio!.options.headers}');
+    debugPrint(
+        'apiCall ==> url=> $uri \nparams---> $queryParameters\nheader=> ${dio!.options.headers}');
 
     try {
       var response = await dio!.put(
@@ -153,12 +159,14 @@ Future<Response> getWithoutToken(String uri, {
     }
   }
 
-  Future<Response> delete(String uri, {
+  Future<Response> delete(
+    String uri, {
     data,
     Map<String, dynamic>? queryParameters,
     CancelToken? cancelToken,
   }) async {
-    debugPrint('apiCall ==> url=> $uri \nparams---> $queryParameters\nheader=> ${dio!.options.headers}');
+    debugPrint(
+        'apiCall ==> url=> $uri \nparams---> $queryParameters\nheader=> ${dio!.options.headers}');
 
     try {
       var response = await dio!.delete(
@@ -175,8 +183,8 @@ Future<Response> getWithoutToken(String uri, {
     }
   }
 
-
-  Future<Response> postMultipart(String uri, {
+  Future<Response> postMultipart(
+    String uri, {
     Map<String, dynamic>? data,
     List<XFile?>? files,
     String? fileKey,
@@ -186,13 +194,14 @@ Future<Response> getWithoutToken(String uri, {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    debugPrint('apiCall ==> url=> $uri \nparams---> $queryParameters\nheader=> ${dio!.options.headers}');
+    debugPrint(
+        'apiCall ==> url=> $uri \nparams---> $queryParameters\nheader=> ${dio!.options.headers}');
 
-    try{
+    try {
       List<MultipartFile> fileList = [];
 
-      if(files != null) {
-        for(int i = 0; i < files.length; i++) {
+      if (files != null) {
+        for (int i = 0; i < files.length; i++) {
           fileList.add(MultipartFile.fromBytes(
             await files[i]!.readAsBytes(),
             filename: files[i]!.name,
@@ -200,20 +209,16 @@ Future<Response> getWithoutToken(String uri, {
         }
       }
 
-      if(fileList.isNotEmpty) {
+      if (fileList.isNotEmpty) {
         data?.addAll({
-          '${fileKey ?? 'image'}[]' : fileList,
+          '${fileKey ?? 'image'}[]': fileList,
         });
       }
 
       print('-------data---- $fileList');
-
-    }catch(e) {
+    } catch (e) {
       rethrow;
     }
-
-
-
 
     try {
       var response = await dio!.post(
@@ -233,59 +238,55 @@ Future<Response> getWithoutToken(String uri, {
     }
   }
 
-Future<Response> postMultipartImages(String uri, {
-  Map<String, dynamic>? data,
-  List<XFile?>? files,
-  String? fileKey,
-  Map<String, dynamic>? queryParameters,
-  CancelToken? cancelToken,
-  ProgressCallback? onSendProgress,
-  ProgressCallback? onReceiveProgress,
-}) async {
-
-  // 🔥 Override header JUST for this request
-  Options newOptions = Options(
-    headers: {
-      ...dio!.options.headers,
-      'Content-Type': 'multipart/form-data',
-    },
-  );
-
-  try {
-    List<MultipartFile> fileList = [];
-
-    if (files != null) {
-      for (var f in files) {
-        if (f != null) {
-          fileList.add(MultipartFile.fromBytes(
-            await f.readAsBytes(),
-            filename: f.name,
-          ));
-        }
-      }
-    }
-
-    if (fileList.isNotEmpty) {
-      data?.addAll({ fileKey ?? "image": fileList.first });
-    }
-
-    final response = await dio!.post(
-      uri,
-      data: FormData.fromMap(data ?? {}),
-      options: newOptions, // 👈 ONLY MULTIPART uses this
-      queryParameters: queryParameters,
-      cancelToken: cancelToken,
-      onSendProgress: onSendProgress,
-      onReceiveProgress: onReceiveProgress,
+  Future<Response> postMultipartImages(
+    String uri, {
+    Map<String, dynamic>? data,
+    List<XFile?>? files,
+    String? fileKey,
+    Map<String, dynamic>? queryParameters,
+    CancelToken? cancelToken,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    // 🔥 Override header JUST for this request
+    Options newOptions = Options(
+      headers: {
+        ...dio!.options.headers,
+        'Content-Type': 'multipart/form-data',
+      },
     );
 
-    return response;
+    try {
+      List<MultipartFile> fileList = [];
 
-  } catch (e) {
-    rethrow;
+      if (files != null) {
+        for (var f in files) {
+          if (f != null) {
+            fileList.add(MultipartFile.fromBytes(
+              await f.readAsBytes(),
+              filename: f.name,
+            ));
+          }
+        }
+      }
+
+      if (fileList.isNotEmpty) {
+        data?.addAll({fileKey ?? "image": fileList.first});
+      }
+
+      final response = await dio!.post(
+        uri,
+        data: FormData.fromMap(data ?? {}),
+        options: newOptions, // 👈 ONLY MULTIPART uses this
+        queryParameters: queryParameters,
+        cancelToken: cancelToken,
+        onSendProgress: onSendProgress,
+        onReceiveProgress: onReceiveProgress,
+      );
+
+      return response;
+    } catch (e) {
+      rethrow;
+    }
   }
-}
-
-
-
 }

@@ -7,26 +7,27 @@ import 'package:flutter_restaurant/utill/app_constants.dart';
 class SplashRepo extends DataSyncRepo {
   SplashRepo({required super.sharedPreferences, required super.dioClient});
 
-
-Future<ApiResponseModel<Response>> getConfig({required DataSourceEnum source}) async {
-  return await fetchData<Response>(AppConstants.configUri, source);
-}
-
+  Future<ApiResponseModel<Response>> getConfig(
+      {required DataSourceEnum source}) async {
+    return await fetchData<Response>(AppConstants.configUri, source);
+  }
 
   Future<bool> initSharedData() {
-    if(!sharedPreferences!.containsKey(AppConstants.theme)) {
+    if (!sharedPreferences!.containsKey(AppConstants.theme)) {
       return sharedPreferences!.setBool(AppConstants.theme, false);
     }
-    if(!sharedPreferences!.containsKey(AppConstants.countryCode)) {
-      return sharedPreferences!.setString(AppConstants.countryCode, AppConstants.languages[0].countryCode!);
+    if (!sharedPreferences!.containsKey(AppConstants.countryCode)) {
+      return sharedPreferences!.setString(
+          AppConstants.countryCode, AppConstants.languages[0].countryCode!);
     }
-    if(!sharedPreferences!.containsKey(AppConstants.languageCode)) {
-      return sharedPreferences!.setString(AppConstants.languageCode, AppConstants.languages[0].languageCode!);
+    if (!sharedPreferences!.containsKey(AppConstants.languageCode)) {
+      return sharedPreferences!.setString(
+          AppConstants.languageCode, AppConstants.languages[0].languageCode!);
     }
-    if(!sharedPreferences!.containsKey(AppConstants.onBoardingSkip)) {
+    if (!sharedPreferences!.containsKey(AppConstants.onBoardingSkip)) {
       return sharedPreferences!.setBool(AppConstants.onBoardingSkip, true);
     }
-    if(!sharedPreferences!.containsKey(AppConstants.cartList)) {
+    if (!sharedPreferences!.containsKey(AppConstants.cartList)) {
       return sharedPreferences!.setStringList(AppConstants.cartList, []);
     }
     // if(!sharedPreferences.containsKey(AppConstants.cookiesManagement)) {
@@ -39,11 +40,8 @@ Future<ApiResponseModel<Response>> getConfig({required DataSourceEnum source}) a
     return sharedPreferences!.clear();
   }
 
-  Future<ApiResponseModel<T>> getPolicyPage<T>({required DataSourceEnum source}) async {
+  Future<ApiResponseModel<T>> getPolicyPage<T>(
+      {required DataSourceEnum source}) async {
     return await fetchData<T>(AppConstants.configUri, source);
   }
-
-
-
-
 }

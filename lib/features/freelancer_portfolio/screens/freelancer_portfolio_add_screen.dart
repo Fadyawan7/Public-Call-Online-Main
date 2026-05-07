@@ -48,7 +48,6 @@ class _FreelancerPortfolioAddScreenState
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

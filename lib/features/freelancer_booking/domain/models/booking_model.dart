@@ -1,5 +1,3 @@
-
-
 class BookingModel {
   int? _id;
   int? _userId;
@@ -12,31 +10,24 @@ class BookingModel {
   String? _date;
   String? _time;
 
-
-
-  BookingModel(
-      {
-        int? id,
-        int? userId,
-        int? freelancerId,
-        String? bookingId,
-        String? status,
-        String? date,
-        String? time,
-        String? description,
-        String? freelancerName,
-        String? freelancerImage,
-
-
-
-
-      }) {
+  BookingModel({
+    int? id,
+    int? userId,
+    int? freelancerId,
+    String? bookingId,
+    String? status,
+    String? date,
+    String? time,
+    String? description,
+    String? freelancerName,
+    String? freelancerImage,
+  }) {
     _id = id;
     _userId = userId;
     _freelancerId = freelancerId;
     _bookingId = bookingId;
     _status = status;
-    _date=date;
+    _date = date;
     _description = description;
     _freelancerName = freelancerName;
     _freelancerImage = freelancerImage;
@@ -54,7 +45,6 @@ class BookingModel {
   String? get date => _date;
   String? get time => _time;
 
-
   BookingModel.fromJson(Map<String, dynamic> json) {
     _id = json['id'];
     _userId = json['user_id'];
@@ -66,8 +56,6 @@ class BookingModel {
     _freelancerImage = json['freelancer_image'];
     _date = json['date'];
     _time = json['time'];
-
-
   }
 
   Map<String, dynamic> toJson() {
@@ -86,4 +74,3 @@ class BookingModel {
     return data;
   }
 }
-

@@ -6,7 +6,11 @@ class ProductModel {
   List<Product>? products;
 
   ProductModel(
-      {int? totalSize, int? limit, int? offset, List<Product>? products, double? productMaxPrice}) {
+      {int? totalSize,
+      int? limit,
+      int? offset,
+      List<Product>? products,
+      double? productMaxPrice}) {
     totalSize = totalSize;
     limit = limit;
     offset = offset;
@@ -19,9 +23,8 @@ class ProductModel {
     limit = int.tryParse('${json['limit']}');
     offset = int.tryParse('${json['offset']}');
 
-    if(json.containsKey('product_max_price')) {
+    if (json.containsKey('product_max_price')) {
       productMaxPrice = double.tryParse('${json['product_max_price']}');
-
     }
 
     if (json['products'] != null) {
@@ -72,33 +75,33 @@ class Product {
   bool? _isChanged;
   String? _changeReason;
 
-  Product(
-      {int? id,
-        String? name,
-        String? description,
-        String? image,
-        double? price,
-        List<Variation>? variations,
-        List<AddOns>? addOns,
-        double? tax,
-        String? availableTimeStarts,
-        String? availableTimeEnds,
-        int? status,
-        String? createdAt,
-        String? updatedAt,
-        List<String>? attributes,
-        List<CategoryId>? categoryIds,
-        List<ChoiceOption>? choiceOptions,
-        double? discount,
-        String? discountType,
-        String? taxType,
-        int? setMenu,
-        List<Rating>? rating,
-        BranchProduct? branchProduct,
-        double? mainPrice,
-        bool? isChanged,
-        String? changeReason,
-      }) {
+  Product({
+    int? id,
+    String? name,
+    String? description,
+    String? image,
+    double? price,
+    List<Variation>? variations,
+    List<AddOns>? addOns,
+    double? tax,
+    String? availableTimeStarts,
+    String? availableTimeEnds,
+    int? status,
+    String? createdAt,
+    String? updatedAt,
+    List<String>? attributes,
+    List<CategoryId>? categoryIds,
+    List<ChoiceOption>? choiceOptions,
+    double? discount,
+    String? discountType,
+    String? taxType,
+    int? setMenu,
+    List<Rating>? rating,
+    BranchProduct? branchProduct,
+    double? mainPrice,
+    bool? isChanged,
+    String? changeReason,
+  }) {
     _id = id;
     _name = name;
     _description = description;
@@ -152,7 +155,6 @@ class Product {
   bool? get isChanged => _isChanged;
   String? get changeReason => _changeReason;
 
-
   Product.fromJson(Map<String, dynamic> json) {
     _id = json['id'];
     _name = json['name'];
@@ -162,27 +164,25 @@ class Product {
     if (json['variations'] != null) {
       _variations = [];
       json['variations'].forEach((v) {
-        if(!v.containsKey('price')){
+        if (!v.containsKey('price')) {
           _variations!.add(Variation.fromJson(v));
         }
-
       });
     }
     if (json['add_ons'] != null) {
       _addOns = [];
-     try{
-       json['add_ons'].forEach((v) {
-         _addOns!.add(AddOns.fromJson(v));
-       });
-
-     }catch(e){
-       _addOns = [];
-     }
+      try {
+        json['add_ons'].forEach((v) {
+          _addOns!.add(AddOns.fromJson(v));
+        });
+      } catch (e) {
+        _addOns = [];
+      }
     }
     _tax = json['tax'].toDouble();
     _tax = json['tax'].toDouble();
     _availableTimeStarts = json['available_time_starts'] ?? '';
-    _availableTimeEnds = json['available_time_ends'] ?? '' ;
+    _availableTimeEnds = json['available_time_ends'] ?? '';
     _status = json['status'] ?? 0;
     _createdAt = json['created_at'];
     _updatedAt = json['updated_at'];
@@ -209,26 +209,24 @@ class Product {
         _rating!.add(Rating.fromJson(v));
       });
     }
-    productType=  json["product_type"];
-    if(json['branch_product'] != null) {
-      _branchProduct =  BranchProduct.fromJson(json['branch_product']);
+    productType = json["product_type"];
+    if (json['branch_product'] != null) {
+      _branchProduct = BranchProduct.fromJson(json['branch_product']);
       _price = _branchProduct!.price;
       _discount = _branchProduct!.discount;
       _discountType = _branchProduct!.discountType;
-
-    }else{
+    } else {
       _branchProduct = null;
     }
     _mainPrice = double.tryParse('${json['price']}');
 
-    if(json.containsKey('is_changed')){
+    if (json.containsKey('is_changed')) {
       _isChanged = '${json['is_changed']}'.contains('1');
     }
 
-    if(json.containsKey('change_reason')){
+    if (json.containsKey('change_reason')) {
       _changeReason = json['change_reason'];
     }
-
   }
 
   Map<String, dynamic> toJson() {
@@ -241,7 +239,6 @@ class Product {
     if (_variations != null) {
       data['variations'] = _variations!.map((v) => v.toJson()).toList();
     }
-
 
     if (_addOns != null) {
       data['add_ons'] = _addOns!.map((v) => v.toJson()).toList();
@@ -257,8 +254,7 @@ class Product {
       data['category_ids'] = _categoryIds!.map((v) => v.toJson()).toList();
     }
     if (_choiceOptions != null) {
-      data['choice_options'] =
-          _choiceOptions!.map((v) => v.toJson()).toList();
+      data['choice_options'] = _choiceOptions!.map((v) => v.toJson()).toList();
     }
     data['discount'] = _discount;
     data['discount_type'] = _discountType;
@@ -272,6 +268,7 @@ class Product {
     return data;
   }
 }
+
 class BranchProduct {
   int? id;
   int? productId;
@@ -285,34 +282,33 @@ class BranchProduct {
   int? soldQuantity;
   String? stockType;
 
-
-  BranchProduct(
-      {this.id,
-        this.productId,
-        this.branchId,
-        this.isAvailable,
-        this.variations,
-        this.price,
-        this.discount,
-        this.discountType,
-        this.stockType,
-        this.soldQuantity,
-        this.stock,
-        });
+  BranchProduct({
+    this.id,
+    this.productId,
+    this.branchId,
+    this.isAvailable,
+    this.variations,
+    this.price,
+    this.discount,
+    this.discountType,
+    this.stockType,
+    this.soldQuantity,
+    this.stock,
+  });
 
   BranchProduct.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     productId = json['product_id'];
     branchId = json['branch_id'];
     price = double.tryParse('${json['price']}');
-    isAvailable = ('${json['is_available']}' == '1') || '${json['is_available']}' == 'true';
+    isAvailable = ('${json['is_available']}' == '1') ||
+        '${json['is_available']}' == 'true';
     if (json['variations'] != null) {
       variations = [];
       json['variations'].forEach((v) {
-        if(!v.containsKey('price')){
+        if (!v.containsKey('price')) {
           variations!.add(Variation.fromJson(v));
         }
-
       });
     }
     discount = json['discount'].toDouble();
@@ -320,8 +316,6 @@ class BranchProduct {
     stockType = json['stock_type'];
     stock = json['stock'];
     soldQuantity = json['sold_quantity'];
-
-
   }
 
   Map<String, dynamic> toJson() {
@@ -340,6 +334,7 @@ class BranchProduct {
     return data;
   }
 }
+
 class VariationValue {
   String? level;
   double? optionPrice;
@@ -359,8 +354,6 @@ class VariationValue {
   }
 }
 
-
-
 class Variation {
   String? name;
   int? min;
@@ -369,17 +362,19 @@ class Variation {
   bool? isMultiSelect;
   List<VariationValue>? variationValues;
 
-
   Variation({
-    this.name, this.min, this.max,
-    this.isRequired, this.variationValues,
+    this.name,
+    this.min,
+    this.max,
+    this.isRequired,
+    this.variationValues,
     this.isMultiSelect,
   });
 
   Variation.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     isMultiSelect = '${json['type']}' == 'multi';
-    min =  isMultiSelect! ? int.parse(json['min'].toString()) : 0;
+    min = isMultiSelect! ? int.parse(json['min'].toString()) : 0;
     max = isMultiSelect! ? int.parse(json['max'].toString()) : 0;
     isRequired = '${json['required']}' == 'on';
     if (json['values'] != null) {
@@ -388,7 +383,6 @@ class Variation {
         variationValues!.add(VariationValue.fromJson(v));
       });
     }
-
   }
 
   Map<String, dynamic> toJson() {
@@ -414,7 +408,13 @@ class AddOns {
   String? _updatedAt;
   double? _tax; // percentage
 
-  AddOns({int? id, String? name, double? price, String? createdAt, String? updatedAt, double? tax}) {
+  AddOns(
+      {int? id,
+      String? name,
+      double? price,
+      String? createdAt,
+      String? updatedAt,
+      double? tax}) {
     _id = id;
     _name = name;
     _price = price;

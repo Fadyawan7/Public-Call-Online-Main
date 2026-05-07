@@ -1,22 +1,21 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_restaurant/common/widgets/custom_button_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_pop_scope_widget.dart';
+import 'package:flutter_restaurant/common/widgets/custom_text_field_widget.dart';
 import 'package:flutter_restaurant/features/auth/domain/models/user_log_data.dart';
+import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
+import 'package:flutter_restaurant/features/auth/widgets/social_login_widget.dart';
 import 'package:flutter_restaurant/features/language/providers/localization_provider.dart';
 import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
+import 'package:flutter_restaurant/helper/custom_snackbar_helper.dart';
 import 'package:flutter_restaurant/helper/number_checker_helper.dart';
+import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
-import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/utill/color_resources.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';
-import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
-import 'package:flutter_restaurant/common/widgets/custom_button_widget.dart';
-import 'package:flutter_restaurant/helper/custom_snackbar_helper.dart';
-import 'package:flutter_restaurant/common/widgets/custom_text_field_widget.dart';
-
-import 'package:flutter_restaurant/features/auth/widgets/social_login_widget.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -254,7 +253,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                         .fontSizeSmall,
                                                     color: Theme.of(context)
                                                         .colorScheme
-                                                        .error,
+                                                        .primary,
                                                   ),
                                             ),
                                           ),
@@ -424,10 +423,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                                   decorationColor:
                                                       Theme.of(context)
                                                           .colorScheme
-                                                          .error,
+                                                          .primary,
                                                   color: Theme.of(context)
                                                       .colorScheme
-                                                      .error,
+                                                      .primary,
                                                 ),
                                           ),
                                         ]),

@@ -54,53 +54,27 @@ class FreelancerWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               mainAxisSize: MainAxisSize.min,
               children: [
-            Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Theme.of(context).shadowColor.withOpacity(0.5),
-                    offset: const Offset(0, 5),
-                    spreadRadius: 5,
-                    blurRadius: 15,
-                  )
-                ],
-              ),
-              child: Consumer<ChatProvider>(
-                builder: (context, chatProvider, child) {
-                  return InkWell(
-                    onTap: () async {
-                      await chatProvider.startNewChat(isFreelancer
-                          ? bookingProvider.bookingDetails!.userId!
-                          : bookingProvider.bookingDetails!.freelancerId!);
-                      RouterHelper.getConversationScreen(
-                          chat: chatProvider.newChat);
-                    },
-                    child: const CustomAssetImageWidget(Images.chat,
-                        width: 30, height: 30),
-                  );
-                },
-              ),
+            Consumer<ChatProvider>(
+              builder: (context, chatProvider, child) {
+                return InkWell(
+                  onTap: () async {
+                    await chatProvider.startNewChat(isFreelancer
+                        ? bookingProvider.bookingDetails!.userId!
+                        : bookingProvider.bookingDetails!.freelancerId!);
+                    RouterHelper.getConversationScreen(
+                        chat: chatProvider.newChat);
+                  },
+                  child: const CustomAssetImageWidget(Images.chat,
+                      width: 30, height: 30),
+                );
+              },
             ),
             const SizedBox(width: Dimensions.paddingSizeSmall),
-            Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Theme.of(context).shadowColor.withOpacity(0.5),
-                    offset: const Offset(0, 5),
-                    spreadRadius: 5,
-                    blurRadius: 15,
-                  )
-                ],
-              ),
-              child: InkWell(
-                onTap: () => launchUrl(Uri.parse('tel:'),
-                    mode: LaunchMode.externalApplication),
-                child: const CustomAssetImageWidget(Images.callIcon,
-                    width: 30, height: 30),
-              ),
+            InkWell(
+              onTap: () => launchUrl(Uri.parse('tel:'),
+                  mode: LaunchMode.externalApplication),
+              child: const CustomAssetImageWidget(Images.callIcon,
+                  width: 30, height: 30),
             ),
           ])),
     ]);

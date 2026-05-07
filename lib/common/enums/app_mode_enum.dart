@@ -1,4 +1,4 @@
-enum AppMode{
+enum AppMode {
   release,
   demo,
 }

@@ -46,60 +46,67 @@ class PersonInfoWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(10),
-        boxShadow: [BoxShadow(color:ColorResources.cardShadowColor.withOpacity(0.2), blurRadius: 10)],
+        boxShadow: [
+          BoxShadow(
+              color: ColorResources.cardShadowColor.withOpacity(0.2),
+              blurRadius: 10)
+        ],
       ),
       //margin: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall,vertical: Dimensions.paddingSizeLarge),
       padding: ResponsiveHelper.isDesktop(context)
-          ?  const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge, vertical: Dimensions.paddingSizeLarge)
-          : const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault),
-      child: Consumer<LocationProvider>(
-          builder: (context, locationProvider, _) {
-            return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          ? const EdgeInsets.symmetric(
+              horizontal: Dimensions.paddingSizeLarge,
+              vertical: Dimensions.paddingSizeLarge)
+          : const EdgeInsets.symmetric(
+              horizontal: Dimensions.paddingSizeDefault),
+      child:
+          Consumer<LocationProvider>(builder: (context, locationProvider, _) {
+        return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          if (!ResponsiveHelper.isDesktop(context))
+            const SizedBox(height: Dimensions.paddingSizeLarge),
+          Text(
+            getTranslated('contact_person_info', context)!,
+            style: rubikSemiBold.copyWith(
+                fontSize: ResponsiveHelper.isDesktop(context)
+                    ? Dimensions.fontSizeLarge
+                    : Dimensions.fontSizeDefault),
+          ),
+          const SizedBox(height: Dimensions.paddingSizeLarge),
+          if (!ResponsiveHelper.isDesktop(context)) ...[
+            /// for Contact Person Name
+            ProfileTextFieldWidget(
+              isShowBorder: true,
+              controller: contactPersonNameController,
+              focusNode: nameNode,
+              nextFocus: numberNode,
+              inputType: TextInputType.name,
+              capitalization: TextCapitalization.words,
+              level: getTranslated('contact_person_name', context)!,
+              hintText: getTranslated('ex_john_doe', context)!,
+              isFieldRequired: false,
+              isShowPrefixIcon: true,
+              prefixIconUrl: Images.profileIconSvg,
+              inputAction: TextInputAction.next,
+              onValidate: (value) => value!.isEmpty
+                  ? '${getTranslated('please_enter', context)!} ${getTranslated('contact_person_name', context)!}'
+                  : null,
+            ),
+            const SizedBox(height: Dimensions.paddingSizeLarge),
 
-              if(!ResponsiveHelper.isDesktop(context)) const SizedBox(height: Dimensions.paddingSizeLarge),
-              Text(
-                getTranslated('contact_person_info', context)!,
-                style: rubikSemiBold.copyWith(fontSize: ResponsiveHelper.isDesktop(context) ? Dimensions.fontSizeLarge : Dimensions.fontSizeDefault),
-              ),
-              const SizedBox(height: Dimensions.paddingSizeLarge),
-
-              if(! ResponsiveHelper.isDesktop(context))...[
-                /// for Contact Person Name
-                ProfileTextFieldWidget(
-                  isShowBorder: true,
-                  controller: contactPersonNameController,
-                  focusNode: nameNode,
-                  nextFocus: numberNode,
-                  inputType: TextInputType.name,
-                  capitalization: TextCapitalization.words,
-                  level: getTranslated('contact_person_name', context)!,
-                  hintText: getTranslated('ex_john_doe', context)!,
-                  isFieldRequired: false,
-                  isShowPrefixIcon: true,
-                  prefixIconUrl: Images.profileIconSvg,
-                  inputAction: TextInputAction.next,
-                  onValidate: (value) => value!.isEmpty
-                      ? '${getTranslated('please_enter', context)!} ${getTranslated('contact_person_name', context)!}' : null,
-                ),
-                const SizedBox(height: Dimensions.paddingSizeLarge),
-
-                /// for Contact Person Number
-                PhoneNumberFieldView(
-                  onValueChange: (code){
-                    // _countryCode = code;
-                    onValueChange(code);
-                  },
-                  countryCode: countryCode,
-                  phoneNumberTextController: contactPersonNumberController,
-                  phoneFocusNode: numberNode,
-                ),
-                const SizedBox(height: Dimensions.paddingSizeLarge),
-              ],
-
-
-            ]);
-          }
-      ),
+            /// for Contact Person Number
+            PhoneNumberFieldView(
+              onValueChange: (code) {
+                // _countryCode = code;
+                onValueChange(code);
+              },
+              countryCode: countryCode,
+              phoneNumberTextController: contactPersonNumberController,
+              phoneFocusNode: numberNode,
+            ),
+            const SizedBox(height: Dimensions.paddingSizeLarge),
+          ],
+        ]);
+      }),
     );
   }
 }

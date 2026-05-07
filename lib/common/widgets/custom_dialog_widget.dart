@@ -8,7 +8,6 @@ import 'package:flutter_restaurant/utill/styles.dart';
 
 import '../../utill/dimensions.dart';
 
-
 class CustomDialogWidget extends StatelessWidget {
   final IconData? icon;
   final String? title;
@@ -35,7 +34,6 @@ class CustomDialogWidget extends StatelessWidget {
       child: SizedBox(
         width: 300,
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-
           const SizedBox(height: 20),
           CircleAvatar(
             radius: 30,
@@ -43,68 +41,81 @@ class CustomDialogWidget extends StatelessWidget {
             child: Icon(icon, size: 50),
           ),
           Container(
-            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: Dimensions.paddingSizeExtraSmall),
-            child: Text(title ?? '', style: rubikRegular, textAlign: TextAlign.center),
+            padding: const EdgeInsets.symmetric(
+                vertical: 5, horizontal: Dimensions.paddingSizeExtraSmall),
+            child: Text(title ?? '',
+                style: rubikRegular, textAlign: TextAlign.center),
           ),
-
           Padding(
             padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
-            child: Text(description ?? '', style: rubikRegular, textAlign: TextAlign.center),
+            child: Text(description ?? '',
+                style: rubikRegular, textAlign: TextAlign.center),
           ),
-
           Container(height: 0.5, color: Theme.of(context).hintColor),
-
           Row(children: [
-
-            Expanded(child: InkWell(
+            Expanded(
+                child: InkWell(
               onTap: onTapTrue as void Function()?,
               child: Container(
                 padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
                 alignment: Alignment.center,
-                decoration: const BoxDecoration(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10))),
-                child: Text(buttonTextTrue ?? getTranslated('yes', context)!, style: rubikBold.copyWith(color: Theme.of(context).primaryColor)),
+                decoration: const BoxDecoration(
+                    borderRadius:
+                        BorderRadius.only(bottomLeft: Radius.circular(10))),
+                child: Text(buttonTextTrue ?? getTranslated('yes', context)!,
+                    style: rubikBold.copyWith(
+                        color: Theme.of(context).primaryColor)),
               ),
             )),
-
-            Expanded(child: InkWell(
+            Expanded(
+                child: InkWell(
               onTap: onTapFalse as void Function()?,
               child: Container(
                 padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor,
-                  borderRadius: const BorderRadius.only(bottomRight: Radius.circular(10)),
+                  borderRadius:
+                      const BorderRadius.only(bottomRight: Radius.circular(10)),
                 ),
-                child: Text(buttonTextFalse ?? getTranslated('no', context)!, style: rubikBold.copyWith(color: Colors.white)),
+                child: Text(buttonTextFalse ?? getTranslated('no', context)!,
+                    style: rubikBold.copyWith(color: Colors.white)),
               ),
             )),
-
           ])
-        ]),),
+        ]),
+      ),
     );
   }
 }
-void openDialog(Widget child, {bool isDismissible = true, bool isDialog = false, bool willPop = true}) {
-  ResponsiveHelper.isMobile() && isDialog ?
-  showModalBottomSheet(
-    backgroundColor: Colors.transparent,
-    isDismissible: isDismissible,
-    isScrollControlled: true,
-    builder: (BuildContext context) => PopScope(child: child, onPopInvoked: (value)=> willPop),
-    context: Get.context!,
-  ) :
-  showAnimatedDialog(
-    Get.context!,
-    Dialog(
-      backgroundColor: Colors.transparent,
-      child:   PopScope(child: child, onPopInvoked: (value)=> willPop),
-    ),
-    dismissible: isDismissible,
-  );
+
+void openDialog(Widget child,
+    {bool isDismissible = true, bool isDialog = false, bool willPop = true}) {
+  ResponsiveHelper.isMobile() && isDialog
+      ? showModalBottomSheet(
+          backgroundColor: Colors.transparent,
+          isDismissible: isDismissible,
+          isScrollControlled: true,
+          builder: (BuildContext context) =>
+              PopScope(child: child, onPopInvoked: (value) => willPop),
+          context: Get.context!,
+        )
+      : showAnimatedDialog(
+          Get.context!,
+          Dialog(
+            backgroundColor: Colors.transparent,
+            child: PopScope(child: child, onPopInvoked: (value) => willPop),
+          ),
+          dismissible: isDismissible,
+        );
 }
 
-void showAnimatedDialog(BuildContext context, Widget dialog, {
-  bool isFlip = false, bool dismissible = true, Duration? duration,
+void showAnimatedDialog(
+  BuildContext context,
+  Widget dialog, {
+  bool isFlip = false,
+  bool dismissible = true,
+  Duration? duration,
 }) {
   showGeneralDialog(
     context: context,
@@ -114,16 +125,22 @@ void showAnimatedDialog(BuildContext context, Widget dialog, {
     pageBuilder: (context, animation1, animation2) => dialog,
     transitionDuration: duration ?? const Duration(milliseconds: 500),
     transitionBuilder: (context, a1, a2, widget) {
-      if(isFlip) {
+      if (isFlip) {
         return Rotation3DTransition(
           alignment: Alignment.center,
-          turns: Tween<double>(begin: math.pi, end: 2.0 * math.pi).animate(CurvedAnimation(parent: a1, curve: const Interval(0.0, 1.0, curve: Curves.linear))),
+          turns: Tween<double>(begin: math.pi, end: 2.0 * math.pi).animate(
+              CurvedAnimation(
+                  parent: a1,
+                  curve: const Interval(0.0, 1.0, curve: Curves.linear))),
           child: FadeTransition(
-            opacity: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: a1, curve: const Interval(0.5, 1.0, curve: Curves.elasticOut))),
+            opacity: Tween<double>(begin: 0.0, end: 1.0).animate(
+                CurvedAnimation(
+                    parent: a1,
+                    curve: const Interval(0.5, 1.0, curve: Curves.elasticOut))),
             child: widget,
           ),
         );
-      }else {
+      } else {
         return Transform.scale(
           scale: a1.value,
           child: Opacity(
@@ -142,7 +159,7 @@ class Rotation3DTransition extends AnimatedWidget {
     required Animation<double> turns,
     this.alignment = Alignment.center,
     this.child,
-  })  : super(listenable: turns);
+  }) : super(listenable: turns);
 
   Animation<double> get turns => listenable as Animation<double>;
 

@@ -11,22 +11,25 @@ class FreelancerPortfolioListWidget extends StatefulWidget {
   final String? status;
   const FreelancerPortfolioListWidget({super.key, required this.status});
 
-
   @override
-  State<FreelancerPortfolioListWidget> createState() => _FreelancerPortfolioListWidgetState();
+  State<FreelancerPortfolioListWidget> createState() =>
+      _FreelancerPortfolioListWidgetState();
 }
 
-class _FreelancerPortfolioListWidgetState extends State<FreelancerPortfolioListWidget> {
+class _FreelancerPortfolioListWidgetState
+    extends State<FreelancerPortfolioListWidget> {
   @override
   void initState() {
     super.initState();
-    Provider.of<BookingProvider>(context, listen: false).getBookingList(context,widget.status);
+    Provider.of<BookingProvider>(context, listen: false)
+        .getBookingList(context, widget.status);
   }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<BookingProvider>(
       builder: (context, booking, index) {
-           List<BookingModel>? bookingList;
+        List<BookingModel>? bookingList;
 
         if (widget.status == 'pending') {
           bookingList = booking.pendingList;
@@ -35,31 +38,40 @@ class _FreelancerPortfolioListWidgetState extends State<FreelancerPortfolioListW
         } else {
           bookingList = booking.historyList;
         }
-        return !booking.isLoading ? bookingList.isNotEmpty ? RefreshIndicator(
-          onRefresh: () async {
-            await Provider.of<BookingProvider>(context, listen: false).getBookingList(context,widget.status);
-          },
-          backgroundColor: Theme.of(context).primaryColor,
-          color: Theme.of(context).cardColor,
-          child: SingleChildScrollView(
-            child: Column(children: [
-              Center(
-                child: SizedBox(
-                  width: Dimensions.webScreenWidth,
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-                    itemCount: bookingList.length,
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return BookingItemWidget(bookingProvider: booking, status: widget.status!, bookingItem: bookingList![index]);
+        return !booking.isLoading
+            ? bookingList.isNotEmpty
+                ? RefreshIndicator(
+                    onRefresh: () async {
+                      await Provider.of<BookingProvider>(context, listen: false)
+                          .getBookingList(context, widget.status);
                     },
-                  ),
-                ),
-              ),
-            ]),
-          ),
-        ) : const Center(child: NoDataWidget(isOrder: true)) : const BookingShimmerWidget();
+                    backgroundColor: Theme.of(context).primaryColor,
+                    color: Theme.of(context).cardColor,
+                    child: SingleChildScrollView(
+                      child: Column(children: [
+                        Center(
+                          child: SizedBox(
+                            width: Dimensions.webScreenWidth,
+                            child: ListView.builder(
+                              padding: const EdgeInsets.all(
+                                  Dimensions.paddingSizeSmall),
+                              itemCount: bookingList.length,
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) {
+                                return BookingItemWidget(
+                                    bookingProvider: booking,
+                                    status: widget.status!,
+                                    bookingItem: bookingList![index]);
+                              },
+                            ),
+                          ),
+                        ),
+                      ]),
+                    ),
+                  )
+                : const Center(child: NoDataWidget(isOrder: true))
+            : const BookingShimmerWidget();
       },
     );
   }

@@ -5,7 +5,8 @@ class LoggingInterceptor extends InterceptorsWrapper {
   int maxCharactersPerLine = 200;
 
   @override
-  Future onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+  Future onRequest(
+      RequestOptions options, RequestInterceptorHandler handler) async {
     // print("--> ${options.method} ${options.path}");
     // print("Headers: ${options.headers.toString()}");
     // print("<-- END HTTP");
@@ -14,7 +15,8 @@ class LoggingInterceptor extends InterceptorsWrapper {
   }
 
   @override
-  Future onResponse(Response response, ResponseInterceptorHandler handler) async {
+  Future onResponse(
+      Response response, ResponseInterceptorHandler handler) async {
     debugPrint(
         "<-- ${response.statusCode} ${response.requestOptions.method} ${response.requestOptions.path}");
 

@@ -9,8 +9,8 @@ class ProfileShimmerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    final ProfileProvider profileProvider = Provider.of<ProfileProvider>(context, listen: false);
+    final ProfileProvider profileProvider =
+        Provider.of<ProfileProvider>(context, listen: false);
 
     return Padding(
       padding: const EdgeInsets.only(
@@ -22,7 +22,9 @@ class ProfileShimmerWidget extends StatelessWidget {
         Shimmer(
           duration: const Duration(seconds: 2),
           enabled: profileProvider.userInfoModel == null,
-          child: Container(height: 30, width: 90,
+          child: Container(
+            height: 30,
+            width: 90,
             decoration: BoxDecoration(
               color: Theme.of(context).hintColor.withOpacity(0.5),
               borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
@@ -30,34 +32,40 @@ class ProfileShimmerWidget extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 50),
-
-        Center(child: Shimmer(
+        Center(
+            child: Shimmer(
           duration: const Duration(seconds: 2),
           enabled: profileProvider.userInfoModel == null,
-          child: ClipOval(child: Container(height: 100, width: 100, color: Theme.of(context).hintColor.withOpacity(0.5))),
+          child: ClipOval(
+              child: Container(
+                  height: 100,
+                  width: 100,
+                  color: Theme.of(context).hintColor.withOpacity(0.5))),
         )),
         const SizedBox(height: 50),
-
         Expanded(
           child: ListView.builder(
             physics: const BouncingScrollPhysics(),
             itemCount: 20,
             itemBuilder: (context, index) => Container(
-              margin: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeDefault),
+              margin: const EdgeInsets.symmetric(
+                  vertical: Dimensions.paddingSizeDefault),
               child: Shimmer(
                 duration: const Duration(seconds: 2),
                 enabled: profileProvider.userInfoModel == null,
-                child: Container(height: 50, width: 60,
+                child: Container(
+                  height: 50,
+                  width: 60,
                   decoration: BoxDecoration(
                     color: Theme.of(context).hintColor.withOpacity(0.5),
-                    borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
+                    borderRadius:
+                        BorderRadius.circular(Dimensions.radiusDefault),
                   ),
                 ),
               ),
             ),
           ),
         ),
-
       ]),
     );
   }

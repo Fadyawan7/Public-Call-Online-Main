@@ -112,7 +112,8 @@ class _FreelancerSearchDialogWidgetState
           normalizedCandidate.startsWith(normalizedQuery)) {
         suggestions.add(candidate);
       } else {
-        final distance = _levenshteinDistance(normalizedQuery, normalizedCandidate);
+        final distance =
+            _levenshteinDistance(normalizedQuery, normalizedCandidate);
         if (distance <= _allowedDistanceByLength(normalizedQuery.length)) {
           suggestions.add(candidate);
         }

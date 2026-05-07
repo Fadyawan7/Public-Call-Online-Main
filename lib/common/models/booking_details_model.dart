@@ -1,10 +1,8 @@
-
 class BookingDetailsModel {
   int? _id;
   String? _bookingId;
   int? _userId;
   int? _freelancerId;
-
 
   String? _date;
   String? _time;
@@ -23,31 +21,28 @@ class BookingDetailsModel {
   bool? _freelancerReview;
   DeliveryAddress? _deliveryAddress;
 
-  BookingDetailsModel(
-      {
-        int? id,
-        String? bookingId,
-        int? userId,
-        int? takerId,
-
-        int? freelancerId,
-        String? date,
-        String? time,
-        String? status,
-        String? description,
-        String? attachmentUrl,
-        List<String>? attachments,
-        String? userName,
-        String? userImage,
-        String? freelancerImage,
-        String? freelancerName,
-        List<Reviews>? reviews,
-        String? freelancerViewId,
-        bool? userReview,
-        bool? freelancerReview,
-        DeliveryAddress? deliveryAddress,
-
-      }) {
+  BookingDetailsModel({
+    int? id,
+    String? bookingId,
+    int? userId,
+    int? takerId,
+    int? freelancerId,
+    String? date,
+    String? time,
+    String? status,
+    String? description,
+    String? attachmentUrl,
+    List<String>? attachments,
+    String? userName,
+    String? userImage,
+    String? freelancerImage,
+    String? freelancerName,
+    List<Reviews>? reviews,
+    String? freelancerViewId,
+    bool? userReview,
+    bool? freelancerReview,
+    DeliveryAddress? deliveryAddress,
+  }) {
     _id = id;
     _bookingId = bookingId;
     _userId = userId;
@@ -63,16 +58,14 @@ class BookingDetailsModel {
     _userImage = userImage;
     _freelancerImage = freelancerImage;
     _freelancerName = freelancerName;
-    _reviews =reviews;
+    _reviews = reviews;
     _freelancerViewId = freelancerViewId;
     _freelancerReview = freelancerReview;
     _freelancerViewId = freelancerViewId;
     _deliveryAddress = deliveryAddress;
-
   }
 
   int? get id => _id;
-
 
   String? get bookingId => _bookingId;
   int? get userId => _userId;
@@ -105,9 +98,9 @@ class BookingDetailsModel {
     _status = json['status'];
     _description = json['description'];
     _attachmentUrl = json['attachments_url'];
-      _attachments = json["attachments"] != null  // Handle potential nulls!
-          ? List<String>.from(json["attachments"])
-          : [];
+    _attachments = json["attachments"] != null // Handle potential nulls!
+        ? List<String>.from(json["attachments"])
+        : [];
     if (json['reviews'] != null) {
       _reviews = [];
       json['reviews'].forEach((v) {
@@ -168,18 +161,16 @@ class Reviews {
   String? _takerImage;
   String? _createdAt;
 
-  Reviews(
-      {
-        int? id,
-        int? rating,
-        String? comment,
-        String? giverName,
-        String? giverImage,
-        String? takerName,
-        String? takerImage,
-        String? createdAt,
-
-      }) {
+  Reviews({
+    int? id,
+    int? rating,
+    String? comment,
+    String? giverName,
+    String? giverImage,
+    String? takerName,
+    String? takerImage,
+    String? createdAt,
+  }) {
     _id = id;
     _takerId = takerId;
 
@@ -247,23 +238,21 @@ class DeliveryAddress {
   String? _createdAt;
   String? _updatedAt;
 
-
-
-  DeliveryAddress(
-      {int? id,
-        String? addressType,
-        String? contactPersonNumber,
-        String? address,
-        String? latitude,
-        String? longitude,
-        String? createdAt,
-        String? updatedAt,
-        int? userId,
-        String? contactPersonName,
-        String? road,
-        String? house,
-        String? floor,
-      }) {
+  DeliveryAddress({
+    int? id,
+    String? addressType,
+    String? contactPersonNumber,
+    String? address,
+    String? latitude,
+    String? longitude,
+    String? createdAt,
+    String? updatedAt,
+    int? userId,
+    String? contactPersonName,
+    String? road,
+    String? house,
+    String? floor,
+  }) {
     _id = id;
     _addressType = addressType;
     _contactPersonNumber = contactPersonNumber;
@@ -275,7 +264,7 @@ class DeliveryAddress {
     _userId = userId;
     _contactPersonName = contactPersonName;
     _road = road;
-    _house =house;
+    _house = house;
     _floor = floor;
   }
 
@@ -293,7 +282,6 @@ class DeliveryAddress {
   String? get road => _road;
   String? get floor => _floor;
 
-
   DeliveryAddress.fromJson(Map<String, dynamic> json) {
     _id = json['id'];
     _addressType = json['address_type'];
@@ -308,7 +296,6 @@ class DeliveryAddress {
     _road = json['road'];
     _house = json['house'];
     _floor = json['floor'];
-
   }
 
   Map<String, dynamic> toJson() {

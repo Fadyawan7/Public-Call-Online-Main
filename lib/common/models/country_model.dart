@@ -4,18 +4,16 @@ class CountryModel {
   String? _countryFlag;
   String? _countryCode;
 
-  CountryModel(
-      {int? id,
-        String? countryName,
-        String? countryFlag,
-        String? countryCode,
-
-      }) {
+  CountryModel({
+    int? id,
+    String? countryName,
+    String? countryFlag,
+    String? countryCode,
+  }) {
     _id = id;
     _countryName = countryName;
     _countryFlag = countryFlag;
     _countryCode = countryCode;
-
   }
 
   int? get id => _id;
@@ -28,7 +26,6 @@ class CountryModel {
     _countryName = json['name'] ?? '';
     _countryFlag = json['emoji'] ?? '';
     _countryCode = json['phonecode'] ?? '';
-
   }
 
   Map<String, dynamic> toJson() {

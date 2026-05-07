@@ -27,8 +27,8 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    Provider.of<BookingProvider>(context, listen: false).getBookingDetails(widget.bookingId.toString());
-
+    Provider.of<BookingProvider>(context, listen: false)
+        .getBookingDetails(widget.bookingId.toString());
   }
 
   @override
@@ -36,14 +36,16 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
     return Scaffold(
       key: _scaffold,
       appBar: AppBar(
-        title: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-          Text('Booking Detail', style: rubikSemiBold.copyWith(
-            color: Theme.of(context).cardColor,
-          )),
-          const SizedBox(height: Dimensions.paddingSizeSmall),
-
-
-        ]),
+        title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Booking Detail',
+                  style: rubikSemiBold.copyWith(
+                    color: Theme.of(context).cardColor,
+                  )),
+              const SizedBox(height: Dimensions.paddingSizeSmall),
+            ]),
         backgroundColor: Theme.of(context).primaryColor,
         leading: IconButton(
           onPressed: () => context.pop(),
@@ -54,74 +56,68 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
         elevation: 0,
         centerTitle: true,
       ),
-
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
-            children: [
-          Expanded(child: CustomScrollView(slivers: [
-            SliverToBoxAdapter(child:
-            Consumer<BookingProvider>(
+        child: Column(children: [
+          Expanded(
+              child: CustomScrollView(slivers: [
+            SliverToBoxAdapter(child: Consumer<BookingProvider>(
               builder: (context, booking, child) {
-
-                return booking.bookingDetails == null  ?
-                BookingDetailsShimmerWidget(enabled: !booking.isLoading && booking.bookingDetails == null ) :
-                (booking.bookingDetails != null ?? false) ?
-                 Column(
-
-                     children: [
-                  const BookingDetailsWidget(),
-
-                  Divider(
-                    indent: Dimensions.paddingSizeDefault,
-                    color: Theme.of(context).hintColor.withOpacity(0.1),
-                  ),
-
-                    if(booking.bookingDetails!.reviews!.isNotEmpty)
-                    Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-
-                      children: [
-                        Text(getTranslated('Booking Review', context)!, style: rubikBold),
-                        const SizedBox(height: Dimensions.paddingSizeDefault),
-
-                        ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: booking.bookingDetails!.reviews!.length,
-                          itemBuilder: (context, index) {
-                            return RateReviewWidget(
-                              rating: booking.bookingDetails!.reviews![index].rating,
-                              comment: booking.bookingDetails!.reviews![index].comment,
-                              userImage: booking.bookingDetails!.reviews![index].giverImage,
-                              userName: booking.bookingDetails!.reviews![index].giverName,
-                              reviewDate: booking.bookingDetails!.reviews![index].createdAt,
-
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-
-                ]) : const Center(child: NoDataWidget(isFooter: false));
+                return booking.bookingDetails == null
+                    ? BookingDetailsShimmerWidget(
+                        enabled: !booking.isLoading &&
+                            booking.bookingDetails == null)
+                    : (booking.bookingDetails != null ?? false)
+                        ? Column(children: [
+                            const BookingDetailsWidget(),
+                            Divider(
+                              indent: Dimensions.paddingSizeDefault,
+                              color:
+                                  Theme.of(context).hintColor.withOpacity(0.1),
+                            ),
+                            if (booking.bookingDetails!.reviews!.isNotEmpty)
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                        getTranslated(
+                                            'Booking Review', context)!,
+                                        style: rubikBold),
+                                    const SizedBox(
+                                        height: Dimensions.paddingSizeDefault),
+                                    ListView.builder(
+                                      scrollDirection: Axis.vertical,
+                                      shrinkWrap: true,
+                                      itemCount: booking
+                                          .bookingDetails!.reviews!.length,
+                                      itemBuilder: (context, index) {
+                                        return RateReviewWidget(
+                                          rating: booking.bookingDetails!
+                                              .reviews![index].rating,
+                                          comment: booking.bookingDetails!
+                                              .reviews![index].comment,
+                                          userImage: booking.bookingDetails!
+                                              .reviews![index].giverImage,
+                                          userName: booking.bookingDetails!
+                                              .reviews![index].giverName,
+                                          reviewDate: booking.bookingDetails!
+                                              .reviews![index].createdAt,
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                          ])
+                        : const Center(child: NoDataWidget(isFooter: false));
               },
             )),
           ])),
-
-         const ButtonWidget(),
-
-
-
+          const ButtonWidget(),
         ]),
       ),
     );
   }
-
 }
-
-
-
-

@@ -47,11 +47,15 @@ class _AddressScreenState extends State<AddressScreen> {
         appBar: (CustomAppBarWidget(
           leading: InkWell(
             onTap: () {
-            if(Get.context!.canPop()) {
-              Get.context!.pop();
-            }
-          },
-            child: const Icon(Icons.arrow_back_ios, size: 20,color: Colors.red,),
+              if (Get.context!.canPop()) {
+                Get.context!.pop();
+              }
+            },
+            child: const Icon(
+              Icons.arrow_back_ios,
+              size: 20,
+              color: Colors.red,
+            ),
           ),
           context: context,
           title: getTranslated('my_address', context),
@@ -69,73 +73,67 @@ class _AddressScreenState extends State<AddressScreen> {
         body: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
-                    child: Consumer<LocationProvider>(
-                      builder: (context, locationProvider, child) {
-                        return RefreshIndicator(
-                          onRefresh: () async {
-                            await Provider.of<LocationProvider>(context,
-                                    listen: false)
-                                .initAddressList();
-                          },
-                          backgroundColor: Theme.of(context).primaryColor,
-                          color: Theme.of(context).cardColor,
-                          child: CustomPaint(
-                            size: const Size(Dimensions.webScreenWidth, 150),
-                            painter: locationProvider.addressList == null ||
-                                    locationProvider.addressList!.isEmpty
-                                ? null
-                                : AddressCustomPrinterWidget(
-                                    isDark: themeProvider.darkTheme),
-                            child: locationProvider.addressList == null
-                                ? _AddressShimmerWidget(
-                                    isEnabled:
-                                        locationProvider.addressList == null)
-                                : locationProvider.addressList!.isNotEmpty
-                                    ? ListView.builder(
-                                        padding: const EdgeInsets.all(
-                                            Dimensions.paddingSizeLarge),
-                                        itemCount: locationProvider
-                                                .addressList?.length ??
-                                            0,
-                                        physics: const BouncingScrollPhysics(),
-                                        shrinkWrap: true,
-                                        itemBuilder: (context, index) =>
-                                            Padding(
-                                          padding: EdgeInsets.only(
-                                            bottom: index ==
-                                                    (locationProvider
-                                                                .addressList
-                                                                ?.length ??
-                                                            0) -
-                                                        1
-                                                ? 50
-                                                : Dimensions.paddingSizeDefault,
-                                          ),
-                                          child: AddressCardWidget(
-                                            addressModel: locationProvider
-                                                .addressList![index],
-                                            index: index,
-                                          ),
-                                        ),
-                                      )
-                                    : SizedBox(
-                                        height: size.height,
-                                        child: const Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            NoDataWidget(
-                                                isFooter: false,
-                                                isAddress: true),
-                                          ],
-                                        )),
-                          ),
-                        );
-                      },
+              child: Consumer<LocationProvider>(
+                builder: (context, locationProvider, child) {
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      await Provider.of<LocationProvider>(context,
+                              listen: false)
+                          .initAddressList();
+                    },
+                    backgroundColor: Theme.of(context).primaryColor,
+                    color: Theme.of(context).cardColor,
+                    child: CustomPaint(
+                      size: const Size(Dimensions.webScreenWidth, 150),
+                      painter: locationProvider.addressList == null ||
+                              locationProvider.addressList!.isEmpty
+                          ? null
+                          : AddressCustomPrinterWidget(
+                              isDark: themeProvider.darkTheme),
+                      child: locationProvider.addressList == null
+                          ? _AddressShimmerWidget(
+                              isEnabled: locationProvider.addressList == null)
+                          : locationProvider.addressList!.isNotEmpty
+                              ? ListView.builder(
+                                  padding: const EdgeInsets.all(
+                                      Dimensions.paddingSizeLarge),
+                                  itemCount:
+                                      locationProvider.addressList?.length ?? 0,
+                                  physics: const BouncingScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemBuilder: (context, index) => Padding(
+                                    padding: EdgeInsets.only(
+                                      bottom: index ==
+                                              (locationProvider.addressList
+                                                          ?.length ??
+                                                      0) -
+                                                  1
+                                          ? 50
+                                          : Dimensions.paddingSizeDefault,
+                                    ),
+                                    child: AddressCardWidget(
+                                      addressModel:
+                                          locationProvider.addressList![index],
+                                      index: index,
+                                    ),
+                                  ),
+                                )
+                              : SizedBox(
+                                  height: size.height,
+                                  child: const Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      NoDataWidget(
+                                          isFooter: false, isAddress: true),
+                                    ],
+                                  )),
                     ),
-                  ),
+                  );
+                },
+              ),
+            ),
           ],
         ));
   }

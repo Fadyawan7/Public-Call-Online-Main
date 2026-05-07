@@ -26,8 +26,7 @@ class BookingShimmerWidget extends StatelessWidget {
           child: Container(
             width: Dimensions.webScreenWidth,
             padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-            margin:
-                const EdgeInsets.only(bottom: Dimensions.paddingSizeSmall),
+            margin: const EdgeInsets.only(bottom: Dimensions.paddingSizeSmall),
             decoration: BoxDecoration(
               color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(10),
@@ -66,8 +65,7 @@ class BookingShimmerWidget extends StatelessWidget {
                                         .withOpacity(0.3)),
                               ],
                             ),
-                            const SizedBox(
-                                width: Dimensions.paddingSizeSmall),
+                            const SizedBox(width: Dimensions.paddingSizeSmall),
                             Container(
                                 height: 15,
                                 width: 150,
@@ -108,9 +106,7 @@ class BookingShimmerWidget extends StatelessWidget {
                           ],
                         ),
                         Divider(
-                          color: Theme.of(context)
-                              .hintColor
-                              .withOpacity(0.2),
+                          color: Theme.of(context).hintColor.withOpacity(0.2),
                           thickness: 0.5,
                         ),
                       ],

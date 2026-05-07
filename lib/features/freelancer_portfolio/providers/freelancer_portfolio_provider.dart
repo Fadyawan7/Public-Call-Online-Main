@@ -14,7 +14,8 @@ import 'package:http/http.dart' as http;
 class FreelancerPortfolioProvider extends ChangeNotifier {
   final FreelancerPortfolioRepo? freelancerPortfolioRepo;
   final SharedPreferences? sharedPreferences;
-  FreelancerPortfolioProvider({ required this.sharedPreferences,required this.freelancerPortfolioRepo});
+  FreelancerPortfolioProvider(
+      {required this.sharedPreferences, required this.freelancerPortfolioRepo});
 
   ResponseModel? _responseModel;
   bool _isLoading = false;
@@ -23,27 +24,28 @@ class FreelancerPortfolioProvider extends ChangeNotifier {
   ResponseModel? get responseModel => _responseModel;
 
   bool get isLoading => _isLoading;
-  List<FreelancerPortfolioModel>? get freelancerPortfolioList => _freelancerPortfolioList;
-
+  List<FreelancerPortfolioModel>? get freelancerPortfolioList =>
+      _freelancerPortfolioList;
 
   void stopLoader() {
     _isLoading = false;
     notifyListeners();
   }
 
-  Future<ResponseModel> freelancerPortfolioAdd( File? file, String token) async {
+  Future<ResponseModel> freelancerPortfolioAdd(File? file, String token) async {
     _isLoading = true;
     notifyListeners();
     ResponseModel responseModel;
-    http.StreamedResponse response = await freelancerPortfolioRepo!.freelancerPortfolioAdd( file, token);
-     print('=======PORTFOLIO ADD ===${response.statusCode}');
+    http.StreamedResponse response =
+        await freelancerPortfolioRepo!.freelancerPortfolioAdd(file, token);
+    print('=======PORTFOLIO ADD ===${response.statusCode}');
     if (response.statusCode == 200) {
       Map map = jsonDecode(await response.stream.bytesToString());
       String? message = map["message"];
       responseModel = ResponseModel(true, message);
-
     } else {
-      responseModel = ResponseModel(false, '${response.statusCode} ${response.reasonPhrase}');
+      responseModel = ResponseModel(
+          false, '${response.statusCode} ${response.reasonPhrase}');
     }
     _isLoading = false;
     notifyListeners();
@@ -53,14 +55,17 @@ class FreelancerPortfolioProvider extends ChangeNotifier {
   Future<void> getFreelancerPortfolioList() async {
     _isLoading = true;
 
-    ApiResponseModel apiResponse = await freelancerPortfolioRepo!.getFreelancerPortfolioList();
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+    ApiResponseModel apiResponse =
+        await freelancerPortfolioRepo!.getFreelancerPortfolioList();
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
       _freelancerPortfolioList = [];
       apiResponse.response!.data.forEach((freelancerPortfolio) {
-        FreelancerPortfolioModel freelancerPortfolioModel = FreelancerPortfolioModel.fromJson(freelancerPortfolio);
-        freelancerPortfolioModel = FreelancerPortfolioModel.fromJson(freelancerPortfolio);
+        FreelancerPortfolioModel freelancerPortfolioModel =
+            FreelancerPortfolioModel.fromJson(freelancerPortfolio);
+        freelancerPortfolioModel =
+            FreelancerPortfolioModel.fromJson(freelancerPortfolio);
         _freelancerPortfolioList!.add(freelancerPortfolioModel);
-
       });
     } else {
       ApiCheckerHelper.checkApi(apiResponse);
@@ -73,20 +78,28 @@ class FreelancerPortfolioProvider extends ChangeNotifier {
   void deleteFreelancerPortfolio(int portfolioID, Function callback) async {
     _isLoading = true;
     notifyListeners();
-    ApiResponseModel apiResponse = await freelancerPortfolioRepo!.deleteFreelancerPortfolio(portfolioID,);
+    ApiResponseModel apiResponse =
+        await freelancerPortfolioRepo!.deleteFreelancerPortfolio(
+      portfolioID,
+    );
     _isLoading = false;
 
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
       FreelancerPortfolioModel? freelancerPortfolioModel;
       for (var freelancerPortfolio in _freelancerPortfolioList ?? []) {
-        if(freelancerPortfolio.id.toString() == portfolioID) {
+        if (freelancerPortfolio.id.toString() == portfolioID) {
           _freelancerPortfolioList = freelancerPortfolio;
         }
       }
       _freelancerPortfolioList?.remove(freelancerPortfolioModel);
-      callback(apiResponse.response!.data['message'], true,);
+      callback(
+        apiResponse.response!.data['message'],
+        true,
+      );
     } else {
-      callback(ApiCheckerHelper.getError(apiResponse).errors?.first.message, false);
+      callback(
+          ApiCheckerHelper.getError(apiResponse).errors?.first.message, false);
     }
     notifyListeners();
   }

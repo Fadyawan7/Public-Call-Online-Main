@@ -1,4 +1,3 @@
-
 class ApiResponseModel<T> {
   final T? response;
   final dynamic error;
@@ -6,10 +5,13 @@ class ApiResponseModel<T> {
 
   ApiResponseModel(this.response, this.error, this.isSuccess);
 
-  ApiResponseModel.withError(dynamic errorValue) : response = null, error = errorValue, isSuccess = false;
+  ApiResponseModel.withError(dynamic errorValue)
+      : response = null,
+        error = errorValue,
+        isSuccess = false;
 
   ApiResponseModel.withSuccess(T? responseValue)
       : response = responseValue,
-        error = null, isSuccess = true;
+        error = null,
+        isSuccess = true;
 }
-

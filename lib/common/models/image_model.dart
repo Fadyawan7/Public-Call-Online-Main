@@ -4,13 +4,11 @@ class ImageModel {
   XFile? image;
   String? imageString;
 
-  ImageModel({ this.image, this.imageString});
+  ImageModel({this.image, this.imageString});
 
   ImageModel.fromJson(Map<String, dynamic> json) {
-
     image = json['image'];
     imageString = json['image_string'];
-
   }
 
   Map<String, dynamic> toJson() {
@@ -21,4 +19,3 @@ class ImageModel {
     return data;
   }
 }
-

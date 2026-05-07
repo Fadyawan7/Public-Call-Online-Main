@@ -11,24 +11,34 @@ class FreelancerBookingListWidget extends StatefulWidget {
   final String? status;
   const FreelancerBookingListWidget({super.key, required this.status});
 
-
   @override
-  State<FreelancerBookingListWidget> createState() => _FreelancerBookingListWidgetState();
+  State<FreelancerBookingListWidget> createState() =>
+      _FreelancerBookingListWidgetState();
 }
 
-class _FreelancerBookingListWidgetState extends State<FreelancerBookingListWidget> {
+class _FreelancerBookingListWidgetState
+    extends State<FreelancerBookingListWidget> {
   @override
   void initState() {
     super.initState();
-    final provider = Provider.of<FreelancerBookingProvider>(context, listen: false);
-    final status = widget.status ?? 'pending';
-    final hasData = (status == 'pending' && provider.pendingList.isNotEmpty) ||
-        (status == 'confirmed' && provider.confirmedList.isNotEmpty) ||
-        (status == 'history' && provider.historyList.isNotEmpty);
-    if (!hasData) {
-      provider.getBookingList(context, status);
-    }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final provider =
+          Provider.of<FreelancerBookingProvider>(context, listen: false);
+
+      final status = widget.status ?? 'pending';
+
+      final hasData =
+          (status == 'pending' && provider.pendingList.isNotEmpty) ||
+              (status == 'confirmed' && provider.confirmedList.isNotEmpty) ||
+              (status == 'history' && provider.historyList.isNotEmpty);
+
+      if (!hasData) {
+        provider.getBookingList(context, status);
+      }
+    });
   }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<FreelancerBookingProvider>(
@@ -44,36 +54,42 @@ class _FreelancerBookingListWidgetState extends State<FreelancerBookingListWidge
           bookingList = freelancerBooking.historyList;
         }
 
-        return !isLoading ? bookingList.isNotEmpty ? RefreshIndicator(
-          onRefresh: () async {
-            await Provider.of<FreelancerBookingProvider>(context, listen: false)
-                .getBookingList(context, status);
-          },
-          backgroundColor: Theme.of(context).primaryColor,
-          color: Theme.of(context).cardColor,
-          child: SingleChildScrollView(
-            child: Column(children: [
-              Center(
-                child: SizedBox(
-                  width: Dimensions.webScreenWidth,
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-                    itemCount: bookingList.length,
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return FreelancerBookingItemWidget(
-                        freelancerBookingProvider: freelancerBooking,
-                        status: status,
-                        bookingItem: bookingList[index],
-                      );
+        return !isLoading
+            ? bookingList.isNotEmpty
+                ? RefreshIndicator(
+                    onRefresh: () async {
+                      await Provider.of<FreelancerBookingProvider>(context,
+                              listen: false)
+                          .getBookingList(context, status);
                     },
-                  ),
-                ),
-              ),
-            ]),
-          ),
-        ) : const Center(child: NoDataWidget(isOrder: true)) : const BookingShimmerWidget();
+                    backgroundColor: Theme.of(context).primaryColor,
+                    color: Theme.of(context).cardColor,
+                    child: SingleChildScrollView(
+                      child: Column(children: [
+                        Center(
+                          child: SizedBox(
+                            width: Dimensions.webScreenWidth,
+                            child: ListView.builder(
+                              padding: const EdgeInsets.all(
+                                  Dimensions.paddingSizeSmall),
+                              itemCount: bookingList.length,
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) {
+                                return FreelancerBookingItemWidget(
+                                  freelancerBookingProvider: freelancerBooking,
+                                  status: status,
+                                  bookingItem: bookingList[index],
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ]),
+                    ),
+                  )
+                : const Center(child: NoDataWidget(isOrder: true))
+            : const BookingShimmerWidget();
       },
     );
   }

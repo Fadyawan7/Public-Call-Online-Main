@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/widgets/custom_pop_scope_widget.dart';
 import 'package:flutter_restaurant/common/widgets/no_data_widget.dart';
@@ -16,24 +15,27 @@ class RateReviewListScreen extends StatefulWidget {
   const RateReviewListScreen({super.key, required this.freelancerId});
 
   @override
-  State<RateReviewListScreen>  createState() => _RateReviewListScreenState();
+  State<RateReviewListScreen> createState() => _RateReviewListScreenState();
 }
 
-class _RateReviewListScreenState extends State<RateReviewListScreen> with TickerProviderStateMixin {
+class _RateReviewListScreenState extends State<RateReviewListScreen>
+    with TickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    Provider.of<ReviewProvider>(context, listen: false).getFreelancerReviewList(widget.freelancerId);
+    Provider.of<ReviewProvider>(context, listen: false)
+        .getFreelancerReviewList(widget.freelancerId);
   }
 
   @override
   Widget build(BuildContext context) {
     return CustomPopScopeWidget(
       child: Scaffold(
-        appBar:  CustomAppBarWidget(
-          title: getTranslated('rate_review', context), centerTitle: true,
+        appBar: CustomAppBarWidget(
+          title: getTranslated('rate_review', context),
+          centerTitle: true,
           titleColor: Colors.white,
         ),
         body: SafeArea(
@@ -41,42 +43,48 @@ class _RateReviewListScreenState extends State<RateReviewListScreen> with Ticker
             builder: (context, reviewProvider, child) {
               return !reviewProvider.isLoading
                   ? reviewProvider.reviewList!.isNotEmpty
-                  ? RefreshIndicator(
-                onRefresh: () async {
-                  await Provider.of<ReviewProvider>(context, listen: false)
-                      .getFreelancerReviewList(widget.freelancerId);
-                },
-                backgroundColor: Theme.of(context).primaryColor,
-                color: Theme.of(context).cardColor,
-                child: ListView.builder(
-                  padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-                  itemCount: reviewProvider.reviewList!.length,
-                  physics: const AlwaysScrollableScrollPhysics(), // Enable scrolling
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return Center(
-                      child: SizedBox(
-                        width: Dimensions.webScreenWidth,
-                        child: RateReviewWidget(
-                          rating: reviewProvider.reviewList![index].rating,
-                          comment: reviewProvider.reviewList![index].comment,
-                          userImage: reviewProvider.reviewList![index].giverImage,
-                          userName: reviewProvider.reviewList![index].giverName,
-                          reviewDate: reviewProvider.reviewList![index].createdAt,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              )
-                  : const Center(child: NoDataWidget(isOrder: true))
+                      ? RefreshIndicator(
+                          onRefresh: () async {
+                            await Provider.of<ReviewProvider>(context,
+                                    listen: false)
+                                .getFreelancerReviewList(widget.freelancerId);
+                          },
+                          backgroundColor: Theme.of(context).primaryColor,
+                          color: Theme.of(context).cardColor,
+                          child: ListView.builder(
+                            padding: const EdgeInsets.all(
+                                Dimensions.paddingSizeSmall),
+                            itemCount: reviewProvider.reviewList!.length,
+                            physics:
+                                const AlwaysScrollableScrollPhysics(), // Enable scrolling
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              return Center(
+                                child: SizedBox(
+                                  width: Dimensions.webScreenWidth,
+                                  child: RateReviewWidget(
+                                    rating: reviewProvider
+                                        .reviewList![index].rating,
+                                    comment: reviewProvider
+                                        .reviewList![index].comment,
+                                    userImage: reviewProvider
+                                        .reviewList![index].giverImage,
+                                    userName: reviewProvider
+                                        .reviewList![index].giverName,
+                                    reviewDate: reviewProvider
+                                        .reviewList![index].createdAt,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        )
+                      : const Center(child: NoDataWidget(isOrder: true))
                   : const BookingShimmerWidget();
             },
           ),
         ),
       ),
     );
-
   }
-
 }

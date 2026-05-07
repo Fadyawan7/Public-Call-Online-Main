@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_restaurant/common/widgets/gradient_button_widget.dart';
 import 'package:flutter_restaurant/common/models/config_model.dart';
 import 'package:flutter_restaurant/common/widgets/custom_asset_image_widget.dart';
 import 'package:flutter_restaurant/features/auth/domain/enum/auth_enum.dart';
@@ -152,7 +153,6 @@ class _VerificationScreenState extends State<VerificationScreen> {
                           ),
                         ),
                         const SizedBox(height: 20),
-
                         Padding(
                           padding: EdgeInsets.symmetric(
                               horizontal: size.height * 0.04),
@@ -222,7 +222,8 @@ class _VerificationScreenState extends State<VerificationScreen> {
                                                   userInput, type)
                                               .then((value) {
                                             if (value.isSuccess) {
-                                              RouterHelper.getProfileRoute('main',
+                                              RouterHelper.getProfileRoute(
+                                                  'main',
                                                   action: RouteAction
                                                       .pushReplacement);
                                             }
@@ -270,11 +271,9 @@ class _VerificationScreenState extends State<VerificationScreen> {
                                 ),
                                 authProvider.resendButtonLoading
                                     ? const CircularProgressIndicator()
-                                    : TextButton(
-                                        style: TextButton.styleFrom(
-                                          padding: EdgeInsets.zero,
-                                        ),
-                                        onPressed: authProvider.currentTime! > 0
+                                    : GradientButtonWidget(
+                                        onTap: (authProvider.currentTime ?? 0) >
+                                                0
                                             ? null
                                             : () async {
                                                 if (widget.fromPage !=
@@ -283,75 +282,51 @@ class _VerificationScreenState extends State<VerificationScreen> {
                                                       .sendVerificationCode(
                                                     config,
                                                     SignUpModel(
-                                                      email: userInput,
-                                                    ),
+                                                        email: userInput),
                                                     type: 'email',
                                                   );
+                                                  authProvider
+                                                      .startVerifyTimer();
                                                 } else {
-                                                  await authProvider
-                                                      .forgetPassword(
+                                                  final value =
+                                                      await authProvider
+                                                          .forgetPassword(
                                                     config: config,
                                                     email: userInput,
-                                                  )
-                                                      .then((value) {
-                                                    authProvider
-                                                        .startVerifyTimer();
+                                                  );
+                                                  authProvider
+                                                      .startVerifyTimer();
 
-                                                    if (value!.isSuccess) {
-                                                      showCustomSnackBarHelper(
-                                                          getTranslated(
-                                                              'resend_code_successful',
-                                                              context),
-                                                          isError: false);
-                                                    } else {
-                                                      showCustomSnackBarHelper(
-                                                          value.message!);
-                                                    }
-                                                  });
+                                                  if (value?.isSuccess ??
+                                                      false) {
+                                                    showCustomSnackBarHelper(
+                                                      getTranslated(
+                                                          'resend_code_successful',
+                                                          context),
+                                                      isError: false,
+                                                    );
+                                                  } else if (value?.message !=
+                                                      null) {
+                                                    showCustomSnackBarHelper(
+                                                        value!.message!);
+                                                  }
                                                 }
                                               },
-                                        child: Builder(builder: (context) {
-                                          int? days, hours, minutes, seconds;
-                                          Duration duration = Duration(
-                                              seconds:
-                                                  authProvider.currentTime ??
-                                                      0);
-
-                                          days = duration.inDays;
-                                          hours = duration.inHours - days * 24;
-                                          minutes = duration.inMinutes -
-                                              (24 * days * 60) -
-                                              (hours * 60);
-                                          seconds = duration.inSeconds -
-                                              (24 * days * 60 * 60) -
-                                              (hours * 60 * 60) -
-                                              (minutes * 60);
-
-                                          return CustomDirectionalityWidget(
-                                            child: Text(
-                                                (authProvider.currentTime !=
-                                                            null &&
-                                                        authProvider
-                                                                .currentTime! >
-                                                            0)
-                                                    ? '${getTranslated('resend', context)} (${minutes > 0 ? '${minutes}m :' : ''}${seconds}s)'
-                                                    : getTranslated(
-                                                        'resend_it', context)!,
-                                                textAlign: TextAlign.end,
-                                                style: rubikSemiBold.copyWith(
-                                                  color: authProvider.currentTime !=
-                                                              null &&
-                                                          authProvider
-                                                                  .currentTime! >
-                                                              0
-                                                      ? Theme.of(context)
-                                                          .colorScheme
-                                                          .onSurface
-                                                      : Theme.of(context)
-                                                          .indicatorColor,
-                                                )),
-                                          );
-                                        }),
+                                        height: 32,
+                                        borderRadius: 8,
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 4),
+                                        child: CustomDirectionalityWidget(
+                                          child: Text(
+                                            (authProvider.currentTime ?? 0) > 0
+                                                ? '${getTranslated('resend', context)} (${authProvider.currentTime}s)'
+                                                : getTranslated(
+                                                    'resend_it', context)!,
+                                            textAlign: TextAlign.end,
+                                            style: rubikSemiBold.copyWith(
+                                                color: Colors.white),
+                                          ),
+                                        ),
                                       ),
                               ]),
                         ),

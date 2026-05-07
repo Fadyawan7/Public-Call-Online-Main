@@ -8,8 +8,6 @@ import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 
-
-
 class BookingInfoWidget extends StatelessWidget {
   const BookingInfoWidget({
     super.key,
@@ -78,11 +76,11 @@ String _formatBookingDate(String? rawDate) {
   if (rawDate == null || rawDate.isEmpty) {
     return 'N/A';
   }
- 
+
   final List<String> parts = rawDate.split('-');
   if (parts.length != 3) {
     return rawDate;
-  } 
+  }
 
   return '${parts[2]}-${parts[1]}-${parts[0]}';
 }

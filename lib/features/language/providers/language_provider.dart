@@ -14,7 +14,7 @@ class LanguageProvider with ChangeNotifier {
   void setSelectIndex(int? index, {bool isUpdate = true}) {
     _selectIndex = index;
 
-    if(isUpdate) {
+    if (isUpdate) {
       notifyListeners();
     }
   }

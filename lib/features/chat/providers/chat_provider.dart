@@ -23,7 +23,7 @@ class ChatProvider extends ChangeNotifier {
   final bool _isSeen = false;
   final bool _isSend = true;
   bool _isMe = false;
-  bool _isLoading= false;
+  bool _isLoading = false;
   bool get isLoading => _isLoading;
   int? _currentChatOrderId;
 
@@ -37,7 +37,7 @@ class ChatProvider extends ChangeNotifier {
   String _message = '';
   String get message => _message;
 
-  List <XFile>?_chatImage = [];
+  List<XFile>? _chatImage = [];
   List<XFile>? get chatImage => _chatImage;
   int? get currentChatOrderId => _currentChatOrderId;
 
@@ -47,12 +47,11 @@ class ChatProvider extends ChangeNotifier {
   List<ConversationModel>? _conversationList = [];
   List<ConversationModel>? get conversationList => _conversationList;
 
-
-
   Future<void> startNewChat(int userId) async {
     _isLoading = true;
     ApiResponseModel apiResponse = await chatRepo!.startNewChat(userId);
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
       _newChat = ChatModel.fromJson(apiResponse.response!.data);
       //
       // final responseBody = apiResponse.response!.body; // Get the response body as String
@@ -69,7 +68,8 @@ class ChatProvider extends ChangeNotifier {
   Future<void> getChatList() async {
     _isLoading = true;
     ApiResponseModel apiResponse = await chatRepo!.getChatList();
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
       _chatList = [];
       apiResponse.response!.data.forEach((chats) {
         ChatModel chatModel = ChatModel.fromJson(chats);
@@ -84,19 +84,19 @@ class ChatProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-
   Future<void> getConversationList(int chatId) async {
-
     _isLoading = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       notifyListeners();
     });
     ApiResponseModel apiResponse = await chatRepo!.getConversationList(chatId);
 
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
       _conversationList = [];
       apiResponse.response!.data.forEach((conversations) {
-        ConversationModel conversationModel = ConversationModel.fromJson(conversations);
+        ConversationModel conversationModel =
+            ConversationModel.fromJson(conversations);
         conversationModel = ConversationModel.fromJson(conversations);
         _conversationList!.add(conversationModel);
       });
@@ -109,10 +109,10 @@ class ChatProvider extends ChangeNotifier {
   }
 
   void pickImage(bool isRemove) async {
-    if(isRemove) {
+    if (isRemove) {
       _imageFile = null;
       _chatImage = null; // Changed to null for single image
-    }else {
+    } else {
       final pickedFile = await ImagePicker().pickImage(
         imageQuality: 30,
         source: ImageSource.gallery, // You can specify camera or gallery
@@ -125,20 +125,15 @@ class ChatProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-
-
-  void resetConversation(){
+  void resetConversation() {
     _conversationList = [];
     notifyListeners();
   }
-
-
 
   void toggleSendButtonActivity() {
     _isSendButtonActive = !_isSendButtonActive;
     notifyListeners();
   }
-
 
   void setIsMe(bool value) {
     _isMe = value;
@@ -148,14 +143,16 @@ class ChatProvider extends ChangeNotifier {
     log('[Pusher] Parsed conversations: $newConversation');
 
     _conversationList!.insert(0, newConversation);
-  // Add at the beginning
+    // Add at the beginning
     notifyListeners();
   }
-  Future<http.StreamedResponse> sendMessage(String message, BuildContext context, String token, int? chatId) async {
+
+  Future<http.StreamedResponse> sendMessage(
+      String message, BuildContext context, String token, int? chatId) async {
     http.StreamedResponse response;
     _isLoading = true;
 
-      response = await chatRepo!.sendMessage(message, _imageFile, chatId, token);
+    response = await chatRepo!.sendMessage(message, _imageFile, chatId, token);
 
     if (response.statusCode == 200) {
       getConversationList(chatId!);
@@ -168,11 +165,12 @@ class ChatProvider extends ChangeNotifier {
     return response;
   }
 
-  Future<void> deleteChat(int chatId,int index) async {
+  Future<void> deleteChat(int chatId, int index) async {
     _isLoading = true;
     ApiResponseModel apiResponse = await chatRepo!.deleteChat(chatId);
 
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
       Map map = apiResponse.response!.data;
       String? message = map["message"];
       print('======RESPONSEee====$message');

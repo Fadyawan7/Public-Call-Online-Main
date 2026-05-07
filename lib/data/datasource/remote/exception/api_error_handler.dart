@@ -82,8 +82,9 @@ class ApiErrorHandler {
                   } else if (data.containsKey('message')) {
                     errorDescription = data['message'];
                   } else if (data.containsKey('errors')) {
-                    errorDescription = _extractValidationMessage(data['errors']) ??
-                        "Failed to load data";
+                    errorDescription =
+                        _extractValidationMessage(data['errors']) ??
+                            "Failed to load data";
                   } else {
                     errorDescription =
                         "Failed to load data (invalid error format)";
