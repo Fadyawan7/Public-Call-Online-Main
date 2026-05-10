@@ -10,6 +10,7 @@ import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/localization/app_localization.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/utill/app_constants.dart';
+import 'package:flutter_restaurant/utill/color_resources.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
@@ -164,17 +165,22 @@ class OptionsWidget extends StatelessWidget {
                                         profileProvider.userInfoModel
                                                 ?.freelancerRequestNote ??
                                             '';
+                                    final bool canRouteToApply =
+                                        applicationStatus.isEmpty ||
+                                            (applicationStatus != 'approved' &&
+                                                applicationStatus != 'pending');
+                                    final Color applicationStatusColor =
+                                        (applicationStatus.isEmpty ||
+                                                applicationStatus ==
+                                                    'no-request')
+                                            ? Colors.green
+                                            : ColorResources.getStatusTextColor(
+                                                applicationStatus);
 
                                     return PortionWidget(
-                                      iconColor: (applicationStatus.isEmpty ||
-                                              applicationStatus == 'no-request')
-                                          ? Colors.green
-                                          : Colors.red.withOpacity(0.6),
+                                      iconColor: applicationStatusColor,
                                       icon: Icons.person_add_sharp,
-                                      textColor: (applicationStatus.isEmpty ||
-                                              applicationStatus == 'no-request')
-                                          ? Colors.green
-                                          : Colors.red.withOpacity(0.6),
+                                      textColor: applicationStatusColor,
                                       imageIcon: Images.addressSvg,
                                       title:
                                           'Apply For Worker - ( ${applicationStatus.toCapitalized().replaceAll('-', ' ')} )',
@@ -183,11 +189,7 @@ class OptionsWidget extends StatelessWidget {
                                               applicationStatus == 'rejected')
                                           ? applicationStatusNote
                                           : null,
-                                      onRoute: (applicationStatus.isEmpty ||
-                                              (applicationStatus !=
-                                                      'approved' &&
-                                                  applicationStatus !=
-                                                      'pending'))
+                                      onRoute: canRouteToApply
                                           ? () => RouterHelper
                                               .getApplyFreelancerRoute()
                                           : null,

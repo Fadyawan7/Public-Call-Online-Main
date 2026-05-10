@@ -407,7 +407,7 @@ class _BookingDateSlotScreenState extends State<BookingDateSlotScreen>
                                     bookingProvider.listImagePath.length + 1,
                                 itemBuilder: (BuildContext context, index) {
                                   final imageCount =
-                                      bookingProvider.listImagePath.length ?? 0;
+                                      bookingProvider.listImagePath.length;
 
                                   // Last item is the add button
                                   if (index == imageCount) {
@@ -437,7 +437,9 @@ class _BookingDateSlotScreenState extends State<BookingDateSlotScreen>
                                                     onTap: () {
                                                       Navigator.pop(context);
                                                       bookingProvider.pickImage(
-                                                          true); // camera
+                                                          true,
+                                                          context:
+                                                              context); // camera
                                                     },
                                                   ),
                                                   ListTile(
@@ -448,7 +450,9 @@ class _BookingDateSlotScreenState extends State<BookingDateSlotScreen>
                                                     onTap: () {
                                                       Navigator.pop(context);
                                                       bookingProvider.pickImage(
-                                                          false); // gallery
+                                                          false,
+                                                          context:
+                                                              context); // gallery
                                                     },
                                                   ),
                                                 ],

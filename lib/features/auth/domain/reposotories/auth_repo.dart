@@ -205,12 +205,7 @@ class AuthRepo {
     String? deviceToken = '@';
     try {
       deviceToken = (await FirebaseMessaging.instance.getToken());
-      if (deviceToken == null) {
-        debugPrint('⚠️ FCM getToken returned null');
-        deviceToken = '@';
-      } else {
-        debugPrint('✅ FCM token obtained: ${deviceToken.substring(0, 10)}...');
-      }
+      debugPrint('✅ FCM token obtained: ${deviceToken?.substring(0, 10)}...');
     } catch (error) {
       debugPrint('🔴 FCM getToken error: $error');
       deviceToken = '@';

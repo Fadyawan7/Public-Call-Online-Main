@@ -14,6 +14,7 @@ import 'package:flutter_restaurant/utill/images.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
 import 'package:flutter_restaurant/common/widgets/custom_app_bar_widget.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter_restaurant/utill/image_utils.dart';
 import 'package:provider/provider.dart';
 
 class FreelancerPortfolioAddScreen extends StatefulWidget {
@@ -37,8 +38,10 @@ class _FreelancerPortfolioAddScreenState
         maxHeight: 500,
         maxWidth: 600);
     if (pickedFile != null) {
+      final File original = File(pickedFile.path);
+      final compressed = await ImageUtils.compressFile(original);
       setState(() {
-        file = File(pickedFile.path);
+        file = compressed;
       });
     }
   }

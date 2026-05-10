@@ -21,16 +21,16 @@ if (keystorePropertiesFile.exists()) {
 android {
     namespace = "com.pcobh.app"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = "27.0.12077973"
+    ndkVersion = "28.2.13676358"
 
     compileOptions {
-        isCoreLibraryDesugaringEnabled = true  // ✅ Use "isCoreLibraryDesugaringEnabled"
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+        jvmTarget = "1.8"
     }
 
     defaultConfig {

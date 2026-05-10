@@ -1,15 +1,18 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/models/api_response_model.dart';
+import 'package:flutter_restaurant/features/chat/domain/models/chat_model.dart';
 import 'package:flutter_restaurant/features/chat/domain/models/conversation_model.dart';
+import 'package:flutter_restaurant/features/chat/domain/reposotories/chat_repo.dart';
 import 'package:flutter_restaurant/features/notification/domain/reposotories/notification_repo.dart';
 import 'package:flutter_restaurant/helper/api_checker_helper.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_restaurant/features/chat/domain/models/chat_model.dart';
-import 'package:flutter_restaurant/features/chat/domain/reposotories/chat_repo.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter_restaurant/utill/image_utils.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ChatProvider extends ChangeNotifier {
   final ChatRepo? chatRepo;
@@ -108,17 +111,63 @@ class ChatProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void pickImage(bool isRemove) async {
+  void pickImage(bool isRemove, {BuildContext? context}) async {
     if (isRemove) {
       _imageFile = null;
       _chatImage = null; // Changed to null for single image
     } else {
+      final Color cropperColor =
+          context != null ? Theme.of(context).primaryColor : Colors.black;
       final pickedFile = await ImagePicker().pickImage(
-        imageQuality: 30,
+        imageQuality: 35,
+        maxHeight: 1000,
+        maxWidth: 1000,
         source: ImageSource.gallery, // You can specify camera or gallery
       );
       if (pickedFile != null) {
-        _imageFile = File(pickedFile.path);
+        final CroppedFile? croppedFile = await ImageCropper().cropImage(
+          sourcePath: pickedFile.path,
+          compressFormat: ImageCompressFormat.jpg,
+          compressQuality: 45,
+          uiSettings: [
+            AndroidUiSettings(
+              toolbarTitle: 'Crop Chat Image',
+              toolbarColor: cropperColor,
+              toolbarWidgetColor: Colors.white,
+              lockAspectRatio: false,
+              cropStyle: CropStyle.rectangle,
+              aspectRatioPresets: const [
+                CropAspectRatioPreset.original,
+                CropAspectRatioPreset.square,
+                CropAspectRatioPreset.ratio4x3,
+                CropAspectRatioPreset.ratio16x9,
+              ],
+              hideBottomControls: false,
+            ),
+            IOSUiSettings(
+              title: 'Crop Chat Image',
+              aspectRatioLockEnabled: false,
+              aspectRatioPickerButtonHidden: false,
+              resetAspectRatioEnabled: true,
+              aspectRatioPresets: [
+                CropAspectRatioPreset.original,
+                CropAspectRatioPreset.square,
+                CropAspectRatioPreset.ratio4x3,
+                CropAspectRatioPreset.ratio16x9,
+              ],
+            ),
+          ],
+        );
+
+        if (croppedFile == null) {
+          notifyListeners();
+          return;
+        }
+
+        // compress the cropped file to be under ~1MB
+        File original = File(croppedFile.path);
+        final compressed = await ImageUtils.compressFile(original);
+        _imageFile = compressed;
         _isSendButtonActive = true;
       }
     }

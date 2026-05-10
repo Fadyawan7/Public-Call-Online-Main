@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/models/api_response_model.dart';
 import 'package:flutter_restaurant/common/models/booking_details_model.dart';
@@ -10,10 +12,12 @@ import 'package:flutter_restaurant/features/freelancer/domain/models/day_date_mo
 import 'package:flutter_restaurant/helper/api_checker_helper.dart';
 import 'package:flutter_restaurant/helper/get_response_error_message.dart';
 import 'package:flutter_restaurant/utill/app_constants.dart';
+import 'package:flutter_restaurant/utill/image_utils.dart';
+import 'package:http/http.dart' as http;
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 
 class BookingProvider extends ChangeNotifier {
   final BookingRepo? bookingRepo;
@@ -144,21 +148,81 @@ class BookingProvider extends ChangeNotifier {
   //   }
   //   Future.microtask(() => notifyListeners());
   // }
-  Future<void> pickImage(bool fromCamera) async {
+  Future<File?> _cropAndCompressBookingImage(
+    XFile image, {
+    required Color cropperColor,
+  }) async {
+    final CroppedFile? croppedFile = await ImageCropper().cropImage(
+      sourcePath: image.path,
+      compressFormat: ImageCompressFormat.jpg,
+      compressQuality: 45,
+      uiSettings: [
+        AndroidUiSettings(
+          toolbarTitle: 'Crop Booking Image',
+          toolbarColor: cropperColor,
+          toolbarWidgetColor: Colors.white,
+          lockAspectRatio: false,
+          cropStyle: CropStyle.rectangle,
+          aspectRatioPresets: const [
+            CropAspectRatioPreset.original,
+            CropAspectRatioPreset.square,
+            CropAspectRatioPreset.ratio4x3,
+            CropAspectRatioPreset.ratio16x9,
+          ],
+          hideBottomControls: false,
+        ),
+        IOSUiSettings(
+          title: 'Crop Booking Image',
+          aspectRatioLockEnabled: false,
+          aspectRatioPickerButtonHidden: false,
+          resetAspectRatioEnabled: true,
+          aspectRatioPresets: [
+            CropAspectRatioPreset.original,
+            CropAspectRatioPreset.square,
+            CropAspectRatioPreset.ratio4x3,
+            CropAspectRatioPreset.ratio16x9,
+          ],
+        ),
+      ],
+    );
+
+    if (croppedFile == null) {
+      return null;
+    }
+
+    return ImageUtils.compressFile(File(croppedFile.path));
+  }
+
+  Future<void> pickImage(bool fromCamera, {BuildContext? context}) async {
     if (_listImagePath.length >= 2) return;
 
+    final Color cropperColor =
+        context != null ? Theme.of(context).primaryColor : Colors.black;
     final ImagePicker picker = ImagePicker();
 
     if (fromCamera) {
-      final XFile? image = await picker.pickImage(source: ImageSource.camera);
+      final XFile? image = await picker.pickImage(
+        source: ImageSource.camera,
+        imageQuality: 35,
+        maxHeight: 1000,
+        maxWidth: 1000,
+      );
       if (image != null && _listImagePath.length < 2) {
-        _listImagePath.add(image.path);
+        final File? processed = await _cropAndCompressBookingImage(image,
+            cropperColor: cropperColor);
+        if (processed != null) {
+          _listImagePath.add(processed.path);
+        }
       }
     } else {
       final List<XFile> images = await picker.pickMultiImage(limit: 2);
       for (XFile file in images) {
         if (_listImagePath.length < 2) {
-          _listImagePath.add(file.path);
+          final File? processed = await _cropAndCompressBookingImage(file,
+              cropperColor: cropperColor);
+          if (processed != null) {
+            _listImagePath.add(processed.path);
+          }
         }
       }
     }

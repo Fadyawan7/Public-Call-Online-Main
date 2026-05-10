@@ -54,7 +54,7 @@ class _AddressScreenState extends State<AddressScreen> {
             child: const Icon(
               Icons.arrow_back_ios,
               size: 20,
-              color: Colors.red,
+              color: Colors.black,
             ),
           ),
           context: context,

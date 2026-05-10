@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:universal_html/js.dart';
 
 class ColorResources {
   static Color getSearchBg(BuildContext context) {
@@ -58,6 +59,8 @@ class ColorResources {
   }
 
   static const Color colorNero = Color(0xFF1F1F1F);
+  static final Color priamrycolor = Color(0xFF5C6CFF);
+
   static const Color searchBg = Color(0xFFF7F9FF);
   static const Color borderColor = Color(0xFFDDE3F0);
   static const Color footerColor = Color(0xFFE8EEFF);
@@ -67,20 +70,48 @@ class ColorResources {
   static const Color onBoardingBgColor = Color(0xFFF1F4FF);
   static const Color homePageSectionTitleColor = Color(0xFF1C255A);
   static const Color splashBackgroundColor = Color(0xFF5C6CFF);
+  static const Color statusApproved = Color(0xFF16A34A);
+  static const Color statusApprovedBg = Color(0xFFE8F7EE);
+  static const Color statusPending = Color(0xFFF59E0B);
+  static const Color statusPendingBg = Color(0xFFFFF7E6);
+  static const Color statusRejected = Color(0xFFDC2626);
+  static const Color statusRejectedBg = Color(0xFFFFEAEA);
 
   static const Map<String, Color> buttonBackgroundColorMap = {
-    'pending': Color(0xFFE8EEFF),
-    'confirmed': Color(0xFFE1E9FF),
-    'cancelled': Color(0xFFEFF2FF),
-    'rejected': Color(0xFFEFF2FF),
-    'completed': Color(0xFFE1E9FF),
+    'pending': statusPendingBg,
+    'needed_more_data': statusPendingBg,
+    'no-request': statusApprovedBg,
+    'approved': statusApprovedBg,
+    'confirmed': statusApprovedBg,
+    'completed': statusApprovedBg,
+    'cancelled': statusRejectedBg,
+    'canceled': statusRejectedBg,
+    'rejected': statusRejectedBg,
+    'failed': statusRejectedBg,
   };
 
   static const Map<String, Color> buttonTextColorMap = {
-    'pending': Color(0xFF5C6CFF),
-    'confirmed': Color(0xFF4A5AF2),
-    'cancelled': Color(0xFF4A5AF2),
-    'rejected': Color(0xFF4A5AF2),
-    'completed': Color(0xFF4A5AF2),
+    'pending': statusPending,
+    'needed_more_data': statusPending,
+    'no-request': statusApproved,
+    'approved': statusApproved,
+    'confirmed': statusApproved,
+    'completed': statusApproved,
+    'cancelled': statusRejected,
+    'canceled': statusRejected,
+    'rejected': statusRejected,
+    'failed': statusRejected,
   };
+
+  static Color getStatusTextColor(String? status, {Color? fallback}) {
+    return buttonTextColorMap[status?.toLowerCase()] ??
+        fallback ??
+        statusPending;
+  }
+
+  static Color getStatusBackgroundColor(String? status, {Color? fallback}) {
+    return buttonBackgroundColorMap[status?.toLowerCase()] ??
+        fallback ??
+        statusPendingBg;
+  }
 }

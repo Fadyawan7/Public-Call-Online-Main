@@ -1,14 +1,13 @@
 // profile_image_widget.dart
 import 'dart:io';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/widgets/custom_image_widget.dart';
 import 'package:flutter_restaurant/utill/color_resources.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:image/image.dart' as img;
-import 'package:path_provider/path_provider.dart';
+import 'package:flutter_restaurant/utill/image_utils.dart';
 
 class ProfileImageWidget extends StatefulWidget {
   final String? imageUrl;
@@ -30,50 +29,59 @@ class _ProfileImageWidgetState extends State<ProfileImageWidget> {
 
   Future<void> _chooseImage() async {
     try {
+      final Color primaryColor = Theme.of(context).primaryColor;
       final pickedFile = await _picker.pickImage(
         source: ImageSource.gallery,
-        imageQuality: 50,
+        imageQuality: 35,
+        maxHeight: 900,
+        maxWidth: 900,
       );
 
       if (pickedFile != null) {
-        // Read and decode the image
-        final imageBytes = await File(pickedFile.path).readAsBytes();
-        final originalImage = img.decodeImage(imageBytes);
+        final CroppedFile? croppedFile = await ImageCropper().cropImage(
+          sourcePath: pickedFile.path,
+          compressFormat: ImageCompressFormat.jpg,
+          compressQuality: 45,
+          uiSettings: [
+            AndroidUiSettings(
+              toolbarTitle: 'Crop Profile Image',
+              toolbarColor: primaryColor,
+              toolbarWidgetColor: Colors.white,
+              lockAspectRatio: false,
+              cropStyle: CropStyle.circle,
+              aspectRatioPresets: const [
+                CropAspectRatioPreset.square,
+                CropAspectRatioPreset.original,
+              ],
+              hideBottomControls: false,
+            ),
+            IOSUiSettings(
+              title: 'Crop Profile Image',
+              cropStyle: CropStyle.circle,
+              aspectRatioLockEnabled: false,
+              aspectRatioPickerButtonHidden: false,
+              resetAspectRatioEnabled: true,
+              aspectRatioPresets: [
+                CropAspectRatioPreset.square,
+                CropAspectRatioPreset.original,
+              ],
+            ),
+          ],
+        );
 
-        if (originalImage != null) {
-          // Calculate square crop dimensions
-          final minDimension = min(originalImage.width, originalImage.height);
-          final offsetX = (originalImage.width - minDimension) ~/ 2;
-          final offsetY = (originalImage.height - minDimension) ~/ 2;
-
-          // Crop to square
-          final croppedImage = img.copyCrop(
-            originalImage,
-            x: offsetX,
-            y: offsetY,
-            width: minDimension,
-            height: minDimension,
-          );
-
-          // Resize to 500x500
-          final resizedImage =
-              img.copyResize(croppedImage, width: 500, height: 500);
-
-          // Save to temporary file
-          final tempDir = await getTemporaryDirectory();
-          final processedFile = File(
-              '${tempDir.path}/processed_${DateTime.now().millisecondsSinceEpoch}.png');
-          await processedFile.writeAsBytes(img.encodePng(resizedImage));
-
-          setState(() {
-            _file = processedFile;
-          });
-          widget.onImageSelected(_file);
+        if (croppedFile == null) {
+          return;
         }
+
+        File original = File(croppedFile.path);
+        final compressed = await ImageUtils.compressFile(original);
+        setState(() {
+          _file = compressed;
+        });
+        widget.onImageSelected(_file);
       }
     } catch (e) {
       debugPrint('Error processing image: $e');
-      // Optionally show error to user
     }
   }
 

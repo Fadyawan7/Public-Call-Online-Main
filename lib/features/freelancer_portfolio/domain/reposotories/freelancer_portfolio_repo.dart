@@ -20,13 +20,15 @@ class FreelancerPortfolioRepo {
         Uri.parse(
             '${AppConstants.baseUrl}${AppConstants.freelancerPortfolioAddUri}'));
 
-    request.headers.addAll(<String, String>{'Authorization': 'Bearer $token'});
+    request.headers.addAll(<String, String>{
+      'Authorization': 'Bearer $token',
+      'Accept': 'application/json',
+    });
     if (file != null) {
       request.files.add(http.MultipartFile(
           'image', file.readAsBytes().asStream(), file.lengthSync(),
           filename: file.path.split('/').last));
     }
-    print('=======PORTFOLIO ADDD ===${request.files.length}');
 
     http.StreamedResponse response = await request.send();
     return response;

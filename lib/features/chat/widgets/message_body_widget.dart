@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_restaurant/common/widgets/custom_asset_image_widget.dart';
@@ -249,7 +250,7 @@ class _MessageBodyWidgetState extends State<MessageBodyWidget> {
                 Row(children: [
                   InkWell(
                     onTap: () async {
-                      chatProvider.pickImage(false);
+                      chatProvider.pickImage(false, context: context);
                     },
                     child: Container(
                       padding: const EdgeInsets.all(11),
@@ -267,8 +268,7 @@ class _MessageBodyWidgetState extends State<MessageBodyWidget> {
                   Expanded(
                     child: TextField(
                       inputFormatters: [
-                        LengthLimitingTextInputFormatter(
-                            Dimensions.messageInputLength)
+                        LengthLimitingTextInputFormatter(300),
                       ],
                       controller: widget._inputMessageController,
                       textCapitalization: TextCapitalization.sentences,
@@ -276,9 +276,16 @@ class _MessageBodyWidgetState extends State<MessageBodyWidget> {
                         fontSize: Dimensions.fontSizeLarge,
                         color: const Color(0xFF111B21),
                       ),
+
                       keyboardType: TextInputType.multiline,
-                      maxLines: null,
+
+                      minLines: 1, // initial single line
+                      maxLines: 6, // expand till 6 lines
+
+                      maxLength: 300,
+
                       decoration: InputDecoration(
+                        counterText: "",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(24),
                           borderSide: BorderSide.none,
@@ -299,30 +306,15 @@ class _MessageBodyWidgetState extends State<MessageBodyWidget> {
                         fillColor: Colors.white,
                         hintText: getTranslated('start_a_new_message', context),
                         hintStyle: rubikRegular.copyWith(
-                            color: const Color(0xFF8696A0),
-                            fontSize: Dimensions.fontSizeLarge),
+                          color: const Color(0xFF8696A0),
+                          fontSize: Dimensions.fontSizeLarge,
+                        ),
                         isDense: true,
                         contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 18, vertical: 13),
+                          horizontal: 18,
+                          vertical: 13,
+                        ),
                       ),
-                      onSubmitted: (String newText) {
-                        if (newText.trim().isNotEmpty &&
-                            !chatProvider.isSendButtonActive) {
-                          chatProvider.toggleSendButtonActivity();
-                        } else if (newText.isEmpty &&
-                            chatProvider.isSendButtonActive) {
-                          chatProvider.toggleSendButtonActivity();
-                        }
-                      },
-                      onChanged: (String newText) {
-                        if (newText.trim().isNotEmpty &&
-                            !chatProvider.isSendButtonActive) {
-                          chatProvider.toggleSendButtonActivity();
-                        } else if (newText.isEmpty &&
-                            chatProvider.isSendButtonActive) {
-                          chatProvider.toggleSendButtonActivity();
-                        }
-                      },
                     ),
                   ),
                   const SizedBox(width: 8),

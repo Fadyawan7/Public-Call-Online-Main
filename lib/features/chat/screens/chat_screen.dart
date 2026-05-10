@@ -41,8 +41,7 @@ class _ChatScreenState extends State<ChatScreen> {
           iconTheme: const IconThemeData(color: Colors.white),
           titleSpacing: ResponsiveHelper.isMobile() ? 20 : 0,
           title: Text(
-            getTranslated('Easy Business\nEvery Business', context) ??
-                'Messages',
+            getTranslated('Chat screen', context) ?? 'Messages',
             style: const TextStyle(
               color: Colors.white,
               fontSize: 20,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/features/freelancer/providers/freelancer_provider.dart';
 import 'package:flutter_restaurant/features/freelancer/screens/freelancer_screen.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
+import 'package:flutter_restaurant/utill/color_resources.dart';
 
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/helper/router_helper.dart';
@@ -61,6 +62,16 @@ class OrderSuccessfulWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final FreelancerProvider freelancerProvider =
         Provider.of<FreelancerProvider>(context, listen: false);
+    final String statusKey = widget.status == 0
+        ? 'approved'
+        : widget.status == 1
+            ? 'rejected'
+            : widget.status == 2
+                ? 'pending'
+                : 'rejected';
+    final Color statusColor = ColorResources.getStatusTextColor(statusKey);
+    final Color statusBackgroundColor =
+        ColorResources.getStatusBackgroundColor(statusKey);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
@@ -78,7 +89,7 @@ class OrderSuccessfulWidget extends StatelessWidget {
                       height: 100,
                       width: 100,
                       decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor.withOpacity(0.2),
+                        color: statusBackgroundColor,
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -89,7 +100,7 @@ class OrderSuccessfulWidget extends StatelessWidget {
                                 : widget.status == 2
                                     ? Icons.question_mark
                                     : Icons.cancel,
-                        color: Theme.of(context).primaryColor,
+                        color: statusColor,
                         size: 80,
                       ),
                     ),

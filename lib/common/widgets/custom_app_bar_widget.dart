@@ -120,6 +120,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/main.dart';
+import 'package:flutter_restaurant/utill/color_resources.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:go_router/go_router.dart';
 
@@ -156,7 +157,7 @@ class CustomAppBarWidget extends StatelessWidget
       title: Text(
         title ?? '',
         style: TextStyle(
-          color: Theme.of(context).colorScheme.primary,
+          color: ColorResources.black,
         ),
         textAlign: TextAlign.center,
       ),
@@ -178,7 +179,7 @@ class CustomAppBarWidget extends StatelessWidget
                 )
               : IconButton(
                   icon: const Icon(Icons.arrow_back_ios),
-                  color: titleColor ?? Colors.red,
+                  color: ColorResources.black,
                   onPressed: () {
                     if (onBackPressed != null) {
                       onBackPressed!();

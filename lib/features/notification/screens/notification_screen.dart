@@ -5,11 +5,9 @@ import 'package:flutter_restaurant/common/widgets/gradient_card_widget.dart';
 import 'package:flutter_restaurant/common/widgets/no_data_widget.dart';
 import 'package:flutter_restaurant/features/notification/providers/notification_provider.dart';
 import 'package:flutter_restaurant/features/notification/widgets/notification_dialog_widget.dart';
-import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
 import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/main.dart';
-import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -22,14 +20,11 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
-  final SplashProvider splashProvider =
-      Provider.of<SplashProvider>(Get.context!, listen: false);
   @override
   void initState() {
+    super.initState();
     Provider.of<NotificationProvider>(context, listen: false)
         .getNotificationList(context);
-
-    super.initState();
   }
 
   @override
@@ -38,149 +33,94 @@ class _NotificationScreenState extends State<NotificationScreen> {
     final double width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      appBar: (CustomAppBarWidget(
-              leading: InkWell(
-                onTap: () {
-                  if (Get.context!.canPop()) {
-                    Get.context!.pop();
-                  }
-                },
-                child: const Icon(
-                  Icons.arrow_back_ios,
-                  size: 20,
-                  color: Colors.red,
-                ),
-              ),
-              context: context,
-              titleColor: Colors.white,
-              title: getTranslated('notification', context)))
-          as PreferredSizeWidget?,
+      appBar: CustomAppBarWidget(
+        context: context,
+        leading: InkWell(
+          onTap: () {
+            if (Get.context!.canPop()) {
+              Get.context!.pop();
+            }
+          },
+          child: const Icon(Icons.arrow_back_ios, size: 20),
+        ),
+        title: getTranslated('notification', context),
+        titleColor: Colors.white,
+      ) as PreferredSizeWidget?,
       body: Consumer<NotificationProvider>(
-          builder: (context, notificationProvider, child) {
-        List<DateTime> dateTimeList = [];
-        return notificationProvider.notificationList != null
-            ? notificationProvider.notificationList!.isNotEmpty
-                ? RefreshIndicator(
-                    onRefresh: () async {
-                      await notificationProvider.getNotificationList(context);
-                    },
-                    backgroundColor: Theme.of(context).primaryColor,
-                    color: Theme.of(context).cardColor,
-                    child: SingleChildScrollView(
-                        child: Column(children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            vertical: ResponsiveHelper.isDesktop(context)
-                                ? Dimensions.paddingSizeLarge
-                                : 0.0),
-                        child: Center(
-                            child: Container(
-                          constraints: BoxConstraints(minHeight: height - 400),
-                          width: width > Dimensions.webScreenWidth
-                              ? Dimensions.webScreenWidth
-                              : width,
-                          padding: width > 700
-                              ? const EdgeInsets.all(
-                                  Dimensions.paddingSizeDefault)
-                              : null,
-                          child: ListView.builder(
-                              itemCount:
-                                  notificationProvider.notificationList?.length,
-                              padding: EdgeInsets.zero,
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) {
-                                return InkWell(
-                                  onTap: () =>
-                                      ResponsiveHelper.showDialogOrBottomSheet(
-                                    context,
-                                    NotificationDialogWidget(
-                                        notificationModel: notificationProvider
-                                            .notificationList![index]),
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      GradientCardWidget(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal:
-                                                Dimensions.paddingSizeLarge),
-                                        borderRadius: 10,
-                                        child: Column(children: [
-                                          const SizedBox(
-                                              height: Dimensions
-                                                  .paddingSizeDefault),
-                                          Row(children: [
-                                            SizedBox(
-                                              height: 50,
-                                              width: 50,
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadiusGeometry
-                                                        .circular(25),
-                                                child: Image.asset(
-                                                  Images.pcosplash,
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                                width: Dimensions
-                                                    .paddingSizeExtraLarge),
-                                            Expanded(
-                                                child: Text(
-                                              notificationProvider
-                                                  .notificationList![index]
-                                                  .title!,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .displayMedium!
-                                                  .copyWith(
-                                                    fontSize: Dimensions
-                                                        .fontSizeDefault,
-                                                  ),
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis,
-                                            )),
-                                            Text(
-                                              notificationProvider
-                                                  .notificationList![index]
-                                                  .createdAt!,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .displayMedium!
-                                                  .copyWith(
-                                                      fontSize: Dimensions
-                                                          .fontSizeExtraSmall),
-                                            ),
-                                          ]),
-                                          const SizedBox(
-                                              height:
-                                                  Dimensions.paddingSizeLarge),
-                                          Container(
-                                              height: 1,
-                                              color: Theme.of(context)
-                                                  .hintColor
-                                                  .withOpacity(0.7)
-                                                  .withOpacity(.2))
-                                        ]),
+        builder: (context, notificationProvider, child) {
+          return notificationProvider.notificationList != null
+              ? notificationProvider.notificationList!.isNotEmpty
+                  ? RefreshIndicator(
+                      onRefresh: () async {
+                        await notificationProvider.getNotificationList(context);
+                      },
+                      child: ListView.builder(
+                        padding: const EdgeInsets.symmetric(vertical: 6),
+                        itemCount:
+                            notificationProvider.notificationList!.length,
+                        itemBuilder: (context, index) {
+                          final item =
+                              notificationProvider.notificationList![index];
+
+                          return InkWell(
+                            onTap: () =>
+                                ResponsiveHelper.showDialogOrBottomSheet(
+                              context,
+                              NotificationDialogWidget(notificationModel: item),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 4),
+                              child: GradientCardWidget(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 8),
+                                borderRadius: 10,
+                                child: Row(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: Image.asset(
+                                        Images.pcosplash,
+                                        height: 32,
+                                        width: 32,
                                       ),
-                                    ],
-                                  ),
-                                );
-                              }),
-                        )),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: Text(
+                                        item.title ?? '',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .copyWith(fontSize: 13),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      item.createdAt ?? '',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall!
+                                          .copyWith(fontSize: 10),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                    ])),
-                  )
-                : const NoDataWidget(
-                    isNotification: true,
-                  )
-            : Center(
-                child:
-                    CustomLoaderWidget(color: Theme.of(context).primaryColor),
-              );
-      }),
+                    )
+                  : const NoDataWidget(isNotification: true)
+              : Center(
+                  child: CustomLoaderWidget(
+                    color: Theme.of(context).primaryColor,
+                  ),
+                );
+        },
+      ),
     );
   }
 }

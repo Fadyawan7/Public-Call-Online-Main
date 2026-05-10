@@ -80,6 +80,9 @@ class _MessageBubbleWidgetState extends State<MessageBubbleWidget> {
         final senderId = widget.messages?.senderId;
         final bool isMe = userId == senderId;
         final String? attachmentPath = widget.messages?.attachment?.filePath;
+        final String msg = widget.messages?.message ?? '';
+        final bool isShortSingleLine =
+            msg.isNotEmpty && !msg.contains('\n') && msg.length <= 40;
 
         return Align(
           alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
@@ -117,14 +120,108 @@ class _MessageBubbleWidgetState extends State<MessageBubbleWidget> {
               children: [
                 if (widget.messages?.message != null &&
                     widget.messages!.message!.isNotEmpty)
-                  Text(
-                    widget.messages!.message ?? '',
-                    style: rubikRegular.copyWith(
-                      color: const Color(0xFF111B21),
-                      fontSize: Dimensions.fontSizeDefault,
-                      height: 1.35,
-                    ),
-                  ),
+                  Builder(builder: (_) {
+                    if (isShortSingleLine) {
+                      return Row(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Flexible(
+                            child: Text(
+                              msg,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: rubikRegular.copyWith(
+                                color: const Color(0xFF111B21),
+                                fontSize: Dimensions.fontSizeDefault,
+                                height: 1.35,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          // timestamp + ticks for outgoing messages
+                          if (isMe) ...[
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  DateConverterHelper.chatTimeOnly(
+                                      widget.messages?.createdAt, context),
+                                  style: rubikRegular.copyWith(
+                                    color: const Color(0xFF667781),
+                                    fontSize: Dimensions.fontSizeSmall,
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                Builder(builder: (_) {
+                                  final bool isRead =
+                                      widget.messages?.isRead == true ||
+                                          (widget.messages?.status != null &&
+                                              widget.messages!.status!
+                                                      .toLowerCase() ==
+                                                  'read');
+                                  final bool isDelivered = !isRead &&
+                                      (widget.messages?.status != null &&
+                                          widget.messages!.status!
+                                                  .toLowerCase() ==
+                                              'delivered');
+
+                                  if (isRead) {
+                                    return Icon(
+                                      Icons.done_all,
+                                      size: 16,
+                                      color: const Color(0xFF34B7F1),
+                                    );
+                                  } else if (isDelivered) {
+                                    return Icon(
+                                      Icons.done_all,
+                                      size: 16,
+                                      color: const Color(0xFF667781),
+                                    );
+                                  } else {
+                                    return Icon(
+                                      Icons.done,
+                                      size: 16,
+                                      color: const Color(0xFF667781),
+                                    );
+                                  }
+                                }),
+                              ],
+                            ),
+                          ] else ...[
+                            // for incoming messages show only timestamp inline
+                            Text(
+                              DateConverterHelper.chatTimeOnly(
+                                  widget.messages?.createdAt, context),
+                              style: rubikRegular.copyWith(
+                                color: const Color(0xFF667781),
+                                fontSize: Dimensions.fontSizeSmall,
+                              ),
+                            ),
+                          ]
+                        ],
+                      );
+                    }
+
+                    // fallback: multi-line or long message -> show as block with timestamp below
+                    return Column(
+                      crossAxisAlignment: isMe
+                          ? CrossAxisAlignment.end
+                          : CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          msg,
+                          style: rubikRegular.copyWith(
+                            color: const Color(0xFF111B21),
+                            fontSize: Dimensions.fontSizeDefault,
+                            height: 1.35,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                      ],
+                    );
+                  }),
                 if (attachmentPath != null) ...[
                   if (widget.messages?.message != null &&
                       widget.messages!.message!.isNotEmpty)
@@ -152,15 +249,59 @@ class _MessageBubbleWidgetState extends State<MessageBubbleWidget> {
                     ),
                   ),
                 ],
-                const SizedBox(height: 2),
-                Text(
-                  DateConverterHelper.chatTimeOnly(
-                      widget.messages?.createdAt, context),
-                  style: rubikRegular.copyWith(
-                    color: const Color(0xFF667781),
-                    fontSize: Dimensions.fontSizeSmall,
+                // show bottom timestamp/ticks only for non-short messages
+                if (!isShortSingleLine) ...[
+                  const SizedBox(height: 2),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment:
+                        isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        DateConverterHelper.chatTimeOnly(
+                            widget.messages?.createdAt, context),
+                        style: rubikRegular.copyWith(
+                          color: const Color(0xFF667781),
+                          fontSize: Dimensions.fontSizeSmall,
+                        ),
+                      ),
+                      if (isMe) ...[
+                        const SizedBox(width: 6),
+                        Builder(builder: (_) {
+                          // Determine status: use isRead or status field if available
+                          final bool isRead = widget.messages?.isRead == true ||
+                              (widget.messages?.status != null &&
+                                  widget.messages!.status!.toLowerCase() ==
+                                      'read');
+                          final bool isDelivered = !isRead &&
+                              (widget.messages?.status != null &&
+                                  widget.messages!.status!.toLowerCase() ==
+                                      'delivered');
+
+                          if (isRead) {
+                            return Icon(
+                              Icons.done_all,
+                              size: 16,
+                              color: const Color(0xFF34B7F1),
+                            );
+                          } else if (isDelivered) {
+                            return Icon(
+                              Icons.done_all,
+                              size: 16,
+                              color: const Color(0xFF667781),
+                            );
+                          } else {
+                            return Icon(
+                              Icons.done,
+                              size: 16,
+                              color: const Color(0xFF667781),
+                            );
+                          }
+                        }),
+                      ]
+                    ],
                   ),
-                ),
+                ],
               ],
             ),
           ),

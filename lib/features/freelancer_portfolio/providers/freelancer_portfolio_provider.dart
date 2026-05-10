@@ -38,14 +38,22 @@ class FreelancerPortfolioProvider extends ChangeNotifier {
     ResponseModel responseModel;
     http.StreamedResponse response =
         await freelancerPortfolioRepo!.freelancerPortfolioAdd(file, token);
-    print('=======PORTFOLIO ADD ===${response.statusCode}');
+    final String responseBody = await response.stream.bytesToString();
     if (response.statusCode == 200) {
-      Map map = jsonDecode(await response.stream.bytesToString());
+      Map map = jsonDecode(responseBody);
       String? message = map["message"];
       responseModel = ResponseModel(true, message);
     } else {
-      responseModel = ResponseModel(
-          false, '${response.statusCode} ${response.reasonPhrase}');
+      String errorMessage = '${response.statusCode} ${response.reasonPhrase}';
+      try {
+        final Map map = jsonDecode(responseBody);
+        errorMessage = map['message']?.toString() ?? errorMessage;
+      } catch (_) {}
+      if (response.statusCode == 403) {
+        errorMessage =
+            'Portfolio upload is not allowed by server for this account yet.';
+      }
+      responseModel = ResponseModel(false, errorMessage);
     }
     _isLoading = false;
     notifyListeners();
@@ -88,8 +96,8 @@ class FreelancerPortfolioProvider extends ChangeNotifier {
         apiResponse.response!.statusCode == 200) {
       FreelancerPortfolioModel? freelancerPortfolioModel;
       for (var freelancerPortfolio in _freelancerPortfolioList ?? []) {
-        if (freelancerPortfolio.id.toString() == portfolioID) {
-          _freelancerPortfolioList = freelancerPortfolio;
+        if (freelancerPortfolio.id == portfolioID) {
+          freelancerPortfolioModel = freelancerPortfolio;
         }
       }
       _freelancerPortfolioList?.remove(freelancerPortfolioModel);
