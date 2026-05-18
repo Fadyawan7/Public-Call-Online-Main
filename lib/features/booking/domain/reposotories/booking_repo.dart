@@ -1,11 +1,10 @@
-import 'package:flutter_restaurant/features/rating_reviews/domain/models/review_body_model.dart';
-import 'package:http/http.dart' as http;
-
+import 'package:flutter_restaurant/common/models/api_response_model.dart';
 import 'package:flutter_restaurant/data/datasource/remote/dio/dio_client.dart';
 import 'package:flutter_restaurant/data/datasource/remote/exception/api_error_handler.dart';
-import 'package:flutter_restaurant/common/models/api_response_model.dart';
 import 'package:flutter_restaurant/features/booking/domain/models/place_booking_model.dart';
+import 'package:flutter_restaurant/features/rating_reviews/domain/models/review_body_model.dart';
 import 'package:flutter_restaurant/utill/app_constants.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BookingRepo {
@@ -59,6 +58,40 @@ class BookingRepo {
     }
   }
 
+  Future<ApiResponseModel> updateBooking(
+    String bookingID, {
+    String? status,
+    String? price,
+  }) async {
+    try {
+      Map<String, dynamic> data = {};
+
+      data['booking_id'] = int.parse(bookingID);
+
+      if (status != null) {
+        data['status'] = status;
+      }
+
+      if (price != null) {
+        data['price'] = price;
+      }
+
+      final response = await dioClient!.post(
+        AppConstants.updateBookingStatusUri,
+        data: data,
+      );
+
+      print('STATUS CODE => ${response.statusCode}');
+      print('RESPONSE => ${response.data}');
+
+      return ApiResponseModel.withSuccess(response);
+    } catch (e) {
+      return ApiResponseModel.withError(
+        ApiErrorHandler.getMessage(e),
+      );
+    }
+  }
+
   Future<http.StreamedResponse> placeBooking(
     PlaceBookingBody bookingBody,
     List<String> imageList,
@@ -86,6 +119,7 @@ class BookingRepo {
       'date': data['date'],
       'description': data['description'],
       'address_id': data['address_id'].toString(),
+      'price': data['price'] ?? '',
     });
 
     // Add each image to the request

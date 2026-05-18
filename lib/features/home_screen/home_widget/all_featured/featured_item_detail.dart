@@ -34,6 +34,40 @@ class _FeaturedItemsDetailState extends State<FeaturedItemsDetail> {
   late final PageController _portfolioPageController;
   int _portfolioPageIndex = 0;
 
+  List<String> _buildCategoryItems() {
+    final apiCategories = freelancer?.categories;
+
+    if (apiCategories != null && apiCategories.isNotEmpty) {
+      return apiCategories
+          .map((category) => category.name?.trim() ?? '')
+          .where((name) => name.isNotEmpty && name.toLowerCase() != 'null')
+          .toList();
+    }
+
+    final String? categoryName = freelancer?.category_name?.trim();
+    final String? category = freelancer?.category?.trim();
+
+    final String fallback = (categoryName != null &&
+            categoryName.isNotEmpty &&
+            categoryName != 'null')
+        ? categoryName
+        : (category != null && category.isNotEmpty && category != 'null')
+            ? category
+            : '';
+
+    if (fallback.isEmpty) {
+      return const ['Unknown'];
+    }
+
+    final List<String> categories = fallback
+        .split(RegExp(r'[,|/]'))
+        .map((item) => item.trim())
+        .where((item) => item.isNotEmpty && item.toLowerCase() != 'null')
+        .toList();
+
+    return categories.isEmpty ? const ['Unknown'] : categories;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -187,18 +221,38 @@ class _FeaturedItemsDetailState extends State<FeaturedItemsDetail> {
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Chip(
-                            label: Text(
-                              (freelancer?.category != null &&
-                                      freelancer!.category!.trim().isNotEmpty &&
-                                      freelancer!.category != "null")
-                                  ? freelancer!.category!
-                                  : 'Unknown',
+                          Expanded(
+                            child: Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              alignment: WrapAlignment.start,
+                              children: _buildCategoryItems().map((item) {
+                                return Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 8,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFEAE6FA),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Text(
+                                    item,
+                                    style: const TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
                             ),
-                            backgroundColor: const Color(0xFFEAE6FA),
                           ),
+                          const SizedBox(width: 12),
                           Row(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               const Icon(Icons.star,
                                   color: Colors.amber, size: 20),
@@ -214,15 +268,13 @@ class _FeaturedItemsDetailState extends State<FeaturedItemsDetail> {
                           freelancer!.current_status == 'available'
                               ? Container(
                                   padding: const EdgeInsets.all(5),
-                                  decoration: BoxDecoration(
+                                  decoration: const BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: Colors.green,
                                   ),
                                 )
                               : const SizedBox.shrink(),
-                          SizedBox(
-                            width: 5,
-                          ),
+                          const SizedBox(width: 5),
                           Text(
                             freelancer?.current_status?.toCapitalized() ??
                                 'Not Available',

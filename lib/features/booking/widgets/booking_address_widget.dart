@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_restaurant/common/widgets/custom_button_widget.dart';
 import 'package:flutter_restaurant/features/booking/providers/booking_provider.dart';
+import 'package:flutter_restaurant/features/freelancer/domain/models/freelancer_model.dart';
 import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
-import 'package:flutter_restaurant/helper/get_direction_googlemap_widget.dart';
+import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 
@@ -68,21 +69,57 @@ class BookingAddressInfoWidget extends StatelessWidget {
                         iconData: Icons.directions,
                         btnTxt: 'Get Direction',
                         onTap: () async {
-                          double latitude = double.parse(bookingProvider
-                              .bookingDetails!
-                              .deliveryAddress!
-                              .latitude!); // Example: San Francisco latitude
-                          double longitude = double.parse(bookingProvider
-                              .bookingDetails!
-                              .deliveryAddress!
-                              .longitude!); // Example: San Francisco longitude
+                          final latitude = double.tryParse(
+                                bookingProvider.bookingDetails?.deliveryAddress
+                                        ?.latitude ??
+                                    '',
+                              ) ??
+                              0;
+                          final longitude = double.tryParse(
+                                bookingProvider.bookingDetails?.deliveryAddress
+                                        ?.longitude ??
+                                    '',
+                              ) ??
+                              0;
+
+                          if (latitude == 0 && longitude == 0) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Invalid destination location'),
+                                ),
+                              );
+                            }
+                            return;
+                          }
+
                           try {
-                            await openMap(latitude, longitude);
+                            final currentPosition =
+                                await Geolocator.getCurrentPosition(
+                              desiredAccuracy: LocationAccuracy.high,
+                            );
+
+                            final destinationFreelancer = FreelancerModel(
+                              name: bookingProvider.bookingDetails?.userName ??
+                                  'Destination',
+                              category_name: 'Booking Address',
+                              latitude: latitude,
+                              longitude: longitude,
+                              rating: 0,
+                            );
+
+                            RouterHelper.getDirectionRoute(
+                              destinationFreelancer,
+                              currentPosition.latitude,
+                              currentPosition.longitude,
+                            );
                           } catch (e) {
-                            if (e is PlatformException) {
-                              throw 'Failed to open the map. Please make sure Google Maps is installed.';
-                            } else {
-                              throw 'An unexpected error occurred: $e';
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Failed to open direction: $e'),
+                                ),
+                              );
                             }
                           }
                         },

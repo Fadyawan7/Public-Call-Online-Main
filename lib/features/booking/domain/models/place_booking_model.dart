@@ -6,6 +6,7 @@ class PlaceBookingBody {
   String? _time;
   String? _description;
   List<String>? _attachments;
+  String? _price;
 
   PlaceBookingBody({
     int? freelancerId,
@@ -14,6 +15,7 @@ class PlaceBookingBody {
     String? time,
     String? description,
     List<String>? attachments,
+    String? price,
   }) {
     _freelancerId = freelancerId;
     _addressId = addressId;
@@ -21,6 +23,7 @@ class PlaceBookingBody {
     _time = time;
     _description = description;
     _attachments = attachments;
+    _price = price;
   }
 
   String? get description => _description;
@@ -28,6 +31,7 @@ class PlaceBookingBody {
   String? get time => _time;
   int? get freelancerId => _freelancerId;
   int? get addressId => _addressId;
+  String? get price => _price;
 
   List<String>? get attachments => _attachments;
 
@@ -39,6 +43,7 @@ class PlaceBookingBody {
     _date = json['date'];
     _description = json['description'];
     _attachments = json['attachments'].cast<String>();
+    _price = json['price']?.toString();
   }
 
   Map<String, dynamic> toJson() {
@@ -50,6 +55,7 @@ class PlaceBookingBody {
     data['date'] = _date;
     data['description'] = _description;
     data['attachments'] = _attachments;
+    data['price'] = _price;
 
     return data;
   }

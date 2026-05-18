@@ -1,5 +1,5 @@
-import 'package:flutter_restaurant/common/models/language_model.dart';
 import 'package:flutter_restaurant/common/enums/app_mode_enum.dart';
+import 'package:flutter_restaurant/common/models/language_model.dart';
 import 'package:flutter_restaurant/utill/images.dart';
 
 class AppConstants {
@@ -7,6 +7,10 @@ class AppConstants {
   static const String appVersion = '11.2';
   static const AppMode appMode = AppMode.release;
   static const String baseUrl = 'https://publiccallonline.com';
+
+  // Google Maps API Key
+  static const String googleMapsApiKey =
+      'AIzaSyBfylxhx2Q3_PeEF6--cx966SeA8junELg';
   // static const String baseUrl =  'http://192.168.100.73:8000';
   static const String categoryUri = '/api/freelancers/categories';
   static const String frelanceCategoryUri =

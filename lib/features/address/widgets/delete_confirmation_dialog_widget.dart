@@ -1,11 +1,11 @@
-import 'package:flutter_restaurant/features/address/domain/models/address_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_restaurant/localization/language_constrants.dart';
+import 'package:flutter_restaurant/features/address/domain/models/address_model.dart';
 import 'package:flutter_restaurant/features/address/providers/location_provider.dart';
+import 'package:flutter_restaurant/helper/custom_snackbar_helper.dart';
+import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/utill/color_resources.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
-import 'package:flutter_restaurant/helper/custom_snackbar_helper.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -54,7 +54,10 @@ class DeleteConfirmationDialogWidget extends StatelessWidget {
                     .deleteUserAddressByID(addressModel.id, index,
                         (bool isSuccessful, String message) {
                   context.pop();
-                  showCustomSnackBarHelper(message, isError: !isSuccessful);
+                  showCustomSnackBarHelper(message,
+                      status: isSuccessful
+                          ? SnackBarStatus.success
+                          : SnackBarStatus.error);
                   context.pop();
                 });
               },

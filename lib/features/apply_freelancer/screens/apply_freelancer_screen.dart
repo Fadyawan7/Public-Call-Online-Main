@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/widgets/custom_app_bar_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_button_widget.dart';
@@ -118,18 +117,11 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
     super.dispose();
   }
 
-  void _showCustomCategoryInput() {
-    setState(() {
-      _selectedCategoryValue = _newCategoryValue;
-      _showNewCategoryField = true;
-    });
-    freelancerProvider.resetCategoryID();
-  }
-
   void _addCustomCategory() {
     final String categoryName = _newCategoryController?.text.trim() ?? '';
     if (categoryName.isEmpty) {
-      showCustomSnackBarHelper('Please enter category name');
+      showCustomSnackBarHelper('Please enter category name',
+          status: SnackBarStatus.alert);
       return;
     }
 
@@ -379,154 +371,195 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
                                                       builder: (context,
                                                           freelancerProvider,
                                                           child) {
+                                                        // Initialize default selection if none exists
                                                         WidgetsBinding.instance
                                                             .addPostFrameCallback(
                                                                 (_) {
-                                                          if (_selectedCategoryValue == null &&
+                                                          if ((_selectedCategoryValue == null ||
+                                                                  _selectedCategoryValue!
+                                                                      .isEmpty) &&
                                                               freelancerProvider
-                                                                      .selectedCategoryID ==
-                                                                  -1 &&
+                                                                  .selectedCategoryIDs
+                                                                  .isEmpty &&
                                                               categoryProvider
                                                                       .categoryList !=
                                                                   null &&
                                                               categoryProvider
                                                                   .categoryList!
                                                                   .isNotEmpty) {
+                                                            final int firstId =
+                                                                categoryProvider
+                                                                    .categoryList!
+                                                                    .first
+                                                                    .id!;
                                                             freelancerProvider
                                                                 .setCategoryID(
-                                                                    categoryID: categoryProvider
-                                                                        .categoryList!
-                                                                        .first
-                                                                        .id!);
+                                                                    categoryID:
+                                                                        firstId);
                                                             if (mounted) {
                                                               setState(() {
                                                                 _selectedCategoryValue =
-                                                                    categoryProvider
-                                                                        .categoryList!
-                                                                        .first
-                                                                        .id!
+                                                                    firstId
                                                                         .toString();
                                                               });
                                                             }
                                                           }
                                                         });
 
-                                                        return Row(
+                                                        // Build dropdown-like selector (keeps previous dropdown look)
+                                                        String selectedText;
+                                                        if (_customCategoryName !=
+                                                                null &&
+                                                            _customCategoryName!
+                                                                .isNotEmpty) {
+                                                          selectedText =
+                                                              _customCategoryName!;
+                                                        } else if (freelancerProvider
+                                                            .selectedCategoryIDs
+                                                            .isEmpty) {
+                                                          selectedText =
+                                                              'Select category';
+                                                        } else {
+                                                          final names = categoryProvider
+                                                              .categoryList!
+                                                              .where((c) =>
+                                                                  freelancerProvider
+                                                                      .selectedCategoryIDs
+                                                                      .contains(
+                                                                          c.id))
+                                                              .map(
+                                                                  (c) => c.name)
+                                                              .whereType<
+                                                                  String>()
+                                                              .toList();
+                                                          selectedText = names
+                                                                  .isNotEmpty
+                                                              ? names.join(', ')
+                                                              : 'Select category';
+                                                        }
+
+                                                        return Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
                                                           children: [
-                                                            Expanded(
-                                                              child:
-                                                                  DropdownButtonHideUnderline(
-                                                                child:
-                                                                    DropdownButton2<
-                                                                        String>(
-                                                                  isExpanded:
-                                                                      true,
-                                                                  items: [
-                                                                    ...categoryProvider
-                                                                        .categoryList!
-                                                                        .map(
-                                                                      (cat) =>
-                                                                          DropdownMenuItem<
-                                                                              String>(
-                                                                        value: cat
-                                                                            .id
-                                                                            .toString(),
-                                                                        child:
-                                                                            Text(
-                                                                          cat.name ??
-                                                                              "",
-                                                                        ),
+                                                            GestureDetector(
+                                                              onTap: () =>
+                                                                  _openCategorySelector(
+                                                                      categoryProvider,
+                                                                      freelancerProvider),
+                                                              child: Container(
+                                                                padding: const EdgeInsets
+                                                                    .symmetric(
+                                                                    horizontal:
+                                                                        12,
+                                                                    vertical:
+                                                                        14),
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                          Dimensions
+                                                                              .radiusDefault),
+                                                                  border: Border.all(
+                                                                      color: Theme.of(
+                                                                              context)
+                                                                          .hintColor),
+                                                                ),
+                                                                child: Row(
+                                                                  children: [
+                                                                    Expanded(
+                                                                      child:
+                                                                          Text(
+                                                                        selectedText,
+                                                                        maxLines:
+                                                                            1,
+                                                                        overflow:
+                                                                            TextOverflow.ellipsis,
+                                                                        style:
+                                                                            rubikRegular,
                                                                       ),
                                                                     ),
-                                                                    const DropdownMenuItem<
-                                                                        String>(
-                                                                      value:
-                                                                          _newCategoryValue,
-                                                                      child: Text(
-                                                                          'Add Category'),
-                                                                    ),
+                                                                    const SizedBox(
+                                                                        width:
+                                                                            8),
+                                                                    Icon(
+                                                                        Icons
+                                                                            .arrow_drop_down,
+                                                                        color: Theme.of(context)
+                                                                            .hintColor),
                                                                   ],
-                                                                  value:
-                                                                      _selectedCategoryValue,
-                                                                  selectedItemBuilder:
-                                                                      (context) {
-                                                                    return [
-                                                                      ...categoryProvider
-                                                                          .categoryList!
-                                                                          .map(
-                                                                        (cat) =>
-                                                                            Align(
-                                                                          alignment:
-                                                                              Alignment.centerLeft,
-                                                                          child:
-                                                                              Text(
-                                                                            cat.name ??
-                                                                                '',
-                                                                            overflow:
-                                                                                TextOverflow.ellipsis,
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                      Align(
-                                                                        alignment:
-                                                                            Alignment.centerLeft,
-                                                                        child:
-                                                                            Text(
-                                                                          _customCategoryName ??
-                                                                              'Add Category',
-                                                                          overflow:
-                                                                              TextOverflow.ellipsis,
-                                                                        ),
-                                                                      ),
-                                                                    ];
-                                                                  },
-                                                                  onChanged:
-                                                                      (value) {
-                                                                    if (value ==
-                                                                        null) {
-                                                                      return;
-                                                                    }
-
-                                                                    if (value ==
-                                                                        _newCategoryValue) {
-                                                                      _showCustomCategoryInput();
-                                                                      //     Navigator.of(context).pop();
-
-                                                                      return;
-                                                                    }
-
-                                                                    setState(
-                                                                        () {
-                                                                      _selectedCategoryValue =
-                                                                          value;
-                                                                      _showNewCategoryField =
-                                                                          false;
-                                                                      _customCategoryName =
-                                                                          null;
-                                                                      _newCategoryController
-                                                                          ?.clear();
-                                                                    });
-                                                                    freelancerProvider.setCategoryID(
-                                                                        categoryID:
-                                                                            int.parse(value));
-                                                                  },
-                                                                  buttonStyleData:
-                                                                      ButtonStyleData(
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      border: Border.all(
-                                                                          color:
-                                                                              Theme.of(context).hintColor),
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              Dimensions.radiusDefault),
-                                                                    ),
-                                                                  ),
                                                                 ),
                                                               ),
                                                             ),
+
                                                             const SizedBox(
-                                                                width: 8),
+                                                                height: 12),
+                                                            // Selected categories display
+                                                            Wrap(
+                                                              spacing: 8,
+                                                              runSpacing: 8,
+                                                              children: [
+                                                                // custom category chip if present
+                                                                if (_customCategoryName !=
+                                                                        null &&
+                                                                    _customCategoryName!
+                                                                        .isNotEmpty)
+                                                                  Chip(
+                                                                    label: Text(
+                                                                        _customCategoryName!),
+                                                                    backgroundColor: Theme.of(
+                                                                            context)
+                                                                        .primaryColor
+                                                                        .withOpacity(
+                                                                            0.12),
+                                                                    avatar: const Icon(
+                                                                        Icons
+                                                                            .star,
+                                                                        size:
+                                                                            18),
+                                                                    onDeleted:
+                                                                        () {
+                                                                      setState(
+                                                                          () {
+                                                                        _customCategoryName =
+                                                                            null;
+                                                                        _selectedCategoryValue =
+                                                                            null;
+                                                                      });
+                                                                    },
+                                                                  ),
+                                                                // selected standard categories
+                                                                ...freelancerProvider
+                                                                    .selectedCategoryIDs
+                                                                    .map((id) {
+                                                                  final matches = categoryProvider
+                                                                      .categoryList!
+                                                                      .where((c) =>
+                                                                          c.id ==
+                                                                          id)
+                                                                      .toList();
+                                                                  if (matches
+                                                                      .isEmpty)
+                                                                    return const SizedBox
+                                                                        .shrink();
+                                                                  final cat =
+                                                                      matches
+                                                                          .first;
+                                                                  return Chip(
+                                                                    label: Text(
+                                                                        cat.name ??
+                                                                            ''),
+                                                                    onDeleted:
+                                                                        () {
+                                                                      freelancerProvider.setCategoryID(
+                                                                          categoryID:
+                                                                              id);
+                                                                    },
+                                                                  );
+                                                                }).toList(),
+                                                              ],
+                                                            ),
                                                           ],
                                                         );
                                                       },
@@ -835,42 +868,34 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
       return;
     }
 
-    debugPrint('===== START SUBMIT APPLICATION =====');
-
     final List<XFile> selectedPortfolioImages =
         _portfolioImages.whereType<XFile>().toList();
 
-    debugPrint('Selected portfolio images: ${selectedPortfolioImages.length}');
-    debugPrint(
-        'Total portfolio images list length: ${_portfolioImages.length}');
-
     if (selectedPortfolioImages.length != _portfolioImages.length) {
-      debugPrint('Portfolio images validation failed');
-      showCustomSnackBarHelper('Please upload 3 portfolio images');
+      showCustomSnackBarHelper('Please upload 3 portfolio images',
+          status: SnackBarStatus.alert);
       return;
     }
 
     final bool isCustomCategory = _selectedCategoryValue == _newCategoryValue;
 
-    debugPrint('Is custom category: $isCustomCategory');
-    debugPrint('Selected category value: $_selectedCategoryValue');
-    debugPrint('New category value: $_newCategoryValue');
-
     if (isCustomCategory &&
         (_customCategoryName == null || _customCategoryName!.trim().isEmpty)) {
-      debugPrint('Custom category validation failed');
-      showCustomSnackBarHelper('Please add category first');
+      showCustomSnackBarHelper('Please add category first',
+          status: SnackBarStatus.alert);
       return;
     }
 
-    debugPrint('Running field validations');
+    // Ensure at least one category is selected (unless using custom category)
+    if (!isCustomCategory && freelancerProvider.selectedCategoryIDs.isEmpty) {
+      showCustomSnackBarHelper('Please select at least one category',
+          status: SnackBarStatus.alert);
+      return;
+    }
 
     if (!_validateFields(context)) {
-      debugPrint('Field validation failed');
       return;
     }
-
-    debugPrint('All validations passed');
 
     final ApplyFreelancerModel model = ApplyFreelancerModel(
       about: _aboutMeController?.text.trim() ?? '',
@@ -879,26 +904,27 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
       per_hour: _perhourController?.text.trim() ?? '',
       cover_picture: _pickedCoverXFile?.path ?? '',
       whatsapp_number: _phoneNumberController?.text.trim() ?? '',
-      category_id:
-          isCustomCategory ? null : freelancerProvider.selectedCategoryID,
+      category_id: isCustomCategory
+          ? null
+          : (freelancerProvider.selectedCategoryIDs.isNotEmpty
+              ? freelancerProvider.selectedCategoryIDs
+              : null),
       other_category: isCustomCategory ? _customCategoryName : null,
     );
 
-    debugPrint('===== MODEL DATA =====');
-    debugPrint('About: ${model.about}');
-    debugPrint('Price Per Day: ${model.price}');
-    debugPrint('Per Side: ${model.per_side}');
-    debugPrint('Per Hour: ${model.per_hour}');
-    debugPrint('Cover Picture: ${model.cover_picture}');
-    debugPrint('Whatsapp Number: ${model.whatsapp_number}');
-    debugPrint('Category ID: ${model.category_id}');
-    debugPrint('Other Category: ${model.other_category}');
+    // debugPrint('===== MODEL DATA =====');
+    // debugPrint('About: ${model.about}');
+    // debugPrint('Price Per Day: ${model.price}');
+    // debugPrint('Per Side: ${model.per_side}');
+    // debugPrint('Per Hour: ${model.per_hour}');
+    // debugPrint('Cover Picture: ${model.cover_picture}');
+    // debugPrint('Whatsapp Number: ${model.whatsapp_number}');
+    // debugPrint('Category ID: ${model.category_id}');
+    // debugPrint('Other Category: ${model.other_category}');
 
     setState(() {
       _isSubmittingApplication = true;
     });
-
-    debugPrint('Application submitting state set to true');
 
     try {
       final FreelancerPortfolioProvider portfolioProvider =
@@ -910,61 +936,41 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
       final String token =
           Provider.of<AuthProvider>(context, listen: false).getUserToken();
 
-      debugPrint('User token fetched');
-      debugPrint('Uploading portfolio images');
-
-      int imageIndex = 0;
-
       for (final XFile image in selectedPortfolioImages) {
-        imageIndex++;
-
-        debugPrint('Uploading image #$imageIndex');
-        debugPrint('Image path: ${image.path}');
-
         final responseModel = await portfolioProvider.freelancerPortfolioAdd(
           File(image.path),
           token,
         );
 
-        debugPrint(
-            'Upload response for image #$imageIndex: ${responseModel.isSuccess}');
         debugPrint('Response message: ${responseModel.message}');
 
         if (!responseModel.isSuccess) {
-          debugPrint('Portfolio upload failed');
-
           if (mounted) {
             setState(() {
               _isSubmittingApplication = false;
             });
           }
 
-          showCustomSnackBarHelper(responseModel.message);
+          showCustomSnackBarHelper(responseModel.message,
+              status: SnackBarStatus.error);
           return;
         }
       }
 
-      debugPrint('All portfolio images uploaded successfully');
-      debugPrint('Calling applyFreelancer API');
-
       await freelancerProvider.applyFreelancer(model, _callback);
-
-      debugPrint('applyFreelancer API completed');
     } catch (e, stackTrace) {
       debugPrint('===== ERROR IN SUBMIT APPLICATION =====');
       debugPrint('Error: $e');
       debugPrint('StackTrace: $stackTrace');
 
-      showCustomSnackBarHelper('Something went wrong');
+      showCustomSnackBarHelper('Something went wrong',
+          status: SnackBarStatus.error);
     } finally {
       if (mounted) {
         setState(() {
           _isSubmittingApplication = false;
         });
       }
-
-      debugPrint('Application submitting state reset');
-      debugPrint('===== END SUBMIT APPLICATION =====');
     }
   }
 
@@ -1049,23 +1055,131 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
     }
   }
 
+  void _openCategorySelector(CategoryProvider categoryProvider,
+      FreelancerProvider freelancerProvider) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (ctx) {
+        String newCategoryText = '';
+        return StatefulBuilder(builder: (context, setModalState) {
+          final categories = categoryProvider.categoryList ?? [];
+          return Padding(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Select Categories',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w600)),
+                      IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: const Icon(Icons.close),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: categories.map((cat) {
+                      final bool isSelected = freelancerProvider
+                          .selectedCategoryIDs
+                          .contains(cat.id);
+                      return ChoiceChip(
+                        selectedColor:
+                            Theme.of(context).primaryColor.withOpacity(0.12),
+                        label: Text(cat.name ?? ''),
+                        selected: isSelected,
+                        onSelected: (sel) {
+                          freelancerProvider.setCategoryID(categoryID: cat.id);
+                          setModalState(() {});
+                          setState(() {});
+                        },
+                      );
+                    }).toList(),
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          decoration: const InputDecoration(
+                              hintText: 'Add new category'),
+                          onChanged: (v) => newCategoryText = v,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      ElevatedButton(
+                        onPressed: () {
+                          final trimmed = newCategoryText.trim();
+                          if (trimmed.isEmpty) return;
+                          setState(() {
+                            _customCategoryName = trimmed;
+                            _selectedCategoryValue = _newCategoryValue;
+                            _showNewCategoryField = false;
+                          });
+                          freelancerProvider.resetCategoryID();
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Add'),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Cancel'),
+                      ),
+                      const SizedBox(width: 8),
+                      ElevatedButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Done'),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          );
+        });
+      },
+    );
+  }
+
   bool _validateFields(BuildContext context) {
     // Keep all fields optional. Only validate numeric inputs if user entered values.
     final sideVisitText = _perdayChargesController?.text.trim() ?? '';
     if (sideVisitText.isNotEmpty && double.tryParse(sideVisitText) == null) {
-      showCustomSnackBarHelper('Please enter a valid Per Day charge');
+      showCustomSnackBarHelper('Please enter a valid Per Day charge',
+          status: SnackBarStatus.alert);
       return false;
     }
 
     final perKmText = _perkmChargesController?.text.trim() ?? '';
     if (perKmText.isNotEmpty && double.tryParse(perKmText) == null) {
-      showCustomSnackBarHelper('Please enter a valid Per Km charge');
+      showCustomSnackBarHelper('Please enter a valid Per Km charge',
+          status: SnackBarStatus.alert);
       return false;
     }
 
     final perHourText = _perhourController?.text.trim() ?? '';
     if (perHourText.isNotEmpty && double.tryParse(perHourText) == null) {
-      showCustomSnackBarHelper('Please enter a valid Per Hour charge');
+      showCustomSnackBarHelper('Please enter a valid Per Hour charge',
+          status: SnackBarStatus.alert);
       return false;
     }
 

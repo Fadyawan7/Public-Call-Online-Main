@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/widgets/custom_alert_dialog_widget.dart';
+import 'package:flutter_restaurant/common/widgets/gradient_card_widget.dart';
 import 'package:flutter_restaurant/features/address/domain/models/address_model.dart';
 import 'package:flutter_restaurant/features/address/providers/location_provider.dart';
 import 'package:flutter_restaurant/helper/custom_snackbar_helper.dart';
@@ -8,7 +9,6 @@ import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
-import 'package:flutter_restaurant/common/widgets/gradient_card_widget.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -59,7 +59,9 @@ class AddressCardWebWidget extends StatelessWidget {
                                   (bool isSuccessful, String message) {
                             context.pop();
                             showCustomSnackBarHelper(message,
-                                isError: !isSuccessful);
+                                status: isSuccessful
+                                    ? SnackBarStatus.success
+                                    : SnackBarStatus.error);
                           });
                         },
                       );

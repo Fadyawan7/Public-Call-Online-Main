@@ -159,7 +159,7 @@ class _FreelancerPortfolioScreenState extends State<FreelancerPortfolioScreen>
 
   void _callback(String message, bool isSuccess) async {
     if (isSuccess) {
-      showCustomSnackBarHelper(message, isError: false);
+      showCustomSnackBarHelper(message, status: SnackBarStatus.success);
       Provider.of<FreelancerPortfolioProvider>(context, listen: false)
           .getFreelancerPortfolioList();
     } else {

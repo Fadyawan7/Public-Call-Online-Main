@@ -3,15 +3,14 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/models/api_response_model.dart';
-
 import 'package:flutter_restaurant/common/models/response_model.dart';
 import 'package:flutter_restaurant/features/apply_freelancer/domain/models/apply_freelancer_model.dart';
 import 'package:flutter_restaurant/features/freelancer/domain/models/freelancer_model.dart';
 import 'package:flutter_restaurant/features/freelancer/domain/reposotories/freelancer_repo.dart';
 import 'package:flutter_restaurant/helper/api_checker_helper.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:http/http.dart' as http;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FreelancerProvider extends ChangeNotifier {
@@ -23,9 +22,12 @@ class FreelancerProvider extends ChangeNotifier {
   List<FreelancerModel>? _freelancerList;
   ResponseModel? _responseModel;
   bool _isLoading = false;
-  int _selectedCategoryID = -1;
+  List<int> _selectedCategoryIDs = [];
   DateTime? now = DateTime.now();
-  int? get selectedCategoryID => _selectedCategoryID;
+  // For backward compatibility, `selectedCategoryID` returns the first selected id or -1.
+  int? get selectedCategoryID =>
+      _selectedCategoryIDs.isNotEmpty ? _selectedCategoryIDs.first : -1;
+  List<int> get selectedCategoryIDs => _selectedCategoryIDs;
   FreelancerModel? _freelancerDetails;
   List<FreelancerModel> _predictionList = [];
 
@@ -76,17 +78,28 @@ class FreelancerProvider extends ChangeNotifier {
   void setCategoryID(
       {int? categoryID, bool isUpdate = true, bool isReload = false}) {
     if (isReload) {
-      _selectedCategoryID = -1;
-    } else {
-      _selectedCategoryID = categoryID!;
+      _selectedCategoryIDs.clear();
+    } else if (categoryID != null) {
+      // toggle selection: add if not present, remove if present
+      if (_selectedCategoryIDs.contains(categoryID)) {
+        _selectedCategoryIDs.remove(categoryID);
+      } else {
+        _selectedCategoryIDs.add(categoryID);
+      }
     }
+
     if (isUpdate) {
       notifyListeners();
     }
   }
 
+  void setCategoryIDs(List<int> ids, {bool isUpdate = true}) {
+    _selectedCategoryIDs = List<int>.from(ids);
+    if (isUpdate) notifyListeners();
+  }
+
   void resetCategoryID() {
-    _selectedCategoryID = -1;
+    _selectedCategoryIDs.clear();
     notifyListeners();
   }
 
@@ -102,13 +115,38 @@ class FreelancerProvider extends ChangeNotifier {
     _predictionList = [];
 
     if (text.isNotEmpty) {
+      final searchLower = text.trim().toLowerCase();
+
+      // First, try to search locally in the current list
+      if (_freelancerList != null && _freelancerList!.isNotEmpty) {
+        _predictionList = _freelancerList!
+            .where((freelancer) =>
+                (freelancer.name?.toLowerCase().contains(searchLower) ??
+                    false) ||
+                (freelancer.category_name
+                        ?.toLowerCase()
+                        .contains(searchLower) ??
+                    false))
+            .toList();
+
+        // If we found results locally, return them
+        if (_predictionList.isNotEmpty) {
+          return _predictionList;
+        }
+      }
+
+      // If no local results, try API search
       ApiResponseModel apiResponse =
           await freelancerRepo!.searchFreelancer(text);
 
       if (apiResponse.response != null &&
           apiResponse.response!.statusCode == 200) {
-        final List<dynamic> freelancers =
-            apiResponse.response!.data['data'] ?? [];
+        // Handle both response structures:
+        // 1. If response.data is a List directly
+        // 2. If response.data is a Map with 'data' key containing the list
+        final List<dynamic> freelancers = apiResponse.response!.data is List
+            ? apiResponse.response!.data
+            : (apiResponse.response!.data['data'] ?? []);
 
         _predictionList = freelancers
             .map((freelancerJson) => FreelancerModel.fromJson(freelancerJson))

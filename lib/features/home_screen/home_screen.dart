@@ -98,12 +98,17 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: _FixitTheme.textSub.withOpacity(0.08), // 🔥 HERE
 
       body: SafeArea(
+        bottom: false,
         child: Column(
           children: [
             _buildAppBarFixed(_isLoggedIn, widget.formattedAddress, context),
             Expanded(
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context)
+                        .padding
+                        .bottom), // Extra padding for floating button
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Column(
@@ -112,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(height: 10),
                       _topBannerWithNotification(
                           Provider.of<HomeProvider>(context)),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 15),
                       _buildSectionHeader("Top categories", () {
                         final categories = Provider.of<CategoryProvider>(
                                     context,
@@ -130,7 +135,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       }),
                       const SizedBox(height: 10),
                       _buildCategoryGrid(),
-                      const SizedBox(height: 16),
                       _buildSectionHeader("Featured", () {
                         Navigator.push(
                           context,
@@ -144,7 +148,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         Provider.of<HomeProvider>(context),
                         context,
                       ),
-                      const SizedBox(height: 14),
                     ],
                   ),
                 ),
@@ -349,51 +352,72 @@ Widget _bannerImage(String imageUrl) {
 // }
 
 Widget _buildCategoryGrid() {
-  return Consumer<CategoryProvider>(builder: (context, provider, _) {
-    final cats = provider.categoryList ?? [];
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: cats.length > 8 ? 8 : cats.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 4,
-        mainAxisSpacing: 3,
-        crossAxisSpacing: 12,
-        childAspectRatio: 0.8,
-      ),
-      itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (_) => ReleventCategories(
-                      categoryId: cats[index].id ?? 0,
-                      title: cats[index].name))),
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15),
-                    border: Border.all(color: Colors.grey.shade200)),
-                child: Image.network(cats[index].iconUrl ?? '',
-                    height: 30,
-                    width: 30,
-                    errorBuilder: (_, __, ___) => const Icon(Icons.category)),
-              ),
-              const SizedBox(height: 6),
-              Text(cats[index].name ?? '',
-                  style: const TextStyle(
-                      fontSize: 12, fontWeight: FontWeight.w500),
-                  textAlign: TextAlign.center,
-                  maxLines: 1),
-            ],
+  return Consumer<CategoryProvider>(
+    builder: (context, provider, _) {
+      final cats = provider.categoryList ?? [];
+
+      return SizedBox(
+        height: 200,
+        child: GridView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: cats.length,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 1.3,
           ),
-        );
-      },
-    );
-  });
+          itemBuilder: (context, index) {
+            return GestureDetector(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => ReleventCategories(
+                    categoryId: cats[index].id ?? 0,
+                    title: cats[index].name,
+                  ),
+                ),
+              ),
+              child: SizedBox(
+                width: 80,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: Colors.grey.shade200,
+                        ),
+                      ),
+                      child: Image.network(
+                        cats[index].iconUrl ?? '',
+                        height: 28,
+                        width: 28,
+                        errorBuilder: (_, __, ___) =>
+                            const Icon(Icons.category),
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      cats[index].name ?? '',
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      );
+    },
+  );
 }
 
 Widget _featuredSection(HomeProvider provider, BuildContext context) {

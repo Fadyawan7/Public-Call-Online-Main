@@ -270,6 +270,8 @@ class _MessageBodyWidgetState extends State<MessageBodyWidget> {
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(300),
                       ],
+                      onChanged: (value) =>
+                          chatProvider.updateSendButtonActivity(message: value),
                       controller: widget._inputMessageController,
                       textCapitalization: TextCapitalization.sentences,
                       style: rubikRegular.copyWith(
@@ -327,7 +329,7 @@ class _MessageBodyWidgetState extends State<MessageBodyWidget> {
                             widget.authProvider.getUserToken(),
                             widget.chatId);
                         widget._inputMessageController.clear();
-                        chatProvider.toggleSendButtonActivity();
+                        chatProvider.updateSendButtonActivity();
                       } else {
                         showCustomSnackBarHelper(
                             getTranslated('write_somethings', context));

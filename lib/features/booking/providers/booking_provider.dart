@@ -44,6 +44,7 @@ class BookingProvider extends ChangeNotifier {
 
   String? _date = '';
   String? _timeSlot = '';
+  String? _price = '';
 
   final List<XFile> _images = [];
   List<String> _listImagePath = [];
@@ -69,6 +70,7 @@ class BookingProvider extends ChangeNotifier {
   int? get selectAddressId => _selectAddressId;
   String? get date => _date;
   String? get timeSlot => _timeSlot;
+  String? get price => _price;
   int get totalPickedImage => _listImagePath.length;
 
   // ======== METHODS ========
@@ -131,6 +133,11 @@ class BookingProvider extends ChangeNotifier {
     _selectAddressIndex = index;
     _selectAddressId = addressId;
     Future.microtask(() => notifyListeners());
+  }
+
+  void updatePrice(String? price) {
+    _price = price;
+    notifyListeners();
   }
 
   void resetSlots() {
@@ -379,6 +386,47 @@ class BookingProvider extends ChangeNotifier {
       callback(ApiCheckerHelper.getError(apiResponse).errors?.first.message,
           false, '-1');
     }
+
+    notifyListeners();
+  }
+
+  void updateBookingPrice(
+    String bookingID,
+    String? price,
+    Function callback,
+  ) async {
+    _isLoading = true;
+    notifyListeners();
+
+    ApiResponseModel apiResponse = await bookingRepo!.updateBooking(
+      bookingID,
+      price: price,
+    );
+
+    final statusCode = apiResponse.response?.statusCode;
+
+    if (statusCode == 200 || statusCode == 201) {
+      await getBookingDetails(bookingID);
+
+      // force latest updated price locally
+      bookingDetails?.price = price;
+
+      _price = price;
+
+      callback(
+        'Booking updated successfully',
+        true,
+        bookingID,
+      );
+    } else {
+      callback(
+        'Failed to update booking',
+        false,
+        '-1',
+      );
+    }
+
+    _isLoading = false;
 
     notifyListeners();
   }

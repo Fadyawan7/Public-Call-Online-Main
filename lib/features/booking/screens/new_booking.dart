@@ -13,7 +13,9 @@ import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/features/booking/domain/models/place_booking_model.dart';
 import 'package:flutter_restaurant/features/booking/providers/booking_provider.dart';
 import 'package:flutter_restaurant/features/booking/widgets/booking_date_slot_widget.dart';
+import 'package:flutter_restaurant/features/booking/widgets/booking_price_tabs_widget.dart';
 import 'package:flutter_restaurant/features/booking/widgets/booking_time_slot_widget.dart';
+import 'package:flutter_restaurant/features/freelancer/providers/freelancer_provider.dart';
 import 'package:flutter_restaurant/helper/custom_snackbar_helper.dart';
 import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/localization/app_localization.dart';
@@ -22,6 +24,7 @@ import 'package:flutter_restaurant/utill/color_resources.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
@@ -40,6 +43,7 @@ class _BookingDateSlotScreenState extends State<BookingDateSlotScreen>
   final now = DateTime.now();
   FocusNode? _descriptionFocus;
   TextEditingController? _descriptionController;
+  TextEditingController? _priceController;
 
   final GlobalKey<FormState> placeBookingFormKey = GlobalKey<FormState>();
 
@@ -47,6 +51,7 @@ class _BookingDateSlotScreenState extends State<BookingDateSlotScreen>
   void initState() {
     super.initState();
 
+    _priceController = TextEditingController();
     Provider.of<BookingProvider>(context, listen: false).checkAvailableDates();
     Provider.of<LocationProvider>(context, listen: false).initAddressList();
 
@@ -61,9 +66,34 @@ class _BookingDateSlotScreenState extends State<BookingDateSlotScreen>
     _descriptionController = TextEditingController();
   }
 
+  double _calculateDistanceKm(
+    AddressModel? address,
+    double? freelancerLatitude,
+    double? freelancerLongitude,
+  ) {
+    final latitude = double.tryParse(address?.latitude ?? '');
+    final longitude = double.tryParse(address?.longitude ?? '');
+
+    if (latitude == null ||
+        longitude == null ||
+        freelancerLatitude == null ||
+        freelancerLongitude == null) {
+      return 0;
+    }
+
+    return Geolocator.distanceBetween(
+          latitude,
+          longitude,
+          freelancerLatitude,
+          freelancerLongitude,
+        ) /
+        1000;
+  }
+
   @override
   void dispose() {
-    _descriptionController?.dispose(); // Dispose to avoid memory leaks
+    _descriptionController?.dispose();
+    _priceController?.dispose();
     super.dispose();
   }
 
@@ -310,10 +340,7 @@ class _BookingDateSlotScreenState extends State<BookingDateSlotScreen>
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            getTranslated(
-                                              'no_saved_address_found',
-                                              context,
-                                            )!,
+                                            'No saved address found',
                                             style: rubikSemiBold.copyWith(
                                                 color: Theme.of(context)
                                                     .textTheme
@@ -343,7 +370,51 @@ class _BookingDateSlotScreenState extends State<BookingDateSlotScreen>
                     },
                   ),
 
+                  // Pricing Tabs
+                  const SizedBox(height: Dimensions.paddingSizeLarge),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: Dimensions.paddingSizeDefault),
+                    child: Consumer3<BookingProvider, FreelancerProvider,
+                        LocationProvider>(
+                      builder: (context, bookingProvider, freelancerProvider,
+                          locationProvider, child) {
+                        if (freelancerProvider.freelancerDetails == null) {
+                          freelancerProvider
+                              .getFreelancerDetails(widget.freelancerId ?? '');
+                        }
+
+                        final freelancer = freelancerProvider.freelancerDetails;
+                        final selectedAddress =
+                            locationProvider.addressList != null &&
+                                    bookingProvider.selectAddressIndex >= 0 &&
+                                    bookingProvider.selectAddressIndex <
+                                        locationProvider.addressList!.length
+                                ? locationProvider.addressList![
+                                    bookingProvider.selectAddressIndex]
+                                : null;
+                        final distanceKm = _calculateDistanceKm(
+                          selectedAddress,
+                          freelancer?.latitude,
+                          freelancer?.longitude,
+                        );
+
+                        return BookingPriceTabsWidget(
+                          pricePerDay: freelancer?.price ?? '0',
+                          pricePerHour: freelancer?.per_hour ?? '0',
+                          pricePerKm: freelancer?.per_side ?? '0',
+                          distanceKm: distanceKm,
+                          priceController: _priceController!,
+                          onPriceSelected: (price) {
+                            bookingProvider.updatePrice(price);
+                          },
+                        );
+                      },
+                    ),
+                  ),
+
                   //Describe Issue
+                  const SizedBox(height: Dimensions.paddingSizeLarge),
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: Dimensions.paddingSizeDefault),
@@ -602,6 +673,7 @@ class _BookingDateSlotScreenState extends State<BookingDateSlotScreen>
                             onTap: () async {
                               String? description =
                                   _descriptionController!.text.trim();
+                              String? price = _priceController!.text.trim();
                               if (placeBookingFormKey.currentState != null &&
                                   placeBookingFormKey.currentState!
                                       .validate()) {
@@ -618,6 +690,10 @@ class _BookingDateSlotScreenState extends State<BookingDateSlotScreen>
                                 } else if (description.isEmpty) {
                                   showCustomSnackBarHelper(
                                       getTranslated('explain_issue', context));
+                                } else if (price.isEmpty) {
+                                  showCustomSnackBarHelper(
+                                      getTranslated('select_price', context) ??
+                                          'Please select or enter a price');
                                 } else {
                                   String? date = bookingProvider.date!;
                                   String? time = bookingProvider.timeSlot!;
@@ -630,7 +706,8 @@ class _BookingDateSlotScreenState extends State<BookingDateSlotScreen>
                                           time: time,
                                           description: description,
                                           addressId:
-                                              bookingProvider.selectAddressId);
+                                              bookingProvider.selectAddressId,
+                                          price: price);
                                   print(
                                       "======BOOKINGDATA====${placeBookingBody.toJson()}");
 

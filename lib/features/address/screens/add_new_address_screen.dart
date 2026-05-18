@@ -1,6 +1,7 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/providers/theme_provider.dart';
+import 'package:flutter_restaurant/common/widgets/code_picker_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_app_bar_widget.dart';
 import 'package:flutter_restaurant/features/address/domain/models/address_model.dart';
 import 'package:flutter_restaurant/features/address/domain/models/input_model.dart';
@@ -9,7 +10,6 @@ import 'package:flutter_restaurant/features/address/widgets/app_address_widget.d
 import 'package:flutter_restaurant/features/address/widgets/person_info_widget.dart';
 import 'package:flutter_restaurant/features/address/widgets/save_button_widget.dart';
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
-import 'package:flutter_restaurant/common/widgets/code_picker_widget.dart';
 import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
 import 'package:flutter_restaurant/helper/custom_snackbar_helper.dart';
 import 'package:flutter_restaurant/helper/responsive_helper.dart';
@@ -376,7 +376,10 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
               Get.context!.pop();
             }
           }
-          showCustomSnackBarHelper(value.message, isError: !value.isSuccess);
+          showCustomSnackBarHelper(value.message,
+              status: value.isSuccess
+                  ? SnackBarStatus.success
+                  : SnackBarStatus.error);
         });
       } else {
         locationProvider.addAddress(addressModel).then((value) {
@@ -385,7 +388,8 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
               Get.context!.pop();
             }
             if (!widget.fromCheckout || !Get.context!.canPop()) {
-              showCustomSnackBarHelper(value.message, isError: false);
+              showCustomSnackBarHelper(value.message,
+                  status: SnackBarStatus.success);
             }
 
             // CheckOutHelper.selectDeliveryAddressAuto(orderType: checkoutProvider.orderType, isLoggedIn: true, lastAddress: null);

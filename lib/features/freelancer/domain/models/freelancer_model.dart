@@ -1,3 +1,5 @@
+import 'package:flutter_restaurant/features/category/domain/category_model.dart';
+
 class FreelancerModel {
   int? id;
   String? name;
@@ -18,6 +20,7 @@ class FreelancerModel {
   String? city_id;
   String? member_since;
   String? category;
+  List<CategoryModel>? categories;
   double? latitude;
   double? longitude;
   String? current_status;
@@ -60,6 +63,7 @@ class FreelancerModel {
     this.city_id,
     this.member_since,
     this.category,
+    this.categories,
     this.category_name,
     this.rating,
     this.latitude,
@@ -102,6 +106,10 @@ class FreelancerModel {
         city_id: json['city_id']?.toString(),
         member_since: json['member_since']?.toString(),
         category: json['category']?.toString(),
+        categories: json['categories'] != null
+            ? List<CategoryModel>.from(
+                json['categories'].map((x) => CategoryModel.fromJson(x)))
+            : null,
         category_name: json['category_name']?.toString(),
         latitude: json['latitude'] is double
             ? json['latitude']
@@ -164,6 +172,7 @@ class FreelancerModel {
         'city_id': city_id,
         'member_since': member_since,
         'category': category,
+        'categories': categories?.map((x) => x.toJson()).toList(),
         'latitude': latitude,
         'longitude': longitude,
         'current_status': current_status,

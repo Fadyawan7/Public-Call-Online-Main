@@ -237,14 +237,14 @@ class _SplashScreenState extends State<SplashScreen>
 
       if (isFirst && !isConnected) {
         showCustomSnackBarHelper(
-            getTranslated('no_internet_connection', currentContext),
-            isError: true);
+          getTranslated('no_internet_connection', currentContext),
+          status: SnackBarStatus.error);
       } else if (!isFirst && mounted) {
         // Check if widget is still mounted
         showCustomSnackBarHelper(
-            getTranslated(isConnected ? 'connected' : 'no_internet_connection',
-                currentContext),
-            isError: !isConnected);
+          getTranslated(isConnected ? 'connected' : 'no_internet_connection',
+            currentContext),
+          status: isConnected ? SnackBarStatus.success : SnackBarStatus.error);
 
         if (isConnected &&
             mounted &&

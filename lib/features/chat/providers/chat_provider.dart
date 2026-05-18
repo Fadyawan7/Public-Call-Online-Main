@@ -184,6 +184,12 @@ class ChatProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateSendButtonActivity({String? message}) {
+    _isSendButtonActive =
+        (message?.trim().isNotEmpty ?? false) || _imageFile != null;
+    notifyListeners();
+  }
+
   void setIsMe(bool value) {
     _isMe = value;
   }

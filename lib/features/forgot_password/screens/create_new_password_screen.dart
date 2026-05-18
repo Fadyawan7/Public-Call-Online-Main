@@ -136,26 +136,30 @@ class CreateNewPasswordScreen extends StatelessWidget {
                                         if (_passwordController.text.isEmpty) {
                                           showCustomSnackBarHelper(
                                               getTranslated(
-                                                  'enter_password', context));
+                                                  'enter_password', context),
+                                              status: SnackBarStatus.alert);
                                         } else if (_passwordController
                                                 .text.length <
                                             8) {
                                           showCustomSnackBarHelper(
                                               getTranslated(
                                                   'password_should_be',
-                                                  context));
+                                                  context),
+                                              status: SnackBarStatus.alert);
                                         } else if (_confirmPasswordController
                                             .text.isEmpty) {
                                           showCustomSnackBarHelper(
                                               getTranslated(
                                                   'enter_confirm_password',
-                                                  context));
+                                                  context),
+                                              status: SnackBarStatus.alert);
                                         } else if (_passwordController.text !=
                                             _confirmPasswordController.text) {
                                           showCustomSnackBarHelper(
                                               getTranslated(
                                                   'password_did_not_match',
-                                                  context));
+                                                  context),
+                                              status: SnackBarStatus.alert);
                                         } else {
                                           auth
                                               .resetPassword(

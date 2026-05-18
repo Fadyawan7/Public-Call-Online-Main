@@ -42,19 +42,22 @@ class _ThemeSwitchButtonWidgetState extends State<ThemeSwitchButtonWidget> {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Switch.adaptive(
-                    value: isAvailable,
-                    onChanged: (bool value) {
-                      // When switch is enabled (true) = Available, so temporaryDisabled should be false
-                      // When switch is disabled (false) = Busy, so temporaryDisabled should be true
-                      authProvider.disableAccount(temporaryDisabled: !value);
-                    },
-                    activeColor: Colors.white,
-                    activeTrackColor: Colors.green,
-                    inactiveThumbColor: Colors.white,
-                    inactiveTrackColor: Colors.red,
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  ),
+                  Transform.scale(
+                    scale: 0.7, // reduce size (try 0.7 or 0.6 if needed)
+                    child: Switch.adaptive(
+                      value: isAvailable,
+                      onChanged: (bool value) {
+                        // When switch is enabled (true) = Available, so temporaryDisabled should be false
+                        // When switch is disabled (false) = Busy, so temporaryDisabled should be true
+                        authProvider.disableAccount(temporaryDisabled: !value);
+                      },
+                      activeColor: Colors.white,
+                      activeTrackColor: Colors.green,
+                      inactiveThumbColor: Colors.white,
+                      inactiveTrackColor: Colors.red,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                  )
                 ],
               ),
             ],

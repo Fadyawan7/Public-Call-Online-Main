@@ -62,7 +62,7 @@ class AddressCardWidget extends StatelessWidget {
                         .deleteUserAddressByID(addressModel.id, index,
                             (bool isSuccessful, String message) {
                       context.pop();
-                      showCustomSnackBarHelper(message, isError: !isSuccessful);
+                      showCustomSnackBarHelper(message, status: isSuccessful ? SnackBarStatus.success : SnackBarStatus.error);
                       context.pop();
                     });
                   },

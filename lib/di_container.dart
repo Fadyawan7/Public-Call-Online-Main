@@ -1,16 +1,19 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_restaurant/common/providers/data_sync_provider.dart';
+import 'package:flutter_restaurant/common/providers/theme_provider.dart';
 import 'package:flutter_restaurant/common/reposotories/data_sync_repo.dart';
-
+import 'package:flutter_restaurant/features/address/domain/reposotories/location_repo.dart';
+import 'package:flutter_restaurant/features/address/providers/location_provider.dart';
 import 'package:flutter_restaurant/features/auth/domain/reposotories/auth_repo.dart';
+import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
+import 'package:flutter_restaurant/features/booking/domain/reposotories/booking_repo.dart';
+import 'package:flutter_restaurant/features/booking/providers/booking_provider.dart';
 import 'package:flutter_restaurant/features/category/domain/reposotories/category_repo.dart';
 import 'package:flutter_restaurant/features/category/providers/category_provider.dart';
-
-import 'package:flutter_restaurant/features/booking/domain/reposotories/booking_repo.dart';
-
-import 'package:flutter_restaurant/features/address/domain/reposotories/location_repo.dart';
 import 'package:flutter_restaurant/features/chat/domain/reposotories/chat_repo.dart';
 import 'package:flutter_restaurant/features/chat/providers/chat_provider.dart';
+import 'package:flutter_restaurant/features/direction/domain/reposotories/direction_repo.dart';
+import 'package:flutter_restaurant/features/direction/providers/direction_provider.dart';
 import 'package:flutter_restaurant/features/freelancer/domain/reposotories/freelancer_repo.dart';
 import 'package:flutter_restaurant/features/freelancer/providers/freelancer_provider.dart';
 import 'package:flutter_restaurant/features/freelancer_booking/domain/reposotories/freelancer_booking_repo.dart';
@@ -19,28 +22,22 @@ import 'package:flutter_restaurant/features/freelancer_portfolio/domain/reposoto
 import 'package:flutter_restaurant/features/freelancer_portfolio/providers/freelancer_portfolio_provider.dart';
 import 'package:flutter_restaurant/features/home_screen/provider/home_provider.dart';
 import 'package:flutter_restaurant/features/home_screen/repo/home_screen_repo.dart';
-import 'package:flutter_restaurant/features/notification/domain/reposotories/notification_repo.dart';
 import 'package:flutter_restaurant/features/language/domain/reposotories/language_repo.dart';
+import 'package:flutter_restaurant/features/language/providers/language_provider.dart';
+import 'package:flutter_restaurant/features/language/providers/localization_provider.dart';
+import 'package:flutter_restaurant/features/notification/domain/reposotories/notification_repo.dart';
+import 'package:flutter_restaurant/features/notification/providers/notification_provider.dart';
 import 'package:flutter_restaurant/features/onboarding/domain/reposotories/onboarding_repo.dart';
+import 'package:flutter_restaurant/features/onboarding/providers/onboarding_provider.dart';
 import 'package:flutter_restaurant/features/profile/domain/reposotories/profile_repo.dart';
+import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
 import 'package:flutter_restaurant/features/rating_reviews/providers/review_provider.dart';
 import 'package:flutter_restaurant/features/splash/domain/reposotories/splash_repo.dart';
-
-import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
-import 'package:flutter_restaurant/features/booking/providers/booking_provider.dart';
-
-import 'package:flutter_restaurant/features/language/providers/localization_provider.dart';
-import 'package:flutter_restaurant/features/notification/providers/notification_provider.dart';
-import 'package:flutter_restaurant/features/address/providers/location_provider.dart';
-import 'package:flutter_restaurant/features/language/providers/language_provider.dart';
-import 'package:flutter_restaurant/features/onboarding/providers/onboarding_provider.dart';
-import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
 import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
-import 'package:flutter_restaurant/common/providers/theme_provider.dart';
-
 import 'package:flutter_restaurant/utill/app_constants.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'data/datasource/remote/dio/dio_client.dart';
 import 'data/datasource/remote/dio/logging_interceptor.dart';
 
@@ -78,6 +75,7 @@ Future<void> init() async {
       () => FreelancerPortfolioRepo(dioClient: sl(), sharedPreferences: sl()));
   sl.registerLazySingleton(
       () => ChatRepo(dioClient: sl(), sharedPreferences: sl()));
+  sl.registerLazySingleton(() => DirectionRepository(dioClient: sl()));
 
   // Provider
   sl.registerLazySingleton(() => DataSyncProvider());
@@ -113,6 +111,7 @@ Future<void> init() async {
   sl.registerLazySingleton(
       () => ChatProvider(chatRepo: sl(), notificationRepo: sl()));
   sl.registerLazySingleton(() => ReviewProvider(bookingRepo: sl()));
+  sl.registerLazySingleton(() => DirectionProvider(directionRepo: sl()));
 
   // External
   final sharedPreferences = await SharedPreferences.getInstance();

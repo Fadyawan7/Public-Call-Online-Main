@@ -128,12 +128,12 @@ class OptionsWidget extends StatelessWidget {
                                   //         'my_bookings', context)!,
                                   //     onRoute: () => RouterHelper
                                   //         .getFreelancerBookingRoute()),
-                                  PortionWidget(
-                                      icon: Iconsax.gallery,
-                                      title: getTranslated(
-                                          'my_portfolio', context)!,
-                                      onRoute: () => RouterHelper
-                                          .getFreelancerPortfolioListRoute()),
+                                  // PortionWidget(
+                                  //     icon: Iconsax.gallery,
+                                  //     title: getTranslated(
+                                  //         'my_portfolio', context)!,
+                                  //     onRoute: () => RouterHelper
+                                  //         .getFreelancerPortfolioListRoute()),
                                 ],
                                 PortionWidget(
                                     icon: Iconsax.home,

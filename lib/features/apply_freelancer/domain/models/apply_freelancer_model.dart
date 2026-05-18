@@ -1,5 +1,5 @@
 class ApplyFreelancerModel {
-  int? category_id;
+  List<int>? category_id;
   String? about;
   String? whatsapp_number;
   String? per_side;
@@ -21,7 +21,19 @@ class ApplyFreelancerModel {
   });
 
   ApplyFreelancerModel.fromJson(Map<String, dynamic> json) {
-    category_id = json['category_id'];
+    // backend now sends category_id as a list of ints
+    final dynamic cat = json['category_id'];
+    if (cat is List) {
+      try {
+        category_id = cat.map<int>((e) => int.parse(e.toString())).toList();
+      } catch (_) {
+        category_id = [];
+      }
+    } else if (cat is int) {
+      category_id = [cat];
+    } else {
+      category_id = null;
+    }
     about = json['about'];
     whatsapp_number = json['whatsapp_number'];
     price = json['price'];
@@ -37,7 +49,7 @@ class ApplyFreelancerModel {
     data['price'] = price;
     data['per_side'] = per_side;
     data['per_hour'] = per_hour;
-    if (category_id != null) {
+    if (category_id != null && category_id!.isNotEmpty) {
       data['category_id'] = category_id;
     }
     if (other_category != null && other_category!.trim().isNotEmpty) {

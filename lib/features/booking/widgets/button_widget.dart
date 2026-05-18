@@ -22,15 +22,30 @@ class ButtonWidget extends StatelessWidget {
     super.key,
   });
 
+  double? _parseAmount(String? value) {
+    if (value == null) return null;
+    return double.tryParse(value.replaceAll(',', '').trim());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<BookingProvider>(builder: (context, bookingProvider, _) {
       final profileProvider =
           Provider.of<ProfileProvider>(context, listen: false);
       final userType = profileProvider.userInfoModel!.userType;
-      final bookingStatus = bookingProvider.bookingDetails?.status;
+      final currentUserId = profileProvider.userInfoModel?.id;
+      final bookingDetails = bookingProvider.bookingDetails;
+      final bookingStatus = bookingDetails?.status;
+      final bookingUserId = bookingDetails?.userId;
+      final bookingFreelancerId = bookingDetails?.freelancerId;
       final width = MediaQuery.of(context).size.width;
       final isLtr = Provider.of<LocalizationProvider>(context).isLtr;
+
+      // Determine if current user created the booking
+      final isBookingCreator = currentUserId == bookingUserId;
+      // Determine if current user is the freelancer for this booking
+      final isBookingFreelancer =
+          currentUserId == bookingFreelancerId && userType == "freelancer";
 
       Widget buildActionButton({
         required String text,
@@ -115,50 +130,83 @@ class ButtonWidget extends StatelessWidget {
 
       return Column(
         children: [
-          if (userType != "freelancer" && bookingStatus == 'pending') ...[
+          if (isBookingCreator && bookingStatus == 'pending') ...[
             Center(
               child: Container(
                 color: Theme.of(context).cardColor,
                 width: width > 700 ? 700 : width,
                 child: Row(
                   children: [
-                    buildActionButton(
-                      text: 'Cancel Booking',
-                      backgroundColor:
-                          Theme.of(context).hintColor.withOpacity(0.2),
-                      textColor: ColorResources.homePageSectionTitleColor,
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (context) => BookingCancelDialogWidget(
-                            popUpTxt: "are_you_sure_to_cancel",
-                            status: "cancelled",
-                            bookingID:
+                    Builder(builder: (context) {
+                      final currentPrice = _parseAmount(bookingProvider.price);
+                      final originalPrice =
+                          _parseAmount(bookingProvider.bookingDetails?.price);
+                      final bool priceChanged = originalPrice == null
+                          ? (bookingProvider.price != null &&
+                              bookingProvider.price!.trim().isNotEmpty)
+                          : currentPrice != null &&
+                              currentPrice != originalPrice;
+                      if (priceChanged) {
+                        return buildActionButton(
+                          text: 'Update Booking',
+                          backgroundColor: Theme.of(context).primaryColor,
+                          textColor: Theme.of(context).cardColor,
+                          onPressed: () {
+                            bookingProvider.updateBookingPrice(
                                 bookingProvider.bookingDetails!.id.toString(),
-                            callback: (String message, bool isSuccess,
-                                String bookingID) {
+                                bookingProvider.price, (String message,
+                                    bool isSuccess, String bookingID) {
                               if (isSuccess) {
                                 showCustomSnackBarHelper(message,
-                                    isError: false);
-                                RouterHelper.getMainRoute(
-                                    action:
-                                        RouteAction.pushNamedAndRemoveUntil);
+                                    status: SnackBarStatus.success);
+                                // Refresh details already performed in provider
                               } else {
                                 showCustomSnackBarHelper(message,
-                                    isError: true);
+                                    status: SnackBarStatus.error);
                               }
-                            },
-                          ),
+                            });
+                          },
                         );
-                      },
-                    ),
+                      }
+
+                      return buildActionButton(
+                        text: 'Cancel Booking',
+                        backgroundColor:
+                            Theme.of(context).hintColor.withOpacity(0.2),
+                        textColor: ColorResources.homePageSectionTitleColor,
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (context) => BookingCancelDialogWidget(
+                              popUpTxt: "are_you_sure_to_cancel",
+                              status: "cancelled",
+                              bookingID:
+                                  bookingProvider.bookingDetails!.id.toString(),
+                              callback: (String message, bool isSuccess,
+                                  String bookingID) {
+                                if (isSuccess) {
+                                  showCustomSnackBarHelper(message,
+                                      status: SnackBarStatus.success);
+                                  RouterHelper.getMainRoute(
+                                      action:
+                                          RouteAction.pushNamedAndRemoveUntil);
+                                } else {
+                                  showCustomSnackBarHelper(message,
+                                      status: SnackBarStatus.error);
+                                }
+                              },
+                            ),
+                          );
+                        },
+                      );
+                    }),
                   ],
                 ),
               ),
             ),
           ],
-          if (userType == "freelancer" && bookingStatus == 'pending') ...[
+          if (isBookingFreelancer && bookingStatus == 'pending') ...[
             Center(
               child: Container(
                 color: Theme.of(context).cardColor,
@@ -185,11 +233,11 @@ class ButtonWidget extends StatelessWidget {
                                     .getBookingDetails(bookingID)
                                     .then((_) {
                                   showCustomSnackBarHelper(message,
-                                      isError: false);
+                                      status: SnackBarStatus.success);
                                 });
                               } else {
                                 showCustomSnackBarHelper(message,
-                                    isError: true);
+                                    status: SnackBarStatus.error);
                               }
                             },
                           ),
@@ -201,13 +249,9 @@ class ButtonWidget extends StatelessWidget {
               ),
             ),
           ],
-          if (bookingStatus == 'completed' &&
-              ((bookingProvider.bookingDetails!.userReview == false &&
-                      profileProvider.userInfoModel!.userType !=
-                          "freelancer") ||
-                  bookingProvider.bookingDetails!.freelancerReview == false &&
-                      profileProvider.userInfoModel!.userType ==
-                          "freelancer")) ...[
+          if (isBookingCreator &&
+              bookingStatus == 'completed' &&
+              bookingProvider.bookingDetails!.userReview == false) ...[
             Center(
               child: Container(
                 width: width > 700 ? 700 : width,
@@ -228,7 +272,7 @@ class ButtonWidget extends StatelessWidget {
             ),
           ],
           if (bookingStatus == "confirmed" && userType == "freelancer") ...[
-            // buildSwipeToComplete(),
+            buildSwipeToComplete(),
             Center(
               child: Container(
                 color: Theme.of(context).cardColor,
@@ -255,11 +299,11 @@ class ButtonWidget extends StatelessWidget {
                                     .getBookingDetails(bookingID)
                                     .then((_) {
                                   showCustomSnackBarHelper(message,
-                                      isError: false);
+                                      status: SnackBarStatus.success);
                                 });
                               } else {
                                 showCustomSnackBarHelper(message,
-                                    isError: true);
+                                    status: SnackBarStatus.error);
                               }
                             },
                           ),
@@ -282,9 +326,9 @@ class ButtonWidget extends StatelessWidget {
           .getBookingDetails(bookingID.toString())
           .then((_) {
         showCustomSnackBarHelper('Booking completed Successfully!',
-            isError: false);
+            status: SnackBarStatus.success);
       });
-      showCustomSnackBarHelper(message, isError: false);
+      showCustomSnackBarHelper(message, status: SnackBarStatus.success);
     } else {
       showCustomSnackBarHelper(message);
     }

@@ -5,7 +5,6 @@ import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/features/booking/providers/booking_provider.dart';
 import 'package:flutter_restaurant/features/booking/widgets/booking_list_widget.dart';
 import 'package:flutter_restaurant/features/category/providers/category_provider.dart';
-import 'package:flutter_restaurant/features/freelancer_booking/providers/freelancer_booking_provider.dart';
 import 'package:flutter_restaurant/features/freelancer_booking/widgets/freelancer_booking_list_widget.dart';
 import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
 import 'package:flutter_restaurant/helper/responsive_helper.dart';
@@ -20,16 +19,13 @@ class BookingScreen extends StatefulWidget {
 
   @override
   State<BookingScreen> createState() => _BookingScreenState();
-
   static Future<void> loadData(bool reload, {bool isFcmUpdate = false}) async {
     final ProfileProvider profileProvider =
         Provider.of<ProfileProvider>(Get.context!, listen: false);
     final CategoryProvider categoryProvider =
         Provider.of<CategoryProvider>(Get.context!, listen: false);
-
     final isLogin =
         Provider.of<AuthProvider>(Get.context!, listen: false).isLoggedIn();
-
     if (isLogin) {
       categoryProvider.getCategoryList();
       if (isFcmUpdate) {
@@ -45,24 +41,29 @@ class _BookingScreenState extends State<BookingScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
   late bool _isLoggedIn;
-  int _selectedIndex = 0;
+  bool isFreelancer = false;
 
   @override
   void initState() {
     super.initState();
-    _tabController =
-        TabController(length: 2, initialIndex: _selectedIndex, vsync: this);
+
     _isLoggedIn =
         Provider.of<AuthProvider>(context, listen: false).isLoggedIn();
+
+    isFreelancer = Provider.of<ProfileProvider>(context, listen: false)
+            .userInfoModel
+            ?.userType ==
+        'freelancer';
+
+    _tabController = TabController(
+      length: isFreelancer ? 2 : 1,
+      vsync: this,
+    );
 
     _tabController.addListener(() {
       if (_tabController.indexIsChanging) return;
 
-      if (mounted) {
-        setState(() {
-          _selectedIndex = _tabController.index;
-        });
-      }
+      setState(() {});
     });
   }
 
@@ -75,12 +76,12 @@ class _BookingScreenState extends State<BookingScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: (CustomAppBarWidget(
+      appBar: CustomAppBarWidget(
         titleColor: Colors.white,
         context: context,
         title: 'Booking Screen',
         isBackButtonExist: !ResponsiveHelper.isMobile(),
-      )) as PreferredSizeWidget?,
+      ) as PreferredSizeWidget?,
       body: _isLoggedIn
           ? Column(
               children: [
@@ -90,53 +91,53 @@ class _BookingScreenState extends State<BookingScreen>
                       width: Dimensions.webScreenWidth,
                       child: Column(
                         children: [
-                          Center(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).canvasColor,
-                                border: Border.all(
-                                  color: Theme.of(context)
-                                      .hintColor
-                                      .withOpacity(0.2),
-                                ),
-                                borderRadius: BorderRadius.circular(
-                                  Dimensions.radiusDefault,
-                                ),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).canvasColor,
+                              border: Border.all(
+                                color: Theme.of(context)
+                                    .hintColor
+                                    .withOpacity(0.2),
                               ),
-                              padding: const EdgeInsets.symmetric(
-                                vertical: Dimensions.paddingSizeExtraSmall,
-                                horizontal: Dimensions.paddingSizeExtraSmall,
+                              borderRadius: BorderRadius.circular(
+                                Dimensions.radiusDefault,
                               ),
-                              margin: const EdgeInsets.symmetric(
-                                vertical: Dimensions.paddingSizeSmall,
-                                horizontal: Dimensions.paddingSizeLarge,
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              vertical: Dimensions.paddingSizeExtraSmall,
+                              horizontal: Dimensions.paddingSizeExtraSmall,
+                            ),
+                            margin: const EdgeInsets.symmetric(
+                              vertical: Dimensions.paddingSizeSmall,
+                              horizontal: 50,
+                            ),
+                            child: TabBar(
+                              controller: _tabController,
+                              dividerHeight: 0,
+                              indicator: const UnderlineTabIndicator(
+                                borderSide: BorderSide.none,
                               ),
-                              child: TabBar(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: Dimensions.paddingSizeExtraSmall,
-                                ),
-                                labelPadding: const EdgeInsets.symmetric(
-                                  horizontal: Dimensions.paddingSizeSmall,
-                                ),
-                                controller: _tabController,
-                                dividerHeight: 0,
-                                indicator: const UnderlineTabIndicator(
-                                  borderSide: BorderSide.none,
-                                ),
-                                tabs: [
-                                  _buildTab(context, 'my_booking', 0),
-                                  _buildTab(context, 'my_order', 1),
-                                ],
-                              ),
+                              tabs: isFreelancer
+                                  ? [
+                                      _buildTab(context, 'my_order', 0),
+                                      _buildTab(context, 'my_booking', 1),
+                                    ]
+                                  : [
+                                      _buildTab(context, 'my_booking', 0),
+                                    ],
                             ),
                           ),
                           Expanded(
                             child: TabBarView(
                               controller: _tabController,
-                              children: const [
-                                _MyBookingTabs(),
-                                _MyOrderTabs(),
-                              ],
+                              children: isFreelancer
+                                  ? [
+                                      _MyBookingTabs(),
+                                      _MyOrderTabs(),
+                                    ]
+                                  : [
+                                      _MyOrderTabs(),
+                                    ],
                             ),
                           ),
                         ],
@@ -151,18 +152,18 @@ class _BookingScreenState extends State<BookingScreen>
   }
 
   Widget _buildTab(BuildContext context, String label, int index) {
+    final bool selected = _tabController.index == index;
+
     return Tab(
-      iconMargin: EdgeInsets.zero,
       child: Container(
         constraints: const BoxConstraints(minHeight: 32),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-        margin: EdgeInsets.zero,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(Dimensions.radiusLarge),
-          color: _selectedIndex == index
+          color: selected
               ? Theme.of(context).primaryColor
               : Theme.of(context).canvasColor,
-          boxShadow: _selectedIndex == index
+          boxShadow: selected
               ? [
                   BoxShadow(
                     color: Theme.of(context).primaryColor.withOpacity(0.12),
@@ -177,11 +178,10 @@ class _BookingScreenState extends State<BookingScreen>
             getTranslated(label, context)!,
             style: rubikRegular.copyWith(
               fontSize: Dimensions.fontSizeSmall,
-              color: _selectedIndex == index
+              color: selected
                   ? Theme.of(context).cardColor
                   : Theme.of(context).primaryColor,
-              fontWeight:
-                  _selectedIndex == index ? FontWeight.w700 : FontWeight.w500,
+              fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
             ),
           ),
         ),
@@ -200,45 +200,16 @@ class _MyBookingTabs extends StatefulWidget {
 class _MyBookingTabsState extends State<_MyBookingTabs>
     with TickerProviderStateMixin {
   late TabController _tabController;
-  late bool _isLoggedIn;
-  int _selectedIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    _tabController =
-        TabController(length: 3, initialIndex: _selectedIndex, vsync: this);
-    _isLoggedIn =
-        Provider.of<AuthProvider>(context, listen: false).isLoggedIn();
 
-    if (_isLoggedIn) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        Provider.of<FreelancerBookingProvider>(context, listen: false)
-            .getBookingList(context, 'pending');
-      });
-    }
+    _tabController = TabController(length: 3, vsync: this);
 
     _tabController.addListener(() {
-      if (_tabController.indexIsChanging || !_isLoggedIn) return;
-
-      _selectedIndex = _tabController.index;
-
-      final bookingProvider =
-          Provider.of<FreelancerBookingProvider>(context, listen: false);
-      final String status = ['pending', 'confirmed', 'history'][_selectedIndex];
-
-      final bool hasData = (status == 'pending' &&
-              bookingProvider.pendingList.isNotEmpty) ||
-          (status == 'confirmed' && bookingProvider.confirmedList.isNotEmpty) ||
-          (status == 'history' && bookingProvider.historyList.isNotEmpty);
-
-      if (!hasData) {
-        bookingProvider.getBookingList(context, status);
-      }
-
-      if (mounted) {
-        setState(() {});
-      }
+      if (_tabController.indexIsChanging) return;
+      setState(() {});
     });
   }
 
@@ -250,108 +221,61 @@ class _MyBookingTabsState extends State<_MyBookingTabs>
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<FreelancerBookingProvider>(
-      builder: (context, freelancerBooking, child) {
-        return Column(
-          children: [
-            Expanded(
-              child: Center(
-                child: SizedBox(
-                  width: Dimensions.webScreenWidth,
-                  child: Column(
-                    children: [
-                      Center(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).canvasColor,
-                            border: Border.all(
-                              color:
-                                  Theme.of(context).hintColor.withOpacity(0.2),
-                            ),
-                            borderRadius:
-                                BorderRadius.circular(Dimensions.radiusDefault),
-                          ),
-                          padding: const EdgeInsets.all(
-                            Dimensions.paddingSizeExtraSmall,
-                          ),
-                          margin: const EdgeInsets.symmetric(
-                            vertical: Dimensions.paddingSizeDefault,
-                            horizontal: Dimensions.paddingSizeLarge,
-                          ),
-                          child: TabBar(
-                            padding: EdgeInsets.zero,
-                            labelPadding: EdgeInsets.zero,
-                            controller: _tabController,
-                            dividerHeight: 0,
-                            indicator: const UnderlineTabIndicator(
-                              borderSide: BorderSide.none,
-                            ),
-                            tabs: [
-                              _buildInnerTab(context, 'pending', 0),
-                              _buildInnerTab(context, 'Upcoming', 1),
-                              _buildInnerTab(context, 'history', 2),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: TabBarView(
-                          controller: _tabController,
-                          children: const [
-                            FreelancerBookingListWidget(status: 'pending'),
-                            FreelancerBookingListWidget(status: 'confirmed'),
-                            FreelancerBookingListWidget(status: 'history'),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+    return Column(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).canvasColor,
+            border: Border.all(
+              color: Theme.of(context).hintColor.withOpacity(0.2),
             ),
-          ],
-        );
-      },
+            borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
+          ),
+          padding: const EdgeInsets.all(
+            3,
+          ),
+          margin: const EdgeInsets.symmetric(
+            vertical: 10,
+            horizontal: Dimensions.paddingSizeLarge,
+          ),
+          child: TabBar(
+            controller: _tabController,
+            dividerHeight: 0,
+            indicator: const UnderlineTabIndicator(
+              borderSide: BorderSide.none,
+            ),
+            tabs: [
+              _innerTab(context, 'pending', 0),
+              _innerTab(context, 'Upcoming', 1),
+              _innerTab(context, 'history', 2),
+            ],
+          ),
+        ),
+        Expanded(
+          child: TabBarView(
+            controller: _tabController,
+            children: const [
+              FreelancerBookingListWidget(status: 'pending'),
+              FreelancerBookingListWidget(status: 'confirmed'),
+              FreelancerBookingListWidget(status: 'history'),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
-  Widget _buildInnerTab(BuildContext context, String label, int index) {
+  Widget _innerTab(BuildContext context, String label, int index) {
+    final bool selected = _tabController.index == index;
+
     return Tab(
-      iconMargin: EdgeInsets.zero,
-      child: Container(
-        constraints: const BoxConstraints(minHeight: 28),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 10,
-          vertical: 4,
-        ),
-        margin: EdgeInsets.zero,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-          color: _selectedIndex == index
+      child: Text(
+        getTranslated(label, context)!,
+        style: rubikRegular.copyWith(
+          color: selected
               ? Theme.of(context).primaryColor
-              : Theme.of(context).canvasColor,
-          boxShadow: _selectedIndex == index
-              ? [
-                  BoxShadow(
-                    color: Theme.of(context).primaryColor.withOpacity(0.12),
-                    blurRadius: 6,
-                    offset: const Offset(0, 1),
-                  )
-                ]
-              : null,
-        ),
-        child: Center(
-          child: Text(
-            getTranslated(label, context)!,
-            style: rubikRegular.copyWith(
-              fontSize: Dimensions.fontSizeExtraSmall,
-              color: _selectedIndex == index
-                  ? Theme.of(context).cardColor
-                  : Theme.of(context).primaryColor,
-              fontWeight:
-                  _selectedIndex == index ? FontWeight.w700 : FontWeight.w500,
-            ),
-          ),
+              : Theme.of(context).primaryColor.withOpacity(0.6),
+          fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
         ),
       ),
     );
@@ -440,19 +364,13 @@ class _MyOrderTabsState extends State<_MyOrderTabs>
                                 BorderRadius.circular(Dimensions.radiusDefault),
                           ),
                           padding: const EdgeInsets.all(
-                            Dimensions.paddingSizeExtraSmall,
+                            3,
                           ),
                           margin: const EdgeInsets.symmetric(
-                            vertical: Dimensions.paddingSizeDefault,
+                            vertical: 10,
                             horizontal: Dimensions.paddingSizeLarge,
                           ),
                           child: TabBar(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: Dimensions.paddingSizeExtraSmall,
-                            ),
-                            labelPadding: const EdgeInsets.symmetric(
-                              horizontal: Dimensions.paddingSizeSmall,
-                            ),
                             controller: _tabController,
                             dividerHeight: 0,
                             indicator: const UnderlineTabIndicator(
@@ -488,42 +406,16 @@ class _MyOrderTabsState extends State<_MyOrderTabs>
   }
 
   Widget _buildInnerTab(BuildContext context, String label, int index) {
+    final bool selected = _tabController.index == index;
+
     return Tab(
-      iconMargin: EdgeInsets.zero,
-      child: Container(
-        constraints: const BoxConstraints(minHeight: 28),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 10,
-          vertical: 4,
-        ),
-        margin: EdgeInsets.zero,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-          color: _selectedIndex == index
+      child: Text(
+        getTranslated(label, context)!,
+        style: rubikRegular.copyWith(
+          color: selected
               ? Theme.of(context).primaryColor
-              : Theme.of(context).canvasColor,
-          boxShadow: _selectedIndex == index
-              ? [
-                  BoxShadow(
-                    color: Theme.of(context).primaryColor.withOpacity(0.12),
-                    blurRadius: 6,
-                    offset: const Offset(0, 1),
-                  )
-                ]
-              : null,
-        ),
-        child: Center(
-          child: Text(
-            getTranslated(label, context)!,
-            style: rubikRegular.copyWith(
-              fontSize: Dimensions.fontSizeExtraSmall,
-              color: _selectedIndex == index
-                  ? Theme.of(context).cardColor
-                  : Theme.of(context).primaryColor,
-              fontWeight:
-                  _selectedIndex == index ? FontWeight.w700 : FontWeight.w500,
-            ),
-          ),
+              : Theme.of(context).primaryColor.withOpacity(0.6),
+          fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
         ),
       ),
     );

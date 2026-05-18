@@ -114,6 +114,7 @@ class RouterHelper {
       '/freelancer-portfolio-add';
   static const String chatListScreen = '/chat-list';
   static const String conversationScreen = '/user-conversation';
+  static const String directionScreen = '/direction';
 
   static const String changePasswordScreen = '/change-password';
 
@@ -186,6 +187,17 @@ class RouterHelper {
 
   static String getNotificationRoute() => _navigateRoute(notificationScreen);
   static String getChatListRoute() => _navigateRoute(chatListScreen);
+
+  static String getDirectionRoute(
+      FreelancerModel freelancer, double userLat, double userLng) {
+    final Map<String, dynamic> data = {
+      'freelancer': freelancer.toJson(),
+      'userLat': userLat,
+      'userLng': userLng,
+    };
+    String encoded = base64Url.encode(utf8.encode(jsonEncode(data)));
+    return _navigateRoute('$directionScreen?data=$encoded');
+  }
 
   static String getCheckoutRoute(
       double? amount, String page, String? code, bool isCutlery) {
@@ -513,6 +525,37 @@ class RouterHelper {
                   chat: chat,
                 ));
           }),
+      // GoRoute(
+      //     path: directionScreen,
+      //     builder: (context, state) {
+      //       FreelancerModel? freelancer;
+      //       double userLat = 0;
+      //       double userLng = 0;
+      //       try {
+      //         final decoded = utf8.decode(base64Url.decode(
+      //             '${state.uri.queryParameters['data']?.replaceAll(' ', '+')}'));
+      //         final data = jsonDecode(decoded);
+      //         freelancer = FreelancerModel.fromJson(data['freelancer']);
+      //         userLat = (data['userLat'] as num).toDouble();
+      //         userLng = (data['userLng'] as num).toDouble();
+      //       } catch (error) {
+      //         debugPrint('route - direction - $error');
+      //       }
+      //       return _routeHandler(
+      //           context,
+      //           path: _getPath(state),
+      //           freelancer != null
+      //               ? DirectionScreen(
+      //                   freelancer: freelancer,
+      //                   currentUserLocation: LatLng(userLat, userLng),
+      //                 )
+      //               : const Scaffold(
+      //                   body: Center(
+      //                     child: Text('Invalid direction data'),
+      //                   ),
+      //                 ));
+      //     }),
+
       GoRoute(
           path: submitRateScreen,
           builder: (context, state) => _routeHandler(

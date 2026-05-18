@@ -274,11 +274,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                         } else {
                                           // Handle registration error
                                           showCustomSnackBarHelper(
-                                            getTranslated(
-                                                signUpResponse.message,
-                                                context),
-                                            isError: true,
-                                          );
+                                              getTranslated(
+                                                  signUpResponse.message,
+                                                  context),
+                                              status: SnackBarStatus.error);
                                         }
                                       }
                                     },
@@ -358,10 +357,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     required ResponseModel signUpResponse,
   }) async {
     // Show success message
-    showCustomSnackBarHelper(
-      getTranslated(signUpResponse.message, context),
-      isError: false,
-    );
+    showCustomSnackBarHelper(getTranslated(signUpResponse.message, context),
+        status: SnackBarStatus.success);
 
     // Set profile as not completed
     await ProfileHelper.setProfileCompleted(false);
@@ -390,10 +387,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     } else {
       // Handle login error after successful registration
       if (mounted) {
-        showCustomSnackBarHelper(
-          getTranslated(loginResponse.message, context),
-          isError: true,
-        );
+        showCustomSnackBarHelper(getTranslated(loginResponse.message, context),
+            status: SnackBarStatus.error);
       }
     }
   }

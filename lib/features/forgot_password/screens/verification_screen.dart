@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_restaurant/common/widgets/gradient_button_widget.dart';
 import 'package:flutter_restaurant/common/models/config_model.dart';
+import 'package:flutter_restaurant/common/widgets/custom_app_bar_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_asset_image_widget.dart';
+import 'package:flutter_restaurant/common/widgets/custom_button_widget.dart';
+import 'package:flutter_restaurant/common/widgets/custom_directionality_widget.dart';
+import 'package:flutter_restaurant/common/widgets/gradient_button_widget.dart';
 import 'package:flutter_restaurant/features/auth/domain/enum/auth_enum.dart';
 import 'package:flutter_restaurant/features/auth/domain/models/signup_model.dart';
-import 'package:flutter_restaurant/helper/email_checker_helper.dart';
-import 'package:flutter_restaurant/helper/responsive_helper.dart';
-import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
+import 'package:flutter_restaurant/helper/custom_snackbar_helper.dart';
+import 'package:flutter_restaurant/helper/email_checker_helper.dart';
+import 'package:flutter_restaurant/helper/responsive_helper.dart';
+import 'package:flutter_restaurant/helper/router_helper.dart';
+import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/utill/color_resources.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';
-import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
-import 'package:flutter_restaurant/common/widgets/custom_app_bar_widget.dart';
-import 'package:flutter_restaurant/common/widgets/custom_button_widget.dart';
-import 'package:flutter_restaurant/common/widgets/custom_directionality_widget.dart';
-import 'package:flutter_restaurant/helper/custom_snackbar_helper.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
 
@@ -303,7 +303,8 @@ class _VerificationScreenState extends State<VerificationScreen> {
                                                       getTranslated(
                                                           'resend_code_successful',
                                                           context),
-                                                      isError: false,
+                                                      status: SnackBarStatus
+                                                          .success,
                                                     );
                                                   } else if (value?.message !=
                                                       null) {

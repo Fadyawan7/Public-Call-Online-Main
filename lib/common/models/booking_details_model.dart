@@ -20,6 +20,7 @@ class BookingDetailsModel {
   bool? _userReview;
   bool? _freelancerReview;
   DeliveryAddress? _deliveryAddress;
+  String? _price;
 
   BookingDetailsModel({
     int? id,
@@ -42,6 +43,7 @@ class BookingDetailsModel {
     bool? userReview,
     bool? freelancerReview,
     DeliveryAddress? deliveryAddress,
+    String? price,
   }) {
     _id = id;
     _bookingId = bookingId;
@@ -63,6 +65,7 @@ class BookingDetailsModel {
     _freelancerReview = freelancerReview;
     _freelancerViewId = freelancerViewId;
     _deliveryAddress = deliveryAddress;
+    _price = price;
   }
 
   int? get id => _id;
@@ -86,6 +89,10 @@ class BookingDetailsModel {
   bool? get userReview => _userReview;
   bool? get freelancerReview => _freelancerReview;
   DeliveryAddress? get deliveryAddress => _deliveryAddress;
+  String? get price => _price;
+  set price(String? value) {
+    _price = value;
+  }
 
   BookingDetailsModel.fromJson(Map<String, dynamic> json) {
     _id = json['id'];
@@ -117,6 +124,7 @@ class BookingDetailsModel {
     _deliveryAddress = json['address'] != null
         ? DeliveryAddress.fromJson(json['address'])
         : null;
+    _price = json['price']?.toString();
   }
 
   Map<String, dynamic> toJson() {
@@ -145,6 +153,7 @@ class BookingDetailsModel {
     if (_deliveryAddress != null) {
       data['address'] = _deliveryAddress!.toJson();
     }
+    data['price'] = _price;
     return data;
   }
 }

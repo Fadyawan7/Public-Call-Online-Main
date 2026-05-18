@@ -183,14 +183,16 @@ class FreelancerBookingItemWidget extends StatelessWidget {
                                                 if (isSuccess) {
                                                   showCustomSnackBarHelper(
                                                       message,
-                                                      isError: false);
+                                                      status: SnackBarStatus
+                                                          .success);
                                                   RouterHelper.getMainRoute(
                                                       action: RouteAction
                                                           .pushNamedAndRemoveUntil);
                                                 } else {
                                                   showCustomSnackBarHelper(
                                                       message,
-                                                      isError: true);
+                                                      status:
+                                                          SnackBarStatus.error);
                                                 }
                                               },
                                             ),

@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_restaurant/common/widgets/gradient_button_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_outlined_button_widget.dart';
+import 'package:flutter_restaurant/common/widgets/gradient_button_widget.dart';
 import 'package:flutter_restaurant/common/widgets/list_tile_widget.dart';
 import 'package:flutter_restaurant/common/widgets/rate_review_widget.dart';
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
@@ -23,10 +23,12 @@ import 'package:url_launcher/url_launcher.dart';
 
 class FreelancerDetailsBottomSheet extends StatefulWidget {
   final FreelancerModel freelancer;
+  final VoidCallback? onDirectionTap;
 
   const FreelancerDetailsBottomSheet({
     super.key,
     required this.freelancer,
+    this.onDirectionTap,
   });
 
   @override
@@ -118,61 +120,6 @@ class _FreelancerDetailsBottomSheetState
     }
   }
 
-  Future<void> _handleDirectionTap() async {
-    final double? destinationLat = widget.freelancer.latitude;
-    final double? destinationLng = widget.freelancer.longitude;
-
-    if (destinationLat == null || destinationLng == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Freelancer location is not available')),
-      );
-      return;
-    }
-
-    final Position? position = await _getCurrentPosition(showFeedback: true);
-    if (position == null) {
-      return;
-    }
-
-    final distanceInMeter = Geolocator.distanceBetween(
-      position.latitude,
-      position.longitude,
-      destinationLat,
-      destinationLng,
-    );
-
-    final double distanceKm = distanceInMeter / 1000;
-    final int etaMinutes = ((distanceKm / 35) * 60).ceil();
-
-    if (mounted) {
-      setState(() {
-        _distanceKm = distanceKm;
-        _etaMinutes = etaMinutes;
-      });
-    }
-
-    if (!mounted) {
-      return;
-    }
-
-    await Navigator.maybeOf(context)?.maybePop();
-
-    final Uri directionUri = Uri.parse(
-      'https://www.google.com/maps/dir/?api=1&origin=${position.latitude},${position.longitude}&destination=$destinationLat,$destinationLng&travelmode=driving',
-    );
-
-    if (await canLaunchUrl(directionUri)) {
-      await launchUrl(directionUri, mode: LaunchMode.externalApplication);
-    } else {
-      if (!mounted) {
-        return;
-      }
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Could not open directions')),
-      );
-    }
-  }
-
   @override
   void initState() {
     _tabController =
@@ -239,8 +186,9 @@ class _FreelancerDetailsBottomSheetState
                           CustomOutlinedButton(
                             label: "Direction",
                             icon: Icons.directions,
-                            onPressed: () async {
-                              await _handleDirectionTap();
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              widget.onDirectionTap?.call();
                             },
                           ),
                           const SizedBox(width: Dimensions.paddingSizeDefault),
@@ -399,7 +347,8 @@ class _FreelancerDetailsBottomSheetState
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 10, vertical: 4),
                                           child: Text(
-                                            getTranslated('view_all', context) ??
+                                            getTranslated(
+                                                    'view_all', context) ??
                                                 'View All',
                                             style: rubikMedium.copyWith(
                                               color: Colors.white,

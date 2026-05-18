@@ -181,7 +181,8 @@ class _BookingReviewWidgetState extends State<BookingReviewWidget> {
                                               if (value.isSuccess) {
                                                 showCustomSnackBarHelper(
                                                     value.message,
-                                                    isError: false);
+                                                    status:
+                                                        SnackBarStatus.success);
                                                 _controller.text = '';
                                                 Provider.of<BookingProvider>(
                                                         context,

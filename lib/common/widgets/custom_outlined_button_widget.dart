@@ -19,10 +19,11 @@ class CustomOutlinedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GradientButtonWidget(
       onTap: onPressed,
-      borderRadius: 25,
+      borderRadius: 10,
+      height: 40,
       padding: const EdgeInsets.symmetric(
-        vertical: Dimensions.paddingSizeSmall,
-        horizontal: Dimensions.paddingSizeDefault,
+        vertical: 4,
+        horizontal: 8,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -32,7 +33,7 @@ class CustomOutlinedButton extends StatelessWidget {
             Icon(
               icon,
               color: Colors.white,
-              size: Dimensions.fontSizeExtraLarge,
+              size: Dimensions.fontSizeDefault,
             ),
             const SizedBox(width: Dimensions.paddingSizeSmall),
           ],
@@ -40,7 +41,7 @@ class CustomOutlinedButton extends StatelessWidget {
             label,
             style: rubikSemiBold.copyWith(
               color: Colors.white,
-              fontSize: Dimensions.fontSizeLarge,
+              fontSize: Dimensions.fontSizeDefault,
             ),
           ),
         ],

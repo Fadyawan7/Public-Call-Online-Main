@@ -12,9 +12,45 @@ import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
 import 'package:provider/provider.dart';
 
-class BookingDetailsWidget extends StatelessWidget {
+class BookingDetailsWidget extends StatefulWidget {
   const BookingDetailsWidget({super.key, this.bookingId});
   final int? bookingId;
+
+  @override
+  State<BookingDetailsWidget> createState() => _BookingDetailsWidgetState();
+}
+
+class _BookingDetailsWidgetState extends State<BookingDetailsWidget> {
+  final TextEditingController _priceController = TextEditingController();
+  int? _syncedBookingId;
+
+  @override
+  void dispose() {
+    _priceController.dispose();
+    super.dispose();
+  }
+
+  void _syncPriceField(BookingProvider bookingProvider) {
+    final bookingDetails = bookingProvider.bookingDetails;
+
+    if (bookingDetails == null) return;
+
+    final currentBookingId = bookingDetails.id;
+    final serverPrice = bookingDetails.price ?? '';
+
+    // Only sync once per booking
+    if (_syncedBookingId == currentBookingId) {
+      return;
+    }
+
+    _syncedBookingId = currentBookingId;
+
+    _priceController.text = serverPrice;
+
+    bookingProvider.updatePrice(
+      serverPrice.isEmpty ? null : serverPrice,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +58,17 @@ class BookingDetailsWidget extends StatelessWidget {
         Provider.of<SplashProvider>(context, listen: false);
     final ProfileProvider profileProvider =
         Provider.of<ProfileProvider>(context, listen: false);
+    final BookingProvider bookingProvider =
+        Provider.of<BookingProvider>(context, listen: false);
 
+    final bookingStatus = bookingProvider.bookingDetails?.status;
     return Consumer<BookingProvider>(builder: (context, booking, _) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _syncPriceField(booking);
+        }
+      });
+
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Padding(
           padding:
@@ -34,6 +79,46 @@ class BookingDetailsWidget extends StatelessWidget {
               children: [
                 Text(getTranslated('Booking Info', context)!, style: rubikBold),
                 const SizedBox(height: Dimensions.paddingSizeDefault),
+                // Update Price field
+                if (bookingStatus == 'pending') ...[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(getTranslated('Update Price', context)!,
+                          style: rubikBold.copyWith(fontSize: 12)),
+                      const SizedBox(height: Dimensions.paddingSizeSmall),
+                      SizedBox(
+                        width: 120,
+                        height: 38,
+                        child: TextFormField(
+                          controller: _priceController,
+                          //focusNode: FocusNode().,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true),
+                          decoration: InputDecoration(
+                            isDense: true,
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context).primaryColor,
+                                    width: 1),
+                                borderRadius: BorderRadius.circular(
+                                    Dimensions.radiusDefault)),
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 8),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(3)),
+                          ),
+
+                          onChanged: (val) {
+                            booking.updatePrice(val);
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+                SizedBox(height: Dimensions.paddingSizeDefault),
                 const GradientCardWidget(
                   padding: EdgeInsets.zero,
                   child: BookingInfoWidget(),

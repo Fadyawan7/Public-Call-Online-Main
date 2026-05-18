@@ -1,6 +1,6 @@
+import 'package:flutter_restaurant/common/models/api_response_model.dart';
 import 'package:flutter_restaurant/data/datasource/remote/dio/dio_client.dart';
 import 'package:flutter_restaurant/data/datasource/remote/exception/api_error_handler.dart';
-import 'package:flutter_restaurant/common/models/api_response_model.dart';
 import 'package:flutter_restaurant/features/apply_freelancer/domain/models/apply_freelancer_model.dart';
 import 'package:flutter_restaurant/utill/app_constants.dart';
 import 'package:image_picker/image_picker.dart';
@@ -40,6 +40,13 @@ class FreelancerRepo {
     try {
       Map<String, dynamic> fields = model.toJson();
 
+      // If category_id is a list, send as repeated form fields 'category_id[]'
+      if (fields['category_id'] is List) {
+        final List ids = fields.remove('category_id');
+        // Add as 'category_id[]' => [1,2,...] so FormData encodes repeated entries
+        fields['category_id[]'] = ids.map((e) => e.toString()).toList();
+      }
+
       List<XFile?> images = [];
       if (model.cover_picture != null && model.cover_picture!.isNotEmpty) {
         images.add(XFile(model.cover_picture!));
@@ -62,8 +69,13 @@ class FreelancerRepo {
     String text,
   ) async {
     try {
+      final Map<String, dynamic> queryParams = {
+        'search': text.trim(),
+      };
       final response = await dioClient!.getWithoutToken(
-          '${AppConstants.frelanceCategoryUri}?categoryName=$text');
+        AppConstants.freelancerListUri,
+        queryParameters: queryParams,
+      );
       return ApiResponseModel.withSuccess(response);
     } catch (e) {
       return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));

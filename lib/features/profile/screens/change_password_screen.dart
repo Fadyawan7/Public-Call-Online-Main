@@ -208,7 +208,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                               getTranslated(
                                                   responseModel.message,
                                                   context),
-                                              isError: false);
+                                              status: SnackBarStatus.success);
                                         }
                                       } else {
                                         showCustomSnackBarHelper(

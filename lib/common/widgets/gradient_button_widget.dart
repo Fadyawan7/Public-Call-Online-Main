@@ -18,7 +18,7 @@ class GradientButtonWidget extends StatelessWidget {
     this.borderRadius = 12,
     this.width,
     this.height,
-    this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    this.padding = const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
     this.margin,
     this.transparent = false,
     this.gradientColors,

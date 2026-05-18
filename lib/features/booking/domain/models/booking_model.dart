@@ -14,6 +14,7 @@ class BookingModel {
   bool? _userReview;
   bool? _freelancerReview;
   String? _freelancerViewId;
+  String? _price;
 
   BookingModel({
     int? id,
@@ -31,6 +32,7 @@ class BookingModel {
     String? freelancerViewId,
     bool? userReview,
     bool? freelancerReview,
+    String? price,
   }) {
     _id = id;
     _userId = userId;
@@ -49,6 +51,7 @@ class BookingModel {
     _userReview = userReview;
     _freelancerReview = freelancerReview;
     _freelancerViewId = freelancerViewId;
+    _price = price;
   }
 
   int? get id => _id;
@@ -66,6 +69,7 @@ class BookingModel {
   String? get freelancerViewId => _freelancerViewId;
   bool? get userReview => _userReview;
   bool? get freelancerReview => _freelancerReview;
+  String? get price => _price;
 
   BookingModel.fromJson(Map<String, dynamic> json) {
     _id = json['id'];
@@ -84,6 +88,7 @@ class BookingModel {
     _freelancerViewId = json['freelancer_view_id'];
     _freelancerReview = json['freelancer_review'];
     _userReview = json['user_review'];
+    _price = json['price']?.toString();
   }
 
   Map<String, dynamic> toJson() {
@@ -104,6 +109,7 @@ class BookingModel {
     data['freelancer_view_id'] = _freelancerViewId;
     data['freelancer_review'] = _freelancerReview;
     data['user_review'] = _userReview;
+    data['price'] = _price;
 
     return data;
   }

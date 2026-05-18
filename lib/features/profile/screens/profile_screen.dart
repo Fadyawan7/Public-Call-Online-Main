@@ -191,7 +191,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           if (mounted) {
             showCustomSnackBarHelper(
               getTranslated(responseModel.message, context),
-              isError: false,
+              status: SnackBarStatus.success,
             );
 
             if (widget.fromSplash) {

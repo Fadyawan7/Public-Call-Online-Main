@@ -34,9 +34,10 @@ class _ChatScreenState extends State<ChatScreen> {
       return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
+          centerTitle: true,
           elevation: 0,
           toolbarHeight: 68,
-          backgroundColor: const Color(0xFF075E54),
+          backgroundColor: const Color(0xFF5C6CFF).withAlpha(240),
           automaticallyImplyLeading: !ResponsiveHelper.isMobile(),
           iconTheme: const IconThemeData(color: Colors.white),
           titleSpacing: ResponsiveHelper.isMobile() ? 20 : 0,
@@ -170,7 +171,7 @@ class MessageListWidget extends StatelessWidget {
                                           .then((chat) {
                                         showCustomSnackBarHelper(
                                             'Chat Deleted Successfully !',
-                                            isError: false);
+                                            status: SnackBarStatus.success);
                                       });
                                     },
                                     child: Padding(

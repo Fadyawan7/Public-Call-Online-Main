@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart'
@@ -8,37 +9,39 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_restaurant/common/providers/theme_provider.dart';
 import 'package:flutter_restaurant/data/datasource/local/cache_response.dart';
+import 'package:flutter_restaurant/features/address/providers/location_provider.dart';
+import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
+import 'package:flutter_restaurant/features/booking/providers/booking_provider.dart';
 import 'package:flutter_restaurant/features/category/providers/category_provider.dart';
 import 'package:flutter_restaurant/features/chat/providers/chat_provider.dart';
+import 'package:flutter_restaurant/features/direction/providers/direction_provider.dart';
 import 'package:flutter_restaurant/features/freelancer/providers/freelancer_provider.dart';
 import 'package:flutter_restaurant/features/freelancer_booking/providers/freelancer_booking_provider.dart';
 import 'package:flutter_restaurant/features/freelancer_portfolio/providers/freelancer_portfolio_provider.dart';
 import 'package:flutter_restaurant/features/home_screen/provider/home_provider.dart';
+import 'package:flutter_restaurant/features/language/providers/language_provider.dart';
+import 'package:flutter_restaurant/features/language/providers/localization_provider.dart';
+import 'package:flutter_restaurant/features/notification/providers/notification_provider.dart';
+import 'package:flutter_restaurant/features/onboarding/providers/onboarding_provider.dart';
+import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
 import 'package:flutter_restaurant/features/rating_reviews/providers/review_provider.dart';
+import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
+import 'package:flutter_restaurant/firebase_options.dart';
 import 'package:flutter_restaurant/helper/notification_helper.dart';
 import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/localization/app_localization.dart';
-import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
-import 'package:flutter_restaurant/features/booking/providers/booking_provider.dart';
-import 'package:flutter_restaurant/features/language/providers/language_provider.dart';
-import 'package:flutter_restaurant/features/language/providers/localization_provider.dart';
-import 'package:flutter_restaurant/features/address/providers/location_provider.dart';
-import 'package:flutter_restaurant/features/notification/providers/notification_provider.dart';
-import 'package:flutter_restaurant/features/onboarding/providers/onboarding_provider.dart';
-import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
-import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
-import 'package:flutter_restaurant/common/providers/theme_provider.dart';
 import 'package:flutter_restaurant/theme/dark_theme.dart';
 import 'package:flutter_restaurant/theme/light_theme.dart';
 import 'package:flutter_restaurant/utill/app_constants.dart';
-import 'package:flutter_restaurant/firebase_options.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:url_strategy/url_strategy.dart';
-import 'di_container.dart' as di;
 import 'package:universal_html/html.dart' as html;
+import 'package:url_strategy/url_strategy.dart';
+
+import 'di_container.dart' as di;
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -139,6 +142,7 @@ Future<void> main() async {
       ChangeNotifierProvider(create: (context) => di.sl<CategoryProvider>()),
       ChangeNotifierProvider(create: (context) => di.sl<FreelancerProvider>()),
       ChangeNotifierProvider(create: (context) => di.sl<ChatProvider>()),
+      ChangeNotifierProvider(create: (context) => di.sl<DirectionProvider>()),
       ChangeNotifierProvider(
           create: (context) => di.sl<FreelancerBookingProvider>()),
       ChangeNotifierProvider(
