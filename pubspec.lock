@@ -289,14 +289,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
-  dart_either:
-    dependency: transitive
-    description:
-      name: dart_either
-      sha256: "928895b8266ac5906eb4e2993fead563a73b17fc86eec6b40172100d56ca2507"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   dart_style:
     dependency: transitive
     description:
@@ -566,14 +558,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_bloc_pattern:
-    dependency: transitive
-    description:
-      name: flutter_bloc_pattern
-      sha256: "934b42da57797a759b62659bb157625749f602239c26f13adde7c61ee65d3e3f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.0"
   flutter_cache_manager:
     dependency: transitive
     description:
@@ -582,15 +566,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.4.1"
-  flutter_google_places_hoc081098:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "84a65b5e6e5da7286b41c6d7f1e806f4b69cd16b"
-      url: "https://github.com/Sobitandra/flutter_google_places_hoc081098.git"
-    source: git
-    version: "2.0.0"
   flutter_inappwebview:
     dependency: "direct main"
     description:
@@ -764,14 +739,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.34"
-  flutter_provider:
-    dependency: transitive
-    description:
-      name: flutter_provider
-      sha256: "5bc7d1e9edcf364397f312b9eb901337a644a5e4a907225bcd1d7e9b020ac914"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.0"
   flutter_staggered_grid_view:
     dependency: "direct main"
     description:
@@ -1302,14 +1269,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.1.1"
-  listenable_stream:
-    dependency: transitive
-    description:
-      name: listenable_stream
-      sha256: "80decc4ef1dd999b42cf696d63f7729d1298a68f75b6bf3c944851ce5bf0eafd"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.1"
   logging:
     dependency: transitive
     description:
@@ -1346,10 +1305,10 @@ packages:
     dependency: transitive
     description:
       name: meta
-      sha256: "23f08335362185a5ea2ad3a4e597f1375e78bce8a040df5c600c8d3552ef2394"
+      sha256: "1741988757a65eb6b36abe716829688cf01910bbf91c34354ff7ec1c3de2b349"
       url: "https://pub.dev"
     source: hosted
-    version: "1.17.0"
+    version: "1.18.0"
   mime:
     dependency: transitive
     description:
@@ -1646,14 +1605,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.28.0"
-  rxdart_ext:
-    dependency: transitive
-    description:
-      name: rxdart_ext
-      sha256: "95df7e8b13140e2c3fdb3b943569a51f18090e82aaaf6ca6e8e6437e434a6fb0"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.3.0"
   sanitize_html:
     dependency: transitive
     description:
@@ -1935,10 +1886,10 @@ packages:
     dependency: transitive
     description:
       name: test_api
-      sha256: "8161c84903fd860b26bfdefb7963b3f0b68fee7adea0f59ef805ecca346f0c7a"
+      sha256: "949a932224383300f01be9221c39180316445ecb8e7547f70a41a35bf421fb9e"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.10"
+    version: "0.7.11"
   timezone:
     dependency: "direct main"
     description:

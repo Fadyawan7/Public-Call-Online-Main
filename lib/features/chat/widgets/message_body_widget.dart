@@ -13,6 +13,7 @@ import 'package:flutter_restaurant/features/chat/widgets/message_bubble_widget.d
 import 'package:flutter_restaurant/helper/custom_snackbar_helper.dart';
 import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
+import 'package:flutter_restaurant/utill/app_constants.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
@@ -59,7 +60,7 @@ class _MessageBodyWidgetState extends State<MessageBodyWidget> {
         onDecryptionFailure: onDecryptionFailure,
         onMemberAdded: onMemberAdded,
         onMemberRemoved: onMemberRemoved,
-        authEndpoint: "https://publiccallonline.com/api/broadcasting/auth",
+        authEndpoint: '${AppConstants.baseUrl}/api/broadcasting/auth',
         // onAuthorizer: onAuthorizer
       );
       await pusher.subscribe(channelName: 'chat.${widget.chatId}');

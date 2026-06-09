@@ -55,12 +55,19 @@ class _FreelancerScreenState extends State<FreelancerScreen>
   bool _arrivalDialogVisible = false;
   bool _directionCompleted = false;
   BitmapDescriptor? _currentLocationMarkerIcon;
+  bool _isFreelancerDetailsSheetOpen = false;
 
   @override
   void initState() {
     super.initState();
-    _initializeFreelancerData();
-    profileProvider.getUserInfo(true);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) {
+        return;
+      }
+
+      _initializeFreelancerData();
+      profileProvider.getUserInfo(true);
+    });
   }
 
   Future<void> _initializeFreelancerData() async {
@@ -116,6 +123,10 @@ class _FreelancerScreenState extends State<FreelancerScreen>
           snippet: freelancer.category_name,
         ),
         onTap: () async {
+          if (_isFreelancerDetailsSheetOpen) {
+            return;
+          }
+
           if (!mounted) return;
 
           await freelancerProvider.getFreelancerDetails(
@@ -139,22 +150,36 @@ class _FreelancerScreenState extends State<FreelancerScreen>
           freelancerProvider.setSelectedFreelancer(
               freelancer: selectedFreelancer);
 
-          await showModalBottomSheet(
-            context: context,
-            backgroundColor: Theme.of(context).canvasColor,
-            isScrollControlled: true,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-            ),
-            builder: (_) => FractionallySizedBox(
-              heightFactor: 0.85,
-              child: FreelancerDetailsBottomSheet(
-                freelancer: selectedFreelancer,
-                onDirectionTap: () =>
-                    _startDirectionTracking(selectedFreelancer),
+          setState(() {
+            _isFreelancerDetailsSheetOpen = true;
+          });
+
+          try {
+            await showModalBottomSheet(
+              context: context,
+              backgroundColor: Theme.of(context).canvasColor,
+              isScrollControlled: true,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
               ),
-            ),
-          );
+              builder: (_) => FractionallySizedBox(
+                heightFactor: 0.85,
+                child: FreelancerDetailsBottomSheet(
+                  freelancer: selectedFreelancer,
+                  onDirectionTap: () =>
+                      _startDirectionTracking(selectedFreelancer),
+                ),
+              ),
+            );
+          } finally {
+            if (mounted) {
+              setState(() {
+                _isFreelancerDetailsSheetOpen = false;
+              });
+            } else {
+              _isFreelancerDetailsSheetOpen = false;
+            }
+          }
         },
       );
 

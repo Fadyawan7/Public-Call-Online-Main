@@ -120,7 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       margin: const EdgeInsets.all(40),
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
-                                        color: Colors.red,
+                                        color: Theme.of(context).primaryColor,
                                         // borderRadius: BorderRadius.circular(20),
                                       ),
                                       child: Container(

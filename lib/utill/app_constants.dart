@@ -6,7 +6,7 @@ class AppConstants {
   static const String appName = 'PCO';
   static const String appVersion = '11.2';
   static const AppMode appMode = AppMode.release;
-  static const String baseUrl = 'https://publiccallonline.com';
+  static const String baseUrl = 'https://www.publiccallonline.com';
 
   // Google Maps API Key
   static const String googleMapsApiKey =

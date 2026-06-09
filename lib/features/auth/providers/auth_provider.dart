@@ -14,18 +14,18 @@ import 'package:flutter_restaurant/features/auth/domain/models/social_login_mode
 import 'package:flutter_restaurant/features/auth/domain/models/user_log_data.dart';
 import 'package:flutter_restaurant/features/auth/domain/reposotories/auth_repo.dart';
 import 'package:flutter_restaurant/features/profile/domain/models/userinfo_model.dart';
-import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
-import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
 import 'package:flutter_restaurant/helper/get_response_error_message.dart';
 import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/main.dart';
+import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
+import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 import '../../../helper/api_checker_helper.dart';
 import '../../../helper/custom_snackbar_helper.dart';
+import 'package:http/http.dart' as http;
 
 typedef SocialLoginCallback = void Function(
   bool isRoute,
@@ -608,7 +608,7 @@ class AuthProvider with ChangeNotifier {
           Provider.of<ProfileProvider>(Get.context!, listen: false);
       profileProvider.getUserInfo(true);
       showCustomSnackBarHelper(apiResponse.response!.data['message'],
-          status: SnackBarStatus.success);
+          isToast: false);
       responseModel = ResponseModel(true, 'verification');
     } else {
       _verificationMsg =
@@ -723,7 +723,7 @@ class AuthProvider with ChangeNotifier {
       _isAvailable = !newStatus;
       showCustomSnackBarHelper(
           newStatus ? 'Status changed to Busy' : 'Status changed to Available',
-          status: SnackBarStatus.success);
+          isToast: false);
 
       // Update profile info to get latest status
       final ProfileProvider profileProvider =

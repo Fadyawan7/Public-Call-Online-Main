@@ -10,6 +10,7 @@ import 'package:flutter_restaurant/features/freelancer/providers/freelancer_prov
 import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/localization/app_localization.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
+import 'package:flutter_restaurant/utill/app_constants.dart';
 import 'package:flutter_restaurant/utill/images.dart';
 import 'package:provider/provider.dart';
 
@@ -572,7 +573,7 @@ class _FeaturedItemsDetailState extends State<FeaturedItemsDetail> {
                                 radius: 20,
                                 backgroundImage: NetworkImage(
                                   review.giverImage ??
-                                      'https://publiccallonline.com/assets/admin/img/avatars/no-avatar.png',
+                                      '${AppConstants.baseUrl}/assets/admin/img/avatars/no-avatar.png',
                                 ),
                                 onBackgroundImageError: (_, __) {},
                               ),

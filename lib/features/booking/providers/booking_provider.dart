@@ -367,19 +367,38 @@ class BookingProvider extends ChangeNotifier {
     if (apiResponse.response != null &&
         apiResponse.response!.statusCode == 200) {
       BookingModel? bookingModel;
+      List<BookingModel>? sourceList;
       List<BookingModel>? targetList;
 
-      if (status == 'pending') targetList = _pendingList;
-      if (status == 'confirmed') targetList = _confirmedList;
-      if (status == 'history') targetList = _historyList;
+      if (status == 'pending') {
+        sourceList = _confirmedList;
+        targetList = _pendingList;
+      } else if (status == 'confirmed') {
+        sourceList = _pendingList;
+        targetList = _confirmedList;
+      } else if (status == 'history') {
+        sourceList = _confirmedList;
+        targetList = _historyList;
+      }
 
-      for (var booking in targetList ?? []) {
+      for (var booking in sourceList ?? []) {
         if (booking.id.toString() == bookingID) {
           bookingModel = booking;
+          break;
         }
       }
 
-      targetList?.remove(bookingModel);
+      if (bookingModel != null) {
+        sourceList?.remove(bookingModel);
+
+        final updatedBookingJson = bookingModel.toJson();
+        updatedBookingJson['status'] = status;
+        final updatedBooking = BookingModel.fromJson(updatedBookingJson);
+        targetList
+            ?.removeWhere((booking) => booking.id.toString() == bookingID);
+        targetList?.add(updatedBooking);
+      }
+
       String? message = 'Booking $bookingID $status Successfully !';
       callback(message, true, bookingID);
     } else {

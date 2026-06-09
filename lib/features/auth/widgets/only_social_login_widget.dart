@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/widgets/custom_alert_dialog_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_asset_image_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_pop_scope_widget.dart';
-
 import 'package:flutter_restaurant/features/auth/domain/models/social_login_model.dart';
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/features/auth/widgets/existing_account_bottom_sheet.dart';
@@ -58,18 +57,14 @@ class _OnlySocialLoginWidgetState extends State<OnlySocialLoginWidget> {
           ),
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              errorMessage ?? 'Unable to complete social login.'),
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(errorMessage ?? 'Unable to complete social login.'),
             backgroundColor: Colors.red));
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content:
-              Text(errorMessage ?? 'Unable to complete social login.'),
-            backgroundColor: Colors.red));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(errorMessage ?? 'Unable to complete social login.'),
+          backgroundColor: Colors.red));
     }
   }
 
@@ -153,17 +148,17 @@ class _OnlySocialLoginWidgetState extends State<OnlySocialLoginWidget> {
                                 GoogleSignInAccount googleAccount =
                                     authProvider.googleAccount!;
                                 final String? socialToken =
-                                  auth.accessToken ?? auth.idToken;
+                                    auth.accessToken ?? auth.idToken;
                                 if (socialToken == null ||
-                                  socialToken.isEmpty) {
+                                    socialToken.isEmpty) {
                                   throw Exception(
-                                    'Failed to obtain Google auth token');
+                                      'Failed to obtain Google auth token');
                                 }
 
                                 authProvider.socialLogin(
                                     SocialLoginModel(
                                       email: googleAccount.email,
-                                    token: socialToken,
+                                      token: socialToken,
                                       uniqueId: googleAccount.id,
                                       medium: 'google',
                                     ),

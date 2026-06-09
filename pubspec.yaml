@@ -28,9 +28,9 @@ dependencies:
   google_maps_flutter: ^2.6.1
 #  flutter_google_places: ^0.3.0
 #  flutter_google_places: ^0.3.0
-  flutter_google_places_hoc081098:
-    git:
-      url: https://github.com/Sobitandra/flutter_google_places_hoc081098.git
+  # flutter_google_places_hoc081098:
+  #   git:
+  #     url: https://github.com/Sobitandra/flutter_google_places_hoc081098.git
   geocoding: ^3.0.0
   geolocator: ^14.0.0
   shimmer_animation:

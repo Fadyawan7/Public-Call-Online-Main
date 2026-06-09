@@ -1,17 +1,12 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/widgets/custom_button_widget.dart';
 import 'package:flutter_restaurant/common/widgets/gradient_button_widget.dart';
-import 'package:flutter_restaurant/common/widgets/slider_button_widget.dart';
 import 'package:flutter_restaurant/features/booking/providers/booking_provider.dart';
 import 'package:flutter_restaurant/features/booking/widgets/booking_cancel_dialog_widget.dart';
-import 'package:flutter_restaurant/features/language/providers/localization_provider.dart';
 import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
 import 'package:flutter_restaurant/helper/custom_snackbar_helper.dart';
 import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
-import 'package:flutter_restaurant/main.dart';
 import 'package:flutter_restaurant/utill/color_resources.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
@@ -39,7 +34,6 @@ class ButtonWidget extends StatelessWidget {
       final bookingUserId = bookingDetails?.userId;
       final bookingFreelancerId = bookingDetails?.freelancerId;
       final width = MediaQuery.of(context).size.width;
-      final isLtr = Provider.of<LocalizationProvider>(context).isLtr;
 
       // Determine if current user created the booking
       final isBookingCreator = currentUserId == bookingUserId;
@@ -72,56 +66,6 @@ class ButtonWidget extends StatelessWidget {
                     fontSize: Dimensions.fontSizeLarge,
                   ),
                 ),
-              ),
-            ),
-          ),
-        );
-      }
-
-      Widget buildSwipeToComplete() {
-        return Container(
-          height: 50,
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(Dimensions.paddingSizeSmall),
-            border: Border.all(
-                color: Theme.of(context).dividerColor.withOpacity(.05)),
-            color: Theme.of(context).canvasColor,
-          ),
-          child: Transform.rotate(
-            angle: isLtr ? 0 : pi,
-            child: Directionality(
-              textDirection: TextDirection.ltr,
-              child: SliderButtonWidget(
-                action: () {
-                  bookingProvider.updateBookingStatus(
-                    bookingProvider.bookingDetails!.id.toString(),
-                    'completed',
-                    _callback,
-                  );
-                },
-                label: Text(
-                  getTranslated('Swipe to Complete Booking', context)!,
-                  style: Theme.of(context)
-                      .textTheme
-                      .displaySmall!
-                      .copyWith(color: Theme.of(context).primaryColor),
-                ),
-                dismissThresholds: 0.5,
-                dismissible: false,
-                icon: const Center(
-                  child: Icon(
-                    Icons.double_arrow_sharp,
-                    color: Colors.white,
-                    size: Dimensions.paddingSizeLarge,
-                  ),
-                ),
-                radius: 10,
-                boxShadow: const BoxShadow(blurRadius: 0.0),
-                buttonColor: Theme.of(context).primaryColor,
-                backgroundColor: Theme.of(context).canvasColor,
-                baseColor: Theme.of(context).primaryColor,
               ),
             ),
           ),
@@ -227,14 +171,13 @@ class ButtonWidget extends StatelessWidget {
                             bookingID:
                                 bookingProvider.bookingDetails!.id.toString(),
                             callback: (String message, bool isSuccess,
-                                String bookingID) {
+                                String bookingID) async {
                               if (isSuccess) {
-                                bookingProvider
-                                    .getBookingDetails(bookingID)
-                                    .then((_) {
-                                  showCustomSnackBarHelper(message,
-                                      status: SnackBarStatus.success);
-                                });
+                                showCustomSnackBarHelper(message,
+                                    status: SnackBarStatus.success);
+                                if (context.mounted) {
+                                  Navigator.of(context).pop();
+                                }
                               } else {
                                 showCustomSnackBarHelper(message,
                                     status: SnackBarStatus.error);
@@ -271,8 +214,7 @@ class ButtonWidget extends StatelessWidget {
               ),
             ),
           ],
-          if (bookingStatus == "confirmed" && userType == "freelancer") ...[
-            buildSwipeToComplete(),
+          if (bookingStatus == "confirmed" && isBookingFreelancer) ...[
             Center(
               child: Container(
                 color: Theme.of(context).cardColor,
@@ -318,19 +260,5 @@ class ButtonWidget extends StatelessWidget {
         ],
       );
     });
-  }
-
-  void _callback(String message, bool isSuccess, String bookingID) async {
-    if (isSuccess) {
-      Provider.of<BookingProvider>(Get.context!, listen: false)
-          .getBookingDetails(bookingID.toString())
-          .then((_) {
-        showCustomSnackBarHelper('Booking completed Successfully!',
-            status: SnackBarStatus.success);
-      });
-      showCustomSnackBarHelper(message, status: SnackBarStatus.success);
-    } else {
-      showCustomSnackBarHelper(message);
-    }
   }
 }
