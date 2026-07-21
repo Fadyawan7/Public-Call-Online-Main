@@ -8,7 +8,7 @@ class FreelancerModel {
   String? price;
   String? per_side;
   String? per_hour;
-
+  String? icon_url;
   String? image;
   String? cover_picture;
 
@@ -55,6 +55,7 @@ class FreelancerModel {
     this.price,
     this.per_side,
     this.per_hour,
+    this.icon_url,
     this.image,
     this.cover_picture,
     this.about,
@@ -98,6 +99,7 @@ class FreelancerModel {
         price: json['price']?.toString(),
         per_side: json['per_side']?.toString(),
         per_hour: json['per_hour']?.toString(),
+        icon_url: json['icon_url']?.toString(),
         image: (json['image'] ?? json['profile_picture'])?.toString(),
         cover_picture: json['cover_picture']?.toString(),
         about: json['about']?.toString(),
@@ -195,6 +197,7 @@ class FreelancerModel {
         'category_icon': categoryIcon,
         'promoted': promoted,
         'cover_picture': coverPicture ?? cover_picture,
+        'icon_url': icon_url,
       };
 }
 

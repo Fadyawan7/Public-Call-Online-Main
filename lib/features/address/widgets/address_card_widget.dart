@@ -25,7 +25,7 @@ class AddressCardWidget extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor.withOpacity(0.1),
+          color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(10)),
       child: Stack(children: [
         Positioned(
@@ -62,7 +62,10 @@ class AddressCardWidget extends StatelessWidget {
                         .deleteUserAddressByID(addressModel.id, index,
                             (bool isSuccessful, String message) {
                       context.pop();
-                      showCustomSnackBarHelper(message, status: isSuccessful ? SnackBarStatus.success : SnackBarStatus.error);
+                      showCustomSnackBarHelper(message,
+                          status: isSuccessful
+                              ? SnackBarStatus.success
+                              : SnackBarStatus.error);
                       context.pop();
                     });
                   },
@@ -80,7 +83,7 @@ class AddressCardWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
               boxShadow: [
                 BoxShadow(
-                  color: Theme.of(context).shadowColor.withOpacity(0.14),
+                  color: Theme.of(context).shadowColor.withValues(alpha: 0.14),
                   blurRadius: Dimensions.radiusDefault,
                   spreadRadius: Dimensions.radiusSmall,
                 )
@@ -98,7 +101,8 @@ class AddressCardWidget extends StatelessWidget {
                                   "workplace"
                               ? Icons.work_outline
                               : Icons.list_alt_outlined,
-                      color: Theme.of(context).primaryColor.withOpacity(0.8),
+                      color:
+                          Theme.of(context).primaryColor.withValues(alpha: 0.8),
                       size: Dimensions.paddingSizeLarge,
                     ),
                     const SizedBox(width: Dimensions.paddingSizeDefault),

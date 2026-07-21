@@ -1,11 +1,11 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_restaurant/common/widgets/code_picker_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_asset_image_widget.dart';
-import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/features/language/providers/language_provider.dart';
+import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
 
 class CustomTextFieldWidget extends StatefulWidget {
@@ -124,7 +124,7 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
               borderRadius: BorderRadius.circular(10.0),
               borderSide: BorderSide(
                 width: 0.2,
-                color: Theme.of(context).primaryColor.withOpacity(0.4),
+                color: Theme.of(context).primaryColor.withValues(alpha: 0.4),
               ),
             ),
             label: widget.label != null
@@ -155,7 +155,7 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
             fillColor: widget.fillColor ?? Theme.of(context).cardColor,
             hintStyle: Theme.of(context).textTheme.displayMedium!.copyWith(
                 fontSize: Dimensions.fontSizeSmall,
-                color: Theme.of(context).hintColor.withOpacity(0.7)),
+                color: Theme.of(context).hintColor.withValues(alpha: 0.7)),
             filled: true,
             prefixIcon: widget.isShowPrefixIcon
                 ? Padding(
@@ -208,8 +208,9 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
                             _obscureText
                                 ? Icons.visibility_off
                                 : Icons.visibility,
-                            color:
-                                Theme.of(context).hintColor.withOpacity(0.3)),
+                            color: Theme.of(context)
+                                .hintColor
+                                .withValues(alpha: 0.3)),
                         onPressed: _toggle)
                     : widget.isIcon
                         ? IconButton(
@@ -246,7 +247,7 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
           style: widget.isShowBorder ? BorderStyle.solid : BorderStyle.none,
           width: widget.isShowBorder ? 1 : 0,
           color: widget.borderColor ??
-              Theme.of(context).primaryColor.withOpacity(0.4),
+              Theme.of(context).primaryColor.withValues(alpha: 0.4),
         ),
       );
 }

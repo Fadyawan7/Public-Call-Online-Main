@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_restaurant/common/widgets/custom_image_widget.dart';
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/features/chat/domain/models/chat_model.dart';
 import 'package:flutter_restaurant/features/chat/providers/chat_provider.dart';
@@ -10,7 +9,6 @@ import 'package:flutter_restaurant/features/profile/providers/profile_provider.d
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/main.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
-import 'package:flutter_restaurant/utill/images.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -45,29 +43,23 @@ class _ConversationScreenState extends State<ConversationScreen> {
           centerTitle: false,
           elevation: 0,
           toolbarHeight: 68,
-          title: Text(
-            getTranslated('${widget.chat!.userName}', context)!,
-            style: rubikSemiBold.copyWith(
-              fontSize: Dimensions.fontSizeLarge,
-              color: Colors.white,
+          title: ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: CircleAvatar(
+              radius: 20,
+              backgroundColor: Colors.grey[300],
+              backgroundImage: NetworkImage(widget.chat!.userImage!),
             ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          backgroundColor: const Color(0xFF075E54),
-          leading: IconButton(
-            onPressed: () {
-              context.pop();
-              Provider.of<ChatProvider>(Get.context!, listen: false)
-                  .resetConversation();
-            },
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            padding: EdgeInsets.zero,
-          ),
-          actions: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(right: 12),
-              child: GestureDetector(
+            title: Text(
+              getTranslated('${widget.chat!.userName}', context)!,
+              style: rubikSemiBold.copyWith(
+                fontSize: Dimensions.fontSizeLarge,
+                color: Colors.white,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            trailing: GestureDetector(
                 onTap: () async {
                   if (!mounted) return;
 
@@ -118,27 +110,18 @@ class _ConversationScreenState extends State<ConversationScreen> {
                         FreelancerDetailsBottomSheet(freelancer: freelancer),
                   );
                 },
-                child: Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(width: 1.5, color: Colors.white),
-                    color: const Color(0xFF128C7E),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(44),
-                    //todo need to add images
-                    child: CustomImageWidget(
-                      fit: BoxFit.cover,
-                      placeholder: Images.profile,
-                      image: '${widget.chat!.userImage}',
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
+                child: Icon(Icons.more_vert, color: Colors.white)),
+          ),
+          backgroundColor: Color(0xFF5C6CFF),
+          leading: IconButton(
+            onPressed: () {
+              context.pop();
+              Provider.of<ChatProvider>(Get.context!, listen: false)
+                  .resetConversation();
+            },
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            padding: EdgeInsets.zero,
+          ),
         ),
         body: Consumer<ChatProvider>(builder: (context, chatProvider, _) {
           return MessageBodyWidget(

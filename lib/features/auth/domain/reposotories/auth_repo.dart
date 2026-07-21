@@ -3,14 +3,14 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_restaurant/common/models/api_response_model.dart';
 import 'package:flutter_restaurant/data/datasource/remote/dio/dio_client.dart';
 import 'package:flutter_restaurant/data/datasource/remote/exception/api_error_handler.dart';
-import 'package:flutter_restaurant/common/models/api_response_model.dart';
 import 'package:flutter_restaurant/features/auth/domain/models/signup_model.dart';
 import 'package:flutter_restaurant/features/auth/domain/models/social_login_model.dart';
 import 'package:flutter_restaurant/utill/app_constants.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthRepo {
   final DioClient? dioClient;
@@ -382,7 +382,7 @@ class AuthRepo {
 
   Future<ApiResponseModel> deleteUser() async {
     try {
-      Response response = await dioClient!.delete(AppConstants.customerRemove);
+      Response response = await dioClient!.post(AppConstants.customerRemove);
       return ApiResponseModel.withSuccess(response);
     } catch (e) {
       return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));

@@ -34,7 +34,7 @@ class DateWidget extends StatelessWidget {
             border: Border.all(
               color: Theme.of(context)
                   .primaryColor
-                  .withOpacity(0.3), // Or any desired border color
+                  .withValues(alpha: 0.3), // Or any desired border color
               width: 1.0, // Adjust border width as needed
             ),
           ),
@@ -49,7 +49,7 @@ class DateWidget extends StatelessWidget {
                 style: rubikMedium.copyWith(
                   color: isSelected
                       ? Theme.of(context).cardColor
-                      : Colors.black.withOpacity(0.6),
+                      : Colors.black.withValues(alpha: 0.6),
                 )),
           ]),
         ),

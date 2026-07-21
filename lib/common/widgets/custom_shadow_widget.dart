@@ -31,11 +31,11 @@ class CustomShadowWidget extends StatelessWidget {
               offset: const Offset(0, 5),
               blurRadius: 15,
               spreadRadius: -3,
-              color: Theme.of(context).primaryColor.withOpacity(0.01)),
+              color: Theme.of(context).primaryColor.withValues(alpha: 0.01)),
           BoxShadow(
               offset: const Offset(0, 0),
               blurRadius: 3,
-              color: Theme.of(context).primaryColor.withOpacity(0.02)),
+              color: Theme.of(context).primaryColor.withValues(alpha: 0.02)),
         ],
       ),
       child: child,

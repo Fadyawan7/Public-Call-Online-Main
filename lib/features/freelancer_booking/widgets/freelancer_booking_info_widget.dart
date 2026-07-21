@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/features/booking/providers/booking_provider.dart';
 import 'package:flutter_restaurant/features/menu/widgets/booking_info_item_widget.dart';
 import 'package:flutter_restaurant/localization/app_localization.dart';
-
 import 'package:flutter_restaurant/utill/color_resources.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:iconsax/iconsax.dart';
@@ -44,7 +43,7 @@ class FreelancerBookingInfoWidget extends StatelessWidget {
                 ),
                 Divider(
                   indent: Dimensions.paddingSizeDefault,
-                  color: Theme.of(context).hintColor.withOpacity(0.1),
+                  color: Theme.of(context).hintColor.withValues(alpha: 0.1),
                 ),
                 BookingInfoItemWidget(
                   iconData: Iconsax.user_octagon,
@@ -54,7 +53,7 @@ class FreelancerBookingInfoWidget extends StatelessWidget {
                 ),
                 Divider(
                   indent: Dimensions.paddingSizeDefault,
-                  color: Theme.of(context).hintColor.withOpacity(0.1),
+                  color: Theme.of(context).hintColor.withValues(alpha: 0.1),
                 ),
                 BookingInfoItemWidget(
                   iconData: Iconsax.clock,
@@ -64,7 +63,7 @@ class FreelancerBookingInfoWidget extends StatelessWidget {
                 ),
                 Divider(
                   indent: Dimensions.paddingSizeDefault,
-                  color: Theme.of(context).hintColor.withOpacity(0.1),
+                  color: Theme.of(context).hintColor.withValues(alpha: 0.1),
                 ),
                 BookingInfoItemWidget(
                   iconData: Iconsax.status,
@@ -76,7 +75,7 @@ class FreelancerBookingInfoWidget extends StatelessWidget {
                 ),
                 Divider(
                   indent: Dimensions.paddingSizeDefault,
-                  color: Theme.of(context).hintColor.withOpacity(0.1),
+                  color: Theme.of(context).hintColor.withValues(alpha: 0.1),
                 ),
               ],
             );

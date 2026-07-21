@@ -121,7 +121,7 @@ void showAnimatedDialog(
     context: context,
     barrierDismissible: dismissible,
     barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-    barrierColor: Colors.black.withOpacity(0.5),
+    barrierColor: Colors.black.withValues(alpha: 0.5),
     pageBuilder: (context, animation1, animation2) => dialog,
     transitionDuration: duration ?? const Duration(milliseconds: 500),
     transitionBuilder: (context, a1, a2, widget) {

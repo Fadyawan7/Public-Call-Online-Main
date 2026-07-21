@@ -309,7 +309,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                                   Dimensions.fontSizeSmall,
                                               color: Theme.of(context)
                                                   .hintColor
-                                                  .withOpacity(0.7)),
+                                                  .withValues(alpha: 0.7)),
                                     ),
                                     const SizedBox(
                                         width: Dimensions.paddingSizeSmall),

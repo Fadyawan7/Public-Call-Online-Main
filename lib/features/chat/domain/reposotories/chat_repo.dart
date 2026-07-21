@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:io';
+
+import 'package:flutter_restaurant/common/models/api_response_model.dart';
 import 'package:flutter_restaurant/data/datasource/remote/dio/dio_client.dart';
 import 'package:flutter_restaurant/data/datasource/remote/exception/api_error_handler.dart';
-import 'package:flutter_restaurant/common/models/api_response_model.dart';
 import 'package:flutter_restaurant/utill/app_constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -52,6 +53,7 @@ class ChatRepo {
         Uri.parse(
             '${AppConstants.baseUrl}${AppConstants.sendMessageUrl}$chatId/messages'));
     request.headers.addAll(<String, String>{'Authorization': 'Bearer $token'});
+    print('====SENDMESSAGE===${request.url}');
     if (file != null) {
       request.files.add(http.MultipartFile(
           'file', file.readAsBytes().asStream(), file.lengthSync(),

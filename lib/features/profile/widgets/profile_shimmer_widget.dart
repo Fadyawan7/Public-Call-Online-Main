@@ -26,7 +26,7 @@ class ProfileShimmerWidget extends StatelessWidget {
             height: 30,
             width: 90,
             decoration: BoxDecoration(
-              color: Theme.of(context).hintColor.withOpacity(0.5),
+              color: Theme.of(context).hintColor.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
             ),
           ),
@@ -40,7 +40,7 @@ class ProfileShimmerWidget extends StatelessWidget {
               child: Container(
                   height: 100,
                   width: 100,
-                  color: Theme.of(context).hintColor.withOpacity(0.5))),
+                  color: Theme.of(context).hintColor.withValues(alpha: 0.5))),
         )),
         const SizedBox(height: 50),
         Expanded(
@@ -57,7 +57,7 @@ class ProfileShimmerWidget extends StatelessWidget {
                   height: 50,
                   width: 60,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).hintColor.withOpacity(0.5),
+                    color: Theme.of(context).hintColor.withValues(alpha: 0.5),
                     borderRadius:
                         BorderRadius.circular(Dimensions.radiusDefault),
                   ),

@@ -3,15 +3,14 @@ import 'package:flutter_restaurant/common/widgets/custom_app_bar_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_asset_image_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_button_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_pop_scope_widget.dart';
-
 import 'package:flutter_restaurant/features/language/providers/language_provider.dart';
+import 'package:flutter_restaurant/features/language/providers/localization_provider.dart';
 import 'package:flutter_restaurant/features/language/widgets/language_widget.dart';
 import 'package:flutter_restaurant/features/onboarding/providers/onboarding_provider.dart';
 import 'package:flutter_restaurant/helper/custom_snackbar_helper.dart';
 import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
-import 'package:flutter_restaurant/features/language/providers/localization_provider.dart';
 import 'package:flutter_restaurant/utill/app_constants.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';
@@ -157,7 +156,7 @@ class _ChooseLanguageScreenState extends State<ChooseLanguageScreen> {
                                     BoxShadow(
                                       color: Theme.of(context)
                                           .shadowColor
-                                          .withOpacity(0.5),
+                                          .withValues(alpha: 0.5),
                                       // offset: const Offset(0, -5),
                                       spreadRadius: Dimensions.radiusDefault,
                                       blurRadius: Dimensions.radiusLarge,

@@ -51,7 +51,7 @@ class BookingAddressInfoWidget extends StatelessWidget {
                 ),
                 Divider(
                   indent: Dimensions.paddingSizeDefault,
-                  color: Theme.of(context).hintColor.withOpacity(0.1),
+                  color: Theme.of(context).hintColor.withValues(alpha: 0.1),
                 ),
                 if ((bookingProvider.bookingDetails?.status == 'completed' ||
                         bookingProvider.bookingDetails?.status ==

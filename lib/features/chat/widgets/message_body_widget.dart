@@ -44,6 +44,12 @@ class _MessageBodyWidgetState extends State<MessageBodyWidget> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ChatProvider>(
+        context,
+        listen: false,
+      ).clearImage();
+    });
     _initializeEcho();
   }
 
@@ -324,7 +330,7 @@ class _MessageBodyWidgetState extends State<MessageBodyWidget> {
                   InkWell(
                     onTap: () async {
                       if (chatProvider.isSendButtonActive) {
-                        chatProvider.sendMessage(
+                        await chatProvider.sendMessage(
                             widget._inputMessageController.text,
                             context,
                             widget.authProvider.getUserToken(),

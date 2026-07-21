@@ -1,10 +1,9 @@
-import 'package:http/http.dart' as http;
-
+import 'package:flutter_restaurant/common/models/api_response_model.dart';
 import 'package:flutter_restaurant/data/datasource/remote/dio/dio_client.dart';
 import 'package:flutter_restaurant/data/datasource/remote/exception/api_error_handler.dart';
-import 'package:flutter_restaurant/common/models/api_response_model.dart';
 import 'package:flutter_restaurant/features/booking/domain/models/place_booking_model.dart';
 import 'package:flutter_restaurant/utill/app_constants.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FreelancerBookingRepo {
@@ -43,7 +42,7 @@ class FreelancerBookingRepo {
     // Create a MultipartRequest
     http.MultipartRequest request = http.MultipartRequest(
       'POST',
-      Uri.parse('${AppConstants.baseUrl}${AppConstants.placeBookingUri}'),
+      Uri.parse(AppConstants.baseUrl).resolve(AppConstants.placeBookingUri),
     );
 
     // Add headers

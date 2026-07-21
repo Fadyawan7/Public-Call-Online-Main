@@ -214,7 +214,42 @@ class _FeaturedItemsDetailState extends State<FeaturedItemsDetail> {
                               width: double.infinity,
                             )),
 
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'My Categories',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          freelancer!.current_status == 'available'
+                              ? Container(
+                                  padding: const EdgeInsets.all(5),
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.green,
+                                  ),
+                                )
+                              : const SizedBox.shrink(),
+                          const SizedBox(width: 5),
+                          Text(
+                            freelancer?.current_status?.toCapitalized() ??
+                                'Not Available',
+                            style: TextStyle(color: Colors.grey[600]),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
 
                   // --- Category & Rating ---
                   Column(
@@ -237,7 +272,7 @@ class _FeaturedItemsDetailState extends State<FeaturedItemsDetail> {
                                   ),
                                   decoration: BoxDecoration(
                                     color: const Color(0xFFEAE6FA),
-                                    borderRadius: BorderRadius.circular(20),
+                                    borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Text(
                                     item,
@@ -250,36 +285,6 @@ class _FeaturedItemsDetailState extends State<FeaturedItemsDetail> {
                                 );
                               }).toList(),
                             ),
-                          ),
-                          const SizedBox(width: 12),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(Icons.star,
-                                  color: Colors.amber, size: 20),
-                              const SizedBox(width: 4),
-                              Text('${freelancer?.average_rating ?? 0.0}'),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          freelancer!.current_status == 'available'
-                              ? Container(
-                                  padding: const EdgeInsets.all(5),
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.green,
-                                  ),
-                                )
-                              : const SizedBox.shrink(),
-                          const SizedBox(width: 5),
-                          Text(
-                            freelancer?.current_status?.toCapitalized() ??
-                                'Not Available',
-                            style: TextStyle(color: Colors.grey[600]),
                           ),
                         ],
                       ),
@@ -363,6 +368,28 @@ class _FeaturedItemsDetailState extends State<FeaturedItemsDetail> {
                     ),
                   ),
 
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Rating",
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.star, color: Colors.amber, size: 20),
+                          const SizedBox(width: 4),
+                          Text('${freelancer?.average_rating ?? 0.0}'),
+                        ],
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: 16),
 
                   // --- Available Locations ---
@@ -452,10 +479,10 @@ class _FeaturedItemsDetailState extends State<FeaturedItemsDetail> {
                                                   begin: Alignment.topCenter,
                                                   end: Alignment.bottomCenter,
                                                   colors: [
-                                                    Colors.black
-                                                        .withOpacity(0.18),
-                                                    Colors.black
-                                                        .withOpacity(0.10),
+                                                    Colors.black.withValues(
+                                                        alpha: 0.18),
+                                                    Colors.black.withValues(
+                                                        alpha: 0.10),
                                                   ],
                                                 ),
                                               ),
@@ -492,8 +519,8 @@ class _FeaturedItemsDetailState extends State<FeaturedItemsDetail> {
                                     bottom: 0,
                                     child: Center(
                                       child: CircleAvatar(
-                                        backgroundColor:
-                                            Colors.black.withOpacity(0.35),
+                                        backgroundColor: Colors.black
+                                            .withValues(alpha: 0.35),
                                         child: IconButton(
                                           icon: const Icon(
                                               Icons.arrow_back_ios_new,
@@ -520,8 +547,8 @@ class _FeaturedItemsDetailState extends State<FeaturedItemsDetail> {
                                     bottom: 0,
                                     child: Center(
                                       child: CircleAvatar(
-                                        backgroundColor:
-                                            Colors.black.withOpacity(0.35),
+                                        backgroundColor: Colors.black
+                                            .withValues(alpha: 0.35),
                                         child: IconButton(
                                           icon: const Icon(
                                               Icons.arrow_forward_ios,

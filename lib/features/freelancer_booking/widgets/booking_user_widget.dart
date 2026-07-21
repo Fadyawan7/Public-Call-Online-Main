@@ -3,7 +3,6 @@ import 'package:flutter_restaurant/common/models/booking_details_model.dart';
 import 'package:flutter_restaurant/common/widgets/custom_asset_image_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_image_widget.dart';
 import 'package:flutter_restaurant/features/booking/providers/booking_provider.dart';
-
 import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';
@@ -52,7 +51,7 @@ class BookingUserWidget extends StatelessWidget {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Theme.of(context).shadowColor.withOpacity(0.5),
+                    color: Theme.of(context).shadowColor.withValues(alpha: 0.5),
                     offset: const Offset(0, 5),
                     spreadRadius: 5,
                     blurRadius: 15,
@@ -73,7 +72,7 @@ class BookingUserWidget extends StatelessWidget {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Theme.of(context).shadowColor.withOpacity(0.5),
+                    color: Theme.of(context).shadowColor.withValues(alpha: 0.5),
                     offset: const Offset(0, 5),
                     spreadRadius: 5,
                     blurRadius: 15,

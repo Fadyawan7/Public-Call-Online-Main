@@ -34,8 +34,9 @@ class MessageBubbleShimmerWidget extends StatelessWidget {
                         : const Radius.circular(10),
                     topRight: const Radius.circular(10),
                   ),
-                  color:
-                      Theme.of(context).hintColor.withOpacity(isMe ? 0.1 : 0.4),
+                  color: Theme.of(context)
+                      .hintColor
+                      .withValues(alpha: isMe ? 0.1 : 0.4),
                 ),
               ),
             ),

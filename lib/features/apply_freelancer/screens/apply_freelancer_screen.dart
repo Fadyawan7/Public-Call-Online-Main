@@ -37,8 +37,6 @@ class ApplyFreelancerScreen extends StatefulWidget {
 }
 
 class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
-  static const String _newCategoryValue = 'new_category';
-
   FocusNode? _firstNameFocus;
   FocusNode? _aboutMe;
   FocusNode? _phoneNumberFocus;
@@ -48,8 +46,8 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
   TextEditingController? _perhourController;
   TextEditingController? _perdayChargesController;
   TextEditingController? _perkmChargesController;
-  TextEditingController? _newCategoryController;
   TextEditingController? _phoneNumberController;
+  TextEditingController? _customCategoryController;
 
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
       GlobalKey<ScaffoldMessengerState>();
@@ -60,9 +58,7 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
   final List<XFile?> _portfolioImages = List<XFile?>.filled(3, null);
   final ImagePicker _picker = ImagePicker();
   late FreelancerProvider freelancerProvider;
-  String? _selectedCategoryValue;
-  String? _customCategoryName;
-  bool _showNewCategoryField = false;
+  final List<String> _customCategoryNames = [];
   bool _isSubmittingApplication = false;
 
   @override
@@ -87,8 +83,8 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
     _perhourController = TextEditingController();
     _perkmChargesController = TextEditingController();
     _perdayChargesController = TextEditingController();
-    _newCategoryController = TextEditingController();
     _phoneNumberController = TextEditingController();
+    _customCategoryController = TextEditingController();
     freelancerProvider =
         Provider.of<FreelancerProvider>(context, listen: false);
 
@@ -112,26 +108,9 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
     _perhourController?.dispose();
     _perdayChargesController?.dispose();
     _perkmChargesController?.dispose();
-    _newCategoryController?.dispose();
     _phoneNumberController?.dispose();
+    _customCategoryController?.dispose();
     super.dispose();
-  }
-
-  void _addCustomCategory() {
-    final String categoryName = _newCategoryController?.text.trim() ?? '';
-    if (categoryName.isEmpty) {
-      showCustomSnackBarHelper('Please enter category name',
-          status: SnackBarStatus.alert);
-      return;
-    }
-
-    setState(() {
-      _customCategoryName = categoryName;
-      _selectedCategoryValue = _newCategoryValue;
-      _showNewCategoryField = false;
-    });
-
-    FocusScope.of(context).unfocus();
   }
 
   @override
@@ -156,8 +135,9 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
                 builder: (context, profileProvider, child) {
                   return profileProvider.userInfoModel != null
                       ? Container(
-                          color:
-                              Theme.of(context).primaryColor.withOpacity(0.8),
+                          color: Theme.of(context)
+                              .primaryColor
+                              .withValues(alpha: 0.8),
                           child: Column(
                             children: [
                               Container(
@@ -371,71 +351,78 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
                                                       builder: (context,
                                                           freelancerProvider,
                                                           child) {
-                                                        // Initialize default selection if none exists
-                                                        WidgetsBinding.instance
-                                                            .addPostFrameCallback(
-                                                                (_) {
-                                                          if ((_selectedCategoryValue == null ||
-                                                                  _selectedCategoryValue!
-                                                                      .isEmpty) &&
-                                                              freelancerProvider
-                                                                  .selectedCategoryIDs
-                                                                  .isEmpty &&
-                                                              categoryProvider
-                                                                      .categoryList !=
-                                                                  null &&
-                                                              categoryProvider
-                                                                  .categoryList!
-                                                                  .isNotEmpty) {
-                                                            final int firstId =
-                                                                categoryProvider
-                                                                    .categoryList!
-                                                                    .first
-                                                                    .id!;
-                                                            freelancerProvider
-                                                                .setCategoryID(
-                                                                    categoryID:
-                                                                        firstId);
-                                                            if (mounted) {
-                                                              setState(() {
-                                                                _selectedCategoryValue =
-                                                                    firstId
-                                                                        .toString();
-                                                              });
-                                                            }
-                                                          }
-                                                        });
+                                                        final String
+                                                            selectedText =
+                                                            _buildSelectedCategoryText(
+                                                          categoryProvider,
+                                                          freelancerProvider,
+                                                        );
 
-                                                        // Build dropdown-like selector (keeps previous dropdown look)
-                                                        String selectedText;
-                                                        if (_customCategoryName !=
-                                                                null &&
-                                                            _customCategoryName!
-                                                                .isNotEmpty) {
-                                                          selectedText =
-                                                              _customCategoryName!;
-                                                        } else if (freelancerProvider
-                                                            .selectedCategoryIDs
-                                                            .isEmpty) {
-                                                          selectedText =
-                                                              'Select category';
-                                                        } else {
-                                                          final names = categoryProvider
-                                                              .categoryList!
-                                                              .where((c) =>
-                                                                  freelancerProvider
-                                                                      .selectedCategoryIDs
-                                                                      .contains(
-                                                                          c.id))
-                                                              .map(
-                                                                  (c) => c.name)
-                                                              .whereType<
-                                                                  String>()
-                                                              .toList();
-                                                          selectedText = names
-                                                                  .isNotEmpty
-                                                              ? names.join(', ')
-                                                              : 'Select category';
+                                                        final List<Widget>
+                                                            chips =
+                                                            freelancerProvider
+                                                                .selectedCategoryIDs
+                                                                .map((id) {
+                                                          final matches =
+                                                              (categoryProvider
+                                                                          .categoryList ??
+                                                                      [])
+                                                                  .where((c) =>
+                                                                      c.id ==
+                                                                      id)
+                                                                  .toList();
+                                                          if (matches.isEmpty) {
+                                                            return const SizedBox
+                                                                .shrink();
+                                                          }
+
+                                                          final cat =
+                                                              matches.first;
+                                                          return Chip(
+                                                            label: Text(
+                                                                cat.name ?? ''),
+                                                            onDeleted: () {
+                                                              freelancerProvider
+                                                                  .setCategoryID(
+                                                                      categoryID:
+                                                                          id);
+                                                            },
+                                                          );
+                                                        }).toList();
+
+                                                        for (final String name
+                                                            in _customCategoryNames) {
+                                                          if (name
+                                                              .trim()
+                                                              .isEmpty) {
+                                                            continue;
+                                                          }
+
+                                                          chips.add(
+                                                            Chip(
+                                                              label: Text(
+                                                                  name.trim()),
+                                                              backgroundColor: Theme
+                                                                      .of(
+                                                                          context)
+                                                                  .primaryColor
+                                                                  .withValues(
+                                                                      alpha:
+                                                                          0.12),
+                                                              avatar:
+                                                                  const Icon(
+                                                                Icons.star,
+                                                                size: 18,
+                                                              ),
+                                                              onDeleted: () {
+                                                                setState(() {
+                                                                  _customCategoryNames
+                                                                      .remove(
+                                                                          name);
+                                                                });
+                                                              },
+                                                            ),
+                                                          );
                                                         }
 
                                                         return Column(
@@ -446,25 +433,29 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
                                                             GestureDetector(
                                                               onTap: () =>
                                                                   _openCategorySelector(
-                                                                      categoryProvider,
-                                                                      freelancerProvider),
+                                                                categoryProvider,
+                                                                freelancerProvider,
+                                                              ),
                                                               child: Container(
-                                                                padding: const EdgeInsets
-                                                                    .symmetric(
-                                                                    horizontal:
-                                                                        12,
-                                                                    vertical:
-                                                                        14),
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .symmetric(
+                                                                  horizontal:
+                                                                      12,
+                                                                  vertical: 14,
+                                                                ),
                                                                 decoration:
                                                                     BoxDecoration(
                                                                   borderRadius:
                                                                       BorderRadius.circular(
                                                                           Dimensions
                                                                               .radiusDefault),
-                                                                  border: Border.all(
-                                                                      color: Theme.of(
-                                                                              context)
-                                                                          .hintColor),
+                                                                  border: Border
+                                                                      .all(
+                                                                    color: Theme.of(
+                                                                            context)
+                                                                        .hintColor,
+                                                                  ),
                                                                 ),
                                                                 child: Row(
                                                                   children: [
@@ -484,112 +475,27 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
                                                                         width:
                                                                             8),
                                                                     Icon(
-                                                                        Icons
-                                                                            .arrow_drop_down,
-                                                                        color: Theme.of(context)
-                                                                            .hintColor),
+                                                                      Icons
+                                                                          .arrow_drop_down,
+                                                                      color: Theme.of(
+                                                                              context)
+                                                                          .hintColor,
+                                                                    ),
                                                                   ],
                                                                 ),
                                                               ),
                                                             ),
-
                                                             const SizedBox(
                                                                 height: 12),
-                                                            // Selected categories display
                                                             Wrap(
                                                               spacing: 8,
                                                               runSpacing: 8,
-                                                              children: [
-                                                                // custom category chip if present
-                                                                if (_customCategoryName !=
-                                                                        null &&
-                                                                    _customCategoryName!
-                                                                        .isNotEmpty)
-                                                                  Chip(
-                                                                    label: Text(
-                                                                        _customCategoryName!),
-                                                                    backgroundColor: Theme.of(
-                                                                            context)
-                                                                        .primaryColor
-                                                                        .withOpacity(
-                                                                            0.12),
-                                                                    avatar: const Icon(
-                                                                        Icons
-                                                                            .star,
-                                                                        size:
-                                                                            18),
-                                                                    onDeleted:
-                                                                        () {
-                                                                      setState(
-                                                                          () {
-                                                                        _customCategoryName =
-                                                                            null;
-                                                                        _selectedCategoryValue =
-                                                                            null;
-                                                                      });
-                                                                    },
-                                                                  ),
-                                                                // selected standard categories
-                                                                ...freelancerProvider
-                                                                    .selectedCategoryIDs
-                                                                    .map((id) {
-                                                                  final matches = categoryProvider
-                                                                      .categoryList!
-                                                                      .where((c) =>
-                                                                          c.id ==
-                                                                          id)
-                                                                      .toList();
-                                                                  if (matches
-                                                                      .isEmpty)
-                                                                    return const SizedBox
-                                                                        .shrink();
-                                                                  final cat =
-                                                                      matches
-                                                                          .first;
-                                                                  return Chip(
-                                                                    label: Text(
-                                                                        cat.name ??
-                                                                            ''),
-                                                                    onDeleted:
-                                                                        () {
-                                                                      freelancerProvider.setCategoryID(
-                                                                          categoryID:
-                                                                              id);
-                                                                    },
-                                                                  );
-                                                                }).toList(),
-                                                              ],
+                                                              children: chips,
                                                             ),
                                                           ],
                                                         );
                                                       },
                                                     ),
-                                                    if (_showNewCategoryField) ...[
-                                                      const SizedBox(
-                                                          height: 12),
-                                                      CustomTextFieldWidget(
-                                                        controller:
-                                                            _newCategoryController,
-                                                        maxLines: 1,
-                                                        hintText:
-                                                            'Enter new category',
-                                                        isShowBorder: true,
-                                                      ),
-                                                      const SizedBox(
-                                                          height: 12),
-                                                      Align(
-                                                          alignment: Alignment
-                                                              .centerRight,
-                                                          child:
-                                                              CustomButtonWidget(
-                                                            btnTxt: 'Add',
-                                                            onTap:
-                                                                _addCustomCategory,
-                                                            width: 100,
-                                                            height: 40,
-                                                          )),
-                                                    ],
-
                                                     SizedBox(height: 20),
 
                                                     /// PHONE
@@ -645,7 +551,7 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
                                                     ),
 
                                                     SizedBox(height: 30),
-                                                    Text('Per per hour (Rs)',
+                                                    Text('Per hour (Rs)',
                                                         style: rubikSemiBold),
 
                                                     CustomTextFieldWidget(
@@ -877,17 +783,12 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
       return;
     }
 
-    final bool isCustomCategory = _selectedCategoryValue == _newCategoryValue;
+    final String? customCategoryName = _customCategoryNames.isNotEmpty
+        ? _customCategoryNames.join(', ')
+        : null;
 
-    if (isCustomCategory &&
-        (_customCategoryName == null || _customCategoryName!.trim().isEmpty)) {
-      showCustomSnackBarHelper('Please add category first',
-          status: SnackBarStatus.alert);
-      return;
-    }
-
-    // Ensure at least one category is selected (unless using custom category)
-    if (!isCustomCategory && freelancerProvider.selectedCategoryIDs.isEmpty) {
+    if (freelancerProvider.selectedCategoryIDs.isEmpty &&
+        customCategoryName == null) {
       showCustomSnackBarHelper('Please select at least one category',
           status: SnackBarStatus.alert);
       return;
@@ -904,12 +805,10 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
       per_hour: _perhourController?.text.trim() ?? '',
       cover_picture: _pickedCoverXFile?.path ?? '',
       whatsapp_number: _phoneNumberController?.text.trim() ?? '',
-      category_id: isCustomCategory
-          ? null
-          : (freelancerProvider.selectedCategoryIDs.isNotEmpty
-              ? freelancerProvider.selectedCategoryIDs
-              : null),
-      other_category: isCustomCategory ? _customCategoryName : null,
+      category_id: freelancerProvider.selectedCategoryIDs.isNotEmpty
+          ? freelancerProvider.selectedCategoryIDs
+          : null,
+      other_category: customCategoryName,
     );
 
     // debugPrint('===== MODEL DATA =====');
@@ -982,6 +881,11 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
           Provider.of<ProfileProvider>(context, listen: false);
 
       freelancerProvider.resetCategoryID();
+      if (mounted) {
+        setState(() {
+          _customCategoryNames.clear();
+        });
+      }
       profileProvider.getUserInfo(true);
       RouterHelper.getOrderSuccessScreen('success', message);
     } else {
@@ -1055,109 +959,241 @@ class _ApplyFreelancerScreenState extends State<ApplyFreelancerScreen> {
     }
   }
 
-  void _openCategorySelector(CategoryProvider categoryProvider,
-      FreelancerProvider freelancerProvider) {
-    showModalBottomSheet(
+  Future<void> _openCategorySelector(CategoryProvider categoryProvider,
+      FreelancerProvider freelancerProvider) async {
+    final List<int> tempSelectedIds =
+        List<int>.from(freelancerProvider.selectedCategoryIDs);
+    final List<String> tempCustomCategoryNames =
+        List<String>.from(_customCategoryNames);
+
+    _customCategoryController?.clear();
+
+    final result = await showModalBottomSheet<Map<String, dynamic>>(
       context: context,
       isScrollControlled: true,
+      useSafeArea: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
-      builder: (ctx) {
-        String newCategoryText = '';
-        return StatefulBuilder(builder: (context, setModalState) {
-          final categories = categoryProvider.categoryList ?? [];
-          return Padding(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text('Select Categories',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w600)),
-                      IconButton(
-                        onPressed: () => Navigator.pop(context),
-                        icon: const Icon(Icons.close),
-                      )
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: categories.map((cat) {
-                      final bool isSelected = freelancerProvider
-                          .selectedCategoryIDs
-                          .contains(cat.id);
-                      return ChoiceChip(
-                        selectedColor:
-                            Theme.of(context).primaryColor.withOpacity(0.12),
-                        label: Text(cat.name ?? ''),
-                        selected: isSelected,
-                        onSelected: (sel) {
-                          freelancerProvider.setCategoryID(categoryID: cat.id);
-                          setModalState(() {});
-                          setState(() {});
-                        },
-                      );
-                    }).toList(),
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          decoration: const InputDecoration(
-                              hintText: 'Add new category'),
-                          onChanged: (v) => newCategoryText = v,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      ElevatedButton(
-                        onPressed: () {
-                          final trimmed = newCategoryText.trim();
-                          if (trimmed.isEmpty) return;
-                          setState(() {
-                            _customCategoryName = trimmed;
-                            _selectedCategoryValue = _newCategoryValue;
-                            _showNewCategoryField = false;
-                          });
-                          freelancerProvider.resetCategoryID();
-                          Navigator.pop(context);
-                        },
-                        child: const Text('Add'),
-                      )
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text('Cancel'),
-                      ),
-                      const SizedBox(width: 8),
-                      ElevatedButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text('Done'),
-                      ),
-                    ],
-                  )
-                ],
+      builder: (sheetContext) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            final categories = categoryProvider.categoryList ?? [];
+
+            void addCustomCategory() {
+              final String trimmed =
+                  _customCategoryController?.text.trim() ?? '';
+              if (trimmed.isEmpty) {
+                showCustomSnackBarHelper(
+                  'Please enter category name',
+                  status: SnackBarStatus.alert,
+                );
+                return;
+              }
+
+              setModalState(() {
+                if (!tempCustomCategoryNames.contains(trimmed)) {
+                  tempCustomCategoryNames.add(trimmed);
+                }
+                _customCategoryController?.clear();
+              });
+            }
+
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(sheetContext).viewInsets.bottom,
               ),
-            ),
-          );
-        });
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'Select Categories',
+                              style: rubikSemiBold.copyWith(fontSize: 18),
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () => Navigator.of(sheetContext).pop(),
+                            icon: const Icon(Icons.close),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      if (categories.isEmpty)
+                        Text(
+                          'No categories available right now.',
+                          style: rubikRegular.copyWith(
+                            color: Theme.of(context).hintColor,
+                          ),
+                        )
+                      else
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: categories.map((cat) {
+                            final bool isSelected =
+                                tempSelectedIds.contains(cat.id);
+                            return ChoiceChip(
+                              selectedColor: Theme.of(context)
+                                  .primaryColor
+                                  .withValues(alpha: 0.12),
+                              label: Text(cat.name ?? ''),
+                              selected: isSelected,
+                              onSelected: (_) {
+                                setModalState(() {
+                                  if (cat.id == null) {
+                                    return;
+                                  }
+                                  if (isSelected) {
+                                    tempSelectedIds.remove(cat.id);
+                                  } else {
+                                    tempSelectedIds.add(cat.id!);
+                                  }
+                                });
+                              },
+                            );
+                          }).toList(),
+                        ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'Add new category',
+                        style: rubikSemiBold.copyWith(fontSize: 14),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: CustomTextFieldWidget(
+                              controller: _customCategoryController,
+                              maxLines: 1,
+                              hintText: 'Enter new category',
+                              isShowBorder: true,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          CustomButtonWidget(
+                            btnTxt: 'Add',
+                            onTap: addCustomCategory,
+                            width: 92,
+                            height: 46,
+                          ),
+                        ],
+                      ),
+                      if (tempCustomCategoryNames.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: tempCustomCategoryNames.map((name) {
+                            return Chip(
+                              label: Text(name),
+                              backgroundColor: Theme.of(context)
+                                  .primaryColor
+                                  .withValues(alpha: 0.12),
+                              avatar: const Icon(Icons.star, size: 18),
+                              onDeleted: () {
+                                setModalState(() {
+                                  tempCustomCategoryNames.remove(name);
+                                });
+                              },
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                      const SizedBox(height: 18),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton(
+                            onPressed: () => Navigator.of(sheetContext).pop(),
+                            child: const Text('Cancel'),
+                          ),
+                          const SizedBox(width: 8),
+                          CustomButtonWidget(
+                            btnTxt: 'Done',
+                            onTap: () {
+                              final String? customName =
+                                  tempCustomCategoryNames.isNotEmpty
+                                      ? tempCustomCategoryNames.join(', ')
+                                      : null;
+
+                              if (tempSelectedIds.isEmpty &&
+                                  customName == null) {
+                                showCustomSnackBarHelper(
+                                  'Please select at least one category',
+                                  status: SnackBarStatus.alert,
+                                );
+                                return;
+                              }
+
+                              Navigator.of(sheetContext).pop(<String, dynamic>{
+                                'selectedCategoryIds': tempSelectedIds,
+                                'customCategoryNames': tempCustomCategoryNames,
+                              });
+                            },
+                            width: 92,
+                            height: 46,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
       },
     );
+
+    if (result == null) {
+      return;
+    }
+
+    final List<int> selectedCategoryIds =
+        List<int>.from(result['selectedCategoryIds'] as List<dynamic>? ?? []);
+    final List<String> customCategoryNames = List<String>.from(
+        result['customCategoryNames'] as List<dynamic>? ?? []);
+
+    if (!mounted) {
+      return;
+    }
+
+    freelancerProvider.setCategoryIDs(selectedCategoryIds);
+    setState(() {
+      _customCategoryNames
+        ..clear()
+        ..addAll(customCategoryNames);
+    });
+  }
+
+  String _buildSelectedCategoryText(CategoryProvider categoryProvider,
+      FreelancerProvider freelancerProvider) {
+    final List<String> selectedNames = [];
+    final categories = categoryProvider.categoryList ?? [];
+
+    for (final int id in freelancerProvider.selectedCategoryIDs) {
+      final matches =
+          categories.where((category) => category.id == id).toList();
+      if (matches.isNotEmpty &&
+          (matches.first.name?.trim().isNotEmpty ?? false)) {
+        selectedNames.add(matches.first.name!.trim());
+      }
+    }
+
+    for (final String name in _customCategoryNames) {
+      if (name.trim().isNotEmpty) {
+        selectedNames.add(name.trim());
+      }
+    }
+
+    return selectedNames.isEmpty ? 'Select category' : selectedNames.join(', ');
   }
 
   bool _validateFields(BuildContext context) {

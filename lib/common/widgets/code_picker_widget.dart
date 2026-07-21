@@ -4,10 +4,10 @@ library;
 import 'package:collection/collection.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_restaurant/common/widgets/custom_directionality_widget.dart';
 import 'package:flutter_restaurant/features/language/providers/localization_provider.dart';
 import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
-import 'package:flutter_restaurant/common/widgets/custom_directionality_widget.dart';
 import 'package:provider/provider.dart';
 
 class CodePickerWidget extends StatefulWidget {
@@ -305,7 +305,7 @@ class CodePickerWidgetState extends State<CodePickerWidget> {
 
   void showCodePickerWidgetDialog() async {
     final item = await showDialog(
-      barrierColor: widget.barrierColor ?? Colors.grey.withOpacity(0.5),
+      barrierColor: widget.barrierColor ?? Colors.grey.withValues(alpha: 0.5),
       context: context,
       builder: (context) => Center(
         child: Dialog(

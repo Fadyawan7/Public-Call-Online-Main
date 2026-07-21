@@ -112,18 +112,17 @@ class SupportScreen extends StatelessWidget {
                                           .displaySmall!
                                           .copyWith(
                                             color: Colors.white,
+                                            fontWeight: FontWeight.bold,
                                             fontSize: Dimensions.fontSizeLarge,
                                           )),
                                 )),
                                 const SizedBox(width: 10),
                                 Expanded(
-                                    child: SizedBox(
+                                    child: CustomButtonWidget(
                                   height: 50,
-                                  child: CustomButtonWidget(
-                                    btnTxt: getTranslated(
-                                        'send_a_message', context),
-                                    onTap: () async {},
-                                  ),
+                                  btnTxt:
+                                      getTranslated('send_a_message', context),
+                                  onTap: () async {},
                                 )),
                               ]),
                             ),

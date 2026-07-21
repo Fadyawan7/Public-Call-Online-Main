@@ -17,8 +17,9 @@ class FreelancerCategoryResponse {
     if (value is int) return value;
     if (value is double) return value.toInt();
     if (value is num) return value.toInt();
-    if (value is String)
+    if (value is String) {
       return int.tryParse(value) ?? double.tryParse(value)?.toInt();
+    }
     return null;
   }
 

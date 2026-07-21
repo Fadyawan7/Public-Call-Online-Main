@@ -30,6 +30,10 @@
 .pub-cache/
 .pub/
 /build/
+/ios/build/
+/ios/Pods/
+ios/Flutter/ephemeral/
+**/Package.resolved
 .firebase
 .github
 /mybuild

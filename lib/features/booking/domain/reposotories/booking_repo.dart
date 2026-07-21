@@ -100,7 +100,7 @@ class BookingRepo {
     // Create a MultipartRequest
     http.MultipartRequest request = http.MultipartRequest(
       'POST',
-      Uri.parse('${AppConstants.baseUrl}${AppConstants.placeBookingUri}'),
+      Uri.parse(AppConstants.baseUrl).resolve(AppConstants.placeBookingUri),
     );
 
     // Add headers

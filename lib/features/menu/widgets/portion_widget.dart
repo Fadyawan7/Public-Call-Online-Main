@@ -34,7 +34,7 @@ class PortionWidget extends StatelessWidget {
             padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Theme.of(context).shadowColor.withOpacity(0.3),
+              color: Theme.of(context).shadowColor.withValues(alpha: 0.3),
             ),
             child: icon != null
                 ? Icon(icon,
@@ -76,7 +76,8 @@ class PortionWidget extends StatelessWidget {
                 hideDivider
                     ? const SizedBox(height: Dimensions.paddingSizeSmall)
                     : Divider(
-                        color: Theme.of(context).hintColor.withOpacity(0.1),
+                        color:
+                            Theme.of(context).hintColor.withValues(alpha: 0.1),
                       ),
               ])),
         ]),

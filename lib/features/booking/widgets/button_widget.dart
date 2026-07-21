@@ -116,7 +116,7 @@ class ButtonWidget extends StatelessWidget {
                       return buildActionButton(
                         text: 'Cancel Booking',
                         backgroundColor:
-                            Theme.of(context).hintColor.withOpacity(0.2),
+                            Theme.of(context).hintColor.withValues(alpha: 0.2),
                         textColor: ColorResources.homePageSectionTitleColor,
                         onPressed: () {
                           showDialog(

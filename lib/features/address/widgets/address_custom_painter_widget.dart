@@ -10,17 +10,17 @@ class AddressCustomPrinterWidget extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Color primaryColor = isDark
-        ? Colors.white.withOpacity(0.08)
-        : const Color(0xff000000).withOpacity(.05);
+        ? Colors.white.withValues(alpha: 0.08)
+        : const Color(0xff000000).withValues(alpha: .05);
     Color secenderyColor = isDark
-        ? Colors.white.withOpacity(0.03)
-        : const Color(0xff616161).withOpacity(.05);
+        ? Colors.white.withValues(alpha: 0.03)
+        : const Color(0xff616161).withValues(alpha: .05);
     Color shadowColor = isDark
-        ? Colors.white.withOpacity(0.01)
-        : const Color(0xffA3A3A3).withOpacity(0.05);
+        ? Colors.white.withValues(alpha: 0.01)
+        : const Color(0xffA3A3A3).withValues(alpha: 0.05);
     Color colorOne = isDark
-        ? Colors.white.withOpacity(0.01)
-        : const Color(0xffD3D3D3).withOpacity(1.0);
+        ? Colors.white.withValues(alpha: 0.01)
+        : const Color(0xffD3D3D3).withValues(alpha: 1.0);
 
     Paint paint0Fill = Paint()..style = PaintingStyle.fill;
     paint0Fill.color = Theme.of(Get.context!).cardColor;
@@ -251,8 +251,8 @@ class AddressCustomPrinterWidget extends CustomPainter {
     paint14Fill.shader = ui.Gradient.linear(
         Offset(size.width * 0.4282139, size.height * 0.7119196),
         Offset(size.width * 0.4312028, size.height * 0.7119196), [
-      const Color(0xff4C4C4C).withOpacity(0.05),
-      const Color(0xff2E2E2E).withOpacity(.02)
+      const Color(0xff4C4C4C).withValues(alpha: 0.05),
+      const Color(0xff2E2E2E).withValues(alpha: .02)
     ], [
       0,
       0.75
@@ -284,7 +284,7 @@ class AddressCustomPrinterWidget extends CustomPainter {
     path_16.close();
 
     Paint paint16Fill = Paint()..style = PaintingStyle.fill;
-    paint16Fill.color = const Color(0xff8E8E8E).withOpacity(1.0);
+    paint16Fill.color = const Color(0xff8E8E8E).withValues(alpha: 1.0);
     canvas.drawPath(path_16, paint16Fill);
 
     Path path_17 = Path();
@@ -299,8 +299,8 @@ class AddressCustomPrinterWidget extends CustomPainter {
     paint17Fill.shader = ui.Gradient.linear(
         Offset(size.width * 0.4909889, size.height * 0.4920339),
         Offset(size.width * 0.4939778, size.height * 0.4920339), [
-      const Color(0xff4C4C4C).withOpacity(0.05),
-      const Color(0xff2E2E2E).withOpacity(.02)
+      const Color(0xff4C4C4C).withValues(alpha: 0.05),
+      const Color(0xff2E2E2E).withValues(alpha: .02)
     ], [
       0,
       0.75
@@ -1001,7 +1001,7 @@ class AddressCustomPrinterWidget extends CustomPainter {
     Paint paint60Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.003111111;
-    paint60Stroke.color = Colors.white.withOpacity(1.0);
+    paint60Stroke.color = Colors.white.withValues(alpha: 1.0);
     canvas.drawPath(path_60, paint60Stroke);
 
     Paint paint60Fill = Paint()..style = PaintingStyle.fill;
@@ -1015,7 +1015,7 @@ class AddressCustomPrinterWidget extends CustomPainter {
     Paint paint61Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.003111111;
-    paint61Stroke.color = Colors.white.withOpacity(1.0);
+    paint61Stroke.color = Colors.white.withValues(alpha: 1.0);
     canvas.drawPath(path_61, paint61Stroke);
 
     Paint paint61Fill = Paint()..style = PaintingStyle.fill;
@@ -1029,7 +1029,7 @@ class AddressCustomPrinterWidget extends CustomPainter {
     Paint paint62Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.003111111;
-    paint62Stroke.color = Colors.white.withOpacity(1.0);
+    paint62Stroke.color = Colors.white.withValues(alpha: 1.0);
     canvas.drawPath(path_62, paint62Stroke);
 
     Paint paint62Fill = Paint()..style = PaintingStyle.fill;
@@ -1043,7 +1043,7 @@ class AddressCustomPrinterWidget extends CustomPainter {
     Paint paint63Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.001361111;
-    paint63Stroke.color = Colors.white.withOpacity(1.0);
+    paint63Stroke.color = Colors.white.withValues(alpha: 1.0);
     canvas.drawPath(path_63, paint63Stroke);
 
     Paint paint63Fill = Paint()..style = PaintingStyle.fill;
@@ -1057,7 +1057,7 @@ class AddressCustomPrinterWidget extends CustomPainter {
     Paint paint64Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.001361111;
-    paint64Stroke.color = Colors.white.withOpacity(1.0);
+    paint64Stroke.color = Colors.white.withValues(alpha: 1.0);
     canvas.drawPath(path_64, paint64Stroke);
 
     Paint paint64Fill = Paint()..style = PaintingStyle.fill;
@@ -1071,7 +1071,7 @@ class AddressCustomPrinterWidget extends CustomPainter {
     Paint paint65Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.001361111;
-    paint65Stroke.color = Colors.white.withOpacity(1.0);
+    paint65Stroke.color = Colors.white.withValues(alpha: 1.0);
     canvas.drawPath(path_65, paint65Stroke);
 
     Paint paint65Fill = Paint()..style = PaintingStyle.fill;
@@ -1085,7 +1085,7 @@ class AddressCustomPrinterWidget extends CustomPainter {
     Paint paint66Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.002388889;
-    paint66Stroke.color = Colors.white.withOpacity(1.0);
+    paint66Stroke.color = Colors.white.withValues(alpha: 1.0);
     canvas.drawPath(path_66, paint66Stroke);
 
     Paint paint66Fill = Paint()..style = PaintingStyle.fill;
@@ -1099,7 +1099,7 @@ class AddressCustomPrinterWidget extends CustomPainter {
     Paint paint67Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.002388889;
-    paint67Stroke.color = Colors.white.withOpacity(1.0);
+    paint67Stroke.color = Colors.white.withValues(alpha: 1.0);
     canvas.drawPath(path_67, paint67Stroke);
 
     Paint paint67Fill = Paint()..style = PaintingStyle.fill;
@@ -1113,7 +1113,7 @@ class AddressCustomPrinterWidget extends CustomPainter {
     Paint paint68Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.002388889;
-    paint68Stroke.color = Colors.white.withOpacity(1.0);
+    paint68Stroke.color = Colors.white.withValues(alpha: 1.0);
     canvas.drawPath(path_68, paint68Stroke);
 
     Paint paint68Fill = Paint()..style = PaintingStyle.fill;
@@ -1127,7 +1127,7 @@ class AddressCustomPrinterWidget extends CustomPainter {
     Paint paint69Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.001194444;
-    paint69Stroke.color = Colors.white.withOpacity(1.0);
+    paint69Stroke.color = Colors.white.withValues(alpha: 1.0);
     canvas.drawPath(path_69, paint69Stroke);
 
     Paint paint69Fill = Paint()..style = PaintingStyle.fill;
@@ -1141,7 +1141,7 @@ class AddressCustomPrinterWidget extends CustomPainter {
     Paint paint70Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.001194444;
-    paint70Stroke.color = Colors.white.withOpacity(1.0);
+    paint70Stroke.color = Colors.white.withValues(alpha: 1.0);
     canvas.drawPath(path_70, paint70Stroke);
 
     Paint paint70Fill = Paint()..style = PaintingStyle.fill;
@@ -1155,7 +1155,7 @@ class AddressCustomPrinterWidget extends CustomPainter {
     Paint paint71Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.001194444;
-    paint71Stroke.color = Colors.white.withOpacity(1.0);
+    paint71Stroke.color = Colors.white.withValues(alpha: 1.0);
     canvas.drawPath(path_71, paint71Stroke);
 
     Paint paint71Fill = Paint()..style = PaintingStyle.fill;
@@ -1169,7 +1169,7 @@ class AddressCustomPrinterWidget extends CustomPainter {
     Paint paint72Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.001194444;
-    paint72Stroke.color = Colors.white.withOpacity(1.0);
+    paint72Stroke.color = Colors.white.withValues(alpha: 1.0);
     canvas.drawPath(path_72, paint72Stroke);
 
     Paint paint72Fill = Paint()..style = PaintingStyle.fill;
@@ -1183,7 +1183,7 @@ class AddressCustomPrinterWidget extends CustomPainter {
     Paint paint73Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.001194444;
-    paint73Stroke.color = Colors.white.withOpacity(1.0);
+    paint73Stroke.color = Colors.white.withValues(alpha: 1.0);
     canvas.drawPath(path_73, paint73Stroke);
 
     Paint paint73Fill = Paint()..style = PaintingStyle.fill;
@@ -1197,7 +1197,7 @@ class AddressCustomPrinterWidget extends CustomPainter {
     Paint paint74Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.001194444;
-    paint74Stroke.color = Colors.white.withOpacity(1.0);
+    paint74Stroke.color = Colors.white.withValues(alpha: 1.0);
     canvas.drawPath(path_74, paint74Stroke);
 
     Paint paint74Fill = Paint()..style = PaintingStyle.fill;
@@ -1281,7 +1281,7 @@ class AddressCustomPrinterWidget extends CustomPainter {
     path_75.close();
 
     Paint paint75Fill = Paint()..style = PaintingStyle.fill;
-    paint75Fill.color = const Color(0xffD6D6D6).withOpacity(1.0);
+    paint75Fill.color = const Color(0xffD6D6D6).withValues(alpha: 1.0);
     canvas.drawPath(path_75, paint75Fill);
 
     Path path_76 = Path();
@@ -1361,7 +1361,7 @@ class AddressCustomPrinterWidget extends CustomPainter {
     path_76.close();
 
     Paint paint76Fill = Paint()..style = PaintingStyle.fill;
-    paint76Fill.color = const Color(0xffD6D6D6).withOpacity(1.0);
+    paint76Fill.color = const Color(0xffD6D6D6).withValues(alpha: 1.0);
     canvas.drawPath(path_76, paint76Fill);
 
     Path path_77 = Path();
@@ -1441,7 +1441,7 @@ class AddressCustomPrinterWidget extends CustomPainter {
     path_77.close();
 
     Paint paint77Fill = Paint()..style = PaintingStyle.fill;
-    paint77Fill.color = Colors.white.withOpacity(1.0);
+    paint77Fill.color = Colors.white.withValues(alpha: 1.0);
     canvas.drawPath(path_77, paint77Fill);
 
     Path path_78 = Path();

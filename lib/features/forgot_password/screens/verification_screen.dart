@@ -88,7 +88,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                                   .textTheme
                                   .bodyMedium!
                                   .color!
-                                  .withOpacity(0.07),
+                                  .withValues(alpha: 0.07),
                               blurRadius: 30,
                               spreadRadius: 0,
                               offset: const Offset(0, 10))

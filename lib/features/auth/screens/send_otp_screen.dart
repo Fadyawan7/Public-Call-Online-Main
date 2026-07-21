@@ -1,11 +1,9 @@
 import 'package:country_code_picker/country_code_picker.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/models/config_model.dart';
 import 'package:flutter_restaurant/common/widgets/custom_button_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_pop_scope_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_text_field_widget.dart';
-
 import 'package:flutter_restaurant/features/auth/domain/models/user_log_data.dart';
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/features/auth/widgets/social_login_widget.dart';
@@ -95,7 +93,7 @@ class _SendOtpScreenState extends State<SendOtpScreen> {
                                         .textTheme
                                         .bodyMedium!
                                         .color!
-                                        .withOpacity(0.07),
+                                        .withValues(alpha: 0.07),
                                     blurRadius: 30,
                                     offset: const Offset(0, 10),
                                     spreadRadius: 0,

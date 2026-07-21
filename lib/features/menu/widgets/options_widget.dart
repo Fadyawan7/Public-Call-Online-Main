@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/widgets/custom_asset_image_widget.dart';
 import 'package:flutter_restaurant/common/widgets/gradient_button_widget.dart';
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
+import 'package:flutter_restaurant/features/freelancer/domain/models/freelancer_model.dart';
+import 'package:flutter_restaurant/features/freelancer/providers/freelancer_provider.dart';
 import 'package:flutter_restaurant/features/menu/widgets/portion_widget.dart';
 import 'package:flutter_restaurant/features/menu/widgets/sign_out_dialog_widget.dart';
 import 'package:flutter_restaurant/features/menu/widgets/theme_switch_button_widget.dart';
@@ -17,12 +19,98 @@ import 'package:flutter_restaurant/utill/styles.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 
-class OptionsWidget extends StatelessWidget {
+class OptionsWidget extends StatefulWidget {
   final Function? onTap;
   const OptionsWidget({super.key, required this.onTap});
 
   @override
+  State<OptionsWidget> createState() => _OptionsWidgetState();
+}
+
+class _OptionsWidgetState extends State<OptionsWidget> {
+  FreelancerModel? _freelancer;
+  int? _loadedFreelancerId;
+  bool _isLoadingFreelancer = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _loadFreelancerCategoriesIfNeeded();
+  }
+
+  Future<void> _loadFreelancerCategoriesIfNeeded() async {
+    final profileProvider =
+        Provider.of<ProfileProvider>(context, listen: false);
+    final userInfo = profileProvider.userInfoModel;
+
+    if (userInfo == null ||
+        userInfo.userType != 'freelancer' ||
+        userInfo.id == null) {
+      return;
+    }
+
+    if (_loadedFreelancerId == userInfo.id) {
+      return;
+    }
+
+    _loadedFreelancerId = userInfo.id;
+    setState(() {
+      _isLoadingFreelancer = true;
+    });
+
+    await Provider.of<FreelancerProvider>(context, listen: false)
+        .getFreelancerDetails(userInfo.id.toString(), isApiCheck: false);
+
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _freelancer = Provider.of<FreelancerProvider>(context, listen: false)
+          .freelancerDetails;
+      _isLoadingFreelancer = false;
+    });
+  }
+
+  List<String> _buildCategoryItems() {
+    final apiCategories = _freelancer?.categories;
+
+    if (apiCategories != null && apiCategories.isNotEmpty) {
+      return apiCategories
+          .map((category) => category.name?.trim() ?? '')
+          .where((name) => name.isNotEmpty && name.toLowerCase() != 'null')
+          .toList();
+    }
+
+    final String? categoryName = _freelancer?.category_name?.trim();
+    final String? category = _freelancer?.category?.trim();
+
+    final String fallback = (categoryName != null &&
+            categoryName.isNotEmpty &&
+            categoryName.toLowerCase() != 'null')
+        ? categoryName
+        : (category != null &&
+                category.isNotEmpty &&
+                category.toLowerCase() != 'null')
+            ? category
+            : '';
+
+    if (fallback.isEmpty) {
+      return [];
+    }
+
+    final categories = fallback
+        .split(RegExp(r'[,|/]'))
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty && e.toLowerCase() != 'null')
+        .toList();
+
+    return categories;
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final categoryItems = _buildCategoryItems();
     final bool isLoggedIn =
         Provider.of<AuthProvider>(context, listen: false).isLoggedIn();
     return Consumer<AuthProvider>(
@@ -35,6 +123,92 @@ class OptionsWidget extends StatelessWidget {
                   Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        if (categoryItems.isEmpty)
+                          SizedBox.shrink()
+                        else
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: Dimensions.paddingSizeDefault),
+                                child: Text('My Category',
+                                    style: rubikSemiBold.copyWith(
+                                        fontSize: Dimensions.fontSizeLarge)),
+                              ),
+                              Container(
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).cardColor,
+                                  borderRadius: BorderRadius.circular(
+                                      Dimensions.radiusDefault),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                        color: Colors.black12,
+                                        spreadRadius: 0.4,
+                                        blurRadius: 1)
+                                  ],
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: Dimensions.paddingSizeDefault),
+                                margin: const EdgeInsets.all(
+                                    Dimensions.paddingSizeDefault),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8),
+                                      child: _isLoadingFreelancer
+                                          ? const Center(
+                                              child: SizedBox(
+                                                height: 18,
+                                                width: 18,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  strokeWidth: 2,
+                                                ),
+                                              ),
+                                            )
+                                          : Wrap(
+                                              spacing: 5,
+                                              runSpacing: 5,
+                                              alignment: WrapAlignment.start,
+                                              children:
+                                                  categoryItems.map((item) {
+                                                return Container(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                    horizontal: 12,
+                                                    vertical: 8,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    color:
+                                                        const Color(0xFFEAE6FA)
+                                                            .withAlpha(900),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
+                                                  ),
+                                                  child: Text(
+                                                    item,
+                                                    style: const TextStyle(
+                                                      fontSize: 13,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color: Colors.black87,
+                                                    ),
+                                                  ),
+                                                );
+                                              }).toList(),
+                                            ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(
+                                  height: Dimensions.paddingSizeExtraSmall),
+                            ],
+                          ),
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: Dimensions.paddingSizeDefault),
@@ -85,7 +259,7 @@ class OptionsWidget extends StatelessWidget {
                                             shape: BoxShape.circle,
                                             color: Theme.of(context)
                                                 .shadowColor
-                                                .withOpacity(0.1),
+                                                .withValues(alpha: 0.1),
                                           ),
                                           child: Icon(Icons.work_outline,
                                               size: 16,
@@ -115,7 +289,7 @@ class OptionsWidget extends StatelessWidget {
                                               Divider(
                                                 color: Theme.of(context)
                                                     .hintColor
-                                                    .withOpacity(0.1),
+                                                    .withValues(alpha: 0.1),
                                               ),
                                             ])),
                                       ]),
@@ -297,9 +471,9 @@ class OptionsWidget extends StatelessWidget {
                                                           color: Theme.of(
                                                                   dialogContext)
                                                               .colorScheme
-                                                              .error
-                                                              .withOpacity(
-                                                                  0.12),
+                                                              .primary
+                                                              .withValues(
+                                                                  alpha: 0.12),
                                                         ),
                                                         child: Icon(
                                                             Icons
@@ -307,7 +481,7 @@ class OptionsWidget extends StatelessWidget {
                                                             color: Theme.of(
                                                                     dialogContext)
                                                                 .colorScheme
-                                                                .error,
+                                                                .primary,
                                                             size: 32),
                                                       ),
                                                       const SizedBox(
@@ -441,7 +615,7 @@ class OptionsWidget extends StatelessWidget {
                                       shape: BoxShape.circle,
                                       color: Theme.of(context)
                                           .primaryColor
-                                          .withOpacity(0.1),
+                                          .withValues(alpha: 0.1),
                                     ),
                                     child: CustomAssetImageWidget(
                                       isLoggedIn
@@ -473,7 +647,7 @@ class OptionsWidget extends StatelessWidget {
                             .textTheme
                             .titleMedium
                             ?.color
-                            ?.withOpacity(0.4),
+                            ?.withValues(alpha: 0.4),
                       )),
                   const SizedBox(height: Dimensions.paddingSizeExtraLarge),
                 ]),

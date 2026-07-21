@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/models/config_model.dart';
 import 'package:flutter_restaurant/common/widgets/custom_asset_image_widget.dart';
-import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
+import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
@@ -97,7 +97,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen>
                                   ? Colors.transparent
                                   : Theme.of(context)
                                       .hintColor
-                                      .withOpacity(0.2),
+                                      .withValues(alpha: 0.2),
                               height: 2,
                             ),
                           )),

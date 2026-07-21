@@ -49,7 +49,7 @@ class FreelancerBookingShimmerWidget extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(10),
                                     color: Theme.of(context)
                                         .shadowColor
-                                        .withOpacity(0.3)),
+                                        .withValues(alpha: 0.3)),
                               ),
                               const SizedBox(
                                   width: Dimensions.paddingSizeExtraSmall),
@@ -58,7 +58,7 @@ class FreelancerBookingShimmerWidget extends StatelessWidget {
                                   width: 80,
                                   color: Theme.of(context)
                                       .shadowColor
-                                      .withOpacity(0.3)),
+                                      .withValues(alpha: 0.3)),
                             ]),
                             const SizedBox(width: Dimensions.paddingSizeSmall),
                             Container(
@@ -66,7 +66,7 @@ class FreelancerBookingShimmerWidget extends StatelessWidget {
                                 width: 150,
                                 color: Theme.of(context)
                                     .shadowColor
-                                    .withOpacity(0.3)),
+                                    .withValues(alpha: 0.3)),
                             const SizedBox(
                                 width: Dimensions.paddingSizeExtraSmall),
                             Container(
@@ -74,7 +74,7 @@ class FreelancerBookingShimmerWidget extends StatelessWidget {
                                 width: 100,
                                 color: Theme.of(context)
                                     .shadowColor
-                                    .withOpacity(0.3)),
+                                    .withValues(alpha: 0.3)),
                             const SizedBox(
                                 width: Dimensions.paddingSizeExtraSmall),
                             Container(
@@ -82,7 +82,7 @@ class FreelancerBookingShimmerWidget extends StatelessWidget {
                                 width: 100,
                                 color: Theme.of(context)
                                     .shadowColor
-                                    .withOpacity(0.3)),
+                                    .withValues(alpha: 0.3)),
                             const SizedBox(
                                 width: Dimensions.paddingSizeExtraSmall),
                             Container(
@@ -95,12 +95,14 @@ class FreelancerBookingShimmerWidget extends StatelessWidget {
                                     Dimensions.radiusSmall),
                                 color: Theme.of(context)
                                     .shadowColor
-                                    .withOpacity(0.3),
+                                    .withValues(alpha: 0.3),
                               ),
                             ),
                           ]),
                       Divider(
-                          color: Theme.of(context).hintColor.withOpacity(0.2),
+                          color: Theme.of(context)
+                              .hintColor
+                              .withValues(alpha: 0.2),
                           thickness: 0.5),
                     ])
                   : Row(children: [
@@ -114,7 +116,7 @@ class FreelancerBookingShimmerWidget extends StatelessWidget {
                                 child: Container(
                                     color: Theme.of(context)
                                         .shadowColor
-                                        .withOpacity(0.3),
+                                        .withValues(alpha: 0.3),
                                     height: 65,
                                     width: 65),
                               ),
@@ -135,7 +137,7 @@ class FreelancerBookingShimmerWidget extends StatelessWidget {
                                         width: 90,
                                         color: Theme.of(context)
                                             .shadowColor
-                                            .withOpacity(0.3)),
+                                            .withValues(alpha: 0.3)),
                                     const SizedBox(
                                         width:
                                             Dimensions.paddingSizeExtraSmall),
@@ -144,7 +146,7 @@ class FreelancerBookingShimmerWidget extends StatelessWidget {
                                         width: 50,
                                         color: Theme.of(context)
                                             .shadowColor
-                                            .withOpacity(0.3)),
+                                            .withValues(alpha: 0.3)),
                                   ]),
                               const SizedBox(
                                   height: Dimensions.paddingSizeSmall),
@@ -157,7 +159,7 @@ class FreelancerBookingShimmerWidget extends StatelessWidget {
                                         width: 70,
                                         color: Theme.of(context)
                                             .shadowColor
-                                            .withOpacity(0.3)),
+                                            .withValues(alpha: 0.3)),
                                     const SizedBox(
                                         width:
                                             Dimensions.paddingSizeExtraSmall),
@@ -166,7 +168,7 @@ class FreelancerBookingShimmerWidget extends StatelessWidget {
                                         width: 70,
                                         color: Theme.of(context)
                                             .shadowColor
-                                            .withOpacity(0.3)),
+                                            .withValues(alpha: 0.3)),
                                   ]),
                               const SizedBox(
                                   height: Dimensions.paddingSizeSmall),
@@ -179,7 +181,7 @@ class FreelancerBookingShimmerWidget extends StatelessWidget {
                                         width: 80,
                                         color: Theme.of(context)
                                             .shadowColor
-                                            .withOpacity(0.3)),
+                                            .withValues(alpha: 0.3)),
                                     const SizedBox(
                                         width:
                                             Dimensions.paddingSizeExtraSmall),
@@ -188,7 +190,7 @@ class FreelancerBookingShimmerWidget extends StatelessWidget {
                                         width: 80,
                                         color: Theme.of(context)
                                             .shadowColor
-                                            .withOpacity(0.3)),
+                                            .withValues(alpha: 0.3)),
                                   ]),
                             ]),
                       ),

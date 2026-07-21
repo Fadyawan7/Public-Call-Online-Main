@@ -42,7 +42,8 @@ class WelcomeScreen extends StatelessWidget {
                   '${getTranslated('welcome_to', context)!} ${AppConstants.appName}, ${getTranslated('please_login_or', context)}',
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.displayMedium!.copyWith(
-                      color: Theme.of(context).hintColor.withOpacity(0.7)),
+                      color:
+                          Theme.of(context).hintColor.withValues(alpha: 0.7)),
                 ),
               ),
               const SizedBox(height: 50),

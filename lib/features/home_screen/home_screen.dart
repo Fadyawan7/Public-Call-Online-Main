@@ -10,6 +10,7 @@ import 'package:flutter_restaurant/features/home_screen/home_widget/all_featured
 import 'package:flutter_restaurant/features/home_screen/home_widget/relevant_category/relevant_categories.dart';
 import 'package:flutter_restaurant/features/home_screen/provider/home_provider.dart';
 import 'package:flutter_restaurant/features/notification/screens/notification_screen.dart';
+import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:provider/provider.dart';
 
 // Fixit Style UI Constants
@@ -95,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _FixitTheme.textSub.withOpacity(0.08), // 🔥 HERE
+      backgroundColor: _FixitTheme.textSub.withValues(alpha: 0.08), // 🔥 HERE
 
       body: SafeArea(
         bottom: false,
@@ -164,73 +165,80 @@ class _HomeScreenState extends State<HomeScreen> {
 
 Widget _buildAppBarFixed(
     bool isLoggedIn, String? formattedAddress, BuildContext context) {
-  return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-    child: Row(
-      children: [
-        // Location Icon
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: const BoxDecoration(
-            color: _FixitTheme.primary,
-            shape: BoxShape.circle,
+  return GestureDetector(
+    onTap: () {
+      RouterHelper.getDashboardRoute('freelancer',
+          action: RouteAction.popAndPush);
+    },
+    child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+      child: Row(
+        children: [
+          // Location Icon
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: const BoxDecoration(
+              color: _FixitTheme.primary,
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.location_on, color: Colors.white, size: 18),
           ),
-          child: const Icon(Icons.location_on, color: Colors.white, size: 18),
-        ),
-        const SizedBox(width: 10),
+          const SizedBox(width: 10),
 
-        // Address Details
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                "Current location",
-                style: TextStyle(
-                  color: _FixitTheme.textSub,
-                  fontSize: 12,
+          // Address Details
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  "PCO",
+                  style: TextStyle(
+                    color: _FixitTheme.primary,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w900,
+                  ),
                 ),
-              ),
-              Consumer<LocationProvider>(
-                builder: (context, locationProvider, child) {
-                  final currentAddress =
-                      formattedAddress?.trim().isNotEmpty == true
-                          ? formattedAddress!.trim()
-                          : locationProvider.address?.trim() ?? '';
+                Consumer<LocationProvider>(
+                  builder: (context, locationProvider, child) {
+                    final currentAddress =
+                        formattedAddress?.trim().isNotEmpty == true
+                            ? formattedAddress!.trim()
+                            : locationProvider.address?.trim() ?? '';
 
-                  return Text(
-                    isLoggedIn
-                        ? (currentAddress.isNotEmpty
-                            ? currentAddress
-                            : "Select your location")
-                        : 'Please Login',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    maxLines: 1,
-                  );
-                },
-              ),
-            ],
+                    return Text(
+                      isLoggedIn
+                          ? (currentAddress.isNotEmpty
+                              ? currentAddress
+                              : "Select your location")
+                          : 'Please Login',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      maxLines: 1,
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
-        ),
 
-        // Notification Icon - FIXED NAVIGATION
-        IconButton(
-          onPressed: () {
-            debugPrint("----> Navigating to Notification Screen");
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const NotificationScreen()),
-            );
-          },
-          icon:
-              const Icon(Icons.notifications_none, color: _FixitTheme.textMain),
-        ),
-      ],
+          // Notification Icon - FIXED NAVIGATION
+          IconButton(
+            onPressed: () {
+              debugPrint("----> Navigating to Notification Screen");
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const NotificationScreen()),
+              );
+            },
+            icon: const Icon(Icons.notifications_none,
+                color: _FixitTheme.textMain),
+          ),
+        ],
+      ),
     ),
   );
 }

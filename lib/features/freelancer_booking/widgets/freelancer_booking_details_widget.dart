@@ -35,7 +35,9 @@ class FreelancerBookingDetailsWidget extends StatelessWidget {
                         BorderRadius.circular(Dimensions.radiusDefault),
                     boxShadow: [
                       BoxShadow(
-                        color: Theme.of(context).shadowColor.withOpacity(0.5),
+                        color: Theme.of(context)
+                            .shadowColor
+                            .withValues(alpha: 0.5),
                         blurRadius: Dimensions.radiusSmall,
                         spreadRadius: 1,
                         offset: const Offset(2, 2),
@@ -61,7 +63,7 @@ class FreelancerBookingDetailsWidget extends StatelessWidget {
                               BoxShadow(
                                 color: Theme.of(context)
                                     .shadowColor
-                                    .withOpacity(0.5),
+                                    .withValues(alpha: 0.5),
                                 blurRadius: 5,
                                 spreadRadius: 1,
                                 offset: const Offset(2, 2),
@@ -88,7 +90,9 @@ class FreelancerBookingDetailsWidget extends StatelessWidget {
                           BorderRadius.circular(Dimensions.radiusDefault),
                       boxShadow: [
                         BoxShadow(
-                          color: Theme.of(context).shadowColor.withOpacity(0.5),
+                          color: Theme.of(context)
+                              .shadowColor
+                              .withValues(alpha: 0.5),
                           blurRadius: 5,
                           spreadRadius: 1,
                           offset: const Offset(2, 2),
@@ -118,8 +122,9 @@ class FreelancerBookingDetailsWidget extends StatelessWidget {
                             BorderRadius.circular(Dimensions.radiusDefault),
                         boxShadow: [
                           BoxShadow(
-                            color:
-                                Theme.of(context).shadowColor.withOpacity(0.5),
+                            color: Theme.of(context)
+                                .shadowColor
+                                .withValues(alpha: 0.5),
                             blurRadius: Dimensions.radiusSmall,
                             spreadRadius: 1,
                             offset: const Offset(2, 2),

@@ -30,7 +30,7 @@ class AddressCardWebWidget extends StatelessWidget {
         Column(children: [
           Container(
             padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
-            color: Theme.of(context).primaryColor.withOpacity(0.05),
+            color: Theme.of(context).primaryColor.withValues(alpha: 0.05),
             child: Row(children: [
               Expanded(
                   child: Text(addressModel.addressType!, style: rubikSemiBold)),

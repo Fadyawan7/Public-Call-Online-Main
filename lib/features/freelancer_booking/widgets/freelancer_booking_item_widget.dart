@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_restaurant/common/widgets/gradient_button_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_button_widget.dart';
+import 'package:flutter_restaurant/common/widgets/gradient_button_widget.dart';
 import 'package:flutter_restaurant/features/booking/domain/models/booking_model.dart';
 import 'package:flutter_restaurant/features/booking/providers/booking_provider.dart';
 import 'package:flutter_restaurant/features/booking/widgets/booking_cancel_dialog_widget.dart';
@@ -43,7 +43,7 @@ class FreelancerBookingItemWidget extends StatelessWidget {
             decoration: BoxDecoration(
               color: Theme.of(context).canvasColor,
               border: Border.all(
-                  color: Theme.of(context).hintColor.withOpacity(0.2)),
+                  color: Theme.of(context).hintColor.withValues(alpha: 0.2)),
               borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
             ),
             child: Column(children: [
@@ -91,7 +91,7 @@ class FreelancerBookingItemWidget extends StatelessWidget {
                               Text(
                                 '${bookingItem.freelancerName}',
                                 style: rubikBold.copyWith(
-                                    color: Colors.black.withOpacity(0.7),
+                                    color: Colors.black.withValues(alpha: 0.7),
                                     fontSize: Dimensions.fontSizeDefault),
                               ),
                               const SizedBox(
@@ -110,7 +110,7 @@ class FreelancerBookingItemWidget extends StatelessWidget {
                                 style: rubikBold.copyWith(
                                     color: Theme.of(context)
                                         .hintColor
-                                        .withOpacity(0.7),
+                                        .withValues(alpha: 0.7),
                                     fontSize: Dimensions.fontSizeSmall),
                               ),
                               const SizedBox(width: Dimensions.fontSizeDefault),
@@ -122,7 +122,9 @@ class FreelancerBookingItemWidget extends StatelessWidget {
                             ]),
                         Divider(
                           indent: Dimensions.paddingSizeDefault,
-                          color: Theme.of(context).hintColor.withOpacity(0.1),
+                          color: Theme.of(context)
+                              .hintColor
+                              .withValues(alpha: 0.1),
                         ),
                         Row(
                           children: [

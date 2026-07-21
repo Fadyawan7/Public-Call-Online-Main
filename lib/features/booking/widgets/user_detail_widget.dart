@@ -51,7 +51,7 @@ class UserDetailWidget extends StatelessWidget {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Theme.of(context).shadowColor.withOpacity(0.5),
+                    color: Theme.of(context).shadowColor.withValues(alpha: 0.5),
                     offset: const Offset(0, 5),
                     spreadRadius: 5,
                     blurRadius: 15,
@@ -79,7 +79,7 @@ class UserDetailWidget extends StatelessWidget {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Theme.of(context).shadowColor.withOpacity(0.5),
+                    color: Theme.of(context).shadowColor.withValues(alpha: 0.5),
                     offset: const Offset(0, 5),
                     spreadRadius: 5,
                     blurRadius: 15,

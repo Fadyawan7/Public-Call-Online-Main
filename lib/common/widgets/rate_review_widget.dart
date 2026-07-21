@@ -92,7 +92,7 @@ class RateReviewWidget extends StatelessWidget {
         ),
         Divider(
           indent: Dimensions.paddingSizeDefault,
-          color: Theme.of(context).hintColor.withOpacity(0.3),
+          color: Theme.of(context).hintColor.withValues(alpha: 0.3),
         ),
       ],
     );

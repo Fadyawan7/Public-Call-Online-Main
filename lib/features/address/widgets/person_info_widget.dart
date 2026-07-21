@@ -48,7 +48,7 @@ class PersonInfoWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-              color: ColorResources.cardShadowColor.withOpacity(0.2),
+              color: ColorResources.cardShadowColor.withValues(alpha: 0.2),
               blurRadius: 10)
         ],
       ),

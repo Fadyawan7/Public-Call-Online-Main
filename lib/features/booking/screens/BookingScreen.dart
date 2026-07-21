@@ -97,7 +97,7 @@ class _BookingScreenState extends State<BookingScreen>
                               border: Border.all(
                                 color: Theme.of(context)
                                     .hintColor
-                                    .withOpacity(0.2),
+                                    .withValues(alpha: 0.2),
                               ),
                               borderRadius: BorderRadius.circular(
                                 Dimensions.radiusDefault,
@@ -166,7 +166,8 @@ class _BookingScreenState extends State<BookingScreen>
           boxShadow: selected
               ? [
                   BoxShadow(
-                    color: Theme.of(context).primaryColor.withOpacity(0.12),
+                    color:
+                        Theme.of(context).primaryColor.withValues(alpha: 0.12),
                     blurRadius: 6,
                     offset: const Offset(0, 1),
                   ),
@@ -227,7 +228,7 @@ class _MyBookingTabsState extends State<_MyBookingTabs>
           decoration: BoxDecoration(
             color: Theme.of(context).canvasColor,
             border: Border.all(
-              color: Theme.of(context).hintColor.withOpacity(0.2),
+              color: Theme.of(context).hintColor.withValues(alpha: 0.2),
             ),
             borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
           ),
@@ -274,7 +275,7 @@ class _MyBookingTabsState extends State<_MyBookingTabs>
         style: rubikRegular.copyWith(
           color: selected
               ? Theme.of(context).primaryColor
-              : Theme.of(context).primaryColor.withOpacity(0.6),
+              : Theme.of(context).primaryColor.withValues(alpha: 0.6),
           fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
         ),
       ),
@@ -357,8 +358,9 @@ class _MyOrderTabsState extends State<_MyOrderTabs>
                           decoration: BoxDecoration(
                             color: Theme.of(context).canvasColor,
                             border: Border.all(
-                              color:
-                                  Theme.of(context).hintColor.withOpacity(0.2),
+                              color: Theme.of(context)
+                                  .hintColor
+                                  .withValues(alpha: 0.2),
                             ),
                             borderRadius:
                                 BorderRadius.circular(Dimensions.radiusDefault),
@@ -414,7 +416,7 @@ class _MyOrderTabsState extends State<_MyOrderTabs>
         style: rubikRegular.copyWith(
           color: selected
               ? Theme.of(context).primaryColor
-              : Theme.of(context).primaryColor.withOpacity(0.6),
+              : Theme.of(context).primaryColor.withValues(alpha: 0.6),
           fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
         ),
       ),

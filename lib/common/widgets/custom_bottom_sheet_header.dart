@@ -32,7 +32,7 @@ class CustomBottomSheetHeader extends StatelessWidget {
               width: 35,
               height: 4,
               decoration: BoxDecoration(
-                color: Theme.of(context).hintColor.withOpacity(0.3),
+                color: Theme.of(context).hintColor.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
               ),
               padding: const EdgeInsets.symmetric(

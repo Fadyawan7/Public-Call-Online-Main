@@ -36,7 +36,7 @@ class ProductShimmerWidget extends StatelessWidget {
                                   BorderRadius.circular(Dimensions.radiusLarge),
                               color: Theme.of(context)
                                   .shadowColor
-                                  .withOpacity(0.3),
+                                  .withValues(alpha: 0.3),
                             ),
                           )),
                       Padding(
@@ -54,7 +54,7 @@ class ProductShimmerWidget extends StatelessWidget {
                                     Dimensions.radiusLarge),
                                 color: Theme.of(context)
                                     .shadowColor
-                                    .withOpacity(0.3),
+                                    .withValues(alpha: 0.3),
                               ),
                             )),
                       ),
@@ -107,7 +107,7 @@ class _ShimmerGridCardItem extends StatelessWidget {
             width: width,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(Dimensions.radiusLarge),
-              color: Theme.of(context).shadowColor.withOpacity(0.3),
+              color: Theme.of(context).shadowColor.withValues(alpha: 0.3),
             ),
           ),
           Align(
@@ -135,7 +135,8 @@ class _ShimmerGridCardItem extends StatelessWidget {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      color: Theme.of(context).shadowColor.withOpacity(0.5),
+                      color:
+                          Theme.of(context).shadowColor.withValues(alpha: 0.5),
                       borderRadius:
                           BorderRadius.circular(Dimensions.radiusDefault),
                     ),
@@ -146,7 +147,9 @@ class _ShimmerGridCardItem extends StatelessWidget {
                   Row(mainAxisSize: MainAxisSize.min, children: [
                     Container(
                       decoration: BoxDecoration(
-                        color: Theme.of(context).shadowColor.withOpacity(0.5),
+                        color: Theme.of(context)
+                            .shadowColor
+                            .withValues(alpha: 0.5),
                         borderRadius:
                             BorderRadius.circular(Dimensions.radiusDefault),
                       ),
@@ -155,13 +158,16 @@ class _ShimmerGridCardItem extends StatelessWidget {
                     ),
                     const SizedBox(width: Dimensions.paddingSizeExtraSmall),
                     Icon(Icons.star,
-                        color: Theme.of(context).shadowColor.withOpacity(0.5),
+                        color: Theme.of(context)
+                            .shadowColor
+                            .withValues(alpha: 0.5),
                         size: Dimensions.paddingSizeDefault),
                   ]),
                   const SizedBox(height: Dimensions.paddingSizeExtraSmall),
                   Container(
                     decoration: BoxDecoration(
-                      color: Theme.of(context).shadowColor.withOpacity(0.5),
+                      color:
+                          Theme.of(context).shadowColor.withValues(alpha: 0.5),
                       borderRadius:
                           BorderRadius.circular(Dimensions.radiusDefault),
                     ),
@@ -206,7 +212,7 @@ class _ShimmerCardItem extends StatelessWidget {
             width: width,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(Dimensions.radiusLarge),
-              color: Theme.of(context).shadowColor.withOpacity(0.3),
+              color: Theme.of(context).shadowColor.withValues(alpha: 0.3),
             ),
           ),
           Align(
@@ -233,7 +239,8 @@ class _ShimmerCardItem extends StatelessWidget {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      color: Theme.of(context).shadowColor.withOpacity(0.5),
+                      color:
+                          Theme.of(context).shadowColor.withValues(alpha: 0.5),
                       borderRadius:
                           BorderRadius.circular(Dimensions.radiusDefault),
                     ),
@@ -244,7 +251,9 @@ class _ShimmerCardItem extends StatelessWidget {
                   Row(mainAxisSize: MainAxisSize.min, children: [
                     Container(
                       decoration: BoxDecoration(
-                        color: Theme.of(context).shadowColor.withOpacity(0.5),
+                        color: Theme.of(context)
+                            .shadowColor
+                            .withValues(alpha: 0.5),
                         borderRadius:
                             BorderRadius.circular(Dimensions.radiusDefault),
                       ),
@@ -253,13 +262,16 @@ class _ShimmerCardItem extends StatelessWidget {
                     ),
                     const SizedBox(width: Dimensions.paddingSizeExtraSmall),
                     Icon(Icons.star,
-                        color: Theme.of(context).shadowColor.withOpacity(0.3),
+                        color: Theme.of(context)
+                            .shadowColor
+                            .withValues(alpha: 0.3),
                         size: Dimensions.paddingSizeDefault),
                   ]),
                   const SizedBox(height: Dimensions.paddingSizeExtraSmall),
                   Container(
                     decoration: BoxDecoration(
-                      color: Theme.of(context).shadowColor.withOpacity(0.5),
+                      color:
+                          Theme.of(context).shadowColor.withValues(alpha: 0.5),
                       borderRadius:
                           BorderRadius.circular(Dimensions.radiusDefault),
                     ),

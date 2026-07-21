@@ -39,7 +39,7 @@ class CustomButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 3,
-      shadowColor: Theme.of(context).primaryColor.withOpacity(0.5),
+      shadowColor: Theme.of(context).primaryColor.withValues(alpha: 0.5),
       child: GradientButtonWidget(
         onTap: isLoading ? null : onTap as void Function()?,
         borderRadius: borderRadius,

@@ -1,13 +1,14 @@
 // profile_image_widget.dart
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/widgets/custom_image_widget.dart';
 import 'package:flutter_restaurant/utill/color_resources.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
+import 'package:flutter_restaurant/utill/image_utils.dart';
 import 'package:flutter_restaurant/utill/images.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:flutter_restaurant/utill/image_utils.dart';
 
 class ProfileImageWidget extends StatefulWidget {
   final String? imageUrl;
@@ -47,23 +48,21 @@ class _ProfileImageWidgetState extends State<ProfileImageWidget> {
               toolbarTitle: 'Crop Profile Image',
               toolbarColor: primaryColor,
               toolbarWidgetColor: Colors.white,
-              lockAspectRatio: false,
+              lockAspectRatio: true,
               cropStyle: CropStyle.circle,
               aspectRatioPresets: const [
                 CropAspectRatioPreset.square,
-                CropAspectRatioPreset.original,
               ],
               hideBottomControls: false,
             ),
             IOSUiSettings(
               title: 'Crop Profile Image',
               cropStyle: CropStyle.circle,
-              aspectRatioLockEnabled: false,
+              aspectRatioLockEnabled: true,
               aspectRatioPickerButtonHidden: false,
               resetAspectRatioEnabled: true,
               aspectRatioPresets: [
                 CropAspectRatioPreset.square,
-                CropAspectRatioPreset.original,
               ],
             ),
           ],
@@ -74,7 +73,8 @@ class _ProfileImageWidgetState extends State<ProfileImageWidget> {
         }
 
         File original = File(croppedFile.path);
-        final compressed = await ImageUtils.compressFile(original);
+        final compressed =
+            await ImageUtils.resizeAndCompressSquareFile(original);
         setState(() {
           _file = compressed;
         });

@@ -84,9 +84,10 @@ class _FilterDialogState extends State<FilterDialog> {
                     Wrap(
                       spacing: 8.0,
                       runSpacing: 8.0,
-                        children: categoryProvider.categoryList!.map((category) {
-                        final isSelected =
-                            freelancerProvider.selectedCategoryIDs.contains(category.id);
+                      children: categoryProvider.categoryList!.map((category) {
+                        final isSelected = freelancerProvider
+                            .selectedCategoryIDs
+                            .contains(category.id);
                         return FilterChip(
                           selectedColor: Theme.of(context).primaryColor,
                           label: Text(
@@ -98,7 +99,8 @@ class _FilterDialogState extends State<FilterDialog> {
                           selected: isSelected,
                           onSelected: (selected) {
                             setState(() {
-                              freelancerProvider.setCategoryID(categoryID: category.id);
+                              freelancerProvider.setCategoryID(
+                                  categoryID: category.id);
                             });
                           },
                         );
@@ -117,7 +119,7 @@ class _FilterDialogState extends State<FilterDialog> {
                             decoration: BoxDecoration(
                               color: Theme.of(context)
                                   .primaryColor
-                                  .withOpacity(0.1),
+                                  .withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
@@ -133,7 +135,8 @@ class _FilterDialogState extends State<FilterDialog> {
                         CustomButtonWidget(
                           onTap: () {
                             // For backward compatibility, pass the first selected id if any
-                            final int? categoryIdToPass = freelancerProvider.selectedCategoryIDs.isNotEmpty
+                            final int? categoryIdToPass = freelancerProvider
+                                    .selectedCategoryIDs.isNotEmpty
                                 ? freelancerProvider.selectedCategoryIDs.first
                                 : null;
                             freelancerProvider.getFreelancerList(

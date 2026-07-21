@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_restaurant/helper/responsive_helper.dart';
-import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/features/language/providers/localization_provider.dart';
 import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
+import 'package:flutter_restaurant/helper/responsive_helper.dart';
+import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
@@ -75,7 +75,7 @@ class FilterButtonWidget extends StatelessWidget {
                                 width: 1.3,
                                 color: Theme.of(context)
                                     .primaryColor
-                                    .withOpacity(0.4))
+                                    .withValues(alpha: 0.4))
                             : null,
                       ),
                       child: Row(

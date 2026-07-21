@@ -29,7 +29,7 @@ class SignOutDialogWidget extends StatelessWidget {
               height: 64,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Theme.of(context).primaryColor.withOpacity(0.12),
+                color: Theme.of(context).primaryColor.withValues(alpha: 0.12),
               ),
               child: Icon(Icons.logout_rounded,
                   color: Theme.of(context).primaryColor, size: 32),

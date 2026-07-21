@@ -1,4 +1,5 @@
 import 'dart:core';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/models/booking_details_model.dart';
 import 'package:flutter_restaurant/common/widgets/no_data_widget.dart';
@@ -77,7 +78,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
               const SizedBox(height: Dimensions.paddingSizeLarge),
               Divider(
                 indent: Dimensions.paddingSizeDefault,
-                color: Theme.of(context).hintColor.withOpacity(0.1),
+                color: Theme.of(context).hintColor.withValues(alpha: 0.1),
               ),
               Text(getTranslated('User Review', context)!,
                   style: const TextStyle(

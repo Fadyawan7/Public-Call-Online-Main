@@ -4,7 +4,6 @@ import 'package:flutter_restaurant/common/widgets/custom_text_field_widget.dart'
 import 'package:flutter_restaurant/features/booking/providers/booking_provider.dart';
 import 'package:flutter_restaurant/features/rating_reviews/domain/models/review_body_model.dart';
 import 'package:flutter_restaurant/features/rating_reviews/providers/review_provider.dart';
-
 import 'package:flutter_restaurant/helper/custom_snackbar_helper.dart';
 import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
@@ -88,7 +87,7 @@ class _BookingReviewWidgetState extends State<BookingReviewWidget> {
                                         color: reviewProvider.rateIndex >= i
                                             ? ColorResources.getSecondaryColor(
                                                     context)
-                                                .withOpacity(0.1)
+                                                .withValues(alpha: 0.1)
                                             : Colors.transparent,
                                         shape: BoxShape.circle,
                                       ),
@@ -134,7 +133,7 @@ class _BookingReviewWidgetState extends State<BookingReviewWidget> {
                         fillColor: Theme.of(context).cardColor,
                         isShowBorder: true,
                         borderColor:
-                            Theme.of(context).hintColor.withOpacity(0.5),
+                            Theme.of(context).hintColor.withValues(alpha: 0.5),
                         maxLines: 5,
                         controller: _controller,
                       ),

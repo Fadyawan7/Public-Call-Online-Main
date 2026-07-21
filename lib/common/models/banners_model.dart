@@ -37,8 +37,8 @@ class BannerData {
   final int? id;
   final String? image;
   final String? url;
-  final String? status;
-  final String? isInternal;
+  final int? status;
+  final int? isInternal;
   final String? createdAt;
   final String? updatedAt;
 
@@ -54,13 +54,19 @@ class BannerData {
 
   factory BannerData.fromJson(Map<String, dynamic> json) {
     return BannerData(
-      id: json['id'],
-      image: json['image'],
-      url: json['url'],
-      status: json['status'],
-      isInternal: json['is_internal'],
-      createdAt: json['created_at'],
-      updatedAt: json['updated_at'],
+      id: json['id'] is int
+          ? json['id']
+          : int.tryParse(json['id']?.toString() ?? ''),
+      image: json['image']?.toString(),
+      url: json['url']?.toString(),
+      status: json['status'] is int
+          ? json['status']
+          : int.tryParse(json['status']?.toString() ?? ''),
+      isInternal: json['is_internal'] is int
+          ? json['is_internal']
+          : int.tryParse(json['is_internal']?.toString() ?? ''),
+      createdAt: json['created_at']?.toString(),
+      updatedAt: json['updated_at']?.toString(),
     );
   }
 

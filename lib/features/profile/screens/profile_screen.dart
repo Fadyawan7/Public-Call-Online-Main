@@ -420,7 +420,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               isShowBorder: true,
                                               borderColor: Theme.of(context)
                                                   .hintColor
-                                                  .withOpacity(0.5),
+                                                  .withValues(alpha: 0.5),
                                             ),
                                           ],
                                         ],
@@ -441,7 +441,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             ? Theme.of(context).primaryColor
                                             : Theme.of(context)
                                                 .primaryColor
-                                                .withOpacity(0.4),
+                                                .withValues(alpha: 0.4),
                                         isLoading: profileProvider.isLoading,
                                         btnTxt: getTranslated(
                                           !requestSubmitted

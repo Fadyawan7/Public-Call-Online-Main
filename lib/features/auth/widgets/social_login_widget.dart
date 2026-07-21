@@ -3,20 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/models/config_model.dart';
 import 'package:flutter_restaurant/common/widgets/custom_alert_dialog_widget.dart';
 import 'package:flutter_restaurant/features/auth/domain/models/social_login_model.dart';
+import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/features/auth/widgets/existing_account_bottom_sheet.dart';
 import 'package:flutter_restaurant/features/profile/domain/models/userinfo_model.dart';
 import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
-import 'package:flutter_restaurant/helper/responsive_helper.dart';
-import 'package:flutter_restaurant/localization/language_constrants.dart';
-import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
+import 'package:flutter_restaurant/helper/responsive_helper.dart';
+import 'package:flutter_restaurant/helper/router_helper.dart';
+import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/utill/app_constants.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';
-import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
-import 'package:provider/provider.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class SocialLoginWidget extends StatefulWidget {
@@ -88,7 +88,7 @@ class _SocialLoginWidgetState extends State<SocialLoginWidget> {
         // Show error message if no valid condition is met
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text(errorMessage ?? 'Unable to complete social login.'),
+            content: Text(errorMessage ?? 'Unable to complete social login.'),
             backgroundColor: Colors.red,
           ),
         );
@@ -125,15 +125,15 @@ class _SocialLoginWidgetState extends State<SocialLoginWidget> {
                 GoogleSignInAuthentication auth =
                     await authProvider.googleLogin();
                 GoogleSignInAccount googleAccount = authProvider.googleAccount!;
-                  final String? socialToken = auth.accessToken ?? auth.idToken;
-                  if (socialToken == null || socialToken.isEmpty) {
-                    throw Exception('Failed to obtain Google auth token');
-                  }
+                final String? socialToken = auth.accessToken ?? auth.idToken;
+                if (socialToken == null || socialToken.isEmpty) {
+                  throw Exception('Failed to obtain Google auth token');
+                }
 
                 authProvider.socialLogin(
                     SocialLoginModel(
                       email: googleAccount.email,
-                        token: socialToken,
+                      token: socialToken,
                       uniqueId: googleAccount.id,
                       medium: 'google',
                     ),
@@ -354,10 +354,10 @@ class SocialLoginButtonWidget extends StatelessWidget {
       padding: padding ??
           const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall),
       decoration: BoxDecoration(
-        color: Theme.of(context).hintColor.withOpacity(0.08),
+        color: Theme.of(context).hintColor.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-        border:
-            Border.all(color: Theme.of(context).primaryColor.withOpacity(0.1)),
+        border: Border.all(
+            color: Theme.of(context).primaryColor.withValues(alpha: 0.1)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,

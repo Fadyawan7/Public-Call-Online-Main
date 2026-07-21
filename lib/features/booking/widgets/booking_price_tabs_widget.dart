@@ -123,12 +123,16 @@ class _BookingPriceTabsWidgetState extends State<BookingPriceTabsWidget> {
                     width: 100,
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? Theme.of(context).primaryColor.withOpacity(0.1)
+                          ? Theme.of(context)
+                              .primaryColor
+                              .withValues(alpha: 0.1)
                           : Theme.of(context).cardColor,
                       border: Border.all(
                         color: isSelected
                             ? Theme.of(context).primaryColor
-                            : Theme.of(context).hintColor.withOpacity(0.3),
+                            : Theme.of(context)
+                                .hintColor
+                                .withValues(alpha: 0.3),
                         width: isSelected ? 2 : 1,
                       ),
                       borderRadius:
@@ -138,7 +142,7 @@ class _BookingPriceTabsWidgetState extends State<BookingPriceTabsWidget> {
                               BoxShadow(
                                 color: Theme.of(context)
                                     .primaryColor
-                                    .withOpacity(0.2),
+                                    .withValues(alpha: 0.2),
                                 blurRadius: 8,
                                 spreadRadius: 2,
                               )
@@ -196,13 +200,13 @@ class _BookingPriceTabsWidgetState extends State<BookingPriceTabsWidget> {
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
               borderSide: BorderSide(
-                color: Theme.of(context).hintColor.withOpacity(0.5),
+                color: Theme.of(context).hintColor.withValues(alpha: 0.5),
               ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
               borderSide: BorderSide(
-                color: Theme.of(context).hintColor.withOpacity(0.5),
+                color: Theme.of(context).hintColor.withValues(alpha: 0.5),
               ),
             ),
             focusedBorder: OutlineInputBorder(

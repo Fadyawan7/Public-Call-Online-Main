@@ -174,6 +174,11 @@ class ChatProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void clearImage() {
+    _imageFile = null;
+    notifyListeners();
+  }
+
   void resetConversation() {
     _conversationList = [];
     notifyListeners();
@@ -206,6 +211,7 @@ class ChatProvider extends ChangeNotifier {
       String message, BuildContext context, String token, int? chatId) async {
     http.StreamedResponse response;
     _isLoading = true;
+    notifyListeners();
 
     response = await chatRepo!.sendMessage(message, _imageFile, chatId, token);
 

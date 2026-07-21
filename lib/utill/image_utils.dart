@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:image/image.dart' as img;
-import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 class ImageUtils {
@@ -19,7 +18,7 @@ class ImageUtils {
 
       final Directory tempDir = await getTemporaryDirectory();
       String targetPath =
-          p.join(tempDir.path, '${DateTime.now().millisecondsSinceEpoch}.jpg');
+          '${tempDir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
 
       int quality = 90;
       File? result;
@@ -38,6 +37,52 @@ class ImageUtils {
       }
 
       // If we couldn't get under maxBytes, return the best-effort result or original
+      return result ?? file;
+    } catch (e) {
+      return file;
+    }
+  }
+
+  /// Resize [file] to a square before compressing it.
+  static Future<File> resizeAndCompressSquareFile(
+    File file, {
+    int size = 512,
+    int maxBytes = 1000000,
+    int minQuality = 20,
+  }) async {
+    try {
+      final bytes = await file.readAsBytes();
+      final image = img.decodeImage(bytes);
+
+      if (image == null) {
+        return file;
+      }
+
+      final resized = img.copyResize(
+        image,
+        width: size,
+        height: size,
+      );
+
+      final Directory tempDir = await getTemporaryDirectory();
+      final String targetPath =
+          '${tempDir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+      int quality = 90;
+      File? result;
+
+      while (quality >= minQuality) {
+        final encoded = img.encodeJpg(resized, quality: quality);
+        result = File(targetPath)..writeAsBytesSync(encoded);
+
+        final int fileSize = await result.length();
+        if (fileSize <= maxBytes) {
+          return result;
+        }
+
+        quality -= 10;
+      }
+
       return result ?? file;
     } catch (e) {
       return file;

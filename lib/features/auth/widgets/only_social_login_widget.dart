@@ -104,7 +104,7 @@ class _OnlySocialLoginWidgetState extends State<OnlySocialLoginWidget> {
                               .textTheme
                               .bodyMedium!
                               .color!
-                              .withOpacity(0.07),
+                              .withValues(alpha: 0.07),
                           blurRadius: 30,
                           spreadRadius: 0,
                           offset: const Offset(0, 10),
@@ -181,13 +181,13 @@ class _OnlySocialLoginWidgetState extends State<OnlySocialLoginWidget> {
                               decoration: BoxDecoration(
                                 color: Theme.of(context)
                                     .hintColor
-                                    .withOpacity(0.08),
+                                    .withValues(alpha: 0.08),
                                 borderRadius: BorderRadius.circular(
                                     Dimensions.radiusSmall),
                                 border: Border.all(
                                     color: Theme.of(context)
                                         .primaryColor
-                                        .withOpacity(0.1)),
+                                        .withValues(alpha: 0.1)),
                               ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -265,13 +265,13 @@ class _OnlySocialLoginWidgetState extends State<OnlySocialLoginWidget> {
                                 decoration: BoxDecoration(
                                   color: Theme.of(context)
                                       .hintColor
-                                      .withOpacity(0.08),
+                                      .withValues(alpha: 0.08),
                                   borderRadius: BorderRadius.circular(
                                       Dimensions.radiusSmall),
                                   border: Border.all(
                                       color: Theme.of(context)
                                           .primaryColor
-                                          .withOpacity(0.1)),
+                                          .withValues(alpha: 0.1)),
                                 ),
                                 child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,

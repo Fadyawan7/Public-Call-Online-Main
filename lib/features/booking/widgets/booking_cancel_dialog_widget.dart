@@ -3,8 +3,8 @@ import 'package:flutter_restaurant/features/booking/providers/booking_provider.d
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
-import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class BookingCancelDialogWidget extends StatelessWidget {
   final String bookingID;
@@ -36,7 +36,7 @@ class BookingCancelDialogWidget extends StatelessWidget {
               ),
               Divider(
                 indent: Dimensions.paddingSizeDefault,
-                color: Theme.of(context).hintColor.withOpacity(0.1),
+                color: Theme.of(context).hintColor.withValues(alpha: 0.1),
               ),
               !booking.isLoading
                   ? Row(children: [

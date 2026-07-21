@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:universal_html/js.dart';
 
 class ColorResources {
   static Color getSearchBg(BuildContext context) {
@@ -36,8 +35,8 @@ class ColorResources {
 
   static Color getProfileMenuHeaderColor(BuildContext context) {
     return Provider.of<ThemeProvider>(context).darkTheme
-        ? footerColor.withOpacity(0.5)
-        : footerColor.withOpacity(0.2);
+        ? footerColor.withValues(alpha: 0.5)
+        : footerColor.withValues(alpha: 0.2);
   }
 
   static Color getFooterColor(BuildContext context) {

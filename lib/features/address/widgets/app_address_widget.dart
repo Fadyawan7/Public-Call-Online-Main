@@ -57,7 +57,7 @@ class _AppAddressWidgetState extends State<AppAddressWidget> {
             borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
             boxShadow: [
               BoxShadow(
-                  color: ColorResources.cardShadowColor.withOpacity(0.2),
+                  color: ColorResources.cardShadowColor.withValues(alpha: 0.2),
                   blurRadius: Dimensions.radiusDefault)
             ],
           ),
@@ -106,7 +106,7 @@ class _AppAddressWidgetState extends State<AppAddressWidget> {
                             ? Theme.of(context).primaryColor
                             : themeProvider.darkTheme
                                 ? Theme.of(context).cardColor
-                                : Colors.white.withOpacity(0.8),
+                                : Colors.white.withValues(alpha: 0.8),
                       ),
                       child: Row(children: [
                         CustomAssetImageWidget(

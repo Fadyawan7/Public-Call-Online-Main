@@ -72,8 +72,9 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                             const BookingDetailsWidget(),
                             Divider(
                               indent: Dimensions.paddingSizeDefault,
-                              color:
-                                  Theme.of(context).hintColor.withOpacity(0.1),
+                              color: Theme.of(context)
+                                  .hintColor
+                                  .withValues(alpha: 0.1),
                             ),
                             if (booking.bookingDetails!.reviews!.isNotEmpty)
                               Padding(

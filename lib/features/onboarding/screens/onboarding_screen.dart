@@ -163,7 +163,7 @@ class OnBoardingScreen extends StatelessWidget {
                                                       .textTheme
                                                       .bodyLarge!
                                                       .color
-                                                      ?.withOpacity(0.7),
+                                                      ?.withValues(alpha: 0.7),
                                                 ),
                                                 textAlign: TextAlign.center,
                                               ),
@@ -202,7 +202,7 @@ class OnBoardingScreen extends StatelessWidget {
                                             border: Border.all(
                                                 color: Theme.of(context)
                                                     .primaryColor
-                                                    .withOpacity(0.2),
+                                                    .withValues(alpha: 0.2),
                                                 width: 2),
                                           ),
                                           padding: const EdgeInsets.all(

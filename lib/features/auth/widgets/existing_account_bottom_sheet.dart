@@ -90,7 +90,7 @@ class _ExistingAccountBottomSheetState
                       context)!,
                   style: rubikRegular.copyWith(
                     fontSize: Dimensions.fontSizeDefault,
-                    color: Theme.of(context).hintColor.withOpacity(0.5),
+                    color: Theme.of(context).hintColor.withValues(alpha: 0.5),
                   ),
                 ),
                 TextSpan(
@@ -107,7 +107,7 @@ class _ExistingAccountBottomSheetState
                       getTranslated('already_used_existing_account', context)!,
                   style: rubikRegular.copyWith(
                     fontSize: Dimensions.fontSizeDefault,
-                    color: Theme.of(context).hintColor.withOpacity(0.5),
+                    color: Theme.of(context).hintColor.withValues(alpha: 0.5),
                   ),
                 ),
               ],

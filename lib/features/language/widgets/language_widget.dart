@@ -31,7 +31,7 @@ class LanguageWidget extends StatelessWidget {
               vertical: Dimensions.paddingSizeDefault),
           decoration: BoxDecoration(
             color: languageProvider.selectIndex == index
-                ? Theme.of(context).primaryColor.withOpacity(0.05)
+                ? Theme.of(context).primaryColor.withValues(alpha: 0.05)
                 : null,
             border: Border.all(
                 width: 1.0,

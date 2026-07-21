@@ -295,7 +295,8 @@ class _FreelancerDetailsBottomSheetState
                   padding: EdgeInsets.zero,
                   labelPadding: EdgeInsets.zero,
                   dividerHeight: 0.1,
-                  dividerColor: Theme.of(context).dividerColor.withOpacity(0.6),
+                  dividerColor:
+                      Theme.of(context).dividerColor.withValues(alpha: 0.6),
                   indicator: UnderlineTabIndicator(
                     borderSide: BorderSide(
                       color: Theme.of(context).primaryColor,
@@ -419,8 +420,9 @@ class _FreelancerDetailsBottomSheetState
                             ),
                             Divider(
                               indent: Dimensions.paddingSizeDefault,
-                              color:
-                                  Theme.of(context).hintColor.withOpacity(0.1),
+                              color: Theme.of(context)
+                                  .hintColor
+                                  .withValues(alpha: 0.1),
                             ),
                             ListTileWidget(
                               iconData: Icons.email_outlined,
@@ -429,8 +431,9 @@ class _FreelancerDetailsBottomSheetState
                             ),
                             Divider(
                               indent: Dimensions.paddingSizeDefault,
-                              color:
-                                  Theme.of(context).hintColor.withOpacity(0.1),
+                              color: Theme.of(context)
+                                  .hintColor
+                                  .withValues(alpha: 0.1),
                             ),
                             ListTileWidget(
                               assetImage: Images.whatsapps,
@@ -439,8 +442,9 @@ class _FreelancerDetailsBottomSheetState
                             ),
                             Divider(
                               indent: Dimensions.paddingSizeDefault,
-                              color:
-                                  Theme.of(context).hintColor.withOpacity(0.1),
+                              color: Theme.of(context)
+                                  .hintColor
+                                  .withValues(alpha: 0.1),
                             ),
                             ListTileWidget(
                               iconData: Iconsax.global,
@@ -449,8 +453,9 @@ class _FreelancerDetailsBottomSheetState
                             ),
                             Divider(
                               indent: Dimensions.paddingSizeDefault,
-                              color:
-                                  Theme.of(context).hintColor.withOpacity(0.1),
+                              color: Theme.of(context)
+                                  .hintColor
+                                  .withValues(alpha: 0.1),
                             ),
                             // ListTileWidget(
                             //   iconData: Iconsax.calendar,

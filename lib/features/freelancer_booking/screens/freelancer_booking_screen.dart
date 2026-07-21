@@ -94,7 +94,7 @@ class _FreelancerBookingScreenState extends State<FreelancerBookingScreen>
                                 border: Border.all(
                                     color: Theme.of(context)
                                         .hintColor
-                                        .withOpacity(0.2)),
+                                        .withValues(alpha: 0.2)),
                                 borderRadius: BorderRadius.circular(
                                     Dimensions.radiusDefault),
                               ),
@@ -134,7 +134,7 @@ class _FreelancerBookingScreenState extends State<FreelancerBookingScreen>
                                                 BoxShadow(
                                                   color: Theme.of(context)
                                                       .primaryColor
-                                                      .withOpacity(0.12),
+                                                      .withValues(alpha: 0.12),
                                                   blurRadius: 6,
                                                   offset: const Offset(0, 1),
                                                 )
@@ -178,7 +178,7 @@ class _FreelancerBookingScreenState extends State<FreelancerBookingScreen>
                                                 BoxShadow(
                                                   color: Theme.of(context)
                                                       .primaryColor
-                                                      .withOpacity(0.12),
+                                                      .withValues(alpha: 0.12),
                                                   blurRadius: 6,
                                                   offset: const Offset(0, 1),
                                                 )
@@ -222,7 +222,7 @@ class _FreelancerBookingScreenState extends State<FreelancerBookingScreen>
                                                 BoxShadow(
                                                   color: Theme.of(context)
                                                       .primaryColor
-                                                      .withOpacity(0.12),
+                                                      .withValues(alpha: 0.12),
                                                   blurRadius: 6,
                                                   offset: const Offset(0, 1),
                                                 )

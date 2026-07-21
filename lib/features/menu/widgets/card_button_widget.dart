@@ -24,7 +24,7 @@ class CardButtonWidget extends StatelessWidget {
         clipBehavior: Clip.hardEdge,
         color: Theme.of(context).cardColor,
         elevation: 7,
-        shadowColor: Theme.of(context).shadowColor.withOpacity(0.5),
+        shadowColor: Theme.of(context).shadowColor.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(Dimensions.paddingSizeDefault),
         child: InkWell(
           onTap: onTap,

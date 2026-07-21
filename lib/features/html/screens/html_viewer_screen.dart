@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/enums/html_type_enum.dart';
+import 'package:flutter_restaurant/common/widgets/custom_app_bar_widget.dart';
+import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
 import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
-import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
 import 'package:flutter_restaurant/main.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
-import 'package:flutter_restaurant/common/widgets/custom_app_bar_widget.dart';
-
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:fwfh_selectable_text/fwfh_selectable_text.dart';
 import 'package:go_router/go_router.dart';
@@ -57,7 +56,7 @@ class HtmlViewerScreen extends StatelessWidget {
           child: const Icon(
             Icons.arrow_back_ios,
             size: 20,
-            color: Colors.red,
+            color: Colors.black,
           ),
         ),
         titleColor: Colors.white,

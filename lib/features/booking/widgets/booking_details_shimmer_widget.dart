@@ -39,7 +39,7 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     color: Theme.of(context)
                                         .hintColor
-                                        .withOpacity(0.1),
+                                        .withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(
                                         Dimensions.radiusDefault),
                                     // boxShadow: [BoxShadow(color: Theme.of(context).shadowColor, blurRadius: Dimensions.radiusSmall, spreadRadius: 1)],
@@ -56,7 +56,7 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                             child: Container(
                                                 color: Theme.of(context)
                                                     .hintColor
-                                                    .withOpacity(0.3),
+                                                    .withValues(alpha: 0.3),
                                                 width: 80,
                                                 height: 80)),
                                         const SizedBox(
@@ -73,7 +73,7 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                                   decoration: BoxDecoration(
                                                     color: Theme.of(context)
                                                         .hintColor
-                                                        .withOpacity(0.5),
+                                                        .withValues(alpha: 0.5),
                                                     borderRadius:
                                                         const BorderRadius.all(
                                                             Radius.circular(
@@ -90,7 +90,7 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                                   decoration: BoxDecoration(
                                                     color: Theme.of(context)
                                                         .hintColor
-                                                        .withOpacity(0.5),
+                                                        .withValues(alpha: 0.5),
                                                     borderRadius:
                                                         const BorderRadius.all(
                                                             Radius.circular(
@@ -110,7 +110,7 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                             decoration: BoxDecoration(
                                               color: Theme.of(context)
                                                   .hintColor
-                                                  .withOpacity(0.5),
+                                                  .withValues(alpha: 0.5),
                                               borderRadius:
                                                   const BorderRadius.all(
                                                       Radius.circular(Dimensions
@@ -136,7 +136,7 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                           decoration: BoxDecoration(
                                             color: Theme.of(context)
                                                 .hintColor
-                                                .withOpacity(0.2),
+                                                .withValues(alpha: 0.2),
                                             borderRadius:
                                                 const BorderRadius.all(
                                                     Radius.circular(Dimensions
@@ -154,7 +154,7 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                           decoration: BoxDecoration(
                                             color: Theme.of(context)
                                                 .hintColor
-                                                .withOpacity(0.2),
+                                                .withValues(alpha: 0.2),
                                             borderRadius:
                                                 const BorderRadius.all(
                                                     Radius.circular(Dimensions
@@ -170,7 +170,7 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                               decoration: BoxDecoration(
                                                 color: Theme.of(context)
                                                     .hintColor
-                                                    .withOpacity(0.5),
+                                                    .withValues(alpha: 0.5),
                                                 borderRadius: const BorderRadius
                                                     .all(Radius.circular(
                                                         Dimensions
@@ -196,7 +196,8 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                                     decoration: BoxDecoration(
                                                       color: Theme.of(context)
                                                           .hintColor
-                                                          .withOpacity(0.3),
+                                                          .withValues(
+                                                              alpha: 0.3),
                                                       borderRadius:
                                                           const BorderRadius
                                                               .all(
@@ -218,7 +219,8 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                                     decoration: BoxDecoration(
                                                       color: Theme.of(context)
                                                           .hintColor
-                                                          .withOpacity(0.3),
+                                                          .withValues(
+                                                              alpha: 0.3),
                                                       borderRadius:
                                                           const BorderRadius
                                                               .all(
@@ -239,7 +241,7 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                               decoration: BoxDecoration(
                                                 color: Theme.of(context)
                                                     .hintColor
-                                                    .withOpacity(0.3),
+                                                    .withValues(alpha: 0.3),
                                                 borderRadius: const BorderRadius
                                                     .all(Radius.circular(
                                                         Dimensions
@@ -254,7 +256,7 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                               decoration: BoxDecoration(
                                                 color: Theme.of(context)
                                                     .hintColor
-                                                    .withOpacity(0.3),
+                                                    .withValues(alpha: 0.3),
                                                 borderRadius: const BorderRadius
                                                     .all(Radius.circular(
                                                         Dimensions
@@ -274,7 +276,7 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                           decoration: BoxDecoration(
                                             color: Theme.of(context)
                                                 .hintColor
-                                                .withOpacity(0.2),
+                                                .withValues(alpha: 0.2),
                                             borderRadius:
                                                 const BorderRadius.all(
                                                     Radius.circular(Dimensions
@@ -290,7 +292,7 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                               decoration: BoxDecoration(
                                                 color: Theme.of(context)
                                                     .hintColor
-                                                    .withOpacity(0.5),
+                                                    .withValues(alpha: 0.5),
                                                 borderRadius: const BorderRadius
                                                     .all(Radius.circular(
                                                         Dimensions
@@ -316,7 +318,8 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                                     decoration: BoxDecoration(
                                                       color: Theme.of(context)
                                                           .hintColor
-                                                          .withOpacity(0.3),
+                                                          .withValues(
+                                                              alpha: 0.3),
                                                       borderRadius:
                                                           const BorderRadius
                                                               .all(
@@ -338,7 +341,8 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                                     decoration: BoxDecoration(
                                                       color: Theme.of(context)
                                                           .hintColor
-                                                          .withOpacity(0.3),
+                                                          .withValues(
+                                                              alpha: 0.3),
                                                       borderRadius:
                                                           const BorderRadius
                                                               .all(
@@ -359,7 +363,7 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                               decoration: BoxDecoration(
                                                 color: Theme.of(context)
                                                     .hintColor
-                                                    .withOpacity(0.3),
+                                                    .withValues(alpha: 0.3),
                                                 borderRadius: const BorderRadius
                                                     .all(Radius.circular(
                                                         Dimensions
@@ -374,7 +378,7 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                               decoration: BoxDecoration(
                                                 color: Theme.of(context)
                                                     .hintColor
-                                                    .withOpacity(0.3),
+                                                    .withValues(alpha: 0.3),
                                                 borderRadius: const BorderRadius
                                                     .all(Radius.circular(
                                                         Dimensions
@@ -394,12 +398,12 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                   height: 160,
                                   color: Theme.of(context)
                                       .hintColor
-                                      .withOpacity(0.2),
+                                      .withValues(alpha: 0.2),
                                   child: Center(
                                       child: Container(
                                           color: Theme.of(context)
                                               .hintColor
-                                              .withOpacity(0.4),
+                                              .withValues(alpha: 0.4),
                                           width: 80,
                                           height: 80)),
                                 ),
@@ -415,7 +419,7 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     color: Theme.of(context)
                                         .hintColor
-                                        .withOpacity(0.2),
+                                        .withValues(alpha: 0.2),
                                     borderRadius: const BorderRadius.all(
                                         Radius.circular(
                                             Dimensions.radiusDefault)),
@@ -423,7 +427,7 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                       BoxShadow(
                                         color: Theme.of(context)
                                             .shadowColor
-                                            .withOpacity(0.5),
+                                            .withValues(alpha: 0.5),
                                         blurRadius: Dimensions.radiusDefault,
                                         spreadRadius: 1,
                                         offset: const Offset(2, 2),
@@ -447,7 +451,7 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                             decoration: BoxDecoration(
                                               color: Theme.of(context)
                                                   .hintColor
-                                                  .withOpacity(0.5),
+                                                  .withValues(alpha: 0.5),
                                               borderRadius:
                                                   const BorderRadius.all(
                                                       Radius.circular(Dimensions
@@ -468,7 +472,7 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                             decoration: BoxDecoration(
                                               color: Theme.of(context)
                                                   .hintColor
-                                                  .withOpacity(0.5),
+                                                  .withValues(alpha: 0.5),
                                               borderRadius:
                                                   const BorderRadius.all(
                                                       Radius.circular(Dimensions
@@ -487,7 +491,7 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                       decoration: BoxDecoration(
                                         color: Theme.of(context)
                                             .hintColor
-                                            .withOpacity(0.5),
+                                            .withValues(alpha: 0.5),
                                         borderRadius: const BorderRadius.all(
                                             Radius.circular(
                                                 Dimensions.radiusDefault)),
@@ -512,7 +516,7 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                           decoration: BoxDecoration(
                                             color: Theme.of(context)
                                                 .hintColor
-                                                .withOpacity(0.2),
+                                                .withValues(alpha: 0.2),
                                             borderRadius:
                                                 const BorderRadius.all(
                                                     Radius.circular(Dimensions
@@ -535,7 +539,7 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                           decoration: BoxDecoration(
                                             color: Theme.of(context)
                                                 .hintColor
-                                                .withOpacity(0.2),
+                                                .withValues(alpha: 0.2),
                                             borderRadius:
                                                 const BorderRadius.all(
                                                     Radius.circular(Dimensions
@@ -551,7 +555,7 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                               decoration: BoxDecoration(
                                                 color: Theme.of(context)
                                                     .hintColor
-                                                    .withOpacity(0.5),
+                                                    .withValues(alpha: 0.5),
                                                 borderRadius: const BorderRadius
                                                     .all(Radius.circular(
                                                         Dimensions
@@ -577,7 +581,8 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                                     decoration: BoxDecoration(
                                                       color: Theme.of(context)
                                                           .hintColor
-                                                          .withOpacity(0.3),
+                                                          .withValues(
+                                                              alpha: 0.3),
                                                       borderRadius:
                                                           const BorderRadius
                                                               .all(
@@ -599,7 +604,8 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                                     decoration: BoxDecoration(
                                                       color: Theme.of(context)
                                                           .hintColor
-                                                          .withOpacity(0.3),
+                                                          .withValues(
+                                                              alpha: 0.3),
                                                       borderRadius:
                                                           const BorderRadius
                                                               .all(
@@ -620,7 +626,7 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                               decoration: BoxDecoration(
                                                 color: Theme.of(context)
                                                     .hintColor
-                                                    .withOpacity(0.3),
+                                                    .withValues(alpha: 0.3),
                                                 borderRadius: const BorderRadius
                                                     .all(Radius.circular(
                                                         Dimensions
@@ -635,7 +641,7 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                               decoration: BoxDecoration(
                                                 color: Theme.of(context)
                                                     .hintColor
-                                                    .withOpacity(0.3),
+                                                    .withValues(alpha: 0.3),
                                                 borderRadius: const BorderRadius
                                                     .all(Radius.circular(
                                                         Dimensions
@@ -660,7 +666,7 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                           decoration: BoxDecoration(
                                             color: Theme.of(context)
                                                 .hintColor
-                                                .withOpacity(0.2),
+                                                .withValues(alpha: 0.2),
                                             borderRadius:
                                                 const BorderRadius.all(
                                                     Radius.circular(Dimensions
@@ -676,7 +682,7 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                               decoration: BoxDecoration(
                                                 color: Theme.of(context)
                                                     .hintColor
-                                                    .withOpacity(0.5),
+                                                    .withValues(alpha: 0.5),
                                                 borderRadius: const BorderRadius
                                                     .all(Radius.circular(
                                                         Dimensions
@@ -702,7 +708,8 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                                     decoration: BoxDecoration(
                                                       color: Theme.of(context)
                                                           .hintColor
-                                                          .withOpacity(0.3),
+                                                          .withValues(
+                                                              alpha: 0.3),
                                                       borderRadius:
                                                           const BorderRadius
                                                               .all(
@@ -724,7 +731,8 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                                     decoration: BoxDecoration(
                                                       color: Theme.of(context)
                                                           .hintColor
-                                                          .withOpacity(0.3),
+                                                          .withValues(
+                                                              alpha: 0.3),
                                                       borderRadius:
                                                           const BorderRadius
                                                               .all(
@@ -745,7 +753,7 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                               decoration: BoxDecoration(
                                                 color: Theme.of(context)
                                                     .hintColor
-                                                    .withOpacity(0.3),
+                                                    .withValues(alpha: 0.3),
                                                 borderRadius: const BorderRadius
                                                     .all(Radius.circular(
                                                         Dimensions
@@ -760,7 +768,7 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                               decoration: BoxDecoration(
                                                 color: Theme.of(context)
                                                     .hintColor
-                                                    .withOpacity(0.3),
+                                                    .withValues(alpha: 0.3),
                                                 borderRadius: const BorderRadius
                                                     .all(Radius.circular(
                                                         Dimensions
@@ -787,7 +795,7 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                               decoration: BoxDecoration(
                                 color: Theme.of(context)
                                     .hintColor
-                                    .withOpacity(0.1),
+                                    .withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(
                                     Dimensions.radiusDefault),
                               ),
@@ -815,7 +823,7 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                             decoration: BoxDecoration(
                                               color: Theme.of(context)
                                                   .hintColor
-                                                  .withOpacity(0.5),
+                                                  .withValues(alpha: 0.5),
                                               borderRadius:
                                                   const BorderRadius.all(
                                                       Radius.circular(Dimensions
@@ -833,7 +841,7 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                             decoration: BoxDecoration(
                                               color: Theme.of(context)
                                                   .hintColor
-                                                  .withOpacity(0.5),
+                                                  .withValues(alpha: 0.5),
                                               borderRadius:
                                                   const BorderRadius.all(
                                                       Radius.circular(Dimensions
@@ -850,7 +858,7 @@ class BookingDetailsShimmerWidget extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     color: Theme.of(context)
                                         .hintColor
-                                        .withOpacity(0.3),
+                                        .withValues(alpha: 0.3),
                                     borderRadius: BorderRadius.circular(
                                         Dimensions.radiusDefault),
                                   ),

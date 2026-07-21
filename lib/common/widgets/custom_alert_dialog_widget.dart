@@ -88,8 +88,9 @@ class CustomAlertDialogWidget extends StatelessWidget {
                           child: SizedBox(
                         width: ResponsiveHelper.isDesktop(context) ? 120 : null,
                         child: CustomButtonWidget(
-                          backgroundColor:
-                              Theme.of(context).disabledColor.withOpacity(0.2),
+                          backgroundColor: Theme.of(context)
+                              .disabledColor
+                              .withValues(alpha: 0.2),
                           btnTxt:
                               leftButtonText ?? getTranslated('no', context),
                           textStyle: rubikSemiBold.copyWith(

@@ -93,7 +93,7 @@ class _NewRequestDialogState extends State<NotificationPopUpDialogWidget> {
                     height: 40,
                     borderRadius: Dimensions.radiusDefault,
                     gradientColors: [
-                      Theme.of(context).disabledColor.withOpacity(0.3),
+                      Theme.of(context).disabledColor.withValues(alpha: 0.3),
                       Theme.of(context).secondaryHeaderColor,
                     ],
                     child: Text(

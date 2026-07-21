@@ -148,7 +148,7 @@ class _CategoryScreenState extends State<CategoryScreen>
                                             .textTheme
                                             .bodyLarge!
                                             .color!
-                                            .withOpacity(0.05),
+                                            .withValues(alpha: 0.05),
                                         blurRadius: 10,
                                         spreadRadius:
                                             0, // Adjust spread radius for shadow concentration
@@ -168,7 +168,7 @@ class _CategoryScreenState extends State<CategoryScreen>
                                     isScrollable: true,
                                     unselectedLabelColor: Theme.of(context)
                                         .hintColor
-                                        .withOpacity(0.7),
+                                        .withValues(alpha: 0.7),
                                     indicatorWeight: 3,
                                     indicatorSize: TabBarIndicatorSize.label,
                                     indicatorColor:

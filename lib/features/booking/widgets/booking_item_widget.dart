@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_restaurant/common/widgets/gradient_card_widget.dart';
 import 'package:flutter_restaurant/features/booking/domain/models/booking_model.dart';
 import 'package:flutter_restaurant/features/booking/providers/booking_provider.dart';
 import 'package:flutter_restaurant/helper/router_helper.dart';
@@ -7,7 +8,6 @@ import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/utill/color_resources.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
-import 'package:flutter_restaurant/common/widgets/gradient_card_widget.dart';
 
 class BookingItemWidget extends StatelessWidget {
   final BookingModel bookingItem;
@@ -99,7 +99,8 @@ class BookingItemWidget extends StatelessWidget {
                                   ? Text(
                                       '${bookingItem.freelancerName}',
                                       style: rubikBold.copyWith(
-                                          color: Colors.black.withOpacity(0.7),
+                                          color: Colors.black
+                                              .withValues(alpha: 0.7),
                                           fontSize: Dimensions.fontSizeDefault),
                                     )
                                   : null,
@@ -108,7 +109,7 @@ class BookingItemWidget extends StatelessWidget {
                             Text(
                               '${bookingItem.freelancerName}',
                               style: rubikBold.copyWith(
-                                  color: Colors.black.withOpacity(0.7),
+                                  color: Colors.black.withValues(alpha: 0.7),
                                   fontSize: Dimensions.fontSizeLarge),
                             ),
                           ]),
@@ -122,7 +123,7 @@ class BookingItemWidget extends StatelessWidget {
                                   style: rubikBold.copyWith(
                                       color: Theme.of(context)
                                           .hintColor
-                                          .withOpacity(0.7),
+                                          .withValues(alpha: 0.7),
                                       fontSize: Dimensions.fontSizeDefault),
                                 ),
                                 const SizedBox(

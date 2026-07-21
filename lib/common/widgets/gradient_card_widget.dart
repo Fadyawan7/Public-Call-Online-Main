@@ -23,7 +23,7 @@ class GradientCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<Color> colors = gradientColors ??
         [
-          Theme.of(context).primaryColor.withOpacity(0.05),
+          Theme.of(context).primaryColor.withValues(alpha: 0.05),
           Theme.of(context).canvasColor,
         ];
 
@@ -35,8 +35,8 @@ class GradientCardWidget extends StatelessWidget {
         // gradient:
         //     backgroundColor == null ? LinearGradient(colors: colors) : null,
         borderRadius: BorderRadius.circular(borderRadius),
-        border:
-            Border.all(color: Theme.of(context).hintColor.withOpacity(0.15)),
+        border: Border.all(
+            color: Theme.of(context).hintColor.withValues(alpha: 0.15)),
       ),
       child: child,
     );

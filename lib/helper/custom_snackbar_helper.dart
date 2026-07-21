@@ -61,12 +61,12 @@ void showCustomSnackBarHelper(String? message,
           ),
           borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
           border: Border.all(
-            color: borderColor.withOpacity(0.3),
+            color: borderColor.withValues(alpha: 0.3),
             width: 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: borderColor.withOpacity(0.2),
+              color: borderColor.withValues(alpha: 0.2),
               blurRadius: 12,
               spreadRadius: 0,
               offset: const Offset(0, 4),
@@ -85,7 +85,7 @@ void showCustomSnackBarHelper(String? message,
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: iconBgColor.withOpacity(0.15),
+                  color: iconBgColor.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(

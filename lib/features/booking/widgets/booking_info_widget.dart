@@ -30,7 +30,7 @@ class BookingInfoWidget extends StatelessWidget {
                 ),
                 Divider(
                   indent: Dimensions.paddingSizeDefault,
-                  color: Theme.of(context).hintColor.withOpacity(0.1),
+                  color: Theme.of(context).hintColor.withValues(alpha: 0.1),
                 ),
                 BookingInfoItemWidget(
                   iconData: Iconsax.user_octagon,
@@ -40,7 +40,7 @@ class BookingInfoWidget extends StatelessWidget {
                 ),
                 Divider(
                   indent: Dimensions.paddingSizeDefault,
-                  color: Theme.of(context).hintColor.withOpacity(0.1),
+                  color: Theme.of(context).hintColor.withValues(alpha: 0.1),
                 ),
                 BookingInfoItemWidget(
                   iconData: Iconsax.clock,
@@ -50,7 +50,7 @@ class BookingInfoWidget extends StatelessWidget {
                 ),
                 Divider(
                   indent: Dimensions.paddingSizeDefault,
-                  color: Theme.of(context).hintColor.withOpacity(0.1),
+                  color: Theme.of(context).hintColor.withValues(alpha: 0.1),
                 ),
                 BookingInfoItemWidget(
                   iconData: Iconsax.status,
@@ -62,7 +62,7 @@ class BookingInfoWidget extends StatelessWidget {
                 ),
                 Divider(
                   indent: Dimensions.paddingSizeDefault,
-                  color: Theme.of(context).hintColor.withOpacity(0.1),
+                  color: Theme.of(context).hintColor.withValues(alpha: 0.1),
                 ),
                 if (bookingProvider.bookingDetails!.price != null &&
                     bookingProvider.bookingDetails!.price!.isNotEmpty)
@@ -75,7 +75,7 @@ class BookingInfoWidget extends StatelessWidget {
                     bookingProvider.bookingDetails!.price!.isNotEmpty)
                   Divider(
                     indent: Dimensions.paddingSizeDefault,
-                    color: Theme.of(context).hintColor.withOpacity(0.1),
+                    color: Theme.of(context).hintColor.withValues(alpha: 0.1),
                   ),
               ],
             );

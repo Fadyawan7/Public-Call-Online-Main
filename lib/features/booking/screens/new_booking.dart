@@ -148,7 +148,7 @@ class _BookingDateSlotScreenState extends State<BookingDateSlotScreen>
                             decoration: BoxDecoration(
                               color: Theme.of(context)
                                   .primaryColor
-                                  .withOpacity(0.1),
+                                  .withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Row(
@@ -238,7 +238,8 @@ class _BookingDateSlotScreenState extends State<BookingDateSlotScreen>
                                                     BoxShadow(
                                                       color: Theme.of(context)
                                                           .shadowColor
-                                                          .withOpacity(0.1),
+                                                          .withValues(
+                                                              alpha: 0.1),
                                                       blurRadius: Dimensions
                                                           .radiusDefault,
                                                       spreadRadius: Dimensions
@@ -272,10 +273,12 @@ class _BookingDateSlotScreenState extends State<BookingDateSlotScreen>
                                                                       .work_outline
                                                                   : Icons
                                                                       .list_alt_outlined,
-                                                          color: Theme.of(
-                                                                  context)
-                                                              .primaryColor
-                                                              .withOpacity(0.8),
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .primaryColor
+                                                                  .withValues(
+                                                                      alpha:
+                                                                          0.8),
                                                           size: Dimensions
                                                               .paddingSizeLarge,
                                                         ),
@@ -440,7 +443,7 @@ class _BookingDateSlotScreenState extends State<BookingDateSlotScreen>
                         fillColor: Theme.of(context).cardColor,
                         isShowBorder: true,
                         borderColor:
-                            Theme.of(context).hintColor.withOpacity(0.5),
+                            Theme.of(context).hintColor.withValues(alpha: 0.5),
                       ),
                     ),
                   ),
@@ -760,7 +763,7 @@ class _AddressShimmerWidget extends StatelessWidget {
       itemBuilder: (context, index) => Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-          color: Theme.of(context).hintColor.withOpacity(0.1),
+          color: Theme.of(context).hintColor.withValues(alpha: 0.1),
         ),
         margin: const EdgeInsets.only(bottom: Dimensions.paddingSizeSmall),
         clipBehavior: Clip.hardEdge,
@@ -772,7 +775,7 @@ class _AddressShimmerWidget extends StatelessWidget {
                 Container(
                     width: 20,
                     height: 20,
-                    color: Theme.of(context).hintColor.withOpacity(0.2)),
+                    color: Theme.of(context).hintColor.withValues(alpha: 0.2)),
                 const SizedBox(width: Dimensions.paddingSizeDefault),
                 Expanded(
                   child: Padding(
@@ -785,14 +788,16 @@ class _AddressShimmerWidget extends StatelessWidget {
                           Container(
                               width: 150,
                               height: 20,
-                              color:
-                                  Theme.of(context).hintColor.withOpacity(0.2)),
+                              color: Theme.of(context)
+                                  .hintColor
+                                  .withValues(alpha: 0.2)),
                           const SizedBox(height: Dimensions.paddingSizeDefault),
                           Container(
                               width: 200,
                               height: 20,
-                              color:
-                                  Theme.of(context).hintColor.withOpacity(0.2)),
+                              color: Theme.of(context)
+                                  .hintColor
+                                  .withValues(alpha: 0.2)),
                         ],
                       )),
                 ),
@@ -800,7 +805,7 @@ class _AddressShimmerWidget extends StatelessWidget {
                 Container(
                     width: 20,
                     height: 20,
-                    color: Theme.of(context).hintColor.withOpacity(0.2)),
+                    color: Theme.of(context).hintColor.withValues(alpha: 0.2)),
               ]),
             )),
       ),

@@ -55,7 +55,7 @@ class _CustomPopScopeWidgetState extends State<CustomPopScopeWidget> {
                         color: Theme.of(dialogContext)
                             .colorScheme
                             .error
-                            .withOpacity(0.12),
+                            .withValues(alpha: 0.12),
                       ),
                       child: Icon(
                         Icons.power_settings_new_rounded,

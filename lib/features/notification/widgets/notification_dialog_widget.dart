@@ -34,7 +34,8 @@ class NotificationDialogWidget extends StatelessWidget {
                   horizontal: Dimensions.paddingSizeLarge),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: Theme.of(context).primaryColor.withOpacity(0.20)),
+                  color:
+                      Theme.of(context).primaryColor.withValues(alpha: 0.20)),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: FadeInImage.assetNetwork(
@@ -71,7 +72,7 @@ class NotificationDialogWidget extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: rubikRegular.copyWith(
                   color: ColorResources.getGreyBunkerColor(context)
-                      .withOpacity(.75),
+                      .withValues(alpha: .75),
                 ),
               ),
             ),

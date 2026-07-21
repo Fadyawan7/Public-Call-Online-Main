@@ -10,7 +10,7 @@ ThemeData dark = ThemeData(
   cardColor: const Color(0xFF171D3B),
   hintColor: const Color(0xFFA7B0C0),
   disabledColor: const Color(0xFF6C7484),
-  shadowColor: Colors.black.withOpacity(0.35),
+  shadowColor: Colors.black.withValues(alpha: 0.35),
   pageTransitionsTheme: const PageTransitionsTheme(builders: {
     TargetPlatform.android: ZoomPageTransitionsBuilder(),
     TargetPlatform.iOS: ZoomPageTransitionsBuilder(),
