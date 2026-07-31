@@ -368,24 +368,30 @@ class BookingProvider extends ChangeNotifier {
         apiResponse.response!.statusCode == 200) {
       BookingModel? bookingModel;
       List<BookingModel>? sourceList;
-      List<BookingModel>? targetList;
 
-      if (status == 'pending') {
-        sourceList = _confirmedList;
-        targetList = _pendingList;
-      } else if (status == 'confirmed') {
-        sourceList = _pendingList;
-        targetList = _confirmedList;
-      } else if (status == 'history') {
-        sourceList = _confirmedList;
-        targetList = _historyList;
-      }
-
-      for (var booking in sourceList ?? []) {
-        if (booking.id.toString() == bookingID) {
-          bookingModel = booking;
+      // Find whichever local list currently holds this booking, instead of
+      // guessing the source purely from the new status - that guess used to
+      // miss 'rejected'/'cancelled'/'completed' entirely, leaving the item
+      // stuck in its old tab until the app was restarted and refetched data.
+      for (final list in [_pendingList, _confirmedList, _historyList]) {
+        final match = list.where((b) => b.id.toString() == bookingID);
+        if (match.isNotEmpty) {
+          bookingModel = match.first;
+          sourceList = list;
           break;
         }
+      }
+
+      // Decide where the booking should live now. Pending/confirmed keep
+      // their own tab; every other terminal status (rejected, cancelled,
+      // completed, history, ...) lands in History.
+      final List<BookingModel> targetList;
+      if (status == 'pending') {
+        targetList = _pendingList;
+      } else if (status == 'confirmed') {
+        targetList = _confirmedList;
+      } else {
+        targetList = _historyList;
       }
 
       if (bookingModel != null) {
@@ -395,8 +401,8 @@ class BookingProvider extends ChangeNotifier {
         updatedBookingJson['status'] = status;
         final updatedBooking = BookingModel.fromJson(updatedBookingJson);
         targetList
-            ?.removeWhere((booking) => booking.id.toString() == bookingID);
-        targetList?.add(updatedBooking);
+            .removeWhere((booking) => booking.id.toString() == bookingID);
+        targetList.add(updatedBooking);
       }
 
       String? message = 'Booking $bookingID $status Successfully !';

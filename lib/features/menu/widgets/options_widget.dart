@@ -1,7 +1,9 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/widgets/custom_asset_image_widget.dart';
 import 'package:flutter_restaurant/common/widgets/gradient_button_widget.dart';
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
+import 'package:flutter_restaurant/features/category/providers/category_provider.dart';
 import 'package:flutter_restaurant/features/freelancer/domain/models/freelancer_model.dart';
 import 'package:flutter_restaurant/features/freelancer/providers/freelancer_provider.dart';
 import 'package:flutter_restaurant/features/menu/widgets/portion_widget.dart';
@@ -36,6 +38,8 @@ class _OptionsWidgetState extends State<OptionsWidget> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _loadFreelancerCategoriesIfNeeded();
+    // Needed to resolve category_ids -> names below; no-op if already loaded.
+    Provider.of<CategoryProvider>(context, listen: false).getCategoryList();
   }
 
   Future<void> _loadFreelancerCategoriesIfNeeded() async {
@@ -73,6 +77,37 @@ class _OptionsWidgetState extends State<OptionsWidget> {
   }
 
   List<String> _buildCategoryItems() {
+    // The freelancer-details response sometimes only returns a single
+    // expanded `categories` object even though `category_ids` lists every
+    // category the freelancer belongs to. Resolve all of them via the
+    // app's category directory so every id gets shown, not just the first.
+    final categoryIds = _freelancer?.category_ids;
+    if (categoryIds != null && categoryIds.isNotEmpty) {
+      final directory =
+          Provider.of<CategoryProvider>(context, listen: false).categoryList;
+      final apiCategories = _freelancer?.categories ?? [];
+
+      final names = categoryIds.map((id) {
+        final fromDirectory = directory
+            ?.where((c) => c.id == id)
+            .map((c) => c.name?.trim() ?? '')
+            .firstOrNull;
+        if (fromDirectory != null && fromDirectory.isNotEmpty) {
+          return fromDirectory;
+        }
+
+        final fromApiCategories = apiCategories
+            .where((c) => c.id == id)
+            .map((c) => c.name?.trim() ?? '')
+            .firstOrNull;
+        return fromApiCategories ?? '';
+      }).where((name) => name.isNotEmpty && name.toLowerCase() != 'null').toList();
+
+      if (names.isNotEmpty) {
+        return names;
+      }
+    }
+
     final apiCategories = _freelancer?.categories;
 
     if (apiCategories != null && apiCategories.isNotEmpty) {

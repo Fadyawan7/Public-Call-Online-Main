@@ -413,8 +413,8 @@ class AuthRepo {
           'Response => statusCode: ${response.statusCode}, data: ${response.data}');
       return ApiResponseModel.withSuccess(response);
     } on DioException catch (e) {
-      print(
-          'Dio error during socialLogin => ${e.response?.statusCode}, ${e.response?.data}');
+      debugPrint(
+          '🔴 Dio error during socialLogin => status: ${e.response?.statusCode}, data: ${e.response?.data}, message: ${e.message}');
       return ApiResponseModel.withError(ApiErrorHandler.getMessage(e));
     } catch (e) {
       print('Unknown error during socialLogin => $e');

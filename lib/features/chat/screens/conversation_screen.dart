@@ -6,6 +6,7 @@ import 'package:flutter_restaurant/features/chat/widgets/message_body_widget.dar
 import 'package:flutter_restaurant/features/freelancer/providers/freelancer_provider.dart';
 import 'package:flutter_restaurant/features/freelancer/widgets/freelancer_detail_dialog_widget.dart';
 import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
+import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/main.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
@@ -48,7 +49,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
             leading: CircleAvatar(
               radius: 20,
               backgroundColor: Colors.grey[300],
-              backgroundImage: NetworkImage(widget.chat!.userImage!),
+              backgroundImage: NetworkImage(widget.chat?.userImage ??
+                  'https://www.gravatar.com/avatar/placeholder'),
             ),
             title: Text(
               getTranslated('${widget.chat!.userName}', context)!,
@@ -106,8 +108,13 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     constraints: BoxConstraints(
                       maxHeight: MediaQuery.of(context).size.height * 0.9,
                     ),
-                    builder: (_) =>
-                        FreelancerDetailsBottomSheet(freelancer: freelancer),
+                    builder: (_) => FreelancerDetailsBottomSheet(
+                        freelancer: freelancer,
+                        onDirectionTap: () {
+                          Navigator.of(context).pop();
+                          RouterHelper.getDashboardRoute('freelancer',
+                              autoTrackFreelancer: freelancer);
+                        }),
                   );
                 },
                 child: Icon(Icons.more_vert, color: Colors.white)),

@@ -177,8 +177,17 @@ class RouterHelper {
   static String getHomeRoute(
           {required String fromAppBar, RouteAction? action}) =>
       _navigateRoute('$homeScreen?from=$fromAppBar', route: action);
-  static String getDashboardRoute(String page, {RouteAction? action}) =>
-      _navigateRoute('$dashboardScreen?page=$page', route: action);
+  static String getDashboardRoute(String page,
+      {RouteAction? action, FreelancerModel? autoTrackFreelancer}) {
+    String path = '$dashboardScreen?page=$page';
+    if (autoTrackFreelancer != null) {
+      final String encoded = base64Url
+          .encode(utf8.encode(jsonEncode(autoTrackFreelancer.toJson())));
+      path = '$path&autoTrackFreelancer=$encoded';
+    }
+    return _navigateRoute(path, route: action);
+  }
+
   static String getSearchRoute() => _navigateRoute(searchScreen);
   static String getSearchResultRoute(String text) {
     return _navigateRoute(
@@ -278,7 +287,14 @@ class RouterHelper {
   static String getPolicyRoute() => _navigateRoute(policyScreen);
   static String getAboutUsRoute() => _navigateRoute(aboutUsScreen);
 
-  static String getFreelancerScreen() => _navigateRoute(freelancerScreen);
+  static String getFreelancerScreen({FreelancerModel? autoTrackFreelancer}) {
+    if (autoTrackFreelancer == null) {
+      return _navigateRoute(freelancerScreen);
+    }
+    final String encoded = base64Url
+        .encode(utf8.encode(jsonEncode(autoTrackFreelancer.toJson())));
+    return _navigateRoute('$freelancerScreen?autoTrackFreelancer=$encoded');
+  }
 
   static String getOtpVerificationScreen() => _navigateRoute(otpVerification);
   static String getOtpRegistrationScreen(String? tempToken, String userInput,
@@ -471,6 +487,18 @@ class RouterHelper {
       GoRoute(
           path: dashboardScreen,
           builder: (context, state) {
+            FreelancerModel? autoTrackFreelancer;
+            final String? encodedFreelancer =
+                state.uri.queryParameters['autoTrackFreelancer'];
+            if (encodedFreelancer != null && encodedFreelancer.isNotEmpty) {
+              try {
+                autoTrackFreelancer = FreelancerModel.fromJson(jsonDecode(
+                    utf8.decode(base64Url
+                        .decode(encodedFreelancer.replaceAll(' ', '+')))));
+              } catch (error) {
+                debugPrint('route - dashboard autoTrack - $error');
+              }
+            }
             return _routeHandler(
                 context,
                 path: _getPath(state),
@@ -487,6 +515,7 @@ class RouterHelper {
                                           'menu'
                                   ? 4
                                   : 0,
+                  autoTrackFreelancer: autoTrackFreelancer,
                 ),
                 isBranchCheck: true);
           }),
@@ -612,8 +641,24 @@ class RouterHelper {
               _routeHandler(context, path: _getPath(state), ChatScreen())),
       GoRoute(
           path: freelancerScreen,
-          builder: (context, state) => _routeHandler(
-              context, path: _getPath(state), const FreelancerScreen())),
+          builder: (context, state) {
+            FreelancerModel? autoTrackFreelancer;
+            final String? encoded =
+                state.uri.queryParameters['autoTrackFreelancer'];
+            if (encoded != null && encoded.isNotEmpty) {
+              try {
+                autoTrackFreelancer = FreelancerModel.fromJson(jsonDecode(
+                    utf8.decode(
+                        base64Url.decode(encoded.replaceAll(' ', '+')))));
+              } catch (error) {
+                debugPrint('route - freelancer autoTrack - $error');
+              }
+            }
+            return _routeHandler(
+                context,
+                path: _getPath(state),
+                FreelancerScreen(autoTrackFreelancer: autoTrackFreelancer));
+          }),
       GoRoute(
           path: changePasswordScreen,
           builder: (context, state) => _routeHandler(

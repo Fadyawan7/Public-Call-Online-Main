@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_restaurant/common/widgets/custom_button_widget.dart';
 import 'package:flutter_restaurant/common/widgets/gradient_button_widget.dart';
 import 'package:flutter_restaurant/features/booking/domain/models/booking_model.dart';
 import 'package:flutter_restaurant/features/booking/providers/booking_provider.dart';
@@ -89,7 +88,7 @@ class FreelancerBookingItemWidget extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                '${bookingItem.freelancerName}',
+                                '${bookingItem.userName}',
                                 style: rubikBold.copyWith(
                                     color: Colors.black.withValues(alpha: 0.7),
                                     fontSize: Dimensions.fontSizeDefault),
@@ -164,42 +163,84 @@ class FreelancerBookingItemWidget extends StatelessWidget {
                                   margin: EdgeInsets.zero,
                                   child: Consumer<BookingProvider>(
                                     builder: (context, bookingProvider, child) {
-                                      return CustomButtonWidget(
-                                        isLoading: bookingProvider.isLoading,
-                                        btnTxt:
-                                            getTranslated('Reject', context),
-                                        onTap: () => {
-                                          showDialog(
-                                            context: context,
-                                            barrierDismissible: false,
-                                            builder: (context) =>
-                                                BookingCancelDialogWidget(
-                                              popUpTxt:
-                                                  "are_you_sure_to_reject",
-                                              status: "rejected",
-                                              bookingID:
-                                                  bookingItem.id.toString(),
-                                              callback: (String message,
-                                                  bool isSuccess,
-                                                  String bookingID) {
-                                                if (isSuccess) {
-                                                  showCustomSnackBarHelper(
-                                                      message,
-                                                      status: SnackBarStatus
-                                                          .success);
-                                                  RouterHelper.getMainRoute(
-                                                      action: RouteAction
-                                                          .pushNamedAndRemoveUntil);
-                                                } else {
-                                                  showCustomSnackBarHelper(
-                                                      message,
-                                                      status:
-                                                          SnackBarStatus.error);
-                                                }
+                                      return GradientButtonWidget(
+                                        gradientColors: const [
+                                          Color(0xFFE74C3C),
+                                          Color(0xFFC0392B),
+                                        ],
+                                        height: Dimensions.paddingSizeLarge * 2,
+                                        borderRadius: 8,
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical:
+                                                Dimensions.paddingSizeSmall),
+                                        onTap: bookingProvider.isLoading
+                                            ? null
+                                            : () {
+                                                showDialog(
+                                                  context: context,
+                                                  barrierDismissible: false,
+                                                  builder: (context) =>
+                                                      BookingCancelDialogWidget(
+                                                    popUpTxt:
+                                                        "are_you_sure_to_reject",
+                                                    status: "rejected",
+                                                    bookingID: bookingItem.id
+                                                        .toString(),
+                                                    callback: (String message,
+                                                        bool isSuccess,
+                                                        String bookingID) {
+                                                      if (isSuccess) {
+                                                        // Update this
+                                                        // provider's local
+                                                        // lists directly so
+                                                        // the pending tab
+                                                        // drops the item
+                                                        // immediately,
+                                                        // instead of forcing
+                                                        // a full dashboard
+                                                        // reset.
+                                                        freelancerBookingProvider
+                                                            .applyBookingStatusUpdate(
+                                                          bookingID,
+                                                          'rejected',
+                                                        );
+                                                        showCustomSnackBarHelper(
+                                                            message,
+                                                            status:
+                                                                SnackBarStatus
+                                                                    .success);
+                                                      } else {
+                                                        showCustomSnackBarHelper(
+                                                            message,
+                                                            status:
+                                                                SnackBarStatus
+                                                                    .error);
+                                                      }
+                                                    },
+                                                  ),
+                                                );
                                               },
-                                            ),
-                                          )
-                                        },
+                                        child: bookingProvider.isLoading
+                                            ? const SizedBox(
+                                                height: 18,
+                                                width: 18,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation<
+                                                          Color>(Colors.white),
+                                                  strokeWidth: 2,
+                                                ),
+                                              )
+                                            : Text(
+                                                getTranslated(
+                                                    'Reject', context)!,
+                                                style: rubikSemiBold.copyWith(
+                                                  color: Colors.white,
+                                                  fontSize:
+                                                      Dimensions.fontSizeLarge,
+                                                ),
+                                              ),
                                       );
                                     },
                                   ),

@@ -6,6 +6,7 @@ import 'package:flutter_restaurant/features/address/providers/location_provider.
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/features/booking/screens/BookingScreen.dart';
 import 'package:flutter_restaurant/features/chat/screens/chat_screen.dart';
+import 'package:flutter_restaurant/features/freelancer/domain/models/freelancer_model.dart';
 import 'package:flutter_restaurant/features/freelancer/screens/freelancer_screen.dart';
 import 'package:flutter_restaurant/features/home_screen/home_screen.dart';
 import 'package:flutter_restaurant/features/menu/screens/menu_screen.dart';
@@ -16,7 +17,9 @@ import 'package:provider/provider.dart';
 
 class DashboardScreen extends StatefulWidget {
   final int pageIndex;
-  const DashboardScreen({super.key, required this.pageIndex});
+  final FreelancerModel? autoTrackFreelancer;
+  const DashboardScreen(
+      {super.key, required this.pageIndex, this.autoTrackFreelancer});
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -60,7 +63,7 @@ class _DashboardScreenState extends State<DashboardScreen>
     _screens = [
       const HomeScreen(),
       const BookingScreen(),
-      const FreelancerScreen(),
+      FreelancerScreen(autoTrackFreelancer: widget.autoTrackFreelancer),
       const ChatScreen(),
       MenuScreen(onTap: (int pageIndex) {
         _setPage(pageIndex);

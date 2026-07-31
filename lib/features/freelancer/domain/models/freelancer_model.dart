@@ -21,6 +21,7 @@ class FreelancerModel {
   String? member_since;
   String? category;
   List<CategoryModel>? categories;
+  List<int>? category_ids;
   double? latitude;
   double? longitude;
   String? current_status;
@@ -65,6 +66,7 @@ class FreelancerModel {
     this.member_since,
     this.category,
     this.categories,
+    this.category_ids,
     this.category_name,
     this.rating,
     this.latitude,
@@ -111,6 +113,11 @@ class FreelancerModel {
         categories: json['categories'] != null
             ? List<CategoryModel>.from(
                 json['categories'].map((x) => CategoryModel.fromJson(x)))
+            : null,
+        category_ids: json['category_ids'] != null
+            ? List<int>.from((json['category_ids'] as List)
+                .map((x) => x is int ? x : int.tryParse('$x') ?? 0)
+                .where((x) => x != 0))
             : null,
         category_name: json['category_name']?.toString(),
         latitude: json['latitude'] is double
@@ -175,6 +182,7 @@ class FreelancerModel {
         'member_since': member_since,
         'category': category,
         'categories': categories?.map((x) => x.toJson()).toList(),
+        'category_ids': category_ids,
         'latitude': latitude,
         'longitude': longitude,
         'current_status': current_status,

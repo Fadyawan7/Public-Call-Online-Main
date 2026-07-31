@@ -19,7 +19,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
 class FreelancerScreen extends StatefulWidget {
-  const FreelancerScreen({super.key});
+  final FreelancerModel? autoTrackFreelancer;
+
+  const FreelancerScreen({super.key, this.autoTrackFreelancer});
 
   @override
   State<FreelancerScreen> createState() => _FreelancerScreenState();
@@ -28,7 +30,10 @@ class FreelancerScreen extends StatefulWidget {
 }
 
 class _FreelancerScreenState extends State<FreelancerScreen>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   LatLng bahrainCountryLatLong = const LatLng(30.81029000, 73.45155000);
 
   final FreelancerProvider freelancerProvider =
@@ -56,6 +61,7 @@ class _FreelancerScreenState extends State<FreelancerScreen>
   bool _directionCompleted = false;
   BitmapDescriptor? _currentLocationMarkerIcon;
   bool _isFreelancerDetailsSheetOpen = false;
+  LatLng? _currentUserLocation;
 
   @override
   void initState() {
@@ -80,6 +86,121 @@ class _FreelancerScreenState extends State<FreelancerScreen>
 
     _syncCategoriesFromFreelancers();
     await _loadFreelancerMarkers();
+
+    // Don't block marker rendering on the location permission/GPS fetch.
+    _loadCurrentUserLocation();
+
+    if (!mounted) return;
+    if (widget.autoTrackFreelancer != null) {
+      await _autoStartDirectionTracking(widget.autoTrackFreelancer!);
+    }
+  }
+
+  /// Fetches the user's current location and drops a marker for it on the
+  /// map. Runs every time the freelancer screen is (re)initialized.
+  Future<void> _loadCurrentUserLocation() async {
+    final Position? position = await _getCurrentPosition(showFeedback: false);
+    if (position == null || !mounted) {
+      return;
+    }
+
+    final LatLng userLatLng = LatLng(position.latitude, position.longitude);
+    setState(() {
+      _currentUserLocation = userLatLng;
+    });
+
+    // Only auto-recenter the camera if we're not already focused on an
+    // active direction-tracking route.
+    if (googleMapController != null && _activeDirectionFreelancer == null) {
+      await googleMapController!.animateCamera(
+        CameraUpdate.newLatLngZoom(userLatLng, 14),
+      );
+    }
+  }
+
+  /// Called when we navigate into this screen already knowing which
+  /// freelancer to track (e.g. tapping "Direction" from the chat screen).
+  /// Fetches the latest freelancer details and starts tracking directly,
+  /// without reopening the details bottomsheet.
+  Future<void> _autoStartDirectionTracking(FreelancerModel freelancer) async {
+    await freelancerProvider.getFreelancerDetails(
+      freelancer.id.toString(),
+      isApiCheck: false,
+    );
+
+    if (!mounted) return;
+    final selectedFreelancer = freelancerProvider.freelancerDetails;
+
+    if (selectedFreelancer == null ||
+        selectedFreelancer.id == null ||
+        selectedFreelancer.id == -1) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Unable to load freelancer details')),
+      );
+      return;
+    }
+
+    freelancerProvider.setSelectedFreelancer(freelancer: selectedFreelancer);
+
+    if (!mounted) return;
+    await _startDirectionTracking(selectedFreelancer);
+  }
+
+  Future<void> _openFreelancerDetailsSheet(FreelancerModel freelancer) async {
+    if (_isFreelancerDetailsSheetOpen) {
+      return;
+    }
+
+    if (!mounted) return;
+
+    await freelancerProvider.getFreelancerDetails(
+      freelancer.id.toString(),
+      isApiCheck: false,
+    );
+
+    if (!mounted) return;
+    final selectedFreelancer = freelancerProvider.freelancerDetails;
+
+    if (selectedFreelancer == null ||
+        selectedFreelancer.id == null ||
+        selectedFreelancer.id == -1) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Unable to load freelancer details')),
+      );
+      return;
+    }
+
+    freelancerProvider.setSelectedFreelancer(freelancer: selectedFreelancer);
+
+    setState(() {
+      _isFreelancerDetailsSheetOpen = true;
+    });
+
+    try {
+      await showModalBottomSheet(
+        context: context,
+        backgroundColor: Theme.of(context).canvasColor,
+        isScrollControlled: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        builder: (_) => FractionallySizedBox(
+          heightFactor: 0.85,
+          child: FreelancerDetailsBottomSheet(
+            freelancer: selectedFreelancer,
+            onDirectionTap: () => _startDirectionTracking(selectedFreelancer),
+          ),
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isFreelancerDetailsSheetOpen = false;
+        });
+      } else {
+        _isFreelancerDetailsSheetOpen = false;
+      }
+    }
   }
 
   @override
@@ -123,63 +244,7 @@ class _FreelancerScreenState extends State<FreelancerScreen>
           snippet: freelancer.category_name,
         ),
         onTap: () async {
-          if (_isFreelancerDetailsSheetOpen) {
-            return;
-          }
-
-          if (!mounted) return;
-
-          await freelancerProvider.getFreelancerDetails(
-            freelancer.id.toString(),
-            isApiCheck: false,
-          );
-
-          if (!mounted) return;
-          final selectedFreelancer = freelancerProvider.freelancerDetails;
-
-          if (selectedFreelancer == null ||
-              selectedFreelancer.id == null ||
-              selectedFreelancer.id == -1) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                  content: Text('Unable to load freelancer details')),
-            );
-            return;
-          }
-
-          freelancerProvider.setSelectedFreelancer(
-              freelancer: selectedFreelancer);
-
-          setState(() {
-            _isFreelancerDetailsSheetOpen = true;
-          });
-
-          try {
-            await showModalBottomSheet(
-              context: context,
-              backgroundColor: Theme.of(context).canvasColor,
-              isScrollControlled: true,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-              ),
-              builder: (_) => FractionallySizedBox(
-                heightFactor: 0.85,
-                child: FreelancerDetailsBottomSheet(
-                  freelancer: selectedFreelancer,
-                  onDirectionTap: () =>
-                      _startDirectionTracking(selectedFreelancer),
-                ),
-              ),
-            );
-          } finally {
-            if (mounted) {
-              setState(() {
-                _isFreelancerDetailsSheetOpen = false;
-              });
-            } else {
-              _isFreelancerDetailsSheetOpen = false;
-            }
-          }
+          await _openFreelancerDetailsSheet(freelancer);
         },
       );
 
@@ -677,6 +742,27 @@ class _FreelancerScreenState extends State<FreelancerScreen>
     );
   }
 
+  /// Marker for the user's current location, shown when direction tracking
+  /// isn't active (tracking already shows a live-updating current location
+  /// marker via [_buildTrackingMarkers]).
+  Set<Marker> _buildCurrentUserLocationMarker() {
+    if (_activeDirectionFreelancer != null || _currentUserLocation == null) {
+      return {};
+    }
+
+    return {
+      Marker(
+        markerId: const MarkerId('current_user_location'),
+        position: _currentUserLocation!,
+        infoWindow: const InfoWindow(title: 'Your location'),
+        icon: _currentLocationMarkerIcon ??
+            BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
+        anchor: const Offset(0.5, 0.5),
+        flat: true,
+      ),
+    };
+  }
+
   Set<Marker> _buildTrackingMarkers(DirectionProvider directionProvider) {
     final markers = <Marker>{};
 
@@ -1053,6 +1139,7 @@ class _FreelancerScreenState extends State<FreelancerScreen>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       body: Consumer<DirectionProvider>(
         builder: (context, directionProvider, child) {
@@ -1065,6 +1152,7 @@ class _FreelancerScreenState extends State<FreelancerScreen>
           final combinedMarkers = <Marker>{
             ...freelancerMarker,
             ..._buildTrackingMarkers(directionProvider),
+            ..._buildCurrentUserLocationMarker(),
           };
           final polylines = _buildTrackingPolylines(directionProvider);
 
@@ -1102,6 +1190,14 @@ class _FreelancerScreenState extends State<FreelancerScreen>
                     WidgetsBinding.instance.addPostFrameCallback((_) {
                       if (mounted && !_trackingBoundsFitted) {
                         _fitTrackingRouteBounds();
+                      }
+                    });
+                  } else if (_currentUserLocation != null) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (mounted && _activeDirectionFreelancer == null) {
+                        googleMapController!.animateCamera(
+                          CameraUpdate.newLatLngZoom(_currentUserLocation!, 14),
+                        );
                       }
                     });
                   }
@@ -1311,7 +1407,9 @@ class _FreelancerScreenState extends State<FreelancerScreen>
                       child: InkWell(
                         borderRadius:
                             BorderRadius.circular(Dimensions.radiusLarge),
-                        onTap: _focusOnFreelancers,
+                        onTap:
+                            // _focusOnFreelancers,
+                            _loadCurrentUserLocation,
                         child: const Padding(
                           padding: EdgeInsets.all(Dimensions.paddingSizeSmall),
                           child: Icon(Icons.my_location),

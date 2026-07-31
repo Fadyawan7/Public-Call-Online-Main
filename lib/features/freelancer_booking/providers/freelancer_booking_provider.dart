@@ -68,6 +68,50 @@ class FreelancerBookingProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Moves a booking between the local pending/confirmed/history lists
+  /// right after a status-changing API call succeeds (accept, reject,
+  /// complete, etc.), so the relevant tab updates instantly instead of
+  /// waiting for the next full [getBookingList] refetch (e.g. on app
+  /// restart).
+  void applyBookingStatusUpdate(String bookingID, String? newStatus) {
+    BookingModel? bookingModel;
+    List<BookingModel>? sourceList;
+
+    for (final list in [_pendingList, _confirmedList, _historyList]) {
+      final match = list.where((b) => b.id.toString() == bookingID);
+      if (match.isNotEmpty) {
+        bookingModel = match.first;
+        sourceList = list;
+        break;
+      }
+    }
+
+    if (bookingModel == null) {
+      return;
+    }
+
+    sourceList?.remove(bookingModel);
+
+    // Pending/confirmed keep their own tab; every other terminal status
+    // (rejected, cancelled, completed, history, ...) lands in History.
+    final List<BookingModel> targetList;
+    if (newStatus == 'pending') {
+      targetList = _pendingList;
+    } else if (newStatus == 'confirmed') {
+      targetList = _confirmedList;
+    } else {
+      targetList = _historyList;
+    }
+
+    final updatedBookingJson = bookingModel.toJson();
+    updatedBookingJson['status'] = newStatus;
+    final updatedBooking = BookingModel.fromJson(updatedBookingJson);
+    targetList.removeWhere((b) => b.id.toString() == bookingID);
+    targetList.add(updatedBooking);
+
+    notifyListeners();
+  }
+
   Future<void> setPlaceBooking(String placeBooking) async {
     await sharedPreferences!
         .setString(AppConstants.placeOrderData, placeBooking);

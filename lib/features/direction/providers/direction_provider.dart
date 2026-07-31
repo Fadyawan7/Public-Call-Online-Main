@@ -21,6 +21,13 @@ class DirectionProvider with ChangeNotifier {
   StreamSubscription<Position>? _locationStreamSubscription;
   Timer? _locationCheckTimer;
 
+  // Live re-routing (keeps the polyline + distance glued to the user, like
+  // turn-by-turn nav apps do)
+  LatLng? _destinationLocation;
+  bool _isRefreshingRoute = false;
+  DateTime? _lastRouteRefreshAt;
+  static const Duration _minRouteRefreshInterval = Duration(seconds: 4);
+
   // Tracking configuration
   static const int _locationUpdateThresholdMeters = 10;
   static const Duration _locationCheckInterval = Duration(seconds: 10);
@@ -89,6 +96,8 @@ class DirectionProvider with ChangeNotifier {
   }) async {
     try {
       _onDestinationReached = onDestinationReached;
+      _destinationLocation = destinationLocation;
+      _lastRouteRefreshAt = DateTime.now();
 
       // Check permissions first
       if (!_state.isPermissionGranted) {
@@ -261,10 +270,9 @@ class DirectionProvider with ChangeNotifier {
           state.copyWith(lastSignificantLocation: locationEvent),
         );
 
-        // Update polyline with traveled distance
-        if (_state.polylineData != null && _state.routeData != null) {
-          _updateTraveledDistance(newLatLng);
-        }
+        // Keep the polyline + distance glued to the live position, like
+        // turn-by-turn navigation apps do.
+        _refreshRouteFromCurrentLocation(newLatLng);
       }
 
       // Check if reached destination
@@ -276,6 +284,59 @@ class DirectionProvider with ChangeNotifier {
           errorMessage: 'Error processing location update: $e',
         ),
       );
+    }
+  }
+
+  /// Re-fetches the route from the user's current position to the
+  /// destination so the polyline and remaining distance stay accurate as
+  /// the user moves (mirrors how Google Maps redraws the route live).
+  Future<void> _refreshRouteFromCurrentLocation(LatLng currentPosition) async {
+    if (_destinationLocation == null || _isRefreshingRoute) {
+      return;
+    }
+
+    final now = DateTime.now();
+    if (_lastRouteRefreshAt != null &&
+        now.difference(_lastRouteRefreshAt!) < _minRouteRefreshInterval) {
+      // Too soon since the last API refresh - fall back to a lightweight
+      // local estimate so the UI still feels responsive in between.
+      if (_state.polylineData != null && _state.routeData != null) {
+        _updateTraveledDistance(currentPosition);
+      }
+      return;
+    }
+
+    _isRefreshingRoute = true;
+    _lastRouteRefreshAt = now;
+
+    try {
+      final routeData = await directionRepo.getDirections(
+        currentPosition,
+        _destinationLocation!,
+      );
+
+      final polylineData = PolylineData(
+        points: routeData.routePoints,
+        totalDistance: routeData.distanceMeters.toDouble(),
+        traveledDistance: 0,
+        estimatedDurationMinutes: routeData.durationMinutes,
+      );
+
+      _updateState(
+        state.copyWith(
+          routeData: routeData,
+          polylineData: polylineData,
+        ),
+      );
+    } catch (e) {
+      debugPrint('Error refreshing live route: $e');
+      // Fall back to the old distance-along-route estimate so the UI
+      // doesn't just freeze if the API call fails.
+      if (_state.polylineData != null && _state.routeData != null) {
+        _updateTraveledDistance(currentPosition);
+      }
+    } finally {
+      _isRefreshingRoute = false;
     }
   }
 
@@ -406,6 +467,9 @@ class DirectionProvider with ChangeNotifier {
     _locationCheckTimer?.cancel();
     _locationStreamSubscription = null;
     _locationCheckTimer = null;
+    _destinationLocation = null;
+    _isRefreshingRoute = false;
+    _lastRouteRefreshAt = null;
 
     _updateState(
       state.copyWith(

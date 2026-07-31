@@ -24,6 +24,7 @@ class FreelancerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final BookingProvider bookingProvider =
         Provider.of<BookingProvider>(context, listen: false);
+
     return Row(children: [
       GestureDetector(
         onTap: isFreelancer
@@ -33,7 +34,7 @@ class FreelancerWidget extends StatelessWidget {
         child: ClipOval(
             child: CustomImageWidget(
           image:
-              '${isFreelancer ? bookingProvider.bookingDetails!.userImage : bookingProvider.bookingDetails!.userImage}',
+              '${isFreelancer ? bookingProvider.bookingDetails!.freelancerImage : bookingProvider.bookingDetails!.userImage}',
           width: 50,
           height: 50,
         )),
@@ -43,7 +44,7 @@ class FreelancerWidget extends StatelessWidget {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(
-            '${isFreelancer ? bookingProvider.bookingDetails!.userName : bookingProvider.bookingDetails!.freelancerName} ',
+            '${isFreelancer ? bookingProvider.bookingDetails!.freelancerName : bookingProvider.bookingDetails!.userName} ',
             style: rubikRegular,
             maxLines: 2,
             overflow: TextOverflow.ellipsis),
@@ -59,8 +60,8 @@ class FreelancerWidget extends StatelessWidget {
                 return InkWell(
                   onTap: () async {
                     await chatProvider.startNewChat(isFreelancer
-                        ? bookingProvider.bookingDetails!.userId!
-                        : bookingProvider.bookingDetails!.freelancerId!);
+                        ? bookingProvider.bookingDetails!.freelancerId!
+                        : bookingProvider.bookingDetails!.userId!);
                     RouterHelper.getConversationScreen(
                         chat: chatProvider.newChat);
                   },

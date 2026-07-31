@@ -138,12 +138,12 @@ class _BookingDetailsWidgetState extends State<BookingDetailsWidget> {
                   Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                            getTranslated(
-                                '${profileProvider.userInfoModel!.userType == "freelancer" ? 'User Detail' : 'Freelancer'} ',
-                                context)!,
-                            style: rubikBold),
-                        const SizedBox(height: Dimensions.paddingSizeDefault),
+                        // Text(
+                        //     getTranslated(
+                        //         '${profileProvider.userInfoModel!.userType == "freelancer" ? 'User Detail' : 'Freelancer'} ',
+                        //         context)!,
+                        //     style: rubikBold),
+                        //  const SizedBox(height: Dimensions.paddingSizeDefault),
                         GradientCardWidget(
                           padding:
                               const EdgeInsets.all(Dimensions.paddingSizeSmall),
