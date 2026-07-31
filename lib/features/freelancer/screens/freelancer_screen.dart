@@ -1396,7 +1396,7 @@ class _FreelancerScreenState extends State<FreelancerScreen>
               ),
               Positioned(
                 right: Dimensions.paddingSizeDefault,
-                bottom: 190,
+                bottom: 280,
                 child: Column(
                   children: [
                     Material(

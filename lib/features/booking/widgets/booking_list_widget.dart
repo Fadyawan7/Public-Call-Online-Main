@@ -30,37 +30,57 @@ class BookingListWidget extends StatelessWidget {
           return const BookingShimmerWidget();
         }
 
+        Future<void> refresh() =>
+            Provider.of<BookingProvider>(context, listen: false)
+                .getBookingList(context, status);
+
+        // Pull-to-refresh needs to work even when there's nothing to show
+        // yet (e.g. a booking was just placed and this tab was previously
+        // empty) - otherwise the only way to see it was to restart the app.
         if (bookingList.isEmpty) {
-          return const Center(child: NoDataWidget(isOrder: true));
+          return RefreshIndicator(
+            onRefresh: refresh,
+            backgroundColor: Theme.of(context).primaryColor,
+            color: Theme.of(context).cardColor,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: ConstrainedBox(
+                    constraints:
+                        BoxConstraints(minHeight: constraints.maxHeight),
+                    child: const Center(child: NoDataWidget(isOrder: true)),
+                  ),
+                );
+              },
+            ),
+          );
         }
 
         return RefreshIndicator(
-          onRefresh: () async {
-            await Provider.of<BookingProvider>(context, listen: false)
-                .getBookingList(context, status);
-          },
+          onRefresh: refresh,
           backgroundColor: Theme.of(context).primaryColor,
           color: Theme.of(context).cardColor,
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: Center(
-              child: SizedBox(
-                width: Dimensions.webScreenWidth,
-                child: ListView.builder(
-                  padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-                  itemCount: bookingList.length,
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return BookingItemWidget(
-                      bookingProvider: booking,
-                      status: status,
-                      bookingItem: bookingList[index],
-                    );
-                  },
-                ),
-              ),
+          child: ListView.builder(
+            padding: EdgeInsets.only(
+              top: Dimensions.paddingSizeSmall,
+              left: Dimensions.paddingSizeSmall,
+              right: Dimensions.paddingSizeSmall,
+              bottom: MediaQuery.of(context).padding.bottom + 10,
             ),
+            itemCount: bookingList.length,
+            itemBuilder: (context, index) {
+              return Center(
+                child: SizedBox(
+                  width: Dimensions.webScreenWidth,
+                  child: BookingItemWidget(
+                    bookingProvider: booking,
+                    status: status,
+                    bookingItem: bookingList[index],
+                  ),
+                ),
+              );
+            },
           ),
         );
       },

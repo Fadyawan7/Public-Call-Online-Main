@@ -68,8 +68,17 @@ class CategoryProvider extends DataSyncProvider {
   Future<void> getCategoryList() async {
     if (_categoryList == null) {
       _isLoading = true;
+      notifyListeners();
 
-      fetchAndSyncData(
+      // `fetchAndSyncData` was previously fired without awaiting it, so
+      // this method's Future resolved immediately - before the local
+      // cache *and* network responses had actually populated
+      // `_categoryList`. Callers doing `await getCategoryList()` (e.g.
+      // OptionsWidget resolving category_ids -> names) would then run
+      // right after with an empty list. Awaiting it here makes the
+      // returned Future only complete once the directory is genuinely
+      // ready.
+      await fetchAndSyncData(
         fetchFromLocal: () => categoryRepo!
             .getCategoryList<CacheResponseData>(source: DataSourceEnum.local),
         fetchFromClient: () =>
@@ -92,15 +101,19 @@ class CategoryProvider extends DataSyncProvider {
                 '⚠️ Unexpected data format for category list: ${data.runtimeType}');
           }
 
+          debugPrint("Category directory length: ${_categoryList!.length}");
+
           // ✅ Set default subcategory if available
           if (_categoryList!.isNotEmpty) {
             _selectedSubCategoryId = '${_categoryList?.first.id}';
           }
 
-          _isLoading = false;
           notifyListeners();
         },
       );
+
+      _isLoading = false;
+      notifyListeners();
     }
   }
 

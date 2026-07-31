@@ -54,42 +54,70 @@ class _FreelancerBookingListWidgetState
           bookingList = freelancerBooking.historyList;
         }
 
-        return !isLoading
-            ? bookingList.isNotEmpty
-                ? RefreshIndicator(
-                    onRefresh: () async {
-                      await Provider.of<FreelancerBookingProvider>(context,
-                              listen: false)
-                          .getBookingList(context, status);
-                    },
-                    backgroundColor: Theme.of(context).primaryColor,
-                    color: Theme.of(context).cardColor,
-                    child: SingleChildScrollView(
-                      child: Column(children: [
-                        Center(
-                          child: SizedBox(
-                            width: Dimensions.webScreenWidth,
-                            child: ListView.builder(
-                              padding: const EdgeInsets.all(
-                                  Dimensions.paddingSizeSmall),
-                              itemCount: bookingList.length,
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) {
-                                return FreelancerBookingItemWidget(
-                                  freelancerBookingProvider: freelancerBooking,
-                                  status: status,
-                                  bookingItem: bookingList[index],
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                      ]),
+        if (isLoading) {
+          return const BookingShimmerWidget();
+        }
+
+        Future<void> refresh() =>
+            Provider.of<FreelancerBookingProvider>(context, listen: false)
+                .getBookingList(context, status);
+
+        // Pull-to-refresh needs to work even when there's nothing to show
+        // yet (e.g. a new booking just came in and this tab was previously
+        // empty) - otherwise the only way to see it was to restart the app.
+        if (bookingList.isEmpty) {
+          return RefreshIndicator(
+            onRefresh: refresh,
+            backgroundColor: Theme.of(context).primaryColor,
+            color: Theme.of(context).cardColor,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: ConstrainedBox(
+                    constraints:
+                        BoxConstraints(minHeight: constraints.maxHeight),
+                    child: const Center(child: NoDataWidget(isOrder: true)),
+                  ),
+                );
+              },
+            ),
+          );
+        }
+
+        return RefreshIndicator(
+            onRefresh: refresh,
+            backgroundColor: Theme.of(context).primaryColor,
+            color: Theme.of(context).cardColor,
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).padding.bottom + 5,
+              ),
+              child: Column(
+                children: [
+                  Center(
+                    child: SizedBox(
+                      width: Dimensions.webScreenWidth,
+                      child: ListView.builder(
+                        padding:
+                            const EdgeInsets.all(Dimensions.paddingSizeSmall),
+                        itemCount: bookingList.length,
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return FreelancerBookingItemWidget(
+                            freelancerBookingProvider: freelancerBooking,
+                            status: status,
+                            bookingItem: bookingList[index],
+                          );
+                        },
+                      ),
                     ),
-                  )
-                : const Center(child: NoDataWidget(isOrder: true))
-            : const BookingShimmerWidget();
+                  ),
+                ],
+              ),
+            ));
       },
     );
   }

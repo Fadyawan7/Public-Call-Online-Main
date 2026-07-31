@@ -341,72 +341,63 @@ class _MyOrderTabsState extends State<_MyOrderTabs>
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<BookingProvider>(
-      builder: (context, order, child) {
-        return Column(
-          children: [
-            Expanded(
-              child: Center(
-                child: SizedBox(
-                  width: Dimensions.webScreenWidth,
-                  child: Column(
-                    children: [
-                      Center(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).canvasColor,
-                            border: Border.all(
-                              color: Theme.of(context)
-                                  .hintColor
-                                  .withValues(alpha: 0.2),
-                            ),
-                            borderRadius:
-                                BorderRadius.circular(Dimensions.radiusDefault),
-                          ),
-                          padding: const EdgeInsets.all(
-                            3,
-                          ),
-                          margin: const EdgeInsets.symmetric(
-                            vertical: 10,
-                            horizontal: Dimensions.paddingSizeLarge,
-                          ),
-                          child: TabBar(
-                            controller: _tabController,
-                            dividerHeight: 0,
-                            indicator: const UnderlineTabIndicator(
-                              borderSide: BorderSide.none,
-                            ),
-                            tabs: [
-                              _buildInnerTab(context, 'pending', 0),
-                              _buildInnerTab(context, 'confirmed', 1),
-                              _buildInnerTab(context, 'history', 2),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: TabBarView(
-                          controller: _tabController,
-                          children: const [
-                            BookingListWidget(status: 'pending'),
-                            BookingListWidget(status: 'confirmed'),
-                            BookingListWidget(status: 'history'),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+@override
+Widget build(BuildContext context) {
+  return Consumer<BookingProvider>(
+    builder: (context, order, child) {
+      return Column(
+        children: [
+          Center(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).canvasColor,
+                border: Border.all(
+                  color: Theme.of(context)
+                      .hintColor
+                      .withValues(alpha: 0.2),
+                ),
+                borderRadius: BorderRadius.circular(
+                  Dimensions.radiusDefault,
                 ),
               ),
+              padding: const EdgeInsets.all(3),
+              margin: const EdgeInsets.symmetric(
+                vertical: 10,
+                horizontal: Dimensions.paddingSizeLarge,
+              ),
+              child: TabBar(
+                controller: _tabController,
+                dividerHeight: 0,
+                indicator: const UnderlineTabIndicator(
+                  borderSide: BorderSide.none,
+                ),
+                tabs: [
+                  _buildInnerTab(context, 'pending', 0),
+                  _buildInnerTab(context, 'confirmed', 1),
+                  _buildInnerTab(context, 'history', 2),
+                ],
+              ),
             ),
-          ],
-        );
-      },
-    );
-  }
+          ),
 
+          Expanded(
+            child: SafeArea(
+              bottom: true,
+              child: TabBarView(
+                controller: _tabController,
+                children: const [
+                  BookingListWidget(status: 'pending'),
+                  BookingListWidget(status: 'confirmed'),
+                  BookingListWidget(status: 'history'),
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}
   Widget _buildInnerTab(BuildContext context, String label, int index) {
     final bool selected = _tabController.index == index;
 

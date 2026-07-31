@@ -108,7 +108,7 @@ class _BookingDateSlotScreenState extends State<BookingDateSlotScreen>
           titleColor: Colors.white,
           leading: Icon(
             Icons.arrow_back_ios,
-            color: Colors.red,
+            color: Colors.black,
           ),
         ),
         body: GestureDetector(

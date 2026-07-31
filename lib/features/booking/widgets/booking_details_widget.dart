@@ -149,9 +149,20 @@ class _BookingDetailsWidgetState extends State<BookingDetailsWidget> {
                               const EdgeInsets.all(Dimensions.paddingSizeSmall),
                           child: FreelancerWidget(
                               bookingDetailsModel: booking.bookingDetails!,
-                              isFreelancer:
-                                  profileProvider.userInfoModel!.userType ==
-                                      "freelancer"),
+                              // Show the *other party* on this specific
+                              // booking, not a fixed value based on the
+                              // account's global role. A freelancer account
+                              // can both receive bookings (My Order, where
+                              // they ARE booking.freelancerId - show the
+                              // customer) and place bookings on other
+                              // freelancers (My Booking, where they ARE
+                              // booking.userId - show that freelancer).
+                              // Using userType alone showed the same side
+                              // (their own info) on whichever tab it
+                              // happened to match, and the wrong side on
+                              // the other.
+                              isFreelancer: profileProvider.userInfoModel!.id ==
+                                  booking.bookingDetails!.userId),
                         ),
                         const SizedBox(height: Dimensions.paddingSizeLarge),
                       ]),

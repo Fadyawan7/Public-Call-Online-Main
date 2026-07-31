@@ -14,6 +14,7 @@ class UserInfoModel {
   String? freelancerRequestNote;
 
   int? categoryId;
+  List<int>? categoryIds;
   int? countryId;
   int? cityId;
   String? countryName;
@@ -49,6 +50,12 @@ class UserInfoModel {
     phone = json['phone'] ?? '';
     cmFirebaseToken = json['fcm_token'] ?? '';
     categoryId = json['category_id'] ?? '';
+    categoryIds = json['category_ids'] != null
+        ? List<int>.from((json['category_ids'] as List)
+            .map((x) => x is int ? x : int.tryParse('$x') ?? 0)
+            .where((x) => x != 0))
+        : null;
+
     countryId = json['country_id'] ?? '';
     cityId = json['city_id'] ?? '';
     freelancerRequestNote = json['freelancer_request_note'] ?? '';
@@ -80,6 +87,9 @@ class UserInfoModel {
     }
     if (categoryId != null) {
       data['category_id'] = categoryId;
+    }
+    if (categoryIds != null) {
+      data['category_ids'] = categoryIds;
     }
     if (countryId != null) {
       data['country_id'] = countryId;
