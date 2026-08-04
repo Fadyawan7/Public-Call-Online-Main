@@ -355,38 +355,55 @@ class DirectionProvider with ChangeNotifier {
   }
 
   /// Update traveled distance on polyline
+  ///
+  /// This is only used as a lightweight interim estimate between live
+  /// route re-fetches (see `_refreshRouteFromCurrentLocation`), for when a
+  /// refresh is throttled or fails.
+  ///
+  /// Previous implementation required the user's GPS position to land
+  /// within 50m of one of the decoded polyline's vertices before it would
+  /// stop accumulating distance. On long routes (e.g. a 270 minute /
+  /// intercity trip) the overview polyline's points can be spaced far more
+  /// than 50m apart, so that condition almost never triggered - the loop
+  /// would run to completion and sum the ENTIRE route as "traveled" even
+  /// though the user had barely moved, which is exactly why "remaining"
+  /// collapsed to ~0 while the ETA (taken from the same, otherwise-correct
+  /// route data) stayed high. Fixed by projecting the current position onto
+  /// the *nearest* route point instead of requiring a tight proximity
+  /// match, which works regardless of how far apart the polyline's points
+  /// are.
   void _updateTraveledDistance(LatLng currentPosition) {
     if (_state.polylineData == null || _state.routeData == null) return;
 
     try {
-      double traveledDistance = 0;
+      final routePoints = _state.routeData!.routePoints;
+      if (routePoints.length < 2) return;
 
-      // Calculate cumulative distance along the route
-      for (int i = 0; i < _state.routeData!.routePoints.length - 1; i++) {
-        final point1 = _state.routeData!.routePoints[i];
-        final point2 = _state.routeData!.routePoints[i + 1];
-
-        final segmentDistance = Geolocator.distanceBetween(
-          point1.latitude,
-          point1.longitude,
-          point2.latitude,
-          point2.longitude,
-        );
-
-        traveledDistance += segmentDistance;
-
-        // Check if current position is closer to this segment
-        final distToPoint2 = Geolocator.distanceBetween(
+      int closestIndex = 0;
+      double closestDistance = double.infinity;
+      for (int i = 0; i < routePoints.length; i++) {
+        final distance = Geolocator.distanceBetween(
           currentPosition.latitude,
           currentPosition.longitude,
-          point2.latitude,
-          point2.longitude,
+          routePoints[i].latitude,
+          routePoints[i].longitude,
         );
-
-        if (distToPoint2 < 50) {
-          // Within 50 meters of this point
-          break;
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestIndex = i;
         }
+      }
+
+      // Sum only the segments up to the nearest point - this is the
+      // portion of the route actually behind the user.
+      double traveledDistance = 0;
+      for (int i = 0; i < closestIndex; i++) {
+        traveledDistance += Geolocator.distanceBetween(
+          routePoints[i].latitude,
+          routePoints[i].longitude,
+          routePoints[i + 1].latitude,
+          routePoints[i + 1].longitude,
+        );
       }
 
       // Clamp traveled distance between 0 and total

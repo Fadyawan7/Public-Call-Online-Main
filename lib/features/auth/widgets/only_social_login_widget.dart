@@ -3,21 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/widgets/custom_alert_dialog_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_asset_image_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_pop_scope_widget.dart';
-import 'package:flutter_restaurant/features/auth/domain/models/social_login_model.dart';
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/features/auth/widgets/existing_account_bottom_sheet.dart';
 import 'package:flutter_restaurant/features/profile/domain/models/userinfo_model.dart';
-import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
 import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
-import 'package:flutter_restaurant/utill/app_constants.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class OnlySocialLoginWidget extends StatefulWidget {
   const OnlySocialLoginWidget({super.key});
@@ -42,8 +37,10 @@ class _OnlySocialLoginWidgetState extends State<OnlySocialLoginWidget> {
       } else if (tempToken != null) {
         RouterHelper.getOtpRegistrationScreen(
           tempToken,
-          authProvider.googleAccount?.email ?? '',
-          userName: authProvider.googleAccount?.displayName ?? '',
+          authProvider.socialEmail ?? authProvider.googleAccount?.email ?? '',
+          userName: authProvider.socialName ??
+              authProvider.googleAccount?.displayName ??
+              '',
         );
       } else if (userInfoModel != null) {
         ResponsiveHelper.showDialogOrBottomSheet(
@@ -72,8 +69,7 @@ class _OnlySocialLoginWidgetState extends State<OnlySocialLoginWidget> {
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
     final Size size = MediaQuery.of(context).size;
-    final configModel =
-        Provider.of<SplashProvider>(context, listen: false).configModel;
+    final bool isIos = defaultTargetPlatform == TargetPlatform.iOS;
 
     return CustomPopScopeWidget(
       child: Scaffold(
@@ -140,41 +136,15 @@ class _OnlySocialLoginWidgetState extends State<OnlySocialLoginWidget> {
                         flex: 4,
                         child: Consumer<AuthProvider>(
                             builder: (context, authProvider, child) {
-                          return InkWell(
-                            onTap: () async {
-                              try {
-                                GoogleSignInAuthentication auth =
-                                    await authProvider.googleLogin();
-                                GoogleSignInAccount googleAccount =
-                                    authProvider.googleAccount!;
-                                final String? socialToken =
-                                    auth.accessToken ?? auth.idToken;
-                                if (socialToken == null ||
-                                    socialToken.isEmpty) {
-                                  throw Exception(
-                                      'Failed to obtain Google auth token');
-                                }
+                          final bool isBusy = authProvider.isLoading ||
+                              authProvider.isSocialAuthLoading;
 
-                                authProvider.socialLogin(
-                                    SocialLoginModel(
-                                      email: googleAccount.email,
-                                      token: socialToken,
-                                      uniqueId: googleAccount.id,
-                                      medium: 'google',
-                                    ),
-                                    route);
-                              } catch (er) {
-                                debugPrint('Google Sign-In error: $er');
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                        'Google Sign-In failed: ${er.toString()}'),
-                                    backgroundColor: Colors.red,
-                                    duration: const Duration(seconds: 3),
-                                  ),
-                                );
-                              }
-                            },
+                          return InkWell(
+                            onTap: isBusy
+                                ? null
+                                : () => isIos
+                                    ? authProvider.loginWithApple(route)
+                                    : authProvider.loginWithGoogle(route),
                             child: Container(
                               padding: const EdgeInsets.symmetric(
                                   vertical: Dimensions.paddingSizeDefault),
@@ -193,7 +163,13 @@ class _OnlySocialLoginWidgetState extends State<OnlySocialLoginWidget> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Image.asset(
-                                    Images.google,
+                                    isIos ? Images.appleLogo : Images.google,
+                                    color: isIos
+                                        ? Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium
+                                            ?.color
+                                        : null,
                                     height: ResponsiveHelper.isDesktop(context)
                                         ? 20
                                         : ResponsiveHelper.isTab(context)
@@ -206,10 +182,15 @@ class _OnlySocialLoginWidgetState extends State<OnlySocialLoginWidget> {
                                             : 15,
                                   ),
                                   const SizedBox(
-                                      width: Dimensions.paddingSizeExtraSmall),
+                                    width: Dimensions.paddingSizeExtraSmall,
+                                  ),
                                   Text(
                                     getTranslated(
-                                        "continue_with_google", context)!,
+                                      isIos
+                                          ? 'continue_with_apple'
+                                          : 'continue_with_google',
+                                      context,
+                                    )!,
                                     style: rubikSemiBold.copyWith(
                                       fontSize: Dimensions.fontSizeDefault,
                                       color: Theme.of(context)
@@ -227,97 +208,6 @@ class _OnlySocialLoginWidgetState extends State<OnlySocialLoginWidget> {
                       Expanded(child: Container()),
                     ]),
                     const SizedBox(height: Dimensions.paddingSizeLarge),
-                    if (defaultTargetPlatform == TargetPlatform.iOS) ...[
-                      Row(children: [
-                        Expanded(child: Container()),
-                        Expanded(
-                          flex: 4,
-                          child: Consumer<AuthProvider>(
-                              builder: (context, authProvider, child) {
-                            return InkWell(
-                              onTap: () async {
-                                final credential =
-                                    await SignInWithApple.getAppleIDCredential(
-                                  scopes: [
-                                    AppleIDAuthorizationScopes.email,
-                                    AppleIDAuthorizationScopes.fullName,
-                                  ],
-                                  webAuthenticationOptions:
-                                      WebAuthenticationOptions(
-                                    clientId:
-                                        '${configModel?.appleLogin?.clientId}',
-                                    redirectUri:
-                                        Uri.parse(AppConstants.baseUrl),
-                                  ),
-                                );
-                                authProvider.socialLogin(
-                                    SocialLoginModel(
-                                      email: credential.email,
-                                      token: credential.authorizationCode,
-                                      uniqueId: credential.authorizationCode,
-                                      medium: 'apple',
-                                    ),
-                                    route);
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: Dimensions.paddingSizeDefault),
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context)
-                                      .hintColor
-                                      .withValues(alpha: 0.08),
-                                  borderRadius: BorderRadius.circular(
-                                      Dimensions.radiusSmall),
-                                  border: Border.all(
-                                      color: Theme.of(context)
-                                          .primaryColor
-                                          .withValues(alpha: 0.1)),
-                                ),
-                                child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Image.asset(
-                                        Images.appleLogo,
-                                        color: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium
-                                            ?.color,
-                                        height: ResponsiveHelper.isDesktop(
-                                                context)
-                                            ? 20
-                                            : ResponsiveHelper.isTab(context)
-                                                ? 20
-                                                : 15,
-                                        width: ResponsiveHelper.isDesktop(
-                                                context)
-                                            ? 20
-                                            : ResponsiveHelper.isTab(context)
-                                                ? 20
-                                                : 15,
-                                      ),
-                                      const SizedBox(
-                                          width:
-                                              Dimensions.paddingSizeExtraSmall),
-                                      Text(
-                                          getTranslated(
-                                              "continue_with_apple", context)!,
-                                          style: rubikSemiBold.copyWith(
-                                            fontSize:
-                                                Dimensions.fontSizeDefault,
-                                            color: Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium
-                                                ?.color,
-                                          )),
-                                    ]),
-                              ),
-                            );
-                          }),
-                        ),
-                        Expanded(child: Container()),
-                      ]),
-                      const SizedBox(height: Dimensions.paddingSizeLarge),
-                    ],
                     Center(
                         child: Text(
                       getTranslated('or', context)!,

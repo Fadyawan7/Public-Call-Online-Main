@@ -23,17 +23,6 @@ class MenuScreen extends StatefulWidget {
 }
 
 class _MenuScreenState extends State<MenuScreen> {
-  late bool _isLoggedIn;
-  final int _selectedIndex = 0;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _isLoggedIn =
-        Provider.of<AuthProvider>(context, listen: false).isLoggedIn();
-  }
-
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -41,12 +30,14 @@ class _MenuScreenState extends State<MenuScreen> {
       statusBarIconBrightness: Brightness.dark, // Change as needed
     ));
 
-    return Scaffold(
-      backgroundColor: Theme.of(context).canvasColor,
-      appBar: null,
-      body: _isLoggedIn
-          ? Consumer<AuthProvider>(builder: (context, authProvider, _) {
-              return Column(children: [
+    return Consumer<AuthProvider>(builder: (context, authProvider, _) {
+      final bool isLoggedIn = authProvider.isLoggedIn();
+
+      return Scaffold(
+        backgroundColor: Theme.of(context).canvasColor,
+        appBar: null,
+        body: isLoggedIn
+            ? Column(children: [
                 Consumer<ProfileProvider>(
                   builder: (context, profileProvider, child) => Container(
                     decoration:
@@ -65,7 +56,7 @@ class _MenuScreenState extends State<MenuScreen> {
                           ),
                           padding: const EdgeInsets.all(1),
                           child: ClipOval(
-                            child: _isLoggedIn
+                            child: isLoggedIn
                                 ? CustomImageWidget(
                                     placeholder: Images.placeholderUser,
                                     height: 80,
@@ -87,7 +78,7 @@ class _MenuScreenState extends State<MenuScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                _isLoggedIn &&
+                                isLoggedIn &&
                                         profileProvider.userInfoModel == null
                                     ? Shimmer(
                                         duration: const Duration(seconds: 2),
@@ -110,7 +101,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            _isLoggedIn
+                                            isLoggedIn
                                                 ? '${profileProvider.userInfoModel?.name}'
                                                 : getTranslated(
                                                     'guest', context)!,
@@ -118,7 +109,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                                 fontSize:
                                                     Dimensions.fontSizeDefault),
                                           ),
-                                          if (_isLoggedIn)
+                                          if (isLoggedIn)
                                             Text(
                                               profileProvider
                                                       .userInfoModel?.email ??
@@ -160,7 +151,6 @@ class _MenuScreenState extends State<MenuScreen> {
                                             ),
                                         ],
                                       ),
-                                // const SizedBox(height: Dimensions.paddingSizeExtraSmall),
                               ]),
                         ),
                       ]),
@@ -168,9 +158,9 @@ class _MenuScreenState extends State<MenuScreen> {
                   ),
                 ),
                 Expanded(child: OptionsWidget(onTap: widget.onTap)),
-              ]);
-            })
-          : NotLoggedInWidget(),
-    );
+              ])
+            : const NotLoggedInWidget(),
+      );
+    });
   }
 }

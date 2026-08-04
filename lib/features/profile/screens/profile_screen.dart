@@ -8,7 +8,6 @@ import 'package:flutter_restaurant/features/apply_freelancer/widgets/profile_shi
 import 'package:flutter_restaurant/features/auth/providers/auth_provider.dart';
 import 'package:flutter_restaurant/features/profile/domain/models/userinfo_model.dart';
 import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
-import 'package:flutter_restaurant/features/profile/widgets/profile_city_dropdown_widget.dart';
 import 'package:flutter_restaurant/features/profile/widgets/profile_country_dropdown_widget.dart';
 import 'package:flutter_restaurant/features/profile/widgets/profile_header_widget.dart';
 import 'package:flutter_restaurant/features/profile/widgets/profile_image_widget.dart';
@@ -41,6 +40,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   FocusNode? _lastNameFocus;
   FocusNode? _emailFocus;
   FocusNode? _phoneNumberFocus;
+  FocusNode? _whatsappNumberFocus;
 
   TextEditingController? _firstNameController;
   TextEditingController? _emailController;
@@ -49,7 +49,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   TextEditingController? _whatsappNumberController;
 
   TextEditingController? _countryNameController;
-  TextEditingController? _cityNameController;
+  // TextEditingController? _cityNameController;
   File? file;
   bool? isFreelancer = false;
   late bool _isLoggedIn;
@@ -73,12 +73,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _lastNameFocus = FocusNode();
     _emailFocus = FocusNode(skipTraversal: true);
     _phoneNumberFocus = FocusNode();
+    _whatsappNumberFocus = FocusNode();
 
     _firstNameController = TextEditingController();
     _emailController = TextEditingController();
     _phoneNumberController = TextEditingController();
     _countryNameController = TextEditingController();
-    _cityNameController = TextEditingController();
+    // _cityNameController = TextEditingController();
 
     _whatsappNumberController = TextEditingController();
     _aboutMeController = TextEditingController();
@@ -95,7 +96,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _phoneNumberController!.text = userInfoModel.phone ?? '';
         _emailController!.text = userInfoModel.email ?? '';
         _countryNameController!.text = userInfoModel.countryName ?? '';
-        _cityNameController!.text = userInfoModel.cityName ?? '';
+        // _cityNameController!.text = userInfoModel.cityName ?? '';
 
         _aboutMeController!.text = userInfoModel.aboutMe ?? '';
         _whatsappNumberController!.text = userInfoModel.whatsapp ?? '';
@@ -123,7 +124,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _lastNameFocus?.dispose();
     _emailFocus?.dispose();
     _phoneNumberFocus?.dispose();
-
+    _whatsappNumberFocus?.dispose();
     _firstNameController?.dispose();
     _emailController?.dispose();
     _phoneNumberController?.dispose();
@@ -342,27 +343,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           const SizedBox(
                                               height:
                                                   Dimensions.paddingSizeSmall),
-                                          profileProvider
-                                                      .userInfoModel!.cityId ==
-                                                  -1
-                                              ? CityDropdownWidget(
-                                                  searchController:
-                                                      citySearchController,
-                                                )
-                                              : ProfileTextFieldWidget(
-                                                  isEnabled: false,
-                                                  isShowBorder: true,
-                                                  controller:
-                                                      _cityNameController,
-                                                  level: getTranslated(
-                                                      'City', context)!,
-                                                  isShowPrefixIcon: false,
-                                                  prefixIconUrl:
-                                                      Images.phoneSvg,
-                                                ),
-                                          const SizedBox(
-                                              height:
-                                                  Dimensions.paddingSizeLarge),
+                                          // profileProvider
+                                          //             .userInfoModel!.cityId ==
+                                          //         -1
+                                          //     ? CityDropdownWidget(
+                                          //         searchController:
+                                          //             citySearchController,
+                                          //       )
+                                          //     : ProfileTextFieldWidget(
+                                          //         isEnabled: false,
+                                          //         isShowBorder: true,
+                                          //         controller:
+                                          //             _cityNameController,
+                                          //         level: getTranslated(
+                                          //             'City', context)!,
+                                          //         isShowPrefixIcon: false,
+                                          //         prefixIconUrl:
+                                          //             Images.phoneSvg,
+                                          //       ),
+                                          // const SizedBox(
+                                          //     height:
+                                          //         Dimensions.paddingSizeLarge),
 
                                           // Phone
                                           ProfileTextFieldWidget(
@@ -383,14 +384,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             ProfileTextFieldWidget(
                                               isShowBorder: true,
                                               controller:
-                                                  _phoneNumberController,
-                                              focusNode: _phoneNumberFocus,
+                                                  _whatsappNumberController,
+                                              focusNode: _whatsappNumberFocus,
                                               inputType: TextInputType.phone,
                                               level: getTranslated(
                                                   'whatsapp', context)!,
                                               isShowPrefixIcon: true,
                                               isShowSuffixIcon:
-                                                  _phoneNumberController!
+                                                  _whatsappNumberController!
                                                       .text.isNotEmpty,
                                               prefixIconUrl: Images.phoneSvg,
                                             ),

@@ -1,6 +1,6 @@
-# flutter_restaurant
+# Pco_App
 
-A new Flutter restaurant application.
+A Pco application.
 
 ## Getting Started
 

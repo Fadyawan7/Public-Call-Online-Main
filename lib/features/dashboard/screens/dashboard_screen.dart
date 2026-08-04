@@ -47,7 +47,9 @@ class _DashboardScreenState extends State<DashboardScreen>
       splashProvider.getPolicyPage();
     }
 
-    BookingScreen.loadData(false);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      BookingScreen.loadData(false);
+    });
 
     locationProvider.checkPermission(
       () => locationProvider

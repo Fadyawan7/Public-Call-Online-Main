@@ -16,7 +16,6 @@ import 'package:provider/provider.dart';
 // Fixit Style UI Constants
 class _FixitTheme {
   static const Color primary = Color(0xFF5C6CFF);
-  static const Color background = Color(0xFFF9FAFF);
   static const Color textMain = Color(0xFF232323);
   static const Color textSub = Color(0xFF8A8A8A);
 }
@@ -95,69 +94,73 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: _FixitTheme.textSub.withValues(alpha: 0.08), // 🔥 HERE
+    return Consumer<AuthProvider>(builder: (context, authProvider, _) {
+      final bool isLoggedIn = authProvider.isLoggedIn();
+      _isLoggedIn = isLoggedIn;
 
-      body: SafeArea(
-        bottom: false,
-        child: Column(
-          children: [
-            _buildAppBarFixed(_isLoggedIn, widget.formattedAddress, context),
-            Expanded(
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context)
-                        .padding
-                        .bottom), // Extra padding for floating button
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 10),
-                      _topBannerWithNotification(
-                          Provider.of<HomeProvider>(context)),
-                      const SizedBox(height: 15),
-                      _buildSectionHeader("Top categories", () {
-                        final categories = Provider.of<CategoryProvider>(
-                                    context,
-                                    listen: false)
-                                .categoryList ??
-                            [];
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => AllCategories(
-                              allCategories: categories,
+      return Scaffold(
+        backgroundColor: _FixitTheme.textSub.withValues(alpha: 0.08), // 🔥 HERE
+        body: SafeArea(
+          bottom: false,
+          child: Column(
+            children: [
+              _buildAppBarFixed(isLoggedIn, widget.formattedAddress, context),
+              Expanded(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context)
+                          .padding
+                          .bottom), // Extra padding for floating button
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 10),
+                        _topBannerWithNotification(
+                            Provider.of<HomeProvider>(context)),
+                        const SizedBox(height: 15),
+                        _buildSectionHeader("Top categories", () {
+                          final categories = Provider.of<CategoryProvider>(
+                                      context,
+                                      listen: false)
+                                  .categoryList ??
+                              [];
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => AllCategories(
+                                allCategories: categories,
+                              ),
                             ),
-                          ),
-                        );
-                      }),
-                      const SizedBox(height: 10),
-                      _buildCategoryGrid(),
-                      _buildSectionHeader("Featured", () {
-                        Navigator.push(
+                          );
+                        }),
+                        const SizedBox(height: 10),
+                        _buildCategoryGrid(),
+                        _buildSectionHeader("Featured", () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => AllFeaturedCategories(),
+                            ),
+                          );
+                        }),
+                        const SizedBox(height: 10),
+                        _featuredSection(
+                          Provider.of<HomeProvider>(context),
                           context,
-                          MaterialPageRoute(
-                            builder: (_) => AllFeaturedCategories(),
-                          ),
-                        );
-                      }),
-                      const SizedBox(height: 10),
-                      _featuredSection(
-                        Provider.of<HomeProvider>(context),
-                        context,
-                      ),
-                    ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
 

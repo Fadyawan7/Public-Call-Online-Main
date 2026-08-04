@@ -23,6 +23,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../../../helper/api_checker_helper.dart';
 import '../../../helper/custom_snackbar_helper.dart';
@@ -59,6 +60,9 @@ class AuthProvider with ChangeNotifier {
   bool _isEnableVerificationCode = false;
   bool _isActiveRememberMe = false;
   bool? _isAvailable;
+  bool _isSocialAuthLoading = false;
+  String? _socialEmail;
+  String? _socialName;
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     // Use the web client ID from Firebase console
     serverClientId:
@@ -80,9 +84,12 @@ class AuthProvider with ChangeNotifier {
   set setForgetPasswordLoading(bool value) => _isForgotPasswordLoading = value;
   bool get isPhoneNumberVerificationButtonLoading =>
       _isPhoneNumberVerificationButtonLoading;
+  bool get isSocialAuthLoading => _isSocialAuthLoading;
   String? get verificationMessage => _verificationMsg;
   String get email => _email;
   String get phone => _phone;
+  String? get socialEmail => _socialEmail;
+  String? get socialName => _socialName;
   set setIsPhoneVerificationButttonLoading(bool value) =>
       _isPhoneNumberVerificationButtonLoading = value;
   bool get isEnableVerificationCode => _isEnableVerificationCode;
@@ -447,6 +454,9 @@ class AuthProvider with ChangeNotifier {
         throw Exception('Google Sign-In was cancelled');
       }
 
+      _socialEmail = googleAccount!.email;
+      _socialName = googleAccount!.displayName;
+
       final GoogleSignInAuthentication auth =
           await googleAccount!.authentication;
       if ((auth.accessToken == null || auth.accessToken!.isEmpty) &&
@@ -458,6 +468,134 @@ class AuthProvider with ChangeNotifier {
     } catch (e) {
       debugPrint('Google Sign-In error: $e');
       rethrow;
+    }
+  }
+
+  Future<void> loginWithGoogle(SocialLoginCallback callback) async {
+    if (_isLoading || _isSocialAuthLoading) {
+      return;
+    }
+
+    _isSocialAuthLoading = true;
+    _loginErrorMessage = '';
+    notifyListeners();
+
+    try {
+      final GoogleSignInAuthentication auth = await googleLogin();
+      final GoogleSignInAccount? googleAccount = this.googleAccount;
+      final String? socialToken = auth.accessToken ?? auth.idToken;
+
+      if (googleAccount == null) {
+        throw Exception('Google account was not returned');
+      }
+
+      if (socialToken == null || socialToken.isEmpty) {
+        throw Exception('Failed to obtain Google auth token');
+      }
+
+      await socialLogin(
+        SocialLoginModel(
+          email: googleAccount.email,
+          token: socialToken,
+          uniqueId: googleAccount.id,
+          medium: 'google',
+        ),
+        callback,
+      );
+    } catch (error, stackTrace) {
+      final String message = error.toString().toLowerCase();
+      if (message.contains('cancel') || message.contains('canceled')) {
+        debugPrint('Google Sign-In cancelled');
+        return;
+      }
+
+      debugPrint('Google Sign-In error: $error');
+      debugPrint('Stack: $stackTrace');
+      callback(
+        false,
+        null,
+        'Google Sign-In failed. Please try again.',
+        null,
+        null,
+        null,
+      );
+    } finally {
+      _isSocialAuthLoading = false;
+      notifyListeners();
+    }
+  }
+
+  String? _buildAppleDisplayName(String? givenName, String? familyName) {
+    final parts = <String>[
+      if (givenName != null && givenName.trim().isNotEmpty) givenName.trim(),
+      if (familyName != null && familyName.trim().isNotEmpty) familyName.trim(),
+    ];
+
+    if (parts.isEmpty) {
+      return null;
+    }
+
+    return parts.join(' ');
+  }
+
+  Future<void> loginWithApple(SocialLoginCallback callback) async {
+    if (_isLoading || _isSocialAuthLoading) {
+      return;
+    }
+
+    _isSocialAuthLoading = true;
+    _loginErrorMessage = '';
+    notifyListeners();
+
+    try {
+      final AuthorizationCredentialAppleID credential =
+          await SignInWithApple.getAppleIDCredential(
+        scopes: const [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      final String? identityToken = credential.identityToken;
+      if (identityToken == null || identityToken.isEmpty) {
+        throw Exception('Failed to obtain Apple identity token');
+      }
+
+      _socialEmail = credential.email;
+      _socialName = _buildAppleDisplayName(
+        credential.givenName,
+        credential.familyName,
+      );
+
+      await socialLogin(
+        SocialLoginModel(
+          email: credential.email,
+          token: identityToken,
+          uniqueId: credential.userIdentifier,
+          medium: 'apple',
+        ),
+        callback,
+      );
+    } catch (error, stackTrace) {
+      final String message = error.toString().toLowerCase();
+      if (message.contains('cancel') || message.contains('canceled')) {
+        debugPrint('Apple Sign-In cancelled');
+        return;
+      }
+
+      debugPrint('Apple Sign-In error: $error');
+      debugPrint('Stack: $stackTrace');
+      callback(
+        false,
+        null,
+        'Apple Sign-In failed. Please try again.',
+        null,
+        null,
+        null,
+      );
+    } finally {
+      _isSocialAuthLoading = false;
+      notifyListeners();
     }
   }
 
